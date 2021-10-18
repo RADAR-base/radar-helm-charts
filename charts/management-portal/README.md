@@ -2,7 +2,7 @@
 
 # management-portal
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.0](https://img.shields.io/badge/AppVersion-0.7.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -31,7 +31,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of Management Portal replicas to deploy |
 | image.repository | string | `"radarbase/management-portal"` | Management Portal image repository |
-| image.tag | string | `"0.7.0"` | Management Portal image tag (immutable tags are recommended) |
+| image.tag | string | `"0.8.0"` | Management Portal image tag (immutable tags are recommended) |
 | image.pullPolicy | string | `"IfNotPresent"` | Management Portal image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override management-portal.fullname template with a string (will prepend the release name) |
@@ -95,9 +95,11 @@ Each client configuration has the following setup:
   autoapprove: # List of permissions that can auto-approved when authorization-code flow succeeds.
 ```
 
-## OAuth 2.0 key store
+## OAuth 2.0 keystore
 
-ManagementPortal needs a certificate and private key to sign OAuth 2.0 Json Web Tokens (JWT's). The keystore needs to be a P12 file including an ECDSA certificate with alias `radarbase-managementportal-ec` and an RSA certificate with alias `selfsigned`. The script `bin/keystore-init` is included to generate this for you. It requires Java to be installed.
+ManagementPortal needs a certificate and private key to sign OAuth 2.0 Json Web Tokens (JWT's). This is provided in the form of a so-called keystore. For any installation of RADAR-base, the keystore file MUST be kept confidential, since it is used to generate and verify users identities and permissions. It should also be persisted securely, since any change of the keystore file will cause all apps and clients to require re-identification.
+
+The keystore is a P12 file including an ECDSA certificate with alias `radarbase-managementportal-ec` and an RSA certificate with alias `selfsigned`. Run the script `bin/keystore-init` generate this file. It requires Java to be installed.
 
 Once a valid keystore file is available, its contents should be passed as a base 64 encoded value in the `keystore` value. When using helmfile, this can be achieved by setting
 
