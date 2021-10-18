@@ -18,12 +18,55 @@ The following tools should be installed in your local machine to install the RAD
 |-----|------|
 | [helm 3](https://github.com/helm/helm#install)| Helm Charts are used to package Kubernetes resources for each component|
 | kubernetes | The charts support Kubernetes versions 1.19 up to 1.22. |
+| [helm-docs](https://github.com/norwoodj/helm-docs) | README generator for each chart. |
 
 Installation of these charts is best managed via [RADAR-Kubernetes](https://github.com/RADAR-base/RADAR-Kubernetes).
 
 ## Usage
 
 The radar-helm-charts Github project publishes a Helm repository `radar` with URL <https://radar-base.github.com/radar-helm-charts>. Any time a commit to the `main` branch is made that modified one of the helm charts, a new Github release is created for that chart. It is also published to the Helm repository. For that reason, ensure that the `Chart.yaml` file of the respective Helm chart is up to date for any commit made to `main`. In general, the `main` branch should only be updated via Github pull requests.
+
+Before making a PR back to the `main`, ensure that the README of the chart is up to date using the command:
+```
+helm-docs -s file --template-files=charts/_templates.gotmpl --template-files=DOCS.md.gotmpl --template-files=README.md.gotmpl --chart-search-root=charts
+```
+
+For general usage and instructions view the [helm-docs](https://github.com/norwoodj/helm-docs) README. Below is a short summary.
+
+In each chart directory use the following files to define what the README contents should be.
+
+1. In `README.md.gotmpl` define which sections should be printed to README, with syntax
+
+    ```
+    {{ template "chart.header" . }}
+    {{ template "chart.deprecationWarning" . }}
+
+    {{ template "chart.badgesSection" . }}
+
+    {{ template "chart.description" . }}
+
+    {{ template "chart.homepageLine" . }}
+
+    {{ template "chart.maintainersSection" . }}
+
+    {{ template "chart.sourcesSection" . }}
+
+    {{ template "common.prerequisites" . }}
+
+    {{ template "chart.requirementsSection" . }}
+
+    {{ template "chart.valuesSection" . }}
+    ```
+
+2. In `DOCS.md.gotmpl`, define any sections not part of helm-docs:
+
+    ```
+    {{ define "mychart.usageSection" -}}
+    {{- end }}
+    ```
+
+3. In `Chart.yaml` define as many metadata fields as possible, including at least the description, homepage, maintainer, sources, and requirements.
+4. In the `values.yaml` file, put a comment line before each variable with two dashes `--`. Any text after the two dashes will be used as documentation for that variable.
 
 ## Feedback and Contributions
 
