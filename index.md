@@ -5,6 +5,8 @@ tagline: Helm charts of the RADAR-base platform components.
 description: Helm charts of the RADAR-base platform components.
 ---
 
+# radar-helm-charts
+
 The helm charts of the RADAR-base platform. Installation of these charts is best managed via [RADAR-Kubernetes](https://github.com/RADAR-base/RADAR-Kubernetes). Use the releases in this repository by referencing helm repository `radar` with URL <https://radar-base.github.com/radar-helm-charts>.
 
 ## About
