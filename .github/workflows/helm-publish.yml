@@ -37,7 +37,7 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Run chart-releaser on cp-helm-charts
+      - name: Run chart-releaser -- cp-helm-charts
         uses: helm/chart-releaser-action@v1.2.1
         with:
           config: .github/cr.yaml
