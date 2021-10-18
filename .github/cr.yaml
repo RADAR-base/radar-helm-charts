@@ -1,6 +1,2 @@
-# Set to true for GPG signing
-sign: true
-# UID of the GPG key to use
-key: CBEF2CF0
 # Do not modify existing released charts
 skip-existing: true
