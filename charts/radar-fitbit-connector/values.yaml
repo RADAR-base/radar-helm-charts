@@ -74,6 +74,8 @@ persistence:
   accessMode: ReadWriteOnce
   # -- PVC Storage Request for radar-fitbit-connector volume
   size: 5Gi
+  # -- Overrides the user of the fitbit connector logs, for example, `"1000:1000"`.
+  fsUserOverride: null
 
 # -- Node labels for pod assignment
 nodeSelector: {}

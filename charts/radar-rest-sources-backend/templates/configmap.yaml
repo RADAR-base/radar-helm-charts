@@ -12,10 +12,10 @@ data:
     service:
       # Interval time in minutes for syncing projects and subjects.
       baseUri: http://0.0.0.0:8080/rest-sources/backend/
-      advertisedBaseUri: http://0.0.0.0:8080/rest-sources/backend/
+      advertisedBaseUri: https://{{ .Values.serverName }}/rest-sources/backend/
       enableCors: true
       syncParticipantsIntervalMin: 2
-      stateStoreExpiryInMin: 15
+      tokenExpiryTimeInMinutes: 15
 
     auth:
       # Management Portal URL

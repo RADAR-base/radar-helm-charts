@@ -148,6 +148,20 @@ spec:
               mountPath: /var/lib/kafka-connect-fitbit-source/users
             - name: logs
               mountPath: /var/lib/kafka-connect-fitbit-source/logs
+      {{- if .Values.persistence.fsUserOverride }}
+      initContainers:
+      - name: fix-permissions
+        command:
+        - chown
+        - -R
+        - {{ .Values.persistence.fsUserOverride }}
+        - /var/lib/kafka-connect-fitbit-source/logs
+        image: alpine:latest
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /var/lib/kafka-connect-fitbit-source/logs
+          name: logs
+      {{- end }}
       volumes:
         - name: config-properties
           configMap:

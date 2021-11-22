@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-rest-source-auth-backend
   # -- radar-rest-sources-backend image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 3.2.0
+  tag: 3.2.1
   # -- radar-rest-sources-backend image pull policy
   pullPolicy: IfNotPresent
 

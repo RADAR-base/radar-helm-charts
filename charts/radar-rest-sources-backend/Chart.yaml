@@ -1,8 +1,8 @@
 apiVersion: v1
-appVersion: "3.2.0"
+appVersion: "3.2.1"
 description: A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 name: radar-rest-sources-backend
-version: 0.2.0
+version: 0.2.1
 sources: ["https://github.com/RADAR-base/RADAR-Rest-Source-Auth"]
 deprecated: false
 type: application
