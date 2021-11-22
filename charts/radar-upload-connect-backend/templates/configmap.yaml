@@ -14,7 +14,7 @@ data:
     enableCors: yes
     clientId: {{ .Values.client_id }}
     clientSecret: {{ .Values.client_secret }}
-    managementPortalUrl: http://{{ .Values.managementportal_host }}:8080/managementportal/
+    managementPortalUrl: http://{{ .Values.managementportal_host }}:8080/managementportal
     jdbcDriver: org.postgresql.Driver
     jdbcUrl: jdbc:postgresql://{{ .Values.postgres.host }}:5432/uploadconnector
     jdbcUser: {{ .Values.postgres.user }}
