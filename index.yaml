@@ -429,6 +429,31 @@ entries:
   radar-upload-connect-backend:
   - apiVersion: v1
     appVersion: 0.5.9
+    created: "2021-11-22T08:42:47.538490614Z"
+    description: A Helm chart for RADAR-base upload connector backend application.
+      This application is an upload system that stores uploaded data and its metadata
+      in PostgreSQL for later processing.
+    digest: cc804008e7cc0266c3c8513460c85eb3723d00947cd24b299c6012530461f605
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-upload-connect-backend
+    sources:
+    - https://github.com/RADAR-base/radar-upload-source-connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-upload-connect-backend-0.1.2/radar-upload-connect-backend-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v1
+    appVersion: 0.5.9
     created: "2021-10-18T12:12:53.340584565Z"
     description: A Helm chart for RADAR-base upload connector backend application.
       This application is an upload system that stores uploaded data and its metadata
@@ -559,4 +584,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2021-10-18T12:12:54.115788114Z"
+generated: "2021-11-22T08:42:47.538514314Z"
