@@ -224,6 +224,30 @@ entries:
   radar-fitbit-connector:
   - apiVersion: v1
     appVersion: 0.3.3
+    created: "2021-11-22T09:09:06.258255329Z"
+    description: A Helm chart for RADAR-base fitbit connector. This application collects
+      data from participants via the Fitbit Web API.
+    digest: d1afec5344247e7daa92368d463dde127625016f4e5e444966cee5c8b9c8804d
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-fitbit-connector
+    sources:
+    - https://github.com/RADAR-base/RADAR-REST-Connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-fitbit-connector-0.1.2/radar-fitbit-connector-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v1
+    appVersion: 0.3.3
     created: "2021-10-18T12:12:51.981674505Z"
     description: A Helm chart for RADAR-base fitbit connector. This application collects
       data from participants via the Fitbit Web API.
@@ -350,6 +374,31 @@ entries:
     version: 0.1.1
   radar-rest-sources-authorizer:
   - apiVersion: v1
+    appVersion: 3.2.1
+    created: "2021-11-22T09:09:06.513877635Z"
+    description: A Helm chart for the front-end application of RADAR-base Rest Sources
+      Authorizer which is a portal to authorize the Fitbit connector to read data
+      from Fitbit accounts.
+    digest: 6e49e201d89ff8f5ef9d0820011fb511c4ec0f5f4da7875cc3f615174d583683
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-rest-sources-authorizer
+    sources:
+    - https://github.com/RADAR-base/RADAR-Rest-Source-Auth
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-authorizer-0.2.1/radar-rest-sources-authorizer-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v1
     appVersion: 3.2.0
     created: "2021-10-18T12:12:52.828255777Z"
     description: A Helm chart for the front-end application of RADAR-base Rest Sources
@@ -375,6 +424,30 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-authorizer-0.2.0/radar-rest-sources-authorizer-0.2.0.tgz
     version: 0.2.0
   radar-rest-sources-backend:
+  - apiVersion: v1
+    appVersion: 3.2.1
+    created: "2021-11-22T09:09:06.820404739Z"
+    description: A Helm chart for the backend application of RADAR-base Rest Sources
+      Authorizer
+    digest: eed78442259223fc0ba8c4f3a53207c77822cb71c0cac7f0f13c01c8f4744d3b
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-rest-sources-backend
+    sources:
+    - https://github.com/RADAR-base/RADAR-Rest-Source-Auth
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-backend-0.2.1/radar-rest-sources-backend-0.2.1.tgz
+    version: 0.2.1
   - apiVersion: v1
     appVersion: 3.2.0
     created: "2021-10-18T12:12:52.985322968Z"
@@ -584,4 +657,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2021-11-22T08:42:47.538514314Z"
+generated: "2021-11-22T09:09:06.82051954Z"
