@@ -13,7 +13,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-{{ include "radar-gateway.integration" . | indent 4 }}
+{{ include "radar-integration.labels" . | indent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

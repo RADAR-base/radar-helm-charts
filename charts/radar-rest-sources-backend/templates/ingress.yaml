@@ -13,7 +13,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-{{ include "radar-rest-sources-backend" . | indent 4 }}
+{{ include "radar-rest-sources-backend.labels" . | indent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
