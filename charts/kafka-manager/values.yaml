@@ -93,9 +93,9 @@ resources:
 #  limits:
 #    cpu: 100m
 #    memory: 128Mi
- requests:
-   cpu: 100m
-   memory: 400Mi
+  requests:
+    cpu: 100m
+    memory: 400Mi
 
 ## Node labels for pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
