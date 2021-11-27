@@ -62,6 +62,7 @@ ingress:
       }
   # -- Path within the url structure
   path: "/kafka/?(.*)"
+  pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
     - localhost

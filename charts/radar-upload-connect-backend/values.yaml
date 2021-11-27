@@ -54,6 +54,7 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
   # -- Path within the url structure
   path: "/upload/api/?(.*)"
+  pathType: ImplementationSpecific
   # -- Host to listen to requests to
   hosts:
     - localhost

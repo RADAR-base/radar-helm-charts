@@ -57,6 +57,7 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   # -- Path within the url structure
   path: "/rest-sources/backend/?(.*)"
+  pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
     - localhost
