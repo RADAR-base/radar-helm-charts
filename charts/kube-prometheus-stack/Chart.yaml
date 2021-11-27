@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 appVersion: "1.0"
 description: A Helm chart for Prometheus operator stack. This chart is an overlay for original kube-prometheus-stack chart. It defines some the default values for namespaces to monitor, alert templates, Nginx configuration and authentication and a few extra charts for Grafana. For more details on how to customize those values refer to original chart.
 name: kube-prometheus-stack

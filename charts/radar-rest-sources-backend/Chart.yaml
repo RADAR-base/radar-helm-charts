@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 appVersion: "3.2.1"
 description: A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 name: radar-rest-sources-backend

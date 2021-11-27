@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 appVersion: "3.2.1"
 description: A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer which is a portal to authorize the Fitbit connector to read data from Fitbit accounts.
 name: radar-rest-sources-authorizer

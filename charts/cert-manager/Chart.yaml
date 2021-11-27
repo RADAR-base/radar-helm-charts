@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 appVersion: "1.0"
 description: A Helm chart for cert-manager. This chart is an overly just to make sure `clusterissuer.yaml` is installed with the cluster and some default values. For more info refer to the cert-manager docs.
 name: cert-manager
