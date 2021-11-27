@@ -18,3 +18,8 @@ A Helm chart for Prometheus operator stack. This chart is an overlay for origina
 * Helm 3.1.0+
 * PV provisioner support in the underlying infrastructure
 
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://prometheus-community.github.io/helm-charts | kube-prometheus-stack | 19.1.0 |

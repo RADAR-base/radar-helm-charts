@@ -8,6 +8,10 @@ sources: ["https://github.com/vmware-tanzu/helm-charts/tree/main/charts/velero"]
 deprecated: false
 type: application
 home: "https://velero.io"
+dependencies:
+- name: velero
+  version: 2.12.0
+  repository: https://vmware-tanzu.github.io/helm-charts
 maintainers:
   - email: keyvan@thehyve.nl
     name: Keyvan Hedayati
