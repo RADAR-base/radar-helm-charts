@@ -25,6 +25,26 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Common labels
+*/}}
+{{- define "radar-upload-source-connector.labels" -}}
+helm.sh/chart: {{ include "radar-upload-source-connector.chart" . }}
+{{ include "radar-upload-source-connector.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "radar-upload-source-connector.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "radar-upload-source-connector.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "radar-upload-source-connector.chart" -}}

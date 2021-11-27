@@ -25,6 +25,26 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Common labels
+*/}}
+{{- define "cc-schema-registry-proxy.labels" -}}
+helm.sh/chart: {{ include "cc-schema-registry-proxy.chart" . }}
+{{ include "cc-schema-registry-proxy.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "cc-schema-registry-proxy.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "cc-schema-registry-proxy.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "cc-schema-registry-proxy.chart" -}}
