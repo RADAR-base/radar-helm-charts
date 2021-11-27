@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "radar-rest-sources-backend" . -}}
+{{- $fullName := include "radar-rest-sources-backend.fullname" . -}}
 {{- $path := .Values.ingress.path -}}
 {{- $hosts := .Values.ingress.hosts -}}
 {{- $svcPort := .Values.service.port -}}
