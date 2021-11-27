@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "0.3.3"
 description: A Helm chart for RADAR-base fitbit connector. This application collects data from participants via the Fitbit Web API.
 name: radar-fitbit-connector
-version: 0.1.2
+version: 0.1.3
 sources: ["https://github.com/RADAR-base/RADAR-REST-Connector"]
 deprecated: false
 type: application
