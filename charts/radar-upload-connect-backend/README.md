@@ -2,7 +2,7 @@
 
 # radar-upload-connect-backend
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.9](https://img.shields.io/badge/AppVersion-0.5.9-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.9](https://img.shields.io/badge/AppVersion-0.5.9-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector backend application. This application is an upload system that stores uploaded data and its metadata in PostgreSQL for later processing.
 
@@ -51,7 +51,7 @@ A Helm chart for RADAR-base upload connector backend application. This applicati
 | affinity | object | `{}` | Affinity labels for pod assignment |
 | client_id | string | `"radar_upload_backend"` | OAuth2 client id of the upload connect backend application |
 | client_secret | string | `"secret"` | OAuth2 client secret of the upload connect backend |
-| postgres.host | string | `"radar-upload-postgresql-postgresql"` | Host name of the database to store uploaded data and metadata |
+| postgres.host | string | `"radar-upload-postgresql"` | Host name of the database to store uploaded data and metadata |
 | postgres.user | string | `"postgres"` | Database username |
 | postgres.password | string | `"password"` | Database password |
 | managementportal_host | string | `"management-portal"` | Host name of the management portal application |
