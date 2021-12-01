@@ -2,7 +2,7 @@
 
 # radar-fitbit-connector
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.3](https://img.shields.io/badge/AppVersion-0.3.3-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.3](https://img.shields.io/badge/AppVersion-0.3.3-informational?style=flat-square)
 
 A Helm chart for RADAR-base fitbit connector. This application collects data from participants via the Fitbit Web API.
 
@@ -45,6 +45,7 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | persistence.enabled | bool | `true` | Enable persistence using PVC |
 | persistence.accessMode | string | `"ReadWriteOnce"` | PVC Access Mode for radar-fitbit-connector volume |
 | persistence.size | string | `"5Gi"` | PVC Storage Request for radar-fitbit-connector volume |
+| persistence.fsUserOverride | string | `nil` | Overrides the user of the fitbit connector logs, for example, `"1000:1000"`. |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
