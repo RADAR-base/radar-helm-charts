@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-schemas-tools
   # -- catalog-server image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.7.1
+  tag: 0.7.5
   # -- catalog-server image pull policy
   pullPolicy: IfNotPresent
 
