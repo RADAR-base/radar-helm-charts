@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-app-config-frontend
   # -- Appconfig frontend image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.3.2
+  tag: 0.3.3
   # -- Appconfig frontend image pull policy
   pullPolicy: IfNotPresent
 
