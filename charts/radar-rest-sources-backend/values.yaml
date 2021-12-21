@@ -106,6 +106,9 @@ postgres:
     enabled: false
     keystorepassword: keystorepassword
 
+# -- Resolvable server name, needed to find the advertised URL and callback URL
+serverName: localhost
+
 # -- hostname of the Management Portal
 managementportal_host: management-portal
 
