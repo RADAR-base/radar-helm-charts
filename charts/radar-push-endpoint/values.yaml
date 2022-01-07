@@ -7,26 +7,26 @@ replicaCount: 2
 
 image:
   # -- radar-gateway image repository
-  repository: radarbase/radar-gateway
+  repository: radarbase/radar-push-endpoint
   # -- radar-gateway image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.5.9
+  tag: 0.2.0
   # -- radar-gateway image pull policy
   pullPolicy: IfNotPresent
 
 # -- Docker registry secret names as an array
 imagePullSecrets: []
 
-# -- String to partially override radar-gateway.fullname template with a string (will prepend the release name)
+# -- String to partially override radar-push-endpoint.fullname template with a string (will prepend the release name)
 nameOverride: ""
-# -- String to fully override radar-gateway.fullname template with a string
+# -- String to fully override radar-push-endpoint.fullname template with a string
 fullnameOverride: ""
 
-# -- Configure radar-gateway pods' Security Context
+# -- Configure radar-push-endpoint pods' Security Context
 podSecurityContext: {}
   # fsGroup: 2000
 
-# -- Configure radar-gateway containers' Security Context
+# -- Configure radar-push-endpoint containers' Security Context
 securityContext: {}
   # capabilities:
   #   drop:
@@ -39,7 +39,7 @@ service:
   # -- Kubernetes Service type
   type: ClusterIP
   # -- radar-gateway port
-  port: 8080
+  port: 8090
 
 ingress:
   # -- Enable ingress controller resource
@@ -49,19 +49,23 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/rewrite-target: /kafka/$1
+    nginx.ingress.kubernetes.io/rewrite-target: /push/integrations/$1
     nginx.ingress.kubernetes.io/server-snippet: |
-      location ^~ /kafka/consumers {
-        deny all;
-      }
-      location ^~ /kafka/brokers {
-        deny all;
-      }
-      location ~* /kafka/topics/.+/partitions {
+      location /push-endpoint/garmin {
+        # set client body size to 20M #
+        client_max_body_size 20M;
+
+        # restrict access to only certain IPs provided by Garmin Health API
+        allow 204.77.162.0/23;
+        allow 98.199.124.0/23;
+        allow 185.132.79.0/24;
+        allow 208.65.206.0/23;
+        allow 185.207.94.0/23;
+        allow 198.233.176.0/24;
         deny all;
       }
   # -- Path within the url structure
-  path: "/kafka/?(.*)"
+  path: "/push-endpoint/?(.*)"
   # -- Hosts to accept requests from
   hosts:
     - localhost
@@ -74,9 +78,10 @@ resources:
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # -- CPU/Memory resource limits
   # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
+  #   cpu: 2
+  #   memory: 1.7Gi
 
   # -- CPU/Memory resource requests
   requests:
@@ -125,3 +130,26 @@ cc:
   schemaRegistryApiKey: srApiKey
   # -- Confluent Cloud schema registry API secret
   schemaRegistryApiSecret: srApiSecret
+
+
+garmin:
+  # -- Whether to enable Garmin endpoints
+  enabled: true
+  # -- Consumer key for you application in Garmin Health API developer portal
+  consumerKey: ""
+  # -- Consumer secret for you application in Garmin Health API developer portal
+  consumerSecret: ""
+  # -- The user repository to use for getting list of users and their authorization information
+  userRepositoryClass: "org.radarbase.push.integration.garmin.user.GarminServiceUserRepository"
+  # -- The base url of the user repository if the repository is http(s) based.
+  userRepositoryUrl: "http://radar-rest-sources-backend:8080/"
+  # -- The client ID to access the user repository if the repository requires authorization
+  userRepositoryClientId: "radar_pushendpoint"
+  # -- The client secret to access the user repository if the repository requires authorization
+  userRepositoryClientSecret: ""
+  ## -- The token URL for authentication (Usually the management portal token url)
+  userRepositoryTokenUrl: "http://management-portal:8080/oauth/token/"
+
+redis:
+  # -- The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties.
+  url: "redis://localhost:6379"

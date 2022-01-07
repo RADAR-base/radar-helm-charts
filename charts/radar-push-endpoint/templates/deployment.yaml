@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "radar-gateway.fullname" . }}
+  name: {{ include "radar-push-endpoint.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-gateway.name" . }}
-    helm.sh/chart: {{ include "radar-gateway.chart" . }}
+    app.kubernetes.io/name: {{ include "radar-push-endpoint.name" . }}
+    helm.sh/chart: {{ include "radar-push-endpoint.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "radar-gateway.name" . }}
+      app.kubernetes.io/name: {{ include "radar-push-endpoint.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
-        app.kubernetes.io/name: {{ include "radar-gateway.name" . }}
+        app.kubernetes.io/name: {{ include "radar-push-endpoint.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -37,7 +37,7 @@ spec:
                   - key: "app.kubernetes.io/name"
                     operator: In
                     values:
-                    - {{ template "radar-gateway.name" . }}
+                    - {{ template "radar-push-endpoint.name" . }}
                   - key: "app.kubernetes.io/instance"
                     operator: In
                     values:
@@ -65,7 +65,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["radar-gateway", "/etc/radar-gateway/gateway.yml"]
+          command: ["radar-push-endpoint"]
           env:
           - name: JAVA_OPTS
             value: "-XX:GCTimeRatio=19 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=30 --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.management/javax.management.openmbean=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.management/javax.management=ALL-UNNAMED -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
@@ -101,10 +101,10 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "radar-gateway.fullname" . }}
+            name: {{ include "radar-push-endpoint.fullname" . }}
         - name: gateway-jmx-configmap
           configMap:
-            name:  {{ include "radar-gateway.fullname" . }}-jmx-configmap
+            name:  {{ include "radar-push-endpoint.fullname" . }}-jmx-configmap
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

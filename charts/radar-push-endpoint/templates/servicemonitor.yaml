@@ -2,17 +2,17 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "radar-gateway.fullname" . }}
+  name: {{ include "radar-push-endpoint.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-gateway.name" . }}
-    helm.sh/chart: {{ include "radar-gateway.chart" . }}
+    app.kubernetes.io/name: {{ include "radar-push-endpoint.name" . }}
+    helm.sh/chart: {{ include "radar-push-endpoint.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "radar-gateway.name" . }}
-      helm.sh/chart: {{ include "radar-gateway.chart" . }}
+      app.kubernetes.io/name: {{ include "radar-push-endpoint.name" . }}
+      helm.sh/chart: {{ include "radar-push-endpoint.chart" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
       app.kubernetes.io/managed-by: {{ .Release.Service }}
   endpoints:

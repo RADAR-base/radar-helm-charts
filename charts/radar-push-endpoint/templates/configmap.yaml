@@ -1,25 +1,25 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "radar-gateway.fullname" . }}
+  name: {{ template "radar-push-endpoint.fullname" . }}
   labels:
-    app: {{ template "radar-gateway.name" . }}
-    chart: {{ template "radar-gateway.chart" . }}
+    app: {{ template "radar-push-endpoint.name" . }}
+    chart: {{ template "radar-push-endpoint.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
   healthcheck.sh: |
      #!/bin/sh
-     STATUS=$(curl -s --max-time 4 localhost:{{ .Values.service.port }}/kafka/health)
+     STATUS=$(curl -s --max-time 4 localhost:{{ .Values.service.port }}/push/integrations/health)
      if ! (echo "$STATUS" | grep -Fq '"kafka":{"status":"UP"'); then
        exit 1
      fi
   gateway.yml: |
     # Resource config class
-    #resourceConfig: org.radarbase.gateway.inject.ManagementPortalEnhancerFactory
+    #resourceConfig: org.radarbase.gateway.inject.PushIntegrationEnhancerFactory
 
     server:
-      baseUri: http://0.0.0.0:{{ .Values.service.port }}/kafka/
+      baseUri: http://0.0.0.0:{{ .Values.service.port }}/push/integrations/
 
     kafka:
       producer:
@@ -53,6 +53,22 @@ data:
         basic.auth.credentials.source: USER_INFO
         schema.registry.basic.auth.user.info: {{ .Values.cc.schemaRegistryApiKey }}:{{ .Values.cc.schemaRegistryApiSecret }}
         {{- end }}
-    auth:
-      managementPortalUrl: http://{{ .Values.managementportalHost }}:8080/managementportal
-      checkSourceId: {{ .Values.checkSourceId }}
+    # Push Service specific configuration
+    pushIntegration:
+      garmin:
+          enabled: {{ .Values.garmin.enabled }}
+          consumerKey: {{ .Values.garmin.consumerKey }}
+          consumerSecret: {{ .Values.garmin.consumerSecret }}
+          userRepositoryClass: {{ .Values.garmin.userRepositoryClass }}
+          userRepositoryUrl: {{ .Values.garmin.userRepositoryUrl }}
+          userRepositoryClientId: {{ .Values.garmin.userRepositoryClientId }}
+          userRepositoryClientSecret: {{ .Values.garmin.userRepositoryClientSecret }}
+          userRepositoryTokenUrl: {{ .Values.garmin.userRepositoryTokenUrl }}
+          backfill:
+            # Redis configuration
+            redis:
+              # Redis URI
+              uri: {{ .Values.redis.url }}
+              # Key prefix for locks
+              lockPrefix: radar-push-garmin/lock/
+        
