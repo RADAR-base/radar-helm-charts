@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "radar-appserver.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "radar-appserver.name" . }}
+    helm.sh/chart: {{ include "radar-appserver.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "radar-appserver.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        app.kubernetes.io/name: {{ include "radar-appserver.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                  - key: "app.kubernetes.io/name"
+                    operator: In
+                    values:
+                    - {{ template "radar-appserver.name" . }}
+                  - key: "app.kubernetes.io/instance"
+                    operator: In
+                    values:
+                    - {{ .Release.Name }}
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: RADAR_IS_CONFIG_LOCATION
+            value: /etc/radar-appserver/radar_is.yml
+          - name: SPRING_DATASOURCE_URL
+            value: "jdbc:postgresql://{{ .Values.postgres.host }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}{{ .Values.postgres.connection_parameters }}"
+          - name: SPRING_DATASOURCE_USERNAME
+            value: {{ .Values.postgres.user }}
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: {{ .Values.postgres.password }}
+          - name: SECURITY_RADAR_MANAGEMENTPORTAL_URL
+            value: "http://{{ .Values.managementportal_host }}:8080/managementportal"
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: /etc/radar-appserver/google-credentials.json
+          - name: RADAR_ADMIN_USER
+            value: {{ .Values.radar_admin_user }}
+          - name: RADAR_ADMIN_PASSWORD
+            value: {{ .Values.radar_admin_user }}          
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /projects
+              port: 8080
+              httpHeaders:
+                - name: Accept
+                  value: application/json
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /projects
+              port: 8080
+              httpHeaders:
+                - name: Accept
+                  value: application/json
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/radar-appserver/
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "radar-appserver.fullname" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

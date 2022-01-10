@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "radar-appserver.fullname" . }}
+  labels:
+    app: {{ template "radar-appserver.name" . }}
+    chart: {{ template "radar-appserver.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  google-credentials.json: |
+    {{ .Values.google_application_credentials }}
+  radar_is.yml: |
+    resourceName: {{ .Values.managementportal_resource_name }}
+
+    # Set of supported public key endpoints for authentication
+    publicKeyEndpoints:
+      {{- range .Values.public_key_endpoints }}
+      - {{ . | quote }}
+      {{ end -}}
+
