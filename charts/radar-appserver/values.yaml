@@ -47,14 +47,9 @@ ingress:
   # -- Annotations that define default ingress class, certificate issuer and session configuration
   # @default -- check values.yaml
   annotations:
-    nginx.ingress.kubernetes.io/affinity: cookie
-    nginx.ingress.kubernetes.io/affinity-mode: persistent
-    nginx.ingress.kubernetes.io/session-cookie-path: /
-    nginx.ingress.kubernetes.io/session-cookie-samesite: Strict
-    nginx.ingress.kubernetes.io/session-cookie-max-age: "900"
-    nginx.ingress.kubernetes.io/session-cookie-expires: "900"
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
   # -- Path within the url structure
   path: "/appserver/?(.*)"
   # -- Hosts to accept requests from
@@ -112,10 +107,12 @@ radar_admin_password: radar
 # -- hostname of the Management Portal
 managementportal_host: management-portal
 
+serverName: localhost
+
 # -- radar_is.yml config
 managementportal_resource_name: res_AppServer
 public_key_endpoints:
-  - http://localhost:8081/oauth/token_key
+  - https://localhost/managementportal/oauth/token_key
 
 # -- Google credentials containing FCM server key, etc.
 google_application_credentials: ""
