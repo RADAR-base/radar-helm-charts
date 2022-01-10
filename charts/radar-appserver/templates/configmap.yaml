@@ -9,12 +9,19 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   google-credentials.json: {{ .Values.google_application_credentials | quote }}
+  healthcheck.sh: |
+    #!/bin/sh
+    STATUS=$(curl -s --max-time 4 localhost:8080/actuator/health)
+    if ! (echo "$STATUS" | grep -Fq 'db":{"status":"UP'); then
+      exit 1
+    fi
   radar_is.yml: |
     resourceName: {{ .Values.managementportal_resource_name }}
 
     # Set of supported public key endpoints for authentication
     publicKeyEndpoints:
-      {{- range .Values.public_key_endpoints }}
-      - {{ . | quote }}
-      {{ end -}}
+        - https://{{ .Values.serverName }}/managementportal/oauth/token_key
+        {{- range .Values.public_key_endpoints }}
+        - {{ . | quote }}
+        {{ end -}}
 
