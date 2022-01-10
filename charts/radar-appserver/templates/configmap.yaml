@@ -8,8 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  google-credentials.json: |
-    {{ .Values.google_application_credentials }}
+  google-credentials.json: {{ .Values.google_application_credentials | quote }}
   radar_is.yml: |
     resourceName: {{ .Values.managementportal_resource_name }}
 
