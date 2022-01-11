@@ -23,8 +23,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 # -- Configure catalog-server pods' Security Context
-podSecurityContext: {}
-  # fsGroup: 2000
+podSecurityContext:
+  fsGroup: 101
 
 # -- Configure Appconfig containers' Security Context
 securityContext: {}
