@@ -37,7 +37,7 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override catalog-server.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override catalog-server.fullname template with a string |
-| podSecurityContext | object | `{}` | Configure catalog-server pods' Security Context |
+| podSecurityContext | object | `{fsGroup: 101}` | Configure catalog-server pods' Security Context |
 | securityContext | object | `{}` | Configure Appconfig containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `9010` | catalog-server port |
