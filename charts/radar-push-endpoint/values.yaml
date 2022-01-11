@@ -1,17 +1,17 @@
-# Default values for radar-gateway.
+# Default values for radar-push-endpoint.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- Number of radar-gateway replicas to deploy
+# -- Number of radar-push-endpoint replicas to deploy
 replicaCount: 2
 
 image:
-  # -- radar-gateway image repository
+  # -- radar-push-endpoint image repository
   repository: radarbase/radar-push-endpoint
-  # -- radar-gateway image tag (immutable tags are recommended)
+  # -- radar-push-endpoint image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag: 0.2.0
-  # -- radar-gateway image pull policy
+  # -- radar-push-endpoint image pull policy
   pullPolicy: IfNotPresent
 
 # -- Docker registry secret names as an array
@@ -38,7 +38,7 @@ securityContext: {}
 service:
   # -- Kubernetes Service type
   type: ClusterIP
-  # -- radar-gateway port
+  # -- radar-push-endpoint port
   port: 8090
 
 ingress:
@@ -136,9 +136,9 @@ garmin:
   # -- Whether to enable Garmin endpoints
   enabled: true
   # -- Consumer key for you application in Garmin Health API developer portal
-  consumerKey: ""
+  consumerKey: "consumerKey"
   # -- Consumer secret for you application in Garmin Health API developer portal
-  consumerSecret: ""
+  consumerSecret: "consumerSecret"
   # -- The user repository to use for getting list of users and their authorization information
   userRepositoryClass: "org.radarbase.push.integration.garmin.user.GarminServiceUserRepository"
   # -- The base url of the user repository if the repository is http(s) based.
@@ -146,7 +146,7 @@ garmin:
   # -- The client ID to access the user repository if the repository requires authorization
   userRepositoryClientId: "radar_pushendpoint"
   # -- The client secret to access the user repository if the repository requires authorization
-  userRepositoryClientSecret: ""
+  userRepositoryClientSecret: "clientSecret"
   ## -- The token URL for authentication (Usually the management portal token url)
   userRepositoryTokenUrl: "http://management-portal:8080/oauth/token/"
 

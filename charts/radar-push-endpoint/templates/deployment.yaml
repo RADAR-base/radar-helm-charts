@@ -78,7 +78,7 @@ spec:
               command:
                 - /bin/sh
                 - /etc/radar-gateway/healthcheck.sh
-            initialDelaySeconds: 5
+            initialDelaySeconds: 20
             periodSeconds: 90
             timeoutSeconds: 5
             successThreshold: 1
@@ -88,7 +88,7 @@ spec:
               command:
                 - /bin/sh
                 - /etc/radar-gateway/healthcheck.sh
-            initialDelaySeconds: 5
+            initialDelaySeconds: 20
             periodSeconds: 90
             timeoutSeconds: 5
             successThreshold: 1
