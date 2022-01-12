@@ -65,6 +65,7 @@ data:
           userRepositoryClientSecret: {{ .Values.garmin.userRepositoryClientSecret }}
           userRepositoryTokenUrl: {{ .Values.garmin.userRepositoryTokenUrl }}
           backfill:
+            enabled: true
             # Redis configuration
             redis:
               # Redis URI
