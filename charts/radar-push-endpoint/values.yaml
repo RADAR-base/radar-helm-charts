@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-push-endpoint
   # -- radar-push-endpoint image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.2.0
+  tag: 0.2.2
   # -- radar-push-endpoint image pull policy
   pullPolicy: IfNotPresent
 
@@ -142,13 +142,13 @@ garmin:
   # -- The user repository to use for getting list of users and their authorization information
   userRepositoryClass: "org.radarbase.push.integration.garmin.user.GarminServiceUserRepository"
   # -- The base url of the user repository if the repository is http(s) based.
-  userRepositoryUrl: "http://radar-rest-sources-backend:8080/"
+  userRepositoryUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend/"
   # -- The client ID to access the user repository if the repository requires authorization
-  userRepositoryClientId: "radar_pushendpoint"
+  userRepositoryClientId: "radar_push_endpoint"
   # -- The client secret to access the user repository if the repository requires authorization
-  userRepositoryClientSecret: "clientSecret"
+  userRepositoryClientSecret: "secret"
   ## -- The token URL for authentication (Usually the management portal token url)
-  userRepositoryTokenUrl: "http://management-portal:8080/oauth/token/"
+  userRepositoryTokenUrl: "http://management-portal:8080/managementportal/oauth/token/"
 
 redis:
   # -- The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties.

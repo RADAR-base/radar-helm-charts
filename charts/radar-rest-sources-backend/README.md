@@ -67,3 +67,12 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.fitbit.clientId | string | `nil` | FitBit client id |
 | restSourceClients.fitbit.clientSecret | string | `nil` | FitBit client secret |
 | restSourceClients.fitbit.scope | string | `"activity heartrate sleep profile"` | List of scopes of the data that should be collected from Fitbit. For details, please refer to https://dev.fitbit.com/build/reference/web-api/developer-guide/application-design/#Scopes |
+| restSourceClients.garmin.enable | bool | `false` | set to true, if Garmin client should be used |
+| restSourceClients.garmin.sourceType | string | `"Garmin"` | Type of the data sources |
+| restSourceClients.garmin.preAuthorizationEndpoint | string | `"https://connectapi.garmin.com/oauth-service/oauth/request_token"` | Pre authorization endpoint to get request token in OAuth 1.0 terminology |
+| restSourceClients.garmin.authorizationEndpoint | string | `"https://connect.garmin.com/oauthConfirm"` | Authorization endpoint to get oauth confirmation in OAuth 1.0 terminology |
+| restSourceClients.garmin.deregistrationEndpoint | string | `"https://healthapi.garmin.com/wellness-api/rest/user/registration"` | Endpoint to deregister a user on garmin to disable receiving push requests |
+| restSourceClients.garmin.tokenEndpoint | string | `"https://connectapi.garmin.com/oauth-service/oauth/access_token"` | Token endpoint to request access-token from Garmin |
+| restSourceClients.garmin.clientId | string | `"Garmin-clientid"` | Garmin client id |
+| restSourceClients.garmin.clientSecret | string | `"Garmin-clientsecret"` | Garmin client secret |
+| restSourceClients.garmin.scope | string | `"activity heartrate sleep profile"` | List of scopes of the data that should be collected from Garmin. |
