@@ -131,7 +131,7 @@ restSourceClients:
     clientSecret:
     # -- List of scopes of the data that should be collected from Fitbit. For details, please refer to https://dev.fitbit.com/build/reference/web-api/developer-guide/application-design/#Scopes
     scope: activity heartrate sleep profile
-  
+
   garmin:
     # -- set to true, if Garmin client should be used
     enable: false
