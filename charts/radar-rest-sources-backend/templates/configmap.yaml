@@ -15,7 +15,6 @@ data:
       advertisedBaseUri: https://{{ .Values.serverName }}/rest-sources/backend/
       enableCors: true
       syncParticipantsIntervalMin: 2
-      tokenExpiryTimeInMinutes: 15
 
     auth:
       # Management Portal URL

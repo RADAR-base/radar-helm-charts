@@ -142,7 +142,7 @@ garmin:
   # -- The user repository to use for getting list of users and their authorization information
   userRepositoryClass: "org.radarbase.push.integration.garmin.user.GarminServiceUserRepository"
   # -- The base url of the user repository if the repository is http(s) based.
-  userRepositoryUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend/"
+  userRepositoryUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend"
   # -- The client ID to access the user repository if the repository requires authorization
   userRepositoryClientId: "radar_push_endpoint"
   # -- The client secret to access the user repository if the repository requires authorization

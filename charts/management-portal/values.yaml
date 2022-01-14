@@ -412,4 +412,4 @@ oauth_clients:
       - SUBJECT.READ
     authorized_grant_types:
       - client_credentials
-    access_token_validity: 43200
+    access_token_validity: 900
