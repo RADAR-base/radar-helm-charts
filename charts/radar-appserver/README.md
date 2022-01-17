@@ -12,9 +12,8 @@ A Helm chart for the backend application of RADAR-base Appserver
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | keyvan@thehyve.nl | https://www.thehyve.nl |
-| Joris Borgdorff | joris@thehyve.nl | https://www.thehyve.nl/experts/joris-borgdorff |
-| Nivethika Mahasivam | nivethika@thehyve.nl | https://www.thehyve.nl/experts/nivethika-mahasivam |
+| Yatharth Ranjan | yatharth.ranjan@kcl.ac.uk | https://www.kcl.ac.uk/people/yatharth-ranjan |
+| Pauline Conde | pauline.conde@kcl.ac.uk | https://www.kcl.ac.uk/people/pauline-conde |
 
 ## Source Code
 
