@@ -51,7 +51,7 @@ spec:
           name: prometheus-jmx-exporter
           env:
             - name: "CONFIG_YML"
-              value: "/etc/radar-gateway/config.yml"
+              value: "/etc/radar-push-endpoint/config.yml"
           ports:
           - containerPort: 5556
             protocol: TCP
@@ -60,7 +60,7 @@ spec:
               cpu: 100m
               memory: 128Mi
           volumeMounts:
-          - mountPath: /etc/radar-gateway/
+          - mountPath: /etc/radar-push-endpoint/
             name: gateway-jmx-configmap
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -77,7 +77,7 @@ spec:
             exec:
               command:
                 - /bin/sh
-                - /etc/radar-gateway/healthcheck.sh
+                - /etc/radar-push-endpoint/healthcheck.sh
             initialDelaySeconds: 20
             periodSeconds: 90
             timeoutSeconds: 5
@@ -87,7 +87,7 @@ spec:
             exec:
               command:
                 - /bin/sh
-                - /etc/radar-gateway/healthcheck.sh
+                - /etc/radar-push-endpoint/healthcheck.sh
             initialDelaySeconds: 20
             periodSeconds: 90
             timeoutSeconds: 5
@@ -97,7 +97,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config
-              mountPath: /etc/radar-gateway
+              mountPath: /etc/radar-push-endpoint
       volumes:
         - name: config
           configMap:
