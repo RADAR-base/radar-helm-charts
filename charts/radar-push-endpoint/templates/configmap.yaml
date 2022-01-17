@@ -14,7 +14,7 @@ data:
      if ! (echo "$STATUS" | grep -Fq '"kafka":{"status":"UP"'); then
        exit 1
      fi
-  gateway.yml: |
+  push-endpoint.yml: |
     # Resource config class
     #resourceConfig: org.radarbase.gateway.inject.PushIntegrationEnhancerFactory
 
