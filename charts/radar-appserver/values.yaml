@@ -109,10 +109,14 @@ managementportal_host: management-portal
 
 serverName: localhost
 
-# -- radar_is.yml config
+# -- radar_is.yml config for token verification
 managementportal_resource_name: res_AppServer
 public_key_endpoints:
-  - https://localhost/managementportal/oauth/token_key
+  # List of Management Portal instance public key endpoints for token verification
+  # - https://localhost/managementportal/oauth/token_key
 
 # -- Google credentials containing FCM server key, etc.
 google_application_credentials: ""
+# With helmfile, this can be set in a production.yaml.gotmpl
+# file by setting
+#   google_application_credentials: {{ readFile "etc/radar-appserver/google-credentials.json" | quote }}
