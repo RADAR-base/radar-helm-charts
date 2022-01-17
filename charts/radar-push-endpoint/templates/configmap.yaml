@@ -56,19 +56,20 @@ data:
     # Push Service specific configuration
     pushIntegration:
       garmin:
-          enabled: {{ .Values.garmin.enabled }}
-          consumerKey: {{ .Values.garmin.consumerKey }}
-          consumerSecret: {{ .Values.garmin.consumerSecret }}
-          userRepositoryClass: {{ .Values.garmin.userRepositoryClass }}
-          userRepositoryUrl: {{ .Values.garmin.userRepositoryUrl }}
-          userRepositoryClientId: {{ .Values.garmin.userRepositoryClientId }}
-          userRepositoryClientSecret: {{ .Values.garmin.userRepositoryClientSecret }}
-          userRepositoryTokenUrl: {{ .Values.garmin.userRepositoryTokenUrl }}
-          backfill:
-            # Redis configuration
-            redis:
-              # Redis URI
-              uri: {{ .Values.redis.url }}
-              # Key prefix for locks
-              lockPrefix: radar-push-garmin/lock/
+        enabled: {{ .Values.garmin.enabled }}
+        consumerKey: {{ .Values.garmin.consumerKey }}
+        consumerSecret: {{ .Values.garmin.consumerSecret }}
+        userRepositoryClass: {{ .Values.garmin.userRepositoryClass }}
+        userRepositoryUrl: {{ .Values.garmin.userRepositoryUrl }}
+        userRepositoryClientId: {{ .Values.garmin.userRepositoryClientId }}
+        userRepositoryClientSecret: {{ .Values.garmin.userRepositoryClientSecret }}
+        userRepositoryTokenUrl: {{ .Values.garmin.userRepositoryTokenUrl }}
+        backfill:
+          enabled: true
+          # Redis configuration
+          redis:
+            # Redis URI
+            uri: {{ .Values.redis.url }}
+            # Key prefix for locks
+            lockPrefix: radar-push-garmin/lock/
         

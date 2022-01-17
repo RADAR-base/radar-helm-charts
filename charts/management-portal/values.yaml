@@ -397,3 +397,19 @@ oauth_clients:
       - http://dashboard.localhost/login/generic_oauth
     autoapprove:
       - USER.READ
+
+  radar_push_endpoint:
+    enable: false
+    resource_ids:
+      - res_restAuthorizer
+    client_secret: ""
+    scope:
+      - SOURCETYPE.READ
+      - SUBJECT.UPDATE
+      - MEASUREMENT.READ
+      - MEASUREMENT.CREATE
+      - PROJECT.READ
+      - SUBJECT.READ
+    authorized_grant_types:
+      - client_credentials
+    access_token_validity: 900
