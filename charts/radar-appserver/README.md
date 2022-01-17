@@ -1,5 +1,3 @@
-
-
 # radar-appserver
 
 ![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.0](https://img.shields.io/badge/AppVersion-3.2.0-informational?style=flat-square)
@@ -60,6 +58,6 @@ A Helm chart for the backend application of RADAR-base Appserver
 | radar_admin_password | string | `"radar"` |  |
 | managementportal_host | string | `"management-portal"` | hostname of the Management Portal |
 | serverName | string | `"localhost"` |  |
-| managementportal_resource_name | string | `"res_AppServer"` | radar_is.yml config |
-| public_key_endpoints[0] | string | `"https://localhost/managementportal/oauth/token_key"` |  |
+| managementportal_resource_name | string | `"res_AppServer"` | radar_is.yml config for token verification |
+| public_key_endpoints | string | `nil` |  |
 | google_application_credentials | string | `""` | Google credentials containing FCM server key, etc. |
