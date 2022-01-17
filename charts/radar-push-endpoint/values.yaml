@@ -1,0 +1,155 @@
+# Default values for radar-push-endpoint.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of radar-push-endpoint replicas to deploy
+replicaCount: 2
+
+image:
+  # -- radar-push-endpoint image repository
+  repository: radarbase/radar-push-endpoint
+  # -- radar-push-endpoint image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 0.2.2
+  # -- radar-push-endpoint image pull policy
+  pullPolicy: IfNotPresent
+
+# -- Docker registry secret names as an array
+imagePullSecrets: []
+
+# -- String to partially override radar-push-endpoint.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override radar-push-endpoint.fullname template with a string
+fullnameOverride: ""
+
+# -- Configure radar-push-endpoint pods' Security Context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Configure radar-push-endpoint containers' Security Context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # -- Kubernetes Service type
+  type: ClusterIP
+  # -- radar-push-endpoint port
+  port: 8090
+
+ingress:
+  # -- Enable ingress controller resource
+  enabled: true
+  # -- Annotations that define default ingress class, certificate issuer and deny access to sensitive URLs
+  # @default -- check values.yaml
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /push/integrations/$1
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location /push-endpoint/garmin {
+        # set client body size to 20M #
+        client_max_body_size 20M;
+
+        # restrict access to only certain IPs provided by Garmin Health API
+        allow 204.77.162.0/23;
+        allow 98.199.124.0/23;
+        allow 185.132.79.0/24;
+        allow 208.65.206.0/23;
+        allow 185.207.94.0/23;
+        allow 198.233.176.0/24;
+        deny all;
+      }
+  # -- Path within the url structure
+  path: "/push-endpoint/?(.*)"
+  # -- Hosts to accept requests from
+  hosts:
+    - localhost
+  tls:
+    # -- Name of the secret that contains TLS certificates
+    secretName: radar-base-tls
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # -- CPU/Memory resource limits
+  # limits:
+  #   cpu: 2
+  #   memory: 1.7Gi
+
+  # -- CPU/Memory resource requests
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Toleration labels for pod assignment
+tolerations: []
+
+# -- Affinity labels for pod assignment
+affinity: {}
+
+serviceMonitor:
+  # -- Enable metrics to be collected via Prometheus-operator
+  enabled: true
+
+# -- Host name of the management portal application
+managementportalHost: management-portal
+# -- Schema Registry URL
+schemaRegistry: http://cp-schema-registry:8081
+# -- Not used. To be confirmed
+max_requests: 1000
+# -- Kafka broker URLs
+bootstrapServers: cp-kafka-headless:9092
+# -- set to true, if sources in access token should be validated
+checkSourceId: true
+# -- Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs.
+adminProperties: {}
+# -- Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs.
+producerProperties:
+  compression.type: lz4
+# -- Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig].
+serializationProperties: {}
+
+cc:
+  # -- set to true, if requests should be forwarded to Confluent Cloud based brokers.
+  enabled: false
+  # -- Confluent Cloud cluster API key
+  apiKey: ccApikey
+  # -- Confluent Cloud cluster API secret
+  apiSecret: ccApiSecret
+  # -- Confluent Cloud schema registry API key
+  schemaRegistryApiKey: srApiKey
+  # -- Confluent Cloud schema registry API secret
+  schemaRegistryApiSecret: srApiSecret
+
+
+garmin:
+  # -- Whether to enable Garmin endpoints
+  enabled: true
+  # -- Consumer key for you application in Garmin Health API developer portal
+  consumerKey: "consumerKey"
+  # -- Consumer secret for you application in Garmin Health API developer portal
+  consumerSecret: "consumerSecret"
+  # -- The user repository to use for getting list of users and their authorization information
+  userRepositoryClass: "org.radarbase.push.integration.garmin.user.GarminServiceUserRepository"
+  # -- The base url of the user repository if the repository is http(s) based.
+  userRepositoryUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend"
+  # -- The client ID to access the user repository if the repository requires authorization
+  userRepositoryClientId: "radar_push_endpoint"
+  # -- The client secret to access the user repository if the repository requires authorization
+  userRepositoryClientSecret: "secret"
+  ## -- The token URL for authentication (Usually the management portal token url)
+  userRepositoryTokenUrl: "http://management-portal:8080/managementportal/oauth/token/"
+
+redis:
+  # -- The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties.
+  url: "redis://localhost:6379"
