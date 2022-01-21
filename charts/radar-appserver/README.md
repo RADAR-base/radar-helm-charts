@@ -48,7 +48,7 @@ A Helm chart for the backend application of RADAR-base Appserver
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
-| postgres.host | string | `"postgresql"` | host name of the postgres db |
+| postgres.host | string | `"radar-appserver-postgresql"` | host name of the postgres db |
 | postgres.port | int | `5432` | post of the postgres db |
 | postgres.database | string | `"appserver"` | database name |
 | postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |

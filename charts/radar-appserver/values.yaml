@@ -85,7 +85,7 @@ affinity: {}
 # Configuration of the Postgres data base to store data from Appserver
 postgres:
   # -- host name of the postgres db
-  host: postgresql
+  host: radar-appserver-postgresql
   # -- post of the postgres db
   port: 5432
   # -- database name
