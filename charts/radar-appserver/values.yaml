@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-appserver
   # -- radar-appserver image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.1.0
+  tag: 1.3.0
   # -- radar-appserver image pull policy
   pullPolicy: IfNotPresent
 
@@ -85,7 +85,7 @@ affinity: {}
 # Configuration of the Postgres data base to store data from Appserver
 postgres:
   # -- host name of the postgres db
-  host: postgresql
+  host: radar-appserver-postgresql
   # -- post of the postgres db
   port: 5432
   # -- database name
