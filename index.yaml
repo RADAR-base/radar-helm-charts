@@ -302,6 +302,26 @@ entries:
   radar-appserver:
   - apiVersion: v2
     appVersion: 3.2.0
+    created: "2022-01-24T16:15:13.756754366Z"
+    description: A Helm chart for the backend application of RADAR-base Appserver
+    digest: 3672d6d9c6853b7455477aaf83399b6b3da86cb4bdf3b60e075c760a5294927c
+    home: https://radar-base.org
+    maintainers:
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    name: radar-appserver
+    sources:
+    - https://github.com/RADAR-base/RADAR-Appserver
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-appserver-0.1.0/radar-appserver-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
+    appVersion: 3.2.0
     created: "2022-01-17T16:29:38.712151172Z"
     description: A Helm chart for the backend application of RADAR-base Appserver
     digest: d5225c2d34a3905292cbde962c4ba3311b059b7220cd90b2e61d26f12cace5d2
@@ -391,6 +411,31 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-fitbit-connector-0.1.1/radar-fitbit-connector-0.1.1.tgz
     version: 0.1.1
   radar-gateway:
+  - apiVersion: v2
+    appVersion: 0.5.9
+    created: "2022-01-24T16:15:13.907724852Z"
+    description: A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming
+      participant data. It performs authentication, authorization, content validation
+      and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
+    digest: f440a7d10df14a50e023430f541ea797e7ca6f0e24a53e9f922f57b145dfee32
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-gateway
+    sources:
+    - https://github.com/RADAR-base/RADAR-Gateway
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-gateway-0.1.6/radar-gateway-0.1.6.tgz
+    version: 0.1.6
   - apiVersion: v1
     appVersion: 0.5.9
     created: "2021-12-17T09:00:34.607490794Z"
@@ -1003,4 +1048,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-01-24T16:04:50.649266136Z"
+generated: "2022-01-24T16:15:13.907813353Z"
