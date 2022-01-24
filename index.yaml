@@ -463,6 +463,34 @@ entries:
     version: 0.1.1
   radar-jdbc-connector:
   - apiVersion: v2
+    created: "2022-01-24T16:04:50.649215249Z"
+    description: A Helm chart for RADAR-base JDBC Kafka connector. This is a fork
+      of the Kafka JDBC connector which allows data from topics to be imported into
+      JDBC databases (including TimescaleDB databases which is used in the dashboard
+      pipeline).
+    digest: 338e3bfe2a2da39b262ce3f8a88c0d9fa3588ad118f77f592b51826f6dbd954f
+    home: https://radar-base.org
+    maintainers:
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-jdbc-connector
+    sources:
+    - https://github.com/RADAR-base/RADAR-JDBC-Connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-jdbc-connector-0.1.2/radar-jdbc-connector-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     created: "2021-10-18T12:12:52.492810881Z"
     description: A Helm chart for RADAR-base JDBC Kafka connector. This is a fork
       of the Kafka JDBC connector which allows data from topics to be imported into
@@ -975,4 +1003,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-01-17T16:29:39.017987532Z"
+generated: "2022-01-24T16:04:50.649266136Z"
