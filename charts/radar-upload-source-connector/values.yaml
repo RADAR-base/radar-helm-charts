@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-connect-upload-source
   # -- radar-upload-source-connector image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.5.9
+  tag: 0.5.10
   # -- radar-upload-source-connector image pull policy
 
 # -- Docker registry secret names as an array

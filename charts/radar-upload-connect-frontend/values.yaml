@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-upload-connect-frontend
   # -- radar-upload-connect-frontend image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.5.9
+  tag: 0.5.10
   # -- radar-upload-connect-frontend image pull policy
   pullPolicy: IfNotPresent
 
