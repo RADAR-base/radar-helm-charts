@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: "0.5.9"
+appVersion: "0.5.10"
 description: A Helm chart for RADAR-base upload kafka connector. This is used for reading uploaded data from backend and sending them to Kafka cluster for later processing.
 name: radar-upload-source-connector
 version: 0.1.3

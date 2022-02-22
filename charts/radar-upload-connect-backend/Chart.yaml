@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: "0.5.9"
+appVersion: "0.5.10"
 description: A Helm chart for RADAR-base upload connector backend application. This application is an upload system that stores uploaded data and its metadata in PostgreSQL for later processing.
 name: radar-upload-connect-backend
 version: 0.1.4
