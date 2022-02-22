@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "0.5.9"
 description: A Helm chart for RADAR-base upload connector backend application. This application is an upload system that stores uploaded data and its metadata in PostgreSQL for later processing.
 name: radar-upload-connect-backend
-version: 0.1.3
+version: 0.1.4
 sources: ["https://github.com/RADAR-base/radar-upload-source-connector"]
 deprecated: false
 type: application
