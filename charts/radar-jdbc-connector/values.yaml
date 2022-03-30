@@ -74,6 +74,18 @@ kafka_num_brokers: "3"
 schema_registry: http://cp-schema-registry:8081
 # -- Comma-separated list of topics the connector will read from and ingest into the database
 topics: android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps
+# -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+connect_security_protocol: PLAINTEXT
+# -- The location of the key store file.
+connect_ssl_keystore_location: ""
+# -- The store password for the key store file.
+connect_ssl_keystore_password: ""
+# -- The password of the private key in the key store file.
+connect_ssl_key_password: ""
+# -- The location of the trust store file.
+connect_ssl_truststore_location: ""
+# -- The password for the trust store file.
+connect_ssl_truststore_password: ""
 
 timescaledb:
   # -- Host of the TimescaleDB database
