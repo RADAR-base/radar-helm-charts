@@ -47,6 +47,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+          {{- range $k, $v := .Values.environment }}
+          - name: {{ $k }}
+            value: {{ $v | quote }}
+          {{- end }}
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka }}"
           - name: CONNECT_REST_PORT
@@ -97,18 +101,6 @@ spec:
             value: "sink-timescale/sink-timescale"
           - name: KAFKA_HEAP_OPTS
             value: "-Xms1500m"
-          - name: CONNECT_SECURITY_PROTOCOL
-            value: "{{ .Values.connect_security_protocol }}"
-          - name: CONNECT_SSL_KEYSTORE_LOCATION
-            value: "{{ .Values.connect_ssl_keystore_location }}"
-          - name: CONNECT_SSL_KEYSTORE_PASSWORD
-            value: "{{ .Values.connect_ssl_keystore_password }}"
-          - name: CONNECT_SSL_KEY_PASSWORD
-            value: "{{ .Values.connect_ssl_key_password }}"
-          - name: CONNECT_SSL_TRUSTSTORE_LOCATION
-            value: "{{ .Values.connect_ssl_truststore_location }}"
-          - name: CONNECT_SSL_TRUSTSTORE_PASSWORD
-            value: "{{ .Values.connect_ssl_truststore_password }}"
           ports:
             - name: http
               containerPort: 8083
