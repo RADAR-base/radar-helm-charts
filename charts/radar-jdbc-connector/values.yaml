@@ -64,28 +64,32 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
-# -- URI of Zookeeper instances of the cluster
-zookeeper: cp-zookeeper-headless:2181
-# -- URI of Kafka brokers of the cluster
-kafka: PLAINTEXT://cp-kafka-headless:9092
-# -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
-kafka_num_brokers: "3"
-# -- URL of the Kafka schema registry
-schema_registry: http://cp-schema-registry:8081
+environment:
+  # -- URI of Kafka brokers of the cluster
+  CONNECT_BOOTSTRAP_SERVERS: PLAINTEXT://cp-kafka-headless:9092
+  # -- URL of the Kafka key converter schema registry
+  CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: "http://cp-schema-registry:8081"
+  # -- URL of the Kafka value converter schema registry
+  CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: "http://cp-schema-registry:8081"
+  # -- URI of Zookeeper instances of the cluster
+  CONNECT_ZOOKEEPER_CONNECT: "cp-zookeeper-headless:2181"
+  # -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
+  KAFKA_BROKERS: "3"
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  CONNECT_SECURITY_PROTOCOL: PLAINTEXT
+  # -- The location of the key store file.
+  CONNECT_SSL_KEYSTORE_LOCATION: ""
+  # -- The store password for the key store file.
+  CONNECT_SSL_KEYSTORE_PASSWORD: ""
+  # -- The password of the private key in the key store file.
+  CONNECT_SSL_KEY_PASSWORD: ""
+  # -- The location of the trust store file.
+  CONNECT_SSL_TRUSTSTORE_LOCATION: ""
+  # -- The password for the trust store file.
+  CONNECT_SSL_TRUSTSTORE_PASSWORD: ""
+
 # -- Comma-separated list of topics the connector will read from and ingest into the database
 topics: android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps
-# -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
-connect_security_protocol: PLAINTEXT
-# -- The location of the key store file.
-connect_ssl_keystore_location: ""
-# -- The store password for the key store file.
-connect_ssl_keystore_password: ""
-# -- The password of the private key in the key store file.
-connect_ssl_key_password: ""
-# -- The location of the trust store file.
-connect_ssl_truststore_location: ""
-# -- The password for the trust store file.
-connect_ssl_truststore_password: ""
 
 timescaledb:
   # -- Host of the TimescaleDB database

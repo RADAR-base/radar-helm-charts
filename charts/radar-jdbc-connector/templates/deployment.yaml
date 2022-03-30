@@ -47,8 +47,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: CONNECT_BOOTSTRAP_SERVERS
-            value: "{{ .Values.kafka }}"
+          {{- range $k, $v := .Values.environment }}
+          - name: {{ $k }}
+            value: {{ $v | quote }}
+          {{- end }}
           - name: CONNECT_REST_PORT
             value: "8083"
           - name: CONNECT_GROUP_ID
@@ -63,10 +65,6 @@ spec:
             value: "io.confluent.connect.avro.AvroConverter"
           - name: CONNECT_VALUE_CONVERTER
             value: "io.confluent.connect.avro.AvroConverter"
-          - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL
-            value: "{{ .Values.schema_registry }}"
-          - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL
-            value: "{{ .Values.schema_registry }}"
           - name: CONNECT_INTERNAL_KEY_CONVERTER
             value: "org.apache.kafka.connect.json.JsonConverter"
           - name: CONNECT_INTERNAL_VALUE_CONVERTER
@@ -75,8 +73,6 @@ spec:
             value: "/var/lib/kafka-connect-jdbc/logs/connect.offsets"
           - name: CONNECT_REST_ADVERTISED_HOST_NAME
             value: "radar-jdbc-connector"
-          - name: CONNECT_ZOOKEEPER_CONNECT
-            value: "{{ .Values.zookeeper }}"
           - name: CONNECT_CONSUMER_MAX_POLL_RECORDS
             value: "500"
           - name: CONNECT_CONSUMER_MAX_POLL_INTERVAL_MS
@@ -89,26 +85,12 @@ spec:
             value: /usr/share/kafka-connect/plugins
           - name: CONNECT_LOG4J_ROOT_LOGLEVEL
             value: WARN
-          - name: KAFKA_BROKERS
-            value: "{{ .Values.kafka_num_brokers }}"
           - name: CONNECT_LOG4J_LOGGERS
             value: "org.reflections=ERROR"
           - name: CONNECTOR_PROPERTY_FILE_PREFIX
             value: "sink-timescale/sink-timescale"
           - name: KAFKA_HEAP_OPTS
             value: "-Xms1500m"
-          - name: CONNECT_SECURITY_PROTOCOL
-            value: "{{ .Values.connect_security_protocol }}"
-          - name: CONNECT_SSL_KEYSTORE_LOCATION
-            value: "{{ .Values.connect_ssl_keystore_location }}"
-          - name: CONNECT_SSL_KEYSTORE_PASSWORD
-            value: "{{ .Values.connect_ssl_keystore_password }}"
-          - name: CONNECT_SSL_KEY_PASSWORD
-            value: "{{ .Values.connect_ssl_key_password }}"
-          - name: CONNECT_SSL_TRUSTSTORE_LOCATION
-            value: "{{ .Values.connect_ssl_truststore_location }}"
-          - name: CONNECT_SSL_TRUSTSTORE_PASSWORD
-            value: "{{ .Values.connect_ssl_truststore_password }}"
           ports:
             - name: http
               containerPort: 8083
