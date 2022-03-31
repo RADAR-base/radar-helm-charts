@@ -52,6 +52,7 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | kafka_num_brokers | int | `3` | number of Kafka brokers to look for |
 | kafka | string | `"cp-kafka-headless:9092"` | URI of Kafka brokers |
 | schema_registry | string | `"http://cp-schema-registry:8081"` | URL of the confluent schema registry |
+| kafkaProperties."security.protocol" | string | `"PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | specificationsExclude | string | `nil` | List of paths of specifications relative to specifications folder, if any of the specifications should be excluded from automatically registering topics and schemas. |
 | cc.enabled | bool | `false` | set to true if using Confluent Cloud for kafka cluster and schema registry |
 | cc.bootstrapServerurl | string | `"confluent-url"` | URL of the bootstrap server of Confluent Cloud based kafka cluster |
