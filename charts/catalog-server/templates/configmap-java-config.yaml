@@ -11,7 +11,7 @@ data:
   java-config.properties: |
     # Kafka
     {{- range $key, $value := .Values.kafkaProperties }}
-    {{ $key }}={{ $value }}
+    {{ $key | replace "_" "." }}={{ $value }}
     {{- end }}
     {{- if .Values.cc.enabled }}
     bootstrap.servers={{ .Values.cc.bootstrapServerurl }}
