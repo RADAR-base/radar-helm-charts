@@ -45,7 +45,7 @@ A Helm chart for RADAR-base upload kafka connector. This is used for reading upl
 | affinity | object | `{}` | Affinity labels for pod assignment |
 | zookeeper | string | `"cp-zookeeper-headless:2181"` | Zookeeper URL |
 | kafka | string | `"PLAINTEXT://cp-kafka-headless:9092"` | Kafka broker URLs |
-| environment | object | `{"CONNECT_SECURITY_PROTOCOL":"PLAINTEXT"}` | Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)  |
+| environment | object | `{"CONNECT_SECURITY_PROTOCOL":"PLAINTEXT"}` | Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration) |
 | environment.CONNECT_SECURITY_PROTOCOL | string | `"PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | kafka_num_brokers | string | `"3"` | Number of brokers in the cluster |
 | schema_registry | string | `"http://cp-schema-registry:8081"` | Schema registry URL |
