@@ -75,6 +75,20 @@ schema_registry: http://cp-schema-registry:8081
 # -- Comma-separated list of topics the connector will read from and ingest into the database
 topics: android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps
 
+environment:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  CONNECT_SECURITY_PROTOCOL: PLAINTEXT
+  # -- The location of the key store file.
+  CONNECT_SSL_KEYSTORE_LOCATION: ""
+  # -- The store password for the key store file.
+  CONNECT_SSL_KEYSTORE_PASSWORD: ""
+  # -- The password of the private key in the key store file.
+  CONNECT_SSL_KEY_PASSWORD: ""
+  # -- The location of the trust store file.
+  CONNECT_SSL_TRUSTSTORE_LOCATION: ""
+  # -- The password for the trust store file.
+  CONNECT_SSL_TRUSTSTORE_PASSWORD: ""
+
 timescaledb:
   # -- Host of the TimescaleDB database
   host: timescaledb-postgresql-headless
