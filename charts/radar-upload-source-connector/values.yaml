@@ -67,6 +67,9 @@ affinity: {}
 zookeeper: cp-zookeeper-headless:2181
 # -- Kafka broker URLs
 kafka: PLAINTEXT://cp-kafka-headless:9092
+environment:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  CONNECT_SECURITY_PROTOCOL: PLAINTEXT
 # -- Number of brokers in the cluster
 kafka_num_brokers: "3"
 # -- Schema registry URL

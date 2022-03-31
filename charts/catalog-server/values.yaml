@@ -90,6 +90,10 @@ kafka: cp-kafka-headless:9092
 # -- URL of the confluent schema registry
 schema_registry: http://cp-schema-registry:8081
 
+kafkaProperties:
+# -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  security.protocol: PLAINTEXT
+
 # -- List of paths of specifications relative to specifications folder, if any of the specifications should be excluded from automatically registering topics and schemas.
 specificationsExclude:
 # - active/*

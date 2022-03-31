@@ -1,4 +1,3 @@
-{{- if .Values.cc.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -11,9 +10,13 @@ metadata:
 data:
   java-config.properties: |
     # Kafka
+    {{- range $key, $value := .Values.kafkaProperties }}
+    {{ $key }}={{ $value }}
+    {{- end }}
+    {{- if .Values.cc.enabled }}
     bootstrap.servers={{ .Values.cc.bootstrapServerurl }}
     security.protocol=SASL_SSL
     sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="{{ .Values.cc.apiKey }}" password="{{ .Values.cc.apiSecret }}";
     ssl.endpoint.identification.algorithm=https
     sasl.mechanism=PLAIN
-{{- end -}}
+    {{- end -}}
