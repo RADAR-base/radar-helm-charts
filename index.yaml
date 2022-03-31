@@ -79,6 +79,31 @@ entries:
   catalog-server:
   - apiVersion: v2
     appVersion: 0.7.5
+    created: "2022-03-31T14:07:40.216868191Z"
+    description: A Helm chart for RADAR-base catalogue server. This application creates
+      RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a
+      catalog of available source types.
+    digest: c739cb65ee6dd521327afeb1b9f10715edd66307fe5dbf7fba9953fae6eb88cf
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: catalog-server
+    sources:
+    - https://github.com/RADAR-base/RADAR-Schemas/tree/master/java-sdk
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/catalog-server-0.2.4/catalog-server-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
+    appVersion: 0.7.5
     created: "2022-01-12T13:13:29.282035271Z"
     description: A Helm chart for RADAR-base catalogue server. This application creates
       RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a
@@ -362,6 +387,30 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-backend-0.1.1/radar-backend-0.1.1.tgz
     version: 0.1.1
   radar-fitbit-connector:
+  - apiVersion: v2
+    appVersion: 0.3.3
+    created: "2022-03-31T14:07:40.343680595Z"
+    description: A Helm chart for RADAR-base fitbit connector. This application collects
+      data from participants via the Fitbit Web API.
+    digest: 09771021e25b99b5ae6e261d43adf32ace3c4ce9c56706b5dc97a9293ba7f3e5
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-fitbit-connector
+    sources:
+    - https://github.com/RADAR-base/RADAR-REST-Connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-fitbit-connector-0.1.3/radar-fitbit-connector-0.1.3.tgz
+    version: 0.1.3
   - apiVersion: v1
     appVersion: 0.3.3
     created: "2021-11-22T09:09:06.258255329Z"
@@ -487,6 +536,25 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-gateway-0.1.4/radar-gateway-0.1.4.tgz
     version: 0.1.4
   radar-integration:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2022-03-31T14:07:40.454376087Z"
+    description: A Helm chart for RADAR-Base REDCap survey integration application.
+    digest: 1756e353b9b012ffed479d2f5ba3822942665bc538926b77e9397c0fcac6bd10
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-integration
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-integration-0.1.2/radar-integration-0.1.2.tgz
+    version: 0.1.2
   - apiVersion: v1
     appVersion: 0.1.0
     created: "2021-10-18T12:12:52.314481675Z"
@@ -507,6 +575,34 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-integration-0.1.1/radar-integration-0.1.1.tgz
     version: 0.1.1
   radar-jdbc-connector:
+  - apiVersion: v2
+    created: "2022-03-31T14:07:40.586039174Z"
+    description: A Helm chart for RADAR-base JDBC Kafka connector. This is a fork
+      of the Kafka JDBC connector which allows data from topics to be imported into
+      JDBC databases (including TimescaleDB databases which is used in the dashboard
+      pipeline).
+    digest: 426c69abac5e186e3eb9b816b04203e17847ebe47104451b7fcebce2105de886
+    home: https://radar-base.org
+    maintainers:
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-jdbc-connector
+    sources:
+    - https://github.com/RADAR-base/RADAR-JDBC-Connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-jdbc-connector-0.1.4/radar-jdbc-connector-0.1.4.tgz
+    version: 0.1.4
   - apiVersion: v2
     created: "2022-03-31T11:31:55.224159007Z"
     description: A Helm chart for RADAR-base JDBC Kafka connector. This is a fork
@@ -842,6 +938,32 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-backend-0.2.0/radar-rest-sources-backend-0.2.0.tgz
     version: 0.2.0
   radar-s3-connector:
+  - apiVersion: v2
+    appVersion: 5.5.1
+    created: "2022-03-31T14:07:40.713590305Z"
+    description: A Helm chart for RADAR-base s3 connector. This connector uses Confluent
+      s3 connector with a custom data transformers. These configurations enable a
+      sink connector. See full list of properties here https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options
+    digest: 57f2130b4b097212a567a33f27e8a0785dccaf58b1311ba574b06e11490ade0d
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-s3-connector
+    sources:
+    - https://github.com/RADAR-base/kafka-connect-transform-keyvalue
+    - https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-s3-connector-0.1.2/radar-s3-connector-0.1.2.tgz
+    version: 0.1.2
   - apiVersion: v1
     appVersion: 5.5.1
     created: "2021-10-18T12:12:53.16426028Z"
@@ -972,6 +1094,31 @@ entries:
   radar-upload-source-connector:
   - apiVersion: v2
     appVersion: 0.5.9
+    created: "2022-03-31T14:07:40.846925921Z"
+    description: A Helm chart for RADAR-base upload kafka connector. This is used
+      for reading uploaded data from backend and sending them to Kafka cluster for
+      later processing.
+    digest: 6788f40d842f3c2509d1dacb40e738af0eaf49ed0bad61158ff1837afc37d8aa
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-upload-source-connector
+    sources:
+    - https://github.com/RADAR-base/radar-upload-source-connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-upload-source-connector-0.1.3/radar-upload-source-connector-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 0.5.9
     created: "2021-12-01T19:06:37.285670699Z"
     description: A Helm chart for RADAR-base upload kafka connector. This is used
       for reading uploaded data from backend and sending them to Kafka cluster for
@@ -1076,4 +1223,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-03-31T11:31:55.224362316Z"
+generated: "2022-03-31T14:07:40.847021741Z"
