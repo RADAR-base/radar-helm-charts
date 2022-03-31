@@ -61,7 +61,6 @@ spec:
             tcpSocket:
               port: 8080
             timeoutSeconds: 5
-            name: radar-integration
           readinessProbe:
             failureThreshold: 3
             initialDelaySeconds: 5
