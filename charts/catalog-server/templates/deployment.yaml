@@ -68,9 +68,9 @@ spec:
           value: "3"
         - name: RADAR_NUM_REPLICATION_FACTOR
           value: "3"
-        {{- if .Values.cc.enabled }}
         - name: KAFKA_CONFIG_PATH
           value: "/etc/config/java-config.properties"
+        {{- if .Values.cc.enabled }}
         - name: SCHEMA_REGISTRY_API_KEY
           valueFrom:
             secretKeyRef:
@@ -87,10 +87,8 @@ spec:
             mountPath: /etc/radar-schemas
           - name: config-schemas
             mountPath: /schema/conf
-          {{- if .Values.cc.enabled }}
           - name: cc-java-config
             mountPath: /etc/config/
-          {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -140,11 +138,9 @@ spec:
         {{- else }}
           emptyDir: {}
         {{- end }}
-        {{- if .Values.cc.enabled }}
         - name: cc-java-config
           configMap:
             name: {{ include "catalog-server.fullname" . }}-java-config
-        {{- end -}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

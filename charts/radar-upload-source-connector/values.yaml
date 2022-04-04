@@ -67,6 +67,10 @@ affinity: {}
 zookeeper: cp-zookeeper-headless:2181
 # -- Kafka broker URLs
 kafka: PLAINTEXT://cp-kafka-headless:9092
+# -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
+environment:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  CONNECT_SECURITY_PROTOCOL: PLAINTEXT
 # -- Number of brokers in the cluster
 kafka_num_brokers: "3"
 # -- Schema registry URL
