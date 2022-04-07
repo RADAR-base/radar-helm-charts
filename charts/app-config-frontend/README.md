@@ -2,7 +2,7 @@
 
 # app-config-frontend
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.2](https://img.shields.io/badge/AppVersion-0.3.2-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.3](https://img.shields.io/badge/AppVersion-0.3.3-informational?style=flat-square)
 
 A Helm chart for the frontend application of RADAR-base application config (app-config).
 
@@ -31,7 +31,7 @@ A Helm chart for the frontend application of RADAR-base application config (app-
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of Appconfig frontend replicas to deploy |
 | image.repository | string | `"radarbase/radar-app-config-frontend"` | Appconfig frontend image repository |
-| image.tag | string | `"0.3.2"` | Appconfig frontend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.3.3"` | Appconfig frontend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | Appconfig frontend image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override app-config-frontend.fullname template with a string (will prepend the release name) |
