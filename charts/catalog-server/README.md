@@ -2,7 +2,7 @@
 
 # catalog-server
 
-![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.1](https://img.shields.io/badge/AppVersion-0.7.1-informational?style=flat-square)
+![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.5](https://img.shields.io/badge/AppVersion-0.7.5-informational?style=flat-square)
 
 A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 
@@ -32,12 +32,12 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of catalog-server replicas to deploy |
 | image.repository | string | `"radarbase/radar-schemas-tools"` | catalog-server image repository |
-| image.tag | string | `"0.7.1"` | catalog-server image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.7.5"` | catalog-server image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | catalog-server image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override catalog-server.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override catalog-server.fullname template with a string |
-| podSecurityContext | object | `{}` | Configure catalog-server pods' Security Context |
+| podSecurityContext | object | `{"fsGroup":101}` | Configure catalog-server pods' Security Context |
 | securityContext | object | `{}` | Configure Appconfig containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `9010` | catalog-server port |
@@ -52,6 +52,8 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | kafka_num_brokers | int | `3` | number of Kafka brokers to look for |
 | kafka | string | `"cp-kafka-headless:9092"` | URI of Kafka brokers |
 | schema_registry | string | `"http://cp-schema-registry:8081"` | URL of the confluent schema registry |
+| kafkaProperties | object | `{"security_protocol":"PLAINTEXT"}` | Additional kafka properties such as security config. The template replaces `_` with `.` in keys so property keys can be specified using `_` instead of `.`. For example `security_protocol` is same as `security.protocol` kafka config. |
+| kafkaProperties.security_protocol | string | `"PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | specificationsExclude | string | `nil` | List of paths of specifications relative to specifications folder, if any of the specifications should be excluded from automatically registering topics and schemas. |
 | cc.enabled | bool | `false` | set to true if using Confluent Cloud for kafka cluster and schema registry |
 | cc.bootstrapServerurl | string | `"confluent-url"` | URL of the bootstrap server of Confluent Cloud based kafka cluster |

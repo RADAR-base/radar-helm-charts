@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "radar-push-endpoint.fullname" . }}
+  labels:
+    app: {{ template "radar-push-endpoint.name" . }}
+    chart: {{ template "radar-push-endpoint.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  healthcheck.sh: |
+     #!/bin/sh
+     STATUS=$(curl -s --max-time 4 localhost:{{ .Values.service.port }}/push/integrations/health)
+     if ! (echo "$STATUS" | grep -Fq '"kafka":{"status":"UP"'); then
+       exit 1
+     fi
+  push-endpoint.yml: |
+    # Resource config class
+    #resourceConfig: org.radarbase.gateway.inject.PushIntegrationEnhancerFactory
+
+    server:
+      baseUri: http://0.0.0.0:{{ .Values.service.port }}/push/integrations/
+
+    kafka:
+      producer:
+        bootstrap.servers: {{ .Values.bootstrapServers }}
+        {{- range $key, $value := .Values.producerProperties }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+        {{- if .Values.cc.enabled }}
+        security.protocol: SASL_SSL
+        sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="{{ .Values.cc.apiKey }}" password="{{ .Values.cc.apiSecret }}";
+        ssl.endpoint.identification.algorithm: https
+        sasl.mechanism: PLAIN
+        {{- end }}
+      admin:
+        bootstrap.servers: {{ .Values.bootstrapServers }}
+        {{- range $key, $value := .Values.adminProperties }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+        {{- if .Values.cc.enabled }}
+        security.protocol: SASL_SSL
+        sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="{{ .Values.cc.apiKey }}" password="{{ .Values.cc.apiSecret }}";
+        ssl.endpoint.identification.algorithm: https
+        sasl.mechanism: PLAIN
+        {{- end }}
+      serialization:
+        schema.registry.url: {{ .Values.schemaRegistry }}
+        {{- range $key, $value := .Values.serializationProperties }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+        {{- if .Values.cc.enabled }}
+        basic.auth.credentials.source: USER_INFO
+        schema.registry.basic.auth.user.info: {{ .Values.cc.schemaRegistryApiKey }}:{{ .Values.cc.schemaRegistryApiSecret }}
+        {{- end }}
+    # Push Service specific configuration
+    pushIntegration:
+      garmin:
+        enabled: {{ .Values.garmin.enabled }}
+        consumerKey: {{ .Values.garmin.consumerKey }}
+        consumerSecret: {{ .Values.garmin.consumerSecret }}
+        userRepositoryClass: {{ .Values.garmin.userRepositoryClass }}
+        userRepositoryUrl: {{ .Values.garmin.userRepositoryUrl }}
+        userRepositoryClientId: {{ .Values.garmin.userRepositoryClientId }}
+        userRepositoryClientSecret: {{ .Values.garmin.userRepositoryClientSecret }}
+        userRepositoryTokenUrl: {{ .Values.garmin.userRepositoryTokenUrl }}
+        backfill:
+          enabled: true
+          # Redis configuration
+          redis:
+            # Redis URI
+            uri: {{ .Values.redis.url }}
+            # Key prefix for locks
+            lockPrefix: radar-push-garmin/lock/
+        

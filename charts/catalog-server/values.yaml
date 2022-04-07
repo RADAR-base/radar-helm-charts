@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-schemas-tools
   # -- catalog-server image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.7.1
+  tag: 0.7.5
   # -- catalog-server image pull policy
   pullPolicy: IfNotPresent
 
@@ -23,8 +23,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 # -- Configure catalog-server pods' Security Context
-podSecurityContext: {}
-  # fsGroup: 2000
+podSecurityContext:
+  fsGroup: 101
 
 # -- Configure Appconfig containers' Security Context
 securityContext: {}
@@ -89,6 +89,11 @@ kafka_num_brokers: 3
 kafka: cp-kafka-headless:9092
 # -- URL of the confluent schema registry
 schema_registry: http://cp-schema-registry:8081
+
+# -- Additional kafka properties such as security config. The template replaces `_` with `.` in keys so property keys can be specified using `_` instead of `.`. For example `security_protocol` is same as `security.protocol` kafka config.
+kafkaProperties:
+# -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  security_protocol: PLAINTEXT
 
 # -- List of paths of specifications relative to specifications folder, if any of the specifications should be excluded from automatically registering topics and schemas.
 specificationsExclude:

@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-rest-source-auth-backend
   # -- radar-rest-sources-backend image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 3.2.1
+  tag: 3.2.2
   # -- radar-rest-sources-backend image pull policy
   pullPolicy: IfNotPresent
 
@@ -107,6 +107,9 @@ postgres:
     enabled: false
     keystorepassword: keystorepassword
 
+# -- Resolvable server name, needed to find the advertised URL and callback URL
+serverName: localhost
+
 # -- hostname of the Management Portal
 managementportal_host: management-portal
 
@@ -128,4 +131,24 @@ restSourceClients:
     # -- FitBit client secret
     clientSecret:
     # -- List of scopes of the data that should be collected from Fitbit. For details, please refer to https://dev.fitbit.com/build/reference/web-api/developer-guide/application-design/#Scopes
+    scope: activity heartrate sleep profile
+
+  garmin:
+    # -- set to true, if Garmin client should be used
+    enable: false
+    # -- Type of the data sources
+    sourceType: Garmin
+    # -- Pre authorization endpoint to get request token in OAuth 1.0 terminology
+    preAuthorizationEndpoint: https://connectapi.garmin.com/oauth-service/oauth/request_token
+    # -- Authorization endpoint to get oauth confirmation in OAuth 1.0 terminology
+    authorizationEndpoint: https://connect.garmin.com/oauthConfirm
+    # -- Endpoint to deregister a user on garmin to disable receiving push requests
+    deregistrationEndpoint: https://healthapi.garmin.com/wellness-api/rest/user/registration
+     # -- Token endpoint to request access-token from Garmin
+    tokenEndpoint: https://connectapi.garmin.com/oauth-service/oauth/access_token
+    # -- Garmin client id
+    clientId: Garmin-clientid
+    # -- Garmin client secret
+    clientSecret: Garmin-clientsecret
+    # -- List of scopes of the data that should be collected from Garmin.
     scope: activity heartrate sleep profile

@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "0.7.1"
+appVersion: "0.7.5"
 description: A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 name: catalog-server
-version: 0.2.2
+version: 0.2.5
 sources: ["https://github.com/RADAR-base/RADAR-Schemas/tree/master/java-sdk"]
 type: application
 home: "https://radar-base.org"

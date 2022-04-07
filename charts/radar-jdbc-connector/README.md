@@ -2,7 +2,7 @@
 
 # radar-jdbc-connector
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
 
@@ -32,7 +32,7 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-fitbit-connector replicas to deploy |
 | image.repository | string | `"radarbase/radar-jdbc-connector"` | radar-jdbc-connector image repository |
-| image.tag | string | `"latest"` | radar-jdbc-connector image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"10.3.1"` | radar-jdbc-connector image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-jdbc-connector image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-jdbc-connector.fullname template with a string (will prepend the release name) |
@@ -50,6 +50,8 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | kafka_num_brokers | string | `"3"` | Number of Kafka brokers. This is used to validate the cluster availability at connector init. |
 | schema_registry | string | `"http://cp-schema-registry:8081"` | URL of the Kafka schema registry |
 | topics | string | `"android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps"` | Comma-separated list of topics the connector will read from and ingest into the database |
+| environment | object | `{"CONNECT_SECURITY_PROTOCOL":"PLAINTEXT"}` | Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration) |
+| environment.CONNECT_SECURITY_PROTOCOL | string | `"PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | timescaledb.host | string | `"timescaledb-postgresql-headless"` | Host of the TimescaleDB database |
 | timescaledb.username | string | `"grafana"` | TimescaleDB database username |
 | timescaledb.password | string | `"password"` | TimescaleDB database password |

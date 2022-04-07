@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-output-restructure
   # -- radar-output image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.2.1
+  tag: 2.0.1
   # -- radar-output image pull policy
   pullPolicy: IfNotPresent
 

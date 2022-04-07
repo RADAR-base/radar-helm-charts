@@ -2,7 +2,7 @@
 
 # radar-rest-sources-authorizer
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.1](https://img.shields.io/badge/AppVersion-3.2.1-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.2](https://img.shields.io/badge/AppVersion-3.2.2-informational?style=flat-square)
 
 A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer which is a portal to authorize the Fitbit connector to read data from Fitbit accounts.
 
@@ -31,7 +31,7 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-rest-sources-authorizer replicas to deploy |
 | image.repository | string | `"radarbase/radar-rest-source-authorizer"` | radar-rest-sources-authorizer image repository |
-| image.tag | string | `"3.2.1"` | radar-rest-sources-authorizer image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"3.2.2"` | radar-rest-sources-authorizer image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-rest-sources-authorizer image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-rest-sources-authorizer.fullname template with a string (will prepend the release name) |

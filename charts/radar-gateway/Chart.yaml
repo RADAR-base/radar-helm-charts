@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: "0.5.7"
+appVersion: "0.5.9"
 description: A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 name: radar-gateway
 version: 0.2.0

@@ -2,7 +2,7 @@
 
 # radar-rest-sources-backend
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.1](https://img.shields.io/badge/AppVersion-3.2.1-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.2](https://img.shields.io/badge/AppVersion-3.2.2-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -31,7 +31,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-rest-sources-backend replicas to deploy |
 | image.repository | string | `"radarbase/radar-rest-source-auth-backend"` | radar-rest-sources-backend image repository |
-| image.tag | string | `"3.2.1"` | radar-rest-sources-backend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"3.2.2"` | radar-rest-sources-backend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-rest-sources-backend image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-rest-sources-backend.fullname template with a string (will prepend the release name) |
@@ -58,6 +58,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | postgres.password | string | `"password"` | password of the postgres user |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
+| serverName | string | `"localhost"` | Resolvable server name, needed to find the advertised URL and callback URL |
 | managementportal_host | string | `"management-portal"` | hostname of the Management Portal |
 | client_secret | string | `"secret"` | OAuth2 client secret of the radar-rest-sources-backend client from Management Portal |
 | restSourceClients.fitbit.enable | bool | `false` | set to true, if Fitbit client should be used |
@@ -67,3 +68,12 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.fitbit.clientId | string | `nil` | FitBit client id |
 | restSourceClients.fitbit.clientSecret | string | `nil` | FitBit client secret |
 | restSourceClients.fitbit.scope | string | `"activity heartrate sleep profile"` | List of scopes of the data that should be collected from Fitbit. For details, please refer to https://dev.fitbit.com/build/reference/web-api/developer-guide/application-design/#Scopes |
+| restSourceClients.garmin.enable | bool | `false` | set to true, if Garmin client should be used |
+| restSourceClients.garmin.sourceType | string | `"Garmin"` | Type of the data sources |
+| restSourceClients.garmin.preAuthorizationEndpoint | string | `"https://connectapi.garmin.com/oauth-service/oauth/request_token"` | Pre authorization endpoint to get request token in OAuth 1.0 terminology |
+| restSourceClients.garmin.authorizationEndpoint | string | `"https://connect.garmin.com/oauthConfirm"` | Authorization endpoint to get oauth confirmation in OAuth 1.0 terminology |
+| restSourceClients.garmin.deregistrationEndpoint | string | `"https://healthapi.garmin.com/wellness-api/rest/user/registration"` | Endpoint to deregister a user on garmin to disable receiving push requests |
+| restSourceClients.garmin.tokenEndpoint | string | `"https://connectapi.garmin.com/oauth-service/oauth/access_token"` | Token endpoint to request access-token from Garmin |
+| restSourceClients.garmin.clientId | string | `"Garmin-clientid"` | Garmin client id |
+| restSourceClients.garmin.clientSecret | string | `"Garmin-clientsecret"` | Garmin client secret |
+| restSourceClients.garmin.scope | string | `"activity heartrate sleep profile"` | List of scopes of the data that should be collected from Garmin. |

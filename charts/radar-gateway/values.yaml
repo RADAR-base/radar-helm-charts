@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-gateway
   # -- radar-gateway image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.5.7
+  tag: 0.5.9
   # -- radar-gateway image pull policy
   pullPolicy: IfNotPresent
 
@@ -49,6 +49,7 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /kafka/$1
     nginx.ingress.kubernetes.io/server-snippet: |
       location ^~ /kafka/consumers {

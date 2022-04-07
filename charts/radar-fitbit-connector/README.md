@@ -51,6 +51,7 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | affinity | object | `{}` | Affinity labels for pod assignment |
 | zookeeper | string | `"cp-zookeeper-headless:2181"` | URI of Zookeeper instances of the cluster |
 | kafka | string | `"PLAINTEXT://cp-kafka-headless:9092"` | URI of Kafka brokers of the cluster |
+| environment.CONNECT_SECURITY_PROTOCOL | string | `"PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | kafka_num_brokers | string | `"3"` | Number of Kafka brokers. This is used to validate the cluster availability at connector init. |
 | schema_registry | string | `"http://cp-schema-registry:8081"` | URL of the Kafka schema registry |
 | radar_rest_sources_backend_url | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | Base URL of the rest-sources-authorizer-backend service |
