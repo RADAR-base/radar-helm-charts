@@ -52,6 +52,7 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
   # -- Path within the url structure
   path: "/upload/?(.*)"
+  pathType: ImplementationSpecific
   # -- Host to listen to requests to
   hosts:
     - localhost

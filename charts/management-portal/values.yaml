@@ -59,6 +59,7 @@ ingress:
       }
   # -- Path within the url structure
   path: "/managementportal"
+  pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
     - localhost

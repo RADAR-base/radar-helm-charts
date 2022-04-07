@@ -52,6 +52,7 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
   # -- Path within the url structure
   path: "/rest-sources/authorizer/?(.*)"
+  pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
     - localhost
