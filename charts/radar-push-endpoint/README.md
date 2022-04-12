@@ -12,8 +12,8 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Yatharth Ranjan | yatharth.ranjan@kcl.ac.uk | https://www.kcl.ac.uk/people/yatharth-ranjan |
-| Pauline Conde | pauline.conde@kcl.ac.uk | https://www.kcl.ac.uk/people/pauline-conde |
+| Yatharth Ranjan | <yatharth.ranjan@kcl.ac.uk> | <https://www.kcl.ac.uk/people/yatharth-ranjan> |
+| Pauline Conde | <pauline.conde@kcl.ac.uk> | <https://www.kcl.ac.uk/people/pauline-conde> |
 
 ## Source Code
 
