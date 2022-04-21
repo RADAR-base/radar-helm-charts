@@ -114,8 +114,15 @@ postgres:
   # -- password of the postgres user
   password: password
   ssl:
-    # -- set to true of the connecting to postgres using SSL
+    # -- set to true if the connecting to postgres using SSL
     enabled: false
+    # -- base64 encoded certificate needed to connect to the PostgreSQL
+    keystore: ""
+    # With helmfile, this can be set in a production.yaml.gotmpl
+    # file by setting
+    #   keystore: {{ readFile "certificate.pem" | b64enc | quote }}
+    # or with SOPS
+    #   keystore: {{ exec "sops" (list "-d" "certificate.pem") | b64enc | quote }}
     keystorepassword: keystorepassword
 
 # -- domain name of the server
