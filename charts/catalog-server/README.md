@@ -2,7 +2,7 @@
 
 # catalog-server
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.5](https://img.shields.io/badge/AppVersion-0.7.5-informational?style=flat-square)
+![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.5](https://img.shields.io/badge/AppVersion-0.7.5-informational?style=flat-square)
 
 A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 
@@ -12,9 +12,9 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | keyvan@thehyve.nl | https://www.thehyve.nl |
-| Joris Borgdorff | joris@thehyve.nl | https://www.thehyve.nl/experts/joris-borgdorff |
-| Nivethika Mahasivam | nivethika@thehyve.nl | https://www.thehyve.nl/experts/nivethika-mahasivam |
+| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
+| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
+| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -41,10 +41,9 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | securityContext | object | `{}` | Configure Appconfig containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `9010` | catalog-server port |
-| resources.requests.cpu | string | `"100m"` |  |
-| resources.requests.memory | string | `"256Mi"` |  |
+| resources.requests | object | `{"cpu":"100m","memory":"256Mi"}` | CPU/Memory resource requests |
 | persistence.enabled | bool | `true` | Enable persistence using PVC |
-| persistence.accessMode | string | `"ReadWriteOnce"` |  |
+| persistence.accessMode | string | `"ReadWriteOnce"` | PVC Access Mode for catalog-server volume |
 | persistence.size | string | `"5Mi"` | PVC Storage Request for catalog-server volume |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
