@@ -12,8 +12,8 @@ A Helm chart for the backend application of RADAR-base Appserver
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Yatharth Ranjan | yatharth.ranjan@kcl.ac.uk | https://www.kcl.ac.uk/people/yatharth-ranjan |
-| Pauline Conde | pauline.conde@kcl.ac.uk | https://www.kcl.ac.uk/people/pauline-conde |
+| Yatharth Ranjan | <yatharth.ranjan@kcl.ac.uk> | <https://www.kcl.ac.uk/people/yatharth-ranjan> |
+| Pauline Conde | <pauline.conde@kcl.ac.uk> | <https://www.kcl.ac.uk/people/pauline-conde> |
 
 ## Source Code
 
