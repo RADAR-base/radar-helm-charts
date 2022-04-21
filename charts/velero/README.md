@@ -2,7 +2,7 @@
 
 # velero
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
 A Helm chart for Velero, this chart is an overlay for Velero and adds some default values and a deployment to mirror the local object storage to a remote location.
 
@@ -12,9 +12,9 @@ A Helm chart for Velero, this chart is an overlay for Velero and adds some defau
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
-| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
+| Keyvan Hedayati | keyvan@thehyve.nl | https://www.thehyve.nl |
+| Joris Borgdorff | joris@thehyve.nl | https://www.thehyve.nl/experts/joris-borgdorff |
+| Nivethika Mahasivam | nivethika@thehyve.nl | https://www.thehyve.nl/experts/nivethika-mahasivam |
 
 ## Source Code
 
@@ -53,7 +53,6 @@ A Helm chart for Velero, this chart is an overlay for Velero and adds some defau
 | backup.secretKey | string | `"secretKey"` | Secret key of remote object storage |
 | backup.intermediateBucketName | string | `"radar-intermediate-storage"` | Name of remote intermediate data bucket |
 | backup.outputBucketName | string | `"radar-output-storage"` | Name of remote output data bucket |
-| velero | object | `{"configuration":{"backupStorageLocation":{"bucket":"radar-base-backups","config":{"region":"eu-central-1","s3ForcePathStyle":"true","s3Url":"https://s3.amazon.com"},"name":"default"},"provider":"aws"},"credentials":{"secretContents":{"cloud":"[default]\naws_access_key_id=accessKey\naws_secret_access_key=secretKey\n"}},"deployRestic":true,"initContainers":[{"image":"velero/velero-plugin-for-aws:v1.1.0","imagePullPolicy":"IfNotPresent","name":"velero-plugin-for-aws","volumeMounts":[{"mountPath":"/target","name":"plugins"}]}],"metrics":{"enabled":true,"serviceMonitor":{"enabled":true}},"restic":{"extraVolumeMounts":[],"extraVolumes":[],"podVolumePath":"/var/lib/kubelet/pods","priorityClassName":{},"privileged":false,"resources":{},"securityContext":{},"tolerations":[]},"schedules":{"backup":{"schedule":"0 3 * * *","template":{"includeClusterResources":true,"includedNamespaces":["cert-manager","default","graylog","kubernetes-dashboard","monitoring","velero"],"snapshotVolumes":false,"ttl":"240h"}}},"snapshotsEnabled":false}` | -- |
 | velero.initContainers | list | check values.yaml | Add plugins to enable using different storage systems, AWS plugin is needed to be able to push to S3-compatible object storages |
 | velero.metrics.enabled | bool | `true` | Enable monitoring metrics to be collected |
 | velero.metrics.serviceMonitor.enabled | bool | `true` | Enable prometheus-operator interface |
