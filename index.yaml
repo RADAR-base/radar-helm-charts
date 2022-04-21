@@ -3,31 +3,6 @@ entries:
   app-config:
   - apiVersion: v2
     appVersion: 0.3.3
-    created: "2022-04-21T15:43:10.411395516Z"
-    description: A Helm chart for RADAR-base application config (app-config) backend
-      service which is used as mobile app configuration engine with per-project and
-      per-user configuration.
-    digest: 73beb287ee2c2a0817754f437ca2243666851774c4f325148c3cdbb6985b706d
-    home: https://radar-base.org
-    maintainers:
-    - email: keyvan@thehyve.nl
-      name: Keyvan Hedayati
-      url: https://www.thehyve.nl
-    - email: joris@thehyve.nl
-      name: Joris Borgdorff
-      url: https://www.thehyve.nl/experts/joris-borgdorff
-    - email: nivethika@thehyve.nl
-      name: Nivethika Mahasivam
-      url: https://www.thehyve.nl/experts/nivethika-mahasivam
-    name: app-config
-    sources:
-    - https://github.com/RADAR-base/radar-app-config
-    type: application
-    urls:
-    - https://github.com/RADAR-base/radar-helm-charts/releases/download/app-config-0.2.1/app-config-0.2.1.tgz
-    version: 0.2.1
-  - apiVersion: v2
-    appVersion: 0.3.3
     created: "2022-04-07T21:27:53.070092223Z"
     description: A Helm chart for RADAR-base application config (app-config) backend
       service which is used as mobile app configuration engine with per-project and
@@ -473,6 +448,30 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/kube-prometheus-stack-0.1.0/kube-prometheus-stack-0.1.0.tgz
     version: 0.1.0
   management-portal:
+  - apiVersion: v2
+    appVersion: 0.8.1
+    created: "2022-04-21T15:43:27.823402687Z"
+    description: A Helm chart for RADAR-Base Management Portal to manage projects
+      and participants throughout RADAR-base.
+    digest: 1c9573c3ac9dd2f7e0a02c1438d9910c750734c35807ca3160c52d409eee1340
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: management-portal
+    sources:
+    - https://github.com/RADAR-base/ManagementPortal
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/management-portal-0.2.2/management-portal-0.2.2.tgz
+    version: 0.2.2
   - apiVersion: v2
     appVersion: 0.8.1
     created: "2022-04-12T13:38:58.621082189Z"
@@ -1785,4 +1784,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-04-21T15:43:10.411587821Z"
+generated: "2022-04-21T15:43:27.823589293Z"
