@@ -117,13 +117,12 @@ postgres:
     # -- set to true if the connecting to postgres using SSL
     enabled: false
     # -- base64 encoded certificate needed to connect to the PostgreSQL
-    keystore: ""
     # With helmfile, this can be set in a production.yaml.gotmpl
     # file by setting
     #   keystore: {{ readFile "certificate.pem" | b64enc | quote }}
     # or with SOPS
     #   keystore: {{ exec "sops" (list "-d" "certificate.pem") | b64enc | quote }}
-    keystorepassword: keystorepassword
+    keystore: ""
 
 # -- domain name of the server
 server_name: localhost
