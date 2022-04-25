@@ -10,7 +10,7 @@ image:
   repository: radarbase/kafka-connect-transform-s3
   # -- radar-s3-connector image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "5.5.1"
+  tag: "7.1.1"
   # -- radar-s3-connector image pull policy
   pullPolicy: IfNotPresent
 
