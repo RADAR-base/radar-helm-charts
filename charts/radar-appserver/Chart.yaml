@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "3.2.0"
 description: A Helm chart for the backend application of RADAR-base Appserver
 name: radar-appserver
-version: 0.1.1
+version: 0.1.2
 sources: ["https://github.com/RADAR-base/RADAR-Appserver"]
 deprecated: false
 type: application
