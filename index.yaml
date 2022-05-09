@@ -1831,6 +1831,30 @@ entries:
   radar-rest-sources-backend:
   - apiVersion: v2
     appVersion: 3.2.2
+    created: "2022-05-09T13:26:33.458673088Z"
+    description: A Helm chart for the backend application of RADAR-base Rest Sources
+      Authorizer
+    digest: fb5bc86dd35745d85d031ef0e07aac97a75afe71c5c5ca3597aa517f048be5c1
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-rest-sources-backend
+    sources:
+    - https://github.com/RADAR-base/RADAR-Rest-Source-Auth
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-backend-0.3.4/radar-rest-sources-backend-0.3.4.tgz
+    version: 0.3.4
+  - apiVersion: v2
+    appVersion: 3.2.2
     created: "2022-04-28T12:08:03.636192756Z"
     description: A Helm chart for the backend application of RADAR-base Rest Sources
       Authorizer
@@ -2666,4 +2690,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-04-28T12:08:04.142579317Z"
+generated: "2022-05-09T13:26:33.45896689Z"
