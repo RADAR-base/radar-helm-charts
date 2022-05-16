@@ -15,6 +15,9 @@ data:
       advertisedBaseUri: https://{{ .Values.serverName }}/rest-sources/backend/
       enableCors: true
       syncParticipantsIntervalMin: 2
+      {{- if .Values.authorizer -}}
+      {{ .Values.authorizer | toYaml | nindent 6 }}
+      {{- end }}
 
     auth:
       # Management Portal URL
@@ -37,3 +40,6 @@ data:
       {{ (list (omit $client "enable")) | toYaml | nindent 6 }}
       {{- end -}}
       {{- end }}
+
+    redis:
+        uri: {{ .Values.redis.uri }}
