@@ -1679,6 +1679,31 @@ entries:
     version: 0.1.1
   radar-rest-sources-authorizer:
   - apiVersion: v2
+    appVersion: 4.0.0
+    created: "2022-05-16T12:45:27.710788058Z"
+    description: A Helm chart for the front-end application of RADAR-base Rest Sources
+      Authorizer which is a portal to authorize the Fitbit connector to read data
+      from Fitbit accounts.
+    digest: baca960b0862622425a6bd927257a5853ffab3aa9e437907d33abfbfe15c969f
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-rest-sources-authorizer
+    sources:
+    - https://github.com/RADAR-base/RADAR-Rest-Source-Auth
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-authorizer-0.4.0/radar-rest-sources-authorizer-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
     appVersion: 3.2.2
     created: "2022-04-28T12:08:03.364570513Z"
     description: A Helm chart for the front-end application of RADAR-base Rest Sources
@@ -1829,6 +1854,30 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-authorizer-0.2.0/radar-rest-sources-authorizer-0.2.0.tgz
     version: 0.2.0
   radar-rest-sources-backend:
+  - apiVersion: v2
+    appVersion: 4.0.0
+    created: "2022-05-16T12:45:27.835893263Z"
+    description: A Helm chart for the backend application of RADAR-base Rest Sources
+      Authorizer
+    digest: 8851d7d0caaaa08c2bd5d0abb7258b171fc851fbfc78ff378082f2dc893b8209
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-rest-sources-backend
+    sources:
+    - https://github.com/RADAR-base/RADAR-Rest-Source-Auth
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-backend-0.4.0/radar-rest-sources-backend-0.4.0.tgz
+    version: 0.4.0
   - apiVersion: v2
     appVersion: 3.2.2
     created: "2022-05-09T13:26:33.458673088Z"
@@ -2690,4 +2739,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-05-09T13:26:33.45896689Z"
+generated: "2022-05-16T12:45:27.836107765Z"
