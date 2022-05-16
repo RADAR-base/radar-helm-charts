@@ -2,7 +2,7 @@
 
 # radar-rest-sources-backend
 
-![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.2](https://img.shields.io/badge/AppVersion-3.2.2-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.0.0](https://img.shields.io/badge/AppVersion-4.0.0-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -31,7 +31,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-rest-sources-backend replicas to deploy |
 | image.repository | string | `"radarbase/radar-rest-source-auth-backend"` | radar-rest-sources-backend image repository |
-| image.tag | string | `"3.2.2"` | radar-rest-sources-backend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"4.0.0"` | radar-rest-sources-backend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-rest-sources-backend image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-rest-sources-backend.fullname template with a string (will prepend the release name) |
@@ -50,6 +50,8 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
+| authorizer.tokenExpiryTimeInMinutes | int | `15` | Within how many minutes an online authorization attempt should be finalized. Steps: logging in to Fitbit, returning to the authorizer. |
+| authorizer.persistentTokenExpiryInMin | int | `7200` | Within how many minutes an authorization attempt by a participant should be finalized. Steps: passing token to participant, them logging in to Fitbit, and returning to the authorizer. |
 | postgres.host | string | `"postgresql"` | host name of the postgres db |
 | postgres.port | int | `5432` | post of the postgres db |
 | postgres.database | string | `"restsourceauthorizer"` | database name |
@@ -58,6 +60,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | postgres.password | string | `"password"` | password of the postgres user |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
+| redis.uri | string | `"redis://redis-master:6379"` | URI of the redis database |
 | serverName | string | `"localhost"` | Resolvable server name, needed to find the advertised URL and callback URL |
 | managementportal_host | string | `"management-portal"` | hostname of the Management Portal |
 | client_secret | string | `"secret"` | OAuth2 client secret of the radar-rest-sources-backend client from Management Portal |
