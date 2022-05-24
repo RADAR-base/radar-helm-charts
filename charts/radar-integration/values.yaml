@@ -40,10 +40,14 @@ ingress:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /redcap/$1
+  # -- Path within the url structure
   path: "/redcapint/?(.*)"
+  pathType: ImplementationSpecific
+  # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
+    # -- TLS Secret Name
     secretName: radar-base-tls
 
 resources:

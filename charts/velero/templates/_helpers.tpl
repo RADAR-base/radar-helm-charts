@@ -35,14 +35,21 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "velero.labels" -}}
-app.kubernetes.io/name: {{ include "velero.name" . }}
 helm.sh/chart: {{ include "velero.chart" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "velero.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end -}}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "velero.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "velero.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 {{/*
 Create the name of the service account to use

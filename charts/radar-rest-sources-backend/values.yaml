@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-rest-source-auth-backend
   # -- radar-rest-sources-backend image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 3.2.2
+  tag: 4.0.0
   # -- radar-rest-sources-backend image pull policy
   pullPolicy: IfNotPresent
 
@@ -57,6 +57,7 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   # -- Path within the url structure
   path: "/rest-sources/backend/?(.*)"
+  pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
     - localhost
@@ -87,6 +88,13 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# Additional authorizer configurations.
+authorizer:
+  # -- Within how many minutes an online authorization attempt should be finalized. Steps: logging in to Fitbit, returning to the authorizer.
+  tokenExpiryTimeInMinutes: 15
+  # -- Within how many minutes an authorization attempt by a participant should be finalized. Steps: passing token to participant, them logging in to Fitbit, and returning to the authorizer.
+  persistentTokenExpiryInMin: 7200  # 5 days
+
 # Configuration of the Postgres data base to store data from Rest sources authorizer backend
 postgres:
   # -- host name of the postgres db
@@ -105,6 +113,11 @@ postgres:
     # -- set to true of the connecting to postgres using SSL
     enabled: false
     keystorepassword: keystorepassword
+
+# Redis synchronization configuration
+redis:
+  # -- URI of the redis database
+  uri: redis://redis-master:6379
 
 # -- Resolvable server name, needed to find the advertised URL and callback URL
 serverName: localhost

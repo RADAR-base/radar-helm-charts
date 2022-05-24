@@ -4,6 +4,7 @@ chart-dirs:
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
   - velero=https://vmware-tanzu.github.io/helm-charts
+  - jetstack=https://charts.jetstack.io
 debug: true
 #excluded-charts:
 #  - common

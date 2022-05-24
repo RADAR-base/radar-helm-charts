@@ -2,7 +2,7 @@
 
 # app-config-frontend
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.2](https://img.shields.io/badge/AppVersion-0.3.2-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.3](https://img.shields.io/badge/AppVersion-0.3.3-informational?style=flat-square)
 
 A Helm chart for the frontend application of RADAR-base application config (app-config).
 
@@ -12,9 +12,9 @@ A Helm chart for the frontend application of RADAR-base application config (app-
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | keyvan@thehyve.nl | https://www.thehyve.nl |
-| Joris Borgdorff | joris@thehyve.nl | https://www.thehyve.nl/experts/joris-borgdorff |
-| Nivethika Mahasivam | nivethika@thehyve.nl | https://www.thehyve.nl/experts/nivethika-mahasivam |
+| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
+| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
+| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -31,7 +31,7 @@ A Helm chart for the frontend application of RADAR-base application config (app-
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of Appconfig frontend replicas to deploy |
 | image.repository | string | `"radarbase/radar-app-config-frontend"` | Appconfig frontend image repository |
-| image.tag | string | `"0.3.2"` | Appconfig frontend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.3.3"` | Appconfig frontend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | Appconfig frontend image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override app-config-frontend.fullname template with a string (will prepend the release name) |
@@ -43,8 +43,10 @@ A Helm chart for the frontend application of RADAR-base application config (app-
 | service.port | int | `8080` | Appconfig frontend port |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
-| ingress.hosts[0] | object | `{"paths":["/appconfig($|/)(.*)"]}` | Path within the url structure |
-| ingress.tls | list | `[]` | Utilize TLS backend in ingress |
+| ingress.path | string | `"/appconfig($|/)(.*)"` | Path within the url structure |
+| ingress.pathType | string | `"ImplementationSpecific"` |  |
+| ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
+| ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | resources.limits | object | `{"cpu":"200m","memory":"512Mi"}` | CPU/Memory resource limits |
 | resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |

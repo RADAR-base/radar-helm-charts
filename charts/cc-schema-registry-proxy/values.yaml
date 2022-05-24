@@ -6,17 +6,28 @@ service:
   type: ExternalName
   # -- Domain name used for pointing to actual schema registry instance
   externalName: schema-registry-domain
+  # -- Port number to connect to Confluent platform
+  port: 443
 
 ingress:
   # -- Enable ingress controller resource
   enabled: true
+  # -- Annotations that define default ingress class, certificate issuer
+  # @default -- check values.yaml
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/preserve-host: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/backend-protocol: https
   # -- Path within the url structure
   path: "/schema/?(.*)"
-  # -- Hosts to listen requests from
+  pathType: ImplementationSpecific
+  # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
-    # -- Name of the secret that contains TLS certificates
+    # -- TLS Secret Name
     secretName: radar-base-tls
 
 cc:

@@ -2,32 +2,30 @@
 {{- $fullName := include "cc-schema-registry-proxy.fullname" . -}}
 {{- $path := .Values.ingress.path -}}
 {{- $hosts := .Values.ingress.hosts -}}
+{{- $svcPort := .Values.service.port -}}
+{{- $pathType := .Values.ingress.pathType -}}
 {{- $externalName := .Values.service.externalName -}}
 {{- $credentials := print .Values.cc.schemaRegistryApiKey ":" .Values.cc.schemaRegistryApiSecret -}}
-
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else -}}
 apiVersion: extensions/v1beta1
+{{- end }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    app.kubernetes.io/name: {{ include "cc-schema-registry-proxy.name" . }}
-    helm.sh/chart: {{ include "cc-schema-registry-proxy.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "cc-schema-registry-proxy.labels" . | indent 4 }}
+  {{- with .Values.ingress.annotations }}
   annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    ingress.kubernetes.io/preserve-host: "false"
+    {{- toYaml . | nindent 4 }}
     nginx.ingress.kubernetes.io/configuration-snippet: |
       limit_except GET {
         deny all;
       }
       more_set_input_headers "Authorization: Basic {{ $credentials | b64enc }}";
     nginx.ingress.kubernetes.io/upstream-vhost: {{ $externalName }}
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
-    nginx.ingress.kubernetes.io/backend-protocol: https
-
-
+  {{- end }}
 spec:
 {{- if .Values.ingress.tls }}
   tls:
@@ -43,8 +41,18 @@ spec:
       http:
         paths:
           - path: {{ $path | quote }}
+            {{- if and $pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ $pathType }}
+            {{- end }}
             backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
               serviceName: {{ $fullName }}
-              servicePort: 443
+              servicePort: {{ $svcPort }}
+              {{- end }}
   {{- end }}
 {{- end }}

@@ -25,6 +25,26 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Common labels
+*/}}
+{{- define "radar-rest-sources-backend.labels" -}}
+helm.sh/chart: {{ include "radar-rest-sources-backend.chart" . }}
+{{ include "radar-rest-sources-backend.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "radar-rest-sources-backend.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "radar-rest-sources-backend.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "radar-rest-sources-backend.chart" -}}

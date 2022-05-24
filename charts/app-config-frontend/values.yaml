@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-app-config-frontend
   # -- Appconfig frontend image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.3.2
+  tag: 0.3.3
   # -- Appconfig frontend image pull policy
   pullPolicy: IfNotPresent
 
@@ -52,16 +52,15 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
+  # -- Path within the url structure
+  path: '/appconfig($|/)(.*)'
+  pathType: ImplementationSpecific
+  # -- Hosts to accept requests from
   hosts:
-    # -- Path within the url structure
-    - paths:
-        - '/appconfig($|/)(.*)'
-
-  # -- Utilize TLS backend in ingress
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+    - localhost
+  tls:
+    # -- TLS Secret Name
+    secretName: radar-base-tls
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious

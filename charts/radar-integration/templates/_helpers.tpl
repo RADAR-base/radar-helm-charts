@@ -25,6 +25,26 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Common labels
+*/}}
+{{- define "radar-integration.labels" -}}
+helm.sh/chart: {{ include "radar-integration.chart" . }}
+{{ include "radar-integration.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "radar-integration.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "radar-integration.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "radar-integration.chart" -}}
