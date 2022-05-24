@@ -2,7 +2,7 @@
 
 # catalog-server
 
-![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.5](https://img.shields.io/badge/AppVersion-0.7.5-informational?style=flat-square)
+![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.5](https://img.shields.io/badge/AppVersion-0.7.5-informational?style=flat-square)
 
 A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 
@@ -52,6 +52,8 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | kafka_num_brokers | int | `3` | number of Kafka brokers to look for |
 | kafka | string | `"cp-kafka-headless:9092"` | URI of Kafka brokers |
 | schema_registry | string | `"http://cp-schema-registry:8081"` | URL of the confluent schema registry |
+| kafkaProperties | object | `{"security_protocol":"PLAINTEXT"}` | Additional kafka properties such as security config. The template replaces `_` with `.` in keys so property keys can be specified using `_` instead of `.`. For example `security_protocol` is same as `security.protocol` kafka config. |
+| kafkaProperties.security_protocol | string | `"PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | specificationsExclude | string | `nil` | List of paths of specifications relative to specifications folder, if any of the specifications should be excluded from automatically registering topics and schemas. |
 | cc.enabled | bool | `false` | set to true if using Confluent Cloud for kafka cluster and schema registry |
 | cc.bootstrapServerurl | string | `"confluent-url"` | URL of the bootstrap server of Confluent Cloud based kafka cluster |
