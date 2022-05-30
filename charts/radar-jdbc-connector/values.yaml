@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-jdbc-connector
   # -- radar-jdbc-connector image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 10.3.1
+  tag: 10.3.2
   # -- radar-jdbc-connector image pull policy
   pullPolicy: IfNotPresent
 
