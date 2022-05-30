@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "0.5.9"
+appVersion: "0.5.10"
 description: A Helm chart for RADAR-base upload connector frontend application that provides a UI for uploading files and sending them to the upload-backend.
 name: radar-upload-connect-frontend
-version: 0.2.2
+version: 0.2.3
 sources: ["https://github.com/RADAR-base/radar-upload-source-connector"]
 deprecated: false
 type: application

@@ -2,7 +2,7 @@
 
 # radar-upload-source-connector
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.9](https://img.shields.io/badge/AppVersion-0.5.9-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload kafka connector. This is used for reading uploaded data from backend and sending them to Kafka cluster for later processing.
 
@@ -31,7 +31,7 @@ A Helm chart for RADAR-base upload kafka connector. This is used for reading upl
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-upload-source-connector replicas to deploy |
 | image.repository | string | `"radarbase/radar-connect-upload-source"` | radar-upload-source-connector image repository |
-| image.tag | string | `"0.5.9"` | radar-upload-source-connector image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.5.10"` | radar-upload-source-connector image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-upload-source-connector.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-upload-source-connector.fullname template with a string |
