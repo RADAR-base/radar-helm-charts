@@ -2203,6 +2203,31 @@ entries:
     version: 0.1.1
   radar-upload-connect-backend:
   - apiVersion: v2
+    appVersion: 0.5.10
+    created: "2022-05-30T15:13:41.223618894Z"
+    description: A Helm chart for RADAR-base upload connector backend application.
+      This application is an upload system that stores uploaded data and its metadata
+      in PostgreSQL for later processing.
+    digest: c5b92719203bb67832fec6cbee3a0e9058ba46e1c97134ac22f311e8d000fde1
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-upload-connect-backend
+    sources:
+    - https://github.com/RADAR-base/radar-upload-source-connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-upload-connect-backend-0.2.3/radar-upload-connect-backend-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
     appVersion: 0.5.9
     created: "2022-04-28T12:08:03.908708862Z"
     description: A Helm chart for RADAR-base upload connector backend application.
@@ -2354,6 +2379,30 @@ entries:
     version: 0.1.1
   radar-upload-connect-frontend:
   - apiVersion: v2
+    appVersion: 0.5.10
+    created: "2022-05-30T15:13:41.389958323Z"
+    description: A Helm chart for RADAR-base upload connector frontend application
+      that provides a UI for uploading files and sending them to the upload-backend.
+    digest: 70a4b02cc189257f3b3f0d507275b8bacfdd31bda3702ebd2c00a074b5b7648c
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-upload-connect-frontend
+    sources:
+    - https://github.com/RADAR-base/radar-upload-source-connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-upload-connect-frontend-0.2.3/radar-upload-connect-frontend-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
     appVersion: 0.5.9
     created: "2022-04-28T12:08:04.142288296Z"
     description: A Helm chart for RADAR-base upload connector frontend application
@@ -2450,6 +2499,31 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-upload-connect-frontend-0.1.1/radar-upload-connect-frontend-0.1.1.tgz
     version: 0.1.1
   radar-upload-source-connector:
+  - apiVersion: v2
+    appVersion: 0.5.10
+    created: "2022-05-30T15:13:41.531049247Z"
+    description: A Helm chart for RADAR-base upload kafka connector. This is used
+      for reading uploaded data from backend and sending them to Kafka cluster for
+      later processing.
+    digest: d7225ce9d4e8606ab7610d65442439113cba89e914e6ceaf8fbbd2c11dd8ebca
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-upload-source-connector
+    sources:
+    - https://github.com/RADAR-base/radar-upload-source-connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-upload-source-connector-0.2.2/radar-upload-source-connector-0.2.2.tgz
+    version: 0.2.2
   - apiVersion: v2
     appVersion: 0.5.9
     created: "2022-04-21T15:48:40.444968915Z"
@@ -2739,4 +2813,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-05-16T12:45:27.836107765Z"
+generated: "2022-05-30T15:13:41.531276847Z"
