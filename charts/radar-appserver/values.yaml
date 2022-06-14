@@ -120,3 +120,6 @@ google_application_credentials: ""
 # With helmfile, this can be set in a production.yaml.gotmpl
 # file by setting
 #   google_application_credentials: {{ readFile "etc/radar-appserver/google-credentials.json" | quote }}
+
+# -- Github client token which is used for authenticating requests
+github_client_token: ""
