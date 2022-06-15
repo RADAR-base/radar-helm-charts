@@ -65,7 +65,9 @@ spec:
           - name: RADAR_ADMIN_USER
             value: {{ .Values.radar_admin_user }}
           - name: RADAR_ADMIN_PASSWORD
-            value: {{ .Values.radar_admin_user }}          
+            value: {{ .Values.radar_admin_user }}   
+          - name: SECURITY_GITHUB_CLIENT_TOKEN
+            value: {{ .Values.github_client_token }}         
           imagePullPolicy: Always
           ports:
             - name: http
