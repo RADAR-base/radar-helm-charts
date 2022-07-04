@@ -41,15 +41,7 @@ jobs:
         uses: helm/chart-releaser-action@v1.4.0
         with:
           config: .github/cr.yaml
-          charts_dir: external/order-0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Run chart-releaser -- order 1 external dependencies
-        uses: helm/chart-releaser-action@v1.4.0
-        with:
-          config: .github/cr.yaml
-          charts_dir: external/order-1
+          charts_dir: external
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
