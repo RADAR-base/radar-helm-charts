@@ -2,7 +2,7 @@
 
 # radar-gateway
 
-![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.12](https://img.shields.io/badge/AppVersion-0.5.12-informational?style=flat-square)
+![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.12](https://img.shields.io/badge/AppVersion-0.5.12-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -59,6 +59,8 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | adminProperties | object | `{}` | Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs. |
 | producerProperties | object | `{"compression.type":"lz4"}` | Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs. |
 | serializationProperties | object | `{}` | Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig]. |
+| serverProperties | object | `{"maxRequestSize":25165824}` | Additional gateway server properties |
+| serverProperties.maxRequestSize | int | `25165824` | Maximum request size, also after decompression. |
 | cc.enabled | bool | `false` | set to true, if requests should be forwarded to Confluent Cloud based brokers. |
 | cc.apiKey | string | `"ccApikey"` | Confluent Cloud cluster API key |
 | cc.apiSecret | string | `"ccApiSecret"` | Confluent Cloud cluster API secret |
