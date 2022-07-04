@@ -7,7 +7,7 @@ description: Helm charts of the RADAR-base platform components.
 
 # radar-helm-charts
 
-The helm charts of the RADAR-base platform. Installation of these charts is best managed via [RADAR-Kubernetes](https://github.com/RADAR-base/RADAR-Kubernetes). Use the releases in this repository by referencing helm repository `radar` with URL <https://radar-base.github.com/radar-helm-charts>.
+The helm charts of the RADAR-base platform. Installation of these charts is best managed via [RADAR-Kubernetes](https://github.com/RADAR-base/RADAR-Kubernetes). Use the releases in this repository by referencing helm repository `radar` with URL <https://radar-base.github.io/radar-helm-charts>.
 
 ## About
 
@@ -24,7 +24,7 @@ The following tools should be installed in your local machine to install the RAD
 | Component | Description |
 |-----|------|
 | [helm 3](https://github.com/helm/helm#install)| Helm Charts are used to package Kubernetes resources for each component|
-| kubernetes | The charts support Kubernetes versions 1.19 up to 1.22. |
+| kubernetes | The charts support Kubernetes versions 1.19 up to 1.23. |
 
 Installation of these charts is best managed via [RADAR-Kubernetes](https://github.com/RADAR-base/RADAR-Kubernetes).
 
