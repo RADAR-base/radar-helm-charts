@@ -588,6 +588,150 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/cert-manager-0.1.0/cert-manager-0.1.0.tgz
     version: 0.1.0
+  common:
+  - annotations:
+      category: Infrastructure
+    apiVersion: v2
+    appVersion: 1.13.1
+    created: "2022-07-04T12:27:39.617196194Z"
+    description: A Library Helm Chart for grouping common logic between bitnami charts.
+      This chart is not deployable by itself.
+    digest: 1d6ea33fff3c32736e450081298872679d197b19424f1fc64b6e2a3dd6c6b2e8
+    home: https://github.com/bitnami/charts/tree/master/bitnami/common
+    icon: https://bitnami.com/downloads/logos/bitnami-mark.png
+    keywords:
+    - common
+    - helper
+    - template
+    - function
+    - bitnami
+    maintainers:
+    - email: containers@bitnami.com
+      name: Bitnami
+    name: common
+    sources:
+    - https://github.com/bitnami/charts
+    - https://www.bitnami.com/
+    type: library
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/common-1.13.1/common-1.13.1.tgz
+    version: 1.13.1
+  elasticsearch:
+  - apiVersion: v1
+    appVersion: 7.17.3
+    created: "2022-07-04T12:27:39.749085669Z"
+    description: Official Elastic helm chart for Elasticsearch
+    digest: fbc7d762b901bf479a00e89fdd54c1ddd8129b6fd1775e2d7b5ffc9749aa64e0
+    home: https://github.com/elastic/helm-charts
+    icon: https://helm.elastic.co/icons/elasticsearch.png
+    maintainers:
+    - email: helm-charts@elastic.co
+      name: Elastic
+    name: elasticsearch
+    sources:
+    - https://github.com/elastic/elasticsearch
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/elasticsearch-7.17.3/elasticsearch-7.17.3.tgz
+    version: 7.17.3
+  fluent-bit:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: "Add ability to manually set clusterIP address."
+    apiVersion: v1
+    appVersion: 1.8.15
+    created: "2022-07-04T12:27:39.881151759Z"
+    description: Fast and lightweight log processor and forwarder or Linux, OSX and
+      BSD family operating systems.
+    digest: 3f7851ffe3db51dd4460f27baf6eda748eb7d05c4b978ec299a9d55c9faa10ce
+    home: https://fluentbit.io/
+    icon: https://fluentbit.io/assets/img/logo1-default.png
+    keywords:
+    - logging
+    - fluent-bit
+    - fluentd
+    maintainers:
+    - email: eduardo@calyptia.com
+      name: edsiper
+    - email: naseem@transit.app
+      name: naseemkullah
+    - email: towmeykaw@gmail.com
+      name: Towmeykaw
+    - email: steve.hipwell@gmail.com
+      name: stevehipwell
+    name: fluent-bit
+    sources:
+    - https://github.com/fluent/fluent-bit/
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/fluent-bit-0.19.24/fluent-bit-0.19.24.tgz
+    version: 0.19.24
+  grafana:
+  - apiVersion: v2
+    appVersion: 8.5.0
+    created: "2022-07-04T12:27:40.016193643Z"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: c25c9ccb463821e28f31d5bae68a330672dfdfdcc5c29b6bb382f67aeb980361
+    home: https://grafana.net
+    icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    - email: miroslav.hadzhiev@gmail.com
+      name: Xtigyro
+    - email: mail@torstenwalter.de
+      name: torstenwalter
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/grafana-6.26.8/grafana-6.26.8.tgz
+    version: 6.26.8
+  ingress-nginx:
+  - annotations:
+      artifacthub.io/changes: |
+        - "[8481](https://github.com/kubernetes/ingress-nginx/pull/8481) Fix log creation in chroot script"
+        - "[8479](https://github.com/kubernetes/ingress-nginx/pull/8479) changed nginx base img tag to img built with alpine3.14.6"
+        - "[8478](https://github.com/kubernetes/ingress-nginx/pull/8478) update base images and protobuf gomod"
+        - "[8468](https://github.com/kubernetes/ingress-nginx/pull/8468) Fallback to ngx.var.scheme for redirectScheme with use-forward-headers when X-Forwarded-Proto is empty"
+        - "[8456](https://github.com/kubernetes/ingress-nginx/pull/8456) Implement object deep inspector"
+        - "[8455](https://github.com/kubernetes/ingress-nginx/pull/8455) Update dependencies"
+        - "[8454](https://github.com/kubernetes/ingress-nginx/pull/8454) Update index.md"
+        - "[8447](https://github.com/kubernetes/ingress-nginx/pull/8447) typo fixing"
+        - "[8446](https://github.com/kubernetes/ingress-nginx/pull/8446) Fix suggested annotation-value-word-blocklist"
+        - "[8444](https://github.com/kubernetes/ingress-nginx/pull/8444) replace deprecated topology key in example with current one"
+        - "[8443](https://github.com/kubernetes/ingress-nginx/pull/8443) Add dependency review enforcement"
+        - "[8434](https://github.com/kubernetes/ingress-nginx/pull/8434) added new auth-tls-match-cn annotation"
+        - "[8426](https://github.com/kubernetes/ingress-nginx/pull/8426) Bump github.com/prometheus/common from 0.32.1 to 0.33.0"
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 1.2.0
+    created: "2022-07-04T12:27:40.148846151Z"
+    description: Ingress controller for Kubernetes using NGINX as a reverse proxy
+      and load balancer
+    digest: 3711fb72ec7c6c6edf8c22da2d9f40b7c064639bfa03fd8c259c2f19d5715244
+    home: https://github.com/kubernetes/ingress-nginx
+    icon: https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nginx_logo.svg/500px-Nginx_logo.svg.png
+    keywords:
+    - ingress
+    - nginx
+    kubeVersion: '>=1.19.0-0'
+    maintainers:
+    - name: rikatz
+    - name: strongjz
+    - name: tao12345666333
+    name: ingress-nginx
+    sources:
+    - https://github.com/kubernetes/ingress-nginx
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/ingress-nginx-4.1.0/ingress-nginx-4.1.0.tgz
+    version: 4.1.0
   kafka-manager:
   - apiVersion: v2
     appVersion: 1.3.3.18
@@ -890,6 +1034,27 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/management-portal-0.1.3/management-portal-0.1.3.tgz
     version: 0.1.3
+  minio:
+  - apiVersion: v1
+    appVersion: master
+    created: "2022-07-04T12:27:40.283826033Z"
+    description: High Performance, Kubernetes Native Object Storage
+    digest: bf762c926ad1963835ec9b60f9ca09294b1947097588af3f8716c4d9de8e7fa7
+    home: https://min.io
+    icon: https://min.io/resources/img/logo/MINIO_wordmark.png
+    keywords:
+    - storage
+    - object-storage
+    - S3
+    maintainers:
+    - email: dev@minio.io
+      name: MinIO, Inc
+    name: minio
+    sources:
+    - https://github.com/minio/minio
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/minio-8.0.10/minio-8.0.10.tgz
+    version: 8.0.10
   radar-appserver:
   - apiVersion: v2
     appVersion: 3.2.0
@@ -2887,4 +3052,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-07-04T09:26:48.493864897Z"
+generated: "2022-07-04T12:27:40.28403694Z"
