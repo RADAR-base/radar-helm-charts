@@ -20,6 +20,9 @@ data:
 
     server:
       baseUri: http://0.0.0.0:{{ .Values.service.port }}/kafka/
+      {{- range $key, $value := .Values.serverProperties }}
+      {{ $key }}: {{ $value }}
+      {{- end }}
 
     kafka:
       producer:

@@ -107,6 +107,11 @@ producerProperties:
 # -- Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig].
 serializationProperties: {}
 
+# -- Additional gateway server properties
+serverProperties:
+  # -- Maximum request size, also after decompression.
+  maxRequestSize: 25165824
+
 cc:
   # -- set to true, if requests should be forwarded to Confluent Cloud based brokers.
   enabled: false
