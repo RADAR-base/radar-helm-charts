@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           submodules: true
@@ -21,7 +21,7 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Install Helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
 
       - name: Add Helm repos
         run: |
@@ -41,6 +41,6 @@ jobs:
         uses: helm/chart-releaser-action@v1.4.0
         with:
           config: .github/cr.yaml
-          charts_dir: cp-helm-charts/charts
+          charts_dir: external
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
