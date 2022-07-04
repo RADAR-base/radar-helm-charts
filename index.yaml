@@ -692,6 +692,41 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/grafana-6.26.8/grafana-6.26.8.tgz
     version: 6.26.8
+  graylog:
+  - apiVersion: v2
+    appVersion: 4.2.7
+    created: "2022-07-04T12:59:21.420102935Z"
+    dependencies:
+    - name: elasticsearch
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - install-elasticsearch
+      version: 7.17.3
+    - name: mongodb
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - install-mongodb
+      version: 11.1.10
+    description: Graylog is the centralized log management solution built to open
+      standards for capturing, storing, and enabling real-time analysis of terabytes
+      of machine data.
+    digest: 96ce95b348f1a3cf6916af84028296202bf5e27b49da1edfd3bdea315a78e2dd
+    home: https://www.graylog.org
+    icon: https://global-uploads.webflow.com/5a218ef7897bf400019e2f16/5a218ef7897bf400019e2f60_logo-graylog.png
+    keywords:
+    - graylog
+    - logs
+    - syslog
+    - gelf
+    maintainers:
+    - email: goonohc@gmail.com
+      name: KongZ
+    name: graylog
+    sources:
+    - https://github.com/KongZ/charts
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/graylog-2.1.2/graylog-2.1.2.tgz
+    version: 2.1.2
   ingress-nginx:
   - annotations:
       artifacthub.io/changes: |
@@ -3155,4 +3190,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-07-04T12:36:03.227674199Z"
+generated: "2022-07-04T12:59:21.42039194Z"
