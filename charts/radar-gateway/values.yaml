@@ -51,6 +51,7 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /kafka/$1
+    nginx.ingress.kubernetes.io/proxy-body-size: 24m
   # -- Path within the url structure
   path: "/kafka/?(.*)"
   pathType: ImplementationSpecific
