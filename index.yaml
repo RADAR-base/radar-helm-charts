@@ -1156,6 +1156,31 @@ entries:
   radar-gateway:
   - apiVersion: v2
     appVersion: 0.5.12
+    created: "2022-07-04T09:26:48.493245196Z"
+    description: A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming
+      participant data. It performs authentication, authorization, content validation
+      and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
+    digest: 05957b976112ea405f8443f38f707bb413515cf6b384b0e404e53ae6d53b6ff1
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-gateway
+    sources:
+    - https://github.com/RADAR-base/RADAR-Gateway
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-gateway-0.2.4/radar-gateway-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
+    appVersion: 0.5.12
     created: "2022-04-28T12:08:02.643199628Z"
     description: A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming
       participant data. It performs authentication, authorization, content validation
@@ -2862,4 +2887,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-06-15T10:58:28.004519374Z"
+generated: "2022-07-04T09:26:48.493864897Z"
