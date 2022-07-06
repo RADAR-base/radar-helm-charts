@@ -1848,6 +1848,32 @@ entries:
     version: 0.1.1
   radar-output:
   - apiVersion: v2
+    appVersion: 2.2.0
+    created: "2022-07-06T15:38:25.35015889Z"
+    description: A Helm chart for RADAR-base output restructure service. This application
+      reads data from intermediate storage and restructure the data into project->
+      subject-id-> data topic -> data split per hour. This service offers few options
+      to choose the source and target of the pipeline.
+    digest: 6c5c27b78e072c88c49ea3fc194418100893429d4f6b55013506f2437accb4dd
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-output
+    sources:
+    - https://github.com/RADAR-base/radar-output-restructure
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-output-0.3.0/radar-output-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     appVersion: 2.0.1
     created: "2022-04-21T15:48:38.870327647Z"
     description: A Helm chart for RADAR-base output restructure service. This application
@@ -3190,4 +3216,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-07-04T12:59:21.42039194Z"
+generated: "2022-07-06T15:38:25.350438395Z"
