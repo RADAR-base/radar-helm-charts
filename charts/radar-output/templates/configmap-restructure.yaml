@@ -23,6 +23,9 @@ data:
         accessToken: "{{ .Values.source.s3.accessToken }}"
         secretKey: "{{ .Values.source.s3.secretKey }}"
         bucket: "{{ .Values.source.s3.bucket }}"
+        connectTimeout: {{ .Values.source.s3.connectTimeout }}
+        writeTimeout: {{ .Values.source.s3.writeTimeout }}
+        readTimeout: {{ .Values.source.s3.readTimeout }}
       azure:
         endpoint: "{{ .Values.source.azure.endpoint }}"
         username: "{{ .Values.source.azure.username }}"
@@ -31,6 +34,10 @@ data:
         accountKey: "{{ .Values.source.azure.accountKey }}"
         sasToken: "{{ .Values.source.azure.sasToken }}"
         container: "{{ .Values.source.azure.container }}"
+        connectTimeout: {{ .Values.source.azure.connectTimeout }}
+        responseTimeout: {{ .Values.source.azure.responseTimeout }}
+        writeTimeout: {{ .Values.source.azure.writeTimeout }}
+        readTimeout: {{ .Values.source.azure.readTimeout }}
 
     target:
       type: "{{ .Values.target.type }}"
@@ -39,6 +46,9 @@ data:
         accessToken: "{{ .Values.target.s3.accessToken }}"
         secretKey: "{{ .Values.target.s3.secretKey }}"
         bucket: "{{ .Values.target.s3.bucket }}"
+        connectTimeout: {{ .Values.target.s3.connectTimeout }}
+        writeTimeout: {{ .Values.target.s3.writeTimeout }}
+        readTimeout: {{ .Values.target.s3.readTimeout }}
       azure:
         endpoint: "{{ .Values.target.azure.endpoint }}"
         username: "{{ .Values.target.azure.username }}"
@@ -47,6 +57,10 @@ data:
         accountKey: "{{ .Values.target.azure.accountKey }}"
         sasToken: "{{ .Values.target.azure.sasToken }}"
         container: "{{ .Values.target.azure.container }}"
+        connectTimeout: {{ .Values.target.azure.connectTimeout }}
+        responseTimeout: {{ .Values.target.azure.responseTimeout }}
+        writeTimeout: {{ .Values.target.azure.writeTimeout }}
+        readTimeout: {{ .Values.target.azure.readTimeout }}
 
     redis:
       uri: "{{ .Values.redis.uri }}"
@@ -81,9 +95,9 @@ data:
     # Worker settings
     worker:
       # Maximum number of files and converters to keep open while processing
-      cacheSize: 300
+      cacheSize: {{ .Values.worker.cacheSize }}
       # Maximum number of offsets in cache.
-      cacheOffsetsSize: 500000
+      cacheOffsetsSize: {{ .Values.worker.cacheOffsetsSize }}
       # Number of threads to do processing with
       numThreads: "{{ .Values.worker.numThreads }}"
       # Maximum number of files to process in any given topic.
@@ -120,17 +134,9 @@ data:
         {{ .Values.paths.properties | toYaml | indent 8 | trim }}
 
     # Individual topic configuration
+    {{- if .Values.topics }}
+    topics:
+      {{ .Values.topics | toYaml | indent 6 | trim }}
+    {{- else }}
     topics: {}
-    #  # topic name
-    #  connect_fitbit_source:
-    #    # deduplicate this topic, regardless of the format settings
-    #    deduplication:
-    #      # deduplicate this topic only using given fields.
-    #      distinctFields: [value.time]
-    #  connect_fitbit_bad:
-    #    # Do not process this topic
-    #    exclude: true
-    #  biovotion_acceleration:
-    #    # Disable deduplication
-    #    deduplication:
-    #      enable: false
+    {{- end }}

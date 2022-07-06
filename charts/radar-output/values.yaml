@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-output-restructure
   # -- radar-output image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 2.0.1
+  tag: 2.2.0
   # -- radar-output image pull policy
   pullPolicy: IfNotPresent
 
@@ -47,7 +47,7 @@ resources:
   # -- CPU/Memory resource requests
   requests:
     cpu: 100m
-    memory: 400Mi
+    memory: 2Gi
 
 # -- Node labels for pod assignment
 nodeSelector: {}
@@ -57,6 +57,8 @@ tolerations: []
 
 # -- Affinity labels for pod assignment
 affinity: {}
+
+javaOpts: "-Xms400m -Xmx3g"
 
 source:
   # -- Type of the intermediate storage of the RADAR-base pipeline e.g. s3, hdfs
@@ -70,6 +72,12 @@ source:
     secretKey: secret
     # -- s3 bucket name of the intermediate storage
     bucket: radar-intermediate-storage
+    # -- s3 HTTP connect timeout in seconds
+    connectTimeout:
+    # -- s3 HTTP write timeout in seconds
+    writeTimeout:
+    # -- s3 HTTP read timeout in seconds
+    readTimeout:
   azure:
     # -- Azure endpoint of the intermediate storage
     endpoint: ""
@@ -85,6 +93,14 @@ source:
     sasToken: ""
     # -- Azure blob container name
     container: ""
+    # -- Azure HTTP connect timeout in seconds
+    connectTimeout:
+    # -- Azure HTTP response timeout in seconds
+    responseTimeout:
+    # -- Azure HTTP write timeout in seconds
+    writeTimeout:
+    # -- Azure HTTP read timeout in seconds
+    readTimeout:
 
 target:
   # -- Type of the output storage of the RADAR-base pipeline e.g. s3, local
@@ -98,6 +114,12 @@ target:
     secretKey: secret
     # -- s3 bucket name of the output storage
     bucket: radar-output-storage
+    # -- s3 HTTP connect timeout in seconds
+    connectTimeout:
+    # -- s3 HTTP write timeout in seconds
+    writeTimeout:
+    # -- s3 HTTP read timeout in seconds
+    readTimeout:
   azure:
     # -- Azure endpoint of the output storage
     endpoint: ""
@@ -113,12 +135,24 @@ target:
     sasToken: ""
     # -- Azure blob container name
     container: ""
+    # -- Azure HTTP connect timeout in seconds
+    connectTimeout:
+    # -- Azure HTTP response timeout in seconds
+    responseTimeout:
+    # -- Azure HTTP write timeout in seconds
+    writeTimeout:
+    # -- Azure HTTP read timeout in seconds
+    readTimeout:
 
 redis:
   # -- URL of the redis database
   uri: redis://redis-master:6379
 
 worker:
+  # -- Maximum number of files and converters to keep open while processing
+  cacheSize: 300
+  # -- Maximum number of offsets in cache.
+  cacheOffsetsSize: 500000
   # -- Minimum amount of time in seconds since a file was last modified for it to be considered for processing.
   minimumFileAge: 900
   # -- Number of threads to do processing on
@@ -133,7 +167,23 @@ paths:
   input: topics
   # -- Relative path to output storage to write data
   output: output
-  # -- # Output path construction factory
-  factory: org.radarbase.output.path.ObservationKeyPathFactory
+  # -- Output path construction factory
+  factory: org.radarbase.output.path.FormattedPathFactory
   # -- Additional properties. For details see https://github.com/RADAR-base/radar-output-restructure/blob/master/restructure.yml
   properties: {}
+
+# -- Individual topic configuration
+topics: {}
+  #  # topic name
+  #  connect_fitbit_source:
+  #    # deduplicate this topic, regardless of the format settings
+  #    deduplication:
+  #      # deduplicate this topic only using given fields.
+  #      distinctFields: [value.time]
+  #  connect_fitbit_bad:
+  #    # Do not process this topic
+  #    exclude: true
+  #  biovotion_acceleration:
+  #    # Disable deduplication
+  #    deduplication:
+  #      enable: false
