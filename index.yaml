@@ -588,6 +588,30 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/cert-manager-0.1.0/cert-manager-0.1.0.tgz
     version: 0.1.0
+  cert-manager-letsencrypt:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2022-07-11T08:29:46.169347032Z"
+    description: A Helm chart for a cert-manager ClusterIssuer for letsencrypt. Requires
+      the cert-manager release to be activated.
+    digest: fea8146525788a6eb47a7962544aeccdab8ef9c670228d2703a66510ce88cb5e
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: cert-manager-letsencrypt
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/cert-manager-letsencrypt
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/cert-manager-letsencrypt-0.1.0/cert-manager-letsencrypt-0.1.0.tgz
+    version: 0.1.0
   common:
   - annotations:
       category: Infrastructure
@@ -3216,4 +3240,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-07-06T15:38:25.350438395Z"
+generated: "2022-07-11T08:29:46.169972129Z"
