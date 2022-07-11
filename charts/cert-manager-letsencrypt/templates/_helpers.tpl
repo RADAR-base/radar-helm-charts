@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "cert-manager.name" -}}
+{{- define "cert-manager-letsencrypt.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "cert-manager.fullname" -}}
+{{- define "cert-manager-letsencrypt.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,9 +27,9 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Common labels
 */}}
-{{- define "cert-manager.labels" -}}
-helm.sh/chart: {{ include "cert-manager.chart" . }}
-{{ include "cert-manager.selectorLabels" . }}
+{{- define "cert-manager-letsencrypt.labels" -}}
+helm.sh/chart: {{ include "cert-manager-letsencrypt.chart" . }}
+{{ include "cert-manager-letsencrypt.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -39,14 +39,14 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "cert-manager.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "cert-manager.name" . }}
+{{- define "cert-manager-letsencrypt.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "cert-manager-letsencrypt.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "cert-manager.chart" -}}
+{{- define "cert-manager-letsencrypt.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

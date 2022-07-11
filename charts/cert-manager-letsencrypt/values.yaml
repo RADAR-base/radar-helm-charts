@@ -1,0 +1,19 @@
+# Default values for cert-manager.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Name of the cluster issuer
+nameOverride: letsencrypt-prod
+# -- Full name of the cluster issuer
+fullnameOverride: letsencrypt-prod
+
+# -- Email address of cluster maintainer
+maintainerEmail: me@example.com
+
+httpIssuer:
+  # -- Enable the letsencrypt HTTP issuer
+  enabled: true
+  # -- Environment to use. Either staging or production
+  environment: production
+  # -- Secret to store letsencrypt certificate data in
+  privateSecretRef: letsencrypt-prod
