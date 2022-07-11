@@ -501,6 +501,32 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/cc-schema-registry-proxy-0.1.1/cc-schema-registry-proxy-0.1.1.tgz
     version: 0.1.1
   cert-manager:
+  - annotations:
+      artifacthub.io/prerelease: "false"
+      artifacthub.io/signKey: |
+        fingerprint: 1020CF3C033D4F35BAE1C19E1226061C665DF13E
+        url: https://cert-manager.io/public-keys/cert-manager-keyring-2021-09-20-1020CF3C033D4F35BAE1C19E1226061C665DF13E.gpg
+    apiVersion: v1
+    appVersion: v1.8.2
+    created: "2022-07-11T08:31:54.981638456Z"
+    description: A Helm chart for cert-manager
+    digest: a71682057893dd017b93eed5d2f868f2524d703fec8839b59f61d23626b89612
+    home: https://github.com/cert-manager/cert-manager
+    icon: https://raw.githubusercontent.com/cert-manager/cert-manager/master/logo/logo.png
+    keywords:
+    - cert-manager
+    - kube-lego
+    - letsencrypt
+    - tls
+    maintainers:
+    - email: cert-manager-maintainers@googlegroups.com
+      name: cert-manager-maintainers
+    name: cert-manager
+    sources:
+    - https://github.com/cert-manager/cert-manager
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/cert-manager-v1.8.2/cert-manager-v1.8.2.tgz
+    version: v1.8.2
   - apiVersion: v2
     appVersion: "1.0"
     created: "2022-04-21T15:48:37.638284419Z"
@@ -3240,4 +3266,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-07-11T08:29:46.169972129Z"
+generated: "2022-07-11T08:31:54.98197466Z"
