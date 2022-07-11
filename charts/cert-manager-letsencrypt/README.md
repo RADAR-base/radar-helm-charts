@@ -27,6 +27,7 @@ A Helm chart for a cert-manager ClusterIssuer for letsencrypt. Requires the cert
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| nameOverride | string | `"letsencrypt-prod"` | Name of the cluster issuer |
 | fullnameOverride | string | `"letsencrypt-prod"` | Full name of the cluster issuer |
 | maintainerEmail | string | `"me@example.com"` | Email address of cluster maintainer |
 | httpIssuer.enabled | bool | `true` | Enable the letsencrypt HTTP issuer |
