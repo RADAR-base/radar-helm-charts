@@ -8,7 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  google-credentials.json: {{ .Values.google_application_credentials | quote }}
   healthcheck.sh: |
     #!/bin/sh
     STATUS=$(curl -s --max-time 4 localhost:8080/actuator/health)

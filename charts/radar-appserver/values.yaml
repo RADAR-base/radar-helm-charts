@@ -52,6 +52,8 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
   # -- Path within the url structure
   path: "/appserver/?(.*)"
+  # -- Ingress path type
+  pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
     - localhost
