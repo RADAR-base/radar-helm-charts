@@ -1213,6 +1213,26 @@ entries:
   radar-appserver:
   - apiVersion: v2
     appVersion: 3.2.0
+    created: "2022-07-12T10:18:32.3564467Z"
+    description: A Helm chart for the backend application of RADAR-base Appserver
+    digest: 3f81b86ec71635847b0bcc0cec7678c8ed2cc702d47994ce35c531bc65822624
+    home: https://radar-base.org
+    maintainers:
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    name: radar-appserver
+    sources:
+    - https://github.com/RADAR-base/RADAR-Appserver
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-appserver-0.1.4/radar-appserver-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 3.2.0
     created: "2022-06-15T10:58:28.003966266Z"
     description: A Helm chart for the backend application of RADAR-base Appserver
     digest: c447ff8177e529468f0dd906aec48a9bda6bc0546c02b5a902fd201c21b0e7d0
@@ -3266,4 +3286,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-0.1.1/velero-0.1.1.tgz
     version: 0.1.1
-generated: "2022-07-11T08:31:54.98197466Z"
+generated: "2022-07-12T10:18:32.356658107Z"
