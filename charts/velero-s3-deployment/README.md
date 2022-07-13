@@ -1,10 +1,10 @@
 
 
-# velero
+# velero-s3-deployment
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
-A Helm chart for Velero, this chart is an overlay for Velero and adds some default values and a deployment to mirror the local object storage to a remote location.
+A Helm chart for Velero S3 deployment, this chart holds resources used by Velero with a deployment to mirror the local object storage to a remote object storage.
 
 **Homepage:** <https://velero.io>
 
@@ -18,7 +18,7 @@ A Helm chart for Velero, this chart is an overlay for Velero and adds some defau
 
 ## Source Code
 
-* <https://github.com/vmware-tanzu/helm-charts/tree/main/charts/velero>
+* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/velero-s3-deployment>
 
 ## Prerequisites
 * Kubernetes 1.17+
@@ -30,7 +30,7 @@ A Helm chart for Velero, this chart is an overlay for Velero and adds some defau
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://vmware-tanzu.github.io/helm-charts | velero | 2.12.0 |
+| https://radar-base.github.io/radar-helm-charts | velero | 2.30.1 |
 
 ## Values
 
@@ -38,7 +38,7 @@ A Helm chart for Velero, this chart is an overlay for Velero and adds some defau
 |-----|------|---------|-------------|
 | objectStorageBackupReplicaCount | int | `1` | Number of replicas for object storage backup pod, should be 1 |
 | mc_image.repository | string | `"minio/mc"` | Object storage backup pod image repository |
-| mc_image.tag | string | `"RELEASE.2020-09-03T00-08-28Z"` | Object storage backup pod image tag (immutable tags are recommended) |
+| mc_image.tag | string | `"RELEASE.2022-07-06T14-54-36Z"` | Object storage backup pod image tag (immutable tags are recommended) |
 | mc_image.pullPolicy | string | `"IfNotPresent"` | Object storage backup pod image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | podSecurityContext | object | `{}` | Configure object storage backup pod pods' Security Context |
@@ -53,7 +53,7 @@ A Helm chart for Velero, this chart is an overlay for Velero and adds some defau
 | backup.secretKey | string | `"secretKey"` | Secret key of remote object storage |
 | backup.intermediateBucketName | string | `"radar-intermediate-storage"` | Name of remote intermediate data bucket |
 | backup.outputBucketName | string | `"radar-output-storage"` | Name of remote output data bucket |
-| velero | object | `{"configuration":{"backupStorageLocation":{"bucket":"radar-base-backups","config":{"region":"eu-central-1","s3ForcePathStyle":"true","s3Url":"https://s3.amazon.com"},"name":"default"},"provider":"aws"},"credentials":{"secretContents":{"cloud":"[default]\naws_access_key_id=accessKey\naws_secret_access_key=secretKey\n"}},"deployRestic":true,"initContainers":[{"image":"velero/velero-plugin-for-aws:v1.1.0","imagePullPolicy":"IfNotPresent","name":"velero-plugin-for-aws","volumeMounts":[{"mountPath":"/target","name":"plugins"}]}],"metrics":{"enabled":true,"serviceMonitor":{"enabled":true}},"restic":{"extraVolumeMounts":[],"extraVolumes":[],"podVolumePath":"/var/lib/kubelet/pods","priorityClassName":{},"privileged":false,"resources":{},"securityContext":{},"tolerations":[]},"schedules":{"backup":{"schedule":"0 3 * * *","template":{"includeClusterResources":true,"includedNamespaces":["cert-manager","default","graylog","kubernetes-dashboard","monitoring","velero"],"snapshotVolumes":false,"ttl":"240h"}}},"snapshotsEnabled":false}` | -- |
+| velero | object | `{"configuration":{"backupStorageLocation":{"bucket":"radar-base-backups","config":{"region":"eu-central-1","s3ForcePathStyle":"true","s3Url":"https://s3.amazon.com"},"name":"default"},"provider":"aws"},"credentials":{"secretContents":{"cloud":"[default]\naws_access_key_id=accessKey\naws_secret_access_key=secretKey\n"}},"deployRestic":true,"initContainers":[{"image":"velero/velero-plugin-for-aws:v1.5.0","imagePullPolicy":"IfNotPresent","name":"velero-plugin-for-aws","volumeMounts":[{"mountPath":"/target","name":"plugins"}]}],"metrics":{"enabled":true,"serviceMonitor":{"enabled":true}},"restic":{"podVolumePath":"/var/lib/kubelet/pods","privileged":false},"schedules":{"backup":{"schedule":"0 3 * * *","template":{"includeClusterResources":true,"includedNamespaces":["cert-manager","default","graylog","kubernetes-dashboard","monitoring","velero"],"snapshotVolumes":false,"ttl":"240h"}}},"snapshotsEnabled":false}` | -- |
 | velero.initContainers | list | check values.yaml | Add plugins to enable using different storage systems, AWS plugin is needed to be able to push to S3-compatible object storages |
 | velero.metrics.enabled | bool | `true` | Enable monitoring metrics to be collected |
 | velero.metrics.serviceMonitor.enabled | bool | `true` | Enable prometheus-operator interface |
@@ -67,12 +67,6 @@ A Helm chart for Velero, this chart is an overlay for Velero and adds some defau
 | velero.deployRestic | bool | `true` | Deploy restic to backup Kubernetes volumes |
 | velero.restic.podVolumePath | string | `"/var/lib/kubelet/pods"` | Path to find pod volumes |
 | velero.restic.privileged | bool | `false` | Shouldn't need privilege to backup the volumes |
-| velero.restic.priorityClassName | object | `{}` | Pod priority class name to use for the Restic daemonset. Optional. |
-| velero.restic.resources | object | `{}` | Resource requests/limits to specify for the Restic daemonset deployment. Optional. |
-| velero.restic.tolerations | list | `[]` | Tolerations to use for the Restic daemonset. Optional. |
-| velero.restic.extraVolumes | list | `[]` | Extra volumes for the Restic daemonset. Optional. |
-| velero.restic.extraVolumeMounts | list | `[]` | Extra volumeMounts for the Restic daemonset. Optional. |
-| velero.restic.securityContext | object | `{}` | SecurityContext to use for the Velero deployment. Optional. Set fsGroup for `AWS IAM Roles for Service Accounts` see more informations at: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html |
 | velero.schedules.backup.schedule | string | `"0 3 * * *"` | Backup every day at 3:00 AM |
 | velero.schedules.backup.template.ttl | string | `"240h"` | Keep backup for 10 days |
 | velero.schedules.backup.template.includeClusterResources | bool | `true` | Backup cluster wide resources |

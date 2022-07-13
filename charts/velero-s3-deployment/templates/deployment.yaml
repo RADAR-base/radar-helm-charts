@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "velero.fullname" . }}-object-storage-backup
+  name: {{ include "velero-s3-deployment.fullname" . }}-object-storage-backup
   labels:
-{{ include "velero.labels" . | indent 4 }}
+{{ include "velero-s3-deployment.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.objectStorageBackupReplicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "velero.name" . }}
+      app.kubernetes.io/name: {{ include "velero-s3-deployment.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "velero.name" . }}
+        app.kubernetes.io/name: {{ include "velero-s3-deployment.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       {{- with .Values.imagePullSecrets }}

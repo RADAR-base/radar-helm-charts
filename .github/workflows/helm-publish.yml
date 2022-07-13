@@ -25,9 +25,8 @@ jobs:
 
       - name: Add Helm repos
         run: |
-          helm repo add jetstack https://charts.jetstack.io
+          helm repo add radar https://radar-base.github.io/radar-helm-charts
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-          helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.0
