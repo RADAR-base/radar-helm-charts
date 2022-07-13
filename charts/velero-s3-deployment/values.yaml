@@ -1,4 +1,4 @@
-# Default values for velero.
+# Default values for velero-s3-deployment.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -9,7 +9,7 @@ mc_image:
   # -- Object storage backup pod image repository
   repository: minio/mc
   # -- Object storage backup pod image tag (immutable tags are recommended)
-  tag: RELEASE.2020-09-03T00-08-28Z
+  tag: RELEASE.2022-07-06T14-54-36Z
   # -- Object storage backup pod image pull policy
   pullPolicy: IfNotPresent
 
@@ -59,7 +59,7 @@ velero:
   # @default -- check values.yaml
   initContainers:
     - name: velero-plugin-for-aws
-      image: velero/velero-plugin-for-aws:v1.1.0
+      image: velero/velero-plugin-for-aws:v1.5.0
       imagePullPolicy: IfNotPresent
       volumeMounts:
         - mountPath: /target
@@ -113,24 +113,6 @@ velero:
     podVolumePath: /var/lib/kubelet/pods
     # -- Shouldn't need privilege to backup the volumes
     privileged: false
-    # -- Pod priority class name to use for the Restic daemonset. Optional.
-    priorityClassName: {}
-    # -- Resource requests/limits to specify for the Restic daemonset deployment. Optional.
-    resources: {}
-    # -- Tolerations to use for the Restic daemonset. Optional.
-    tolerations: []
-
-    # -- Extra volumes for the Restic daemonset. Optional.
-    extraVolumes: []
-
-    # -- Extra volumeMounts for the Restic daemonset. Optional.
-    extraVolumeMounts: []
-
-    # -- SecurityContext to use for the Velero deployment. Optional.
-    # Set fsGroup for `AWS IAM Roles for Service Accounts`
-    # see more informations at: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
-    securityContext: {}
-      # fsGroup: 1337
 
   schedules:
     backup:
