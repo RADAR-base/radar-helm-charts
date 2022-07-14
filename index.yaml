@@ -1122,6 +1122,26 @@ entries:
   minio:
   - apiVersion: v1
     appVersion: master
+    created: "2022-07-14T07:27:35.254917111Z"
+    description: High Performance, Kubernetes Native Object Storage
+    digest: 7d18c0bea2b7c487b41633fad500c6b2ada36b33f16855a8f5e9c68f573457c1
+    home: https://min.io
+    icon: https://min.io/resources/img/logo/MINIO_wordmark.png
+    keywords:
+    - storage
+    - object-storage
+    - S3
+    maintainers:
+    - email: dev@minio.io
+      name: MinIO, Inc
+    name: minio
+    sources:
+    - https://github.com/minio/minio
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/minio-8.0.11/minio-8.0.11.tgz
+    version: 8.0.11
+  - apiVersion: v1
+    appVersion: master
     created: "2022-07-04T12:27:40.283826033Z"
     description: High Performance, Kubernetes Native Object Storage
     digest: bf762c926ad1963835ec9b60f9ca09294b1947097588af3f8716c4d9de8e7fa7
@@ -3387,4 +3407,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2022-07-13T14:12:43.771481128Z"
+generated: "2022-07-14T07:27:35.255181529Z"
