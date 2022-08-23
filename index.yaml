@@ -642,6 +642,33 @@ entries:
   - annotations:
       category: Infrastructure
     apiVersion: v2
+    appVersion: 2.0.0
+    created: "2022-08-23T13:17:27.219879419Z"
+    description: A Library Helm Chart for grouping common logic between bitnami charts.
+      This chart is not deployable by itself.
+    digest: 1ae000a43b429bc3b00a5154ed959c85422f5e8ac1cf97322f0b43a224b225a7
+    home: https://github.com/bitnami/charts/tree/master/bitnami/common
+    icon: https://bitnami.com/downloads/logos/bitnami-mark.png
+    keywords:
+    - common
+    - helper
+    - template
+    - function
+    - bitnami
+    maintainers:
+    - name: Bitnami
+      url: https://github.com/bitnami/charts
+    name: common
+    sources:
+    - https://github.com/bitnami/charts
+    - https://www.bitnami.com/
+    type: library
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/common-2.0.0/common-2.0.0.tgz
+    version: 2.0.0
+  - annotations:
+      category: Infrastructure
+    apiVersion: v2
     appVersion: 1.13.1
     created: "2022-07-04T12:27:39.617196194Z"
     description: A Library Helm Chart for grouping common logic between bitnami charts.
@@ -3470,4 +3497,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2022-08-18T10:55:23.705596028Z"
+generated: "2022-08-23T13:17:27.220244323Z"
