@@ -1,16 +1,29 @@
-apiVersion: v1
-appVersion: master
-description: High Performance, Kubernetes Native Object Storage
-home: https://min.io
-icon: https://min.io/resources/img/logo/MINIO_wordmark.png
+annotations:
+  category: Infrastructure
+apiVersion: v2
+appVersion: 2022.8.22
+dependencies:
+- name: common
+  repository: https://radar-base.github.org/radar-helm-charts
+  tags:
+  - bitnami-common
+  version: 2.x.x
+description: MinIO(R) is an object storage server, compatible with Amazon S3 cloud
+  storage service, mainly used for storing unstructured data (such as photos, videos,
+  log files, etc.).
+home: https://github.com/bitnami/charts/tree/master/bitnami/minio
+icon: https://bitnami.com/assets/stacks/minio/img/minio-stack-220x234.png
 keywords:
+- minio
 - storage
 - object-storage
-- S3
+- s3
+- cluster
 maintainers:
-- email: dev@minio.io
-  name: MinIO, Inc
+- name: Bitnami
+  url: https://github.com/bitnami/charts
 name: minio
 sources:
-- https://github.com/minio/minio
-version: 8.0.11
+- https://github.com/bitnami/containers/tree/main/bitnami/minio
+- https://min.io
+version: 11.9.1

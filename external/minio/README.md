@@ -1,418 +1,591 @@
-> NOTE: This helm chart is in code freeze i.e we will only update MinIO releases occastionally by bumping up the version. For latest features you are advised to start using our [MinIO operator](https://github.com/minio/operator).
+<!--- app-name: Bitnami Object Storage based on MinIO&reg; -->
 
-MinIO
-=====
+# Bitnami Object Storage based on MinIO(R)
 
-[MinIO](https://min.io) is a High Performance Object Storage released under Apache License v2.0. It is API compatible with Amazon S3 cloud storage service. Use MinIO to build high performance infrastructure for machine learning, analytics and application data workloads.
+MinIO(R) is an object storage server, compatible with Amazon S3 cloud storage service, mainly used for storing unstructured data (such as photos, videos, log files, etc.).
 
-MinIO supports [distributed mode](https://docs.minio.io/docs/distributed-minio-quickstart-guide). In distributed mode, you can pool multiple drives (even on different machines) into a single object storage server.
+[Overview of Bitnami Object Storage based on MinIO&reg;](https://min.io/)
 
-For more detailed documentation please visit [here](https://docs.minio.io/)
+Disclaimer: All software products, projects and company names are trademark(TM) or registered(R) trademarks of their respective holders, and use of them does not imply any affiliation or endorsement. This software is licensed to you subject to one or more open source licenses and VMware provides the software on an AS-IS basis. MinIO(R) is a registered trademark of the MinIO Inc. in the US and other countries. Bitnami is not affiliated, associated, authorized, endorsed by, or in any way officially connected with MinIO Inc. MinIO(R) is licensed under GNU AGPL v3.0.
+                           
+## TL;DR
 
-Introduction
-------------
-
-This chart bootstraps MinIO deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
-
-Prerequisites
--------------
-
-- Kubernetes 1.4+ with Beta APIs enabled for default standalone mode.
-- Kubernetes 1.5+ with Beta APIs enabled to run MinIO in [distributed mode](#distributed-minio).
-- PV provisioner support in the underlying infrastructure.
-
-Configure MinIO Helm repo
---------------------
-```bash
-$ helm repo add minio https://helm.min.io/
+```console
+$ helm repo add bitnami https://charts.bitnami.com/bitnami
+$ helm install my-release bitnami/minio
 ```
 
-Installing the Chart
---------------------
+## Introduction
 
-Install this chart using:
+This chart bootstraps a [MinIO&reg;](https://github.com/bitnami/containers/tree/main/bitnami/minio) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
-```bash
-$ helm install --namespace minio --generate-name minio/minio
+Bitnami charts can be used with [Kubeapps](https://kubeapps.dev/) for deployment and management of Helm Charts in clusters.
+
+## Prerequisites
+
+- Kubernetes 1.19+
+- Helm 3.2.0+
+- PV provisioner support in the underlying infrastructure
+- ReadWriteMany volume for Gateway NAS deployment scaling
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add bitnami https://charts.bitnami.com/bitnami
+$ helm install my-release bitnami/minio
 ```
 
-The command deploys MinIO on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
+These commands deploy MinIO&reg; on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
-### Release name
+> **Tip**: List all releases using `helm list`
 
-An instance of a chart running in a Kubernetes cluster is called a release. Each release is identified by a unique name within the cluster. Helm automatically assigns a unique release name after installing the chart. You can also set your preferred name by:
+## Uninstalling the Chart
 
-```bash
-$ helm install my-release minio/minio
-```
+To uninstall/delete the `my-release` deployment:
 
-### Access and Secret keys
-
-By default a pre-generated access and secret key will be used. To override the default keys, pass the access and secret keys as arguments to helm install.
-
-```bash
-$ helm install --set accessKey=myaccesskey,secretKey=mysecretkey --generate-name minio/minio
-```
-
-### Updating MinIO configuration via Helm
-
-[ConfigMap](https://kubernetes.io/docs/user-guide/configmap/) allows injecting containers with configuration data even while a Helm release is deployed.
-
-To update your MinIO server configuration while it is deployed in a release, you need to
-
-1. Check all the configurable values in the MinIO chart using `helm inspect values minio/minio`.
-2. Override the `minio_server_config` settings in a YAML formatted file, and then pass that file like this `helm upgrade -f config.yaml minio/minio`.
-3. Restart the MinIO server(s) for the changes to take effect.
-
-You can also check the history of upgrades to a release using `helm history my-release`. Replace `my-release` with the actual release name.
-
-### Installing certificates from third party CAs
-
-MinIO can connect to other servers, including MinIO nodes or other server types such as NATs and Redis. If these servers use certificates that were not registered with a known CA, add trust for these certificates to MinIO Server by bundling these certificates into a Kubernetes secret and providing it to Helm via the `trustedCertsSecret` value. If `.Values.tls.enabled` is `true` and you're installing certificates for third party CAs, remember to include Minio's own certificate with key `public.crt`, if it also needs to be trusted.
-
-For instance, given that TLS is enabled and you need to add trust for Minio's own CA and for the CA of a Keycloak server, a Kubernetes secret can be created from the certificate files using `kubectl`:
-
-```
-kubectl -n minio create secret generic minio-trusted-certs --from-file=public.crt --from-file=keycloak.crt
-```
-
-If TLS is not enabled, you would need only the third party CA:
-
-```
-kubectl -n minio create secret generic minio-trusted-certs --from-file=keycloak.crt
-```
-
-The name of the generated secret can then be passed to Helm using a values file or the `--set` parameter:
-
-```
-trustedCertsSecret: "minio-trusted-certs"
-
-or
-
---set trustedCertsSecret=minio-trusted-certs
-```
-
-Uninstalling the Chart
-----------------------
-
-Assuming your release is named as `my-release`, delete it using the command:
-
-```bash
+```console
 $ helm delete my-release
-```
-
-or
-
-```bash
-$ helm uninstall my-release
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
-Upgrading the Chart
--------------------
+## Parameters
 
-You can use Helm to update MinIO version in a live release. Assuming your release is named as `my-release`, get the values using the command:
+### Global parameters
 
-```bash
-$ helm get values my-release > old_values.yaml
+| Name                      | Description                                     | Value |
+| ------------------------- | ----------------------------------------------- | ----- |
+| `global.imageRegistry`    | Global Docker image registry                    | `""`  |
+| `global.imagePullSecrets` | Global Docker registry secret names as an array | `[]`  |
+| `global.storageClass`     | Global StorageClass for Persistent Volume(s)    | `""`  |
+
+
+### Common parameters
+
+| Name                | Description                                                                                  | Value           |
+| ------------------- | -------------------------------------------------------------------------------------------- | --------------- |
+| `nameOverride`      | String to partially override common.names.fullname template (will maintain the release name) | `""`            |
+| `fullnameOverride`  | String to fully override common.names.fullname template                                      | `""`            |
+| `commonLabels`      | Labels to add to all deployed objects                                                        | `{}`            |
+| `commonAnnotations` | Annotations to add to all deployed objects                                                   | `{}`            |
+| `kubeVersion`       | Force target Kubernetes version (using Helm capabilities if not set)                         | `""`            |
+| `clusterDomain`     | Default Kubernetes cluster domain                                                            | `cluster.local` |
+| `extraDeploy`       | Array of extra objects to deploy with the release                                            | `[]`            |
+
+
+### MinIO&reg; parameters
+
+| Name                       | Description                                                                                                                                                                                               | Value                    |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| `image.registry`           | MinIO&reg; image registry                                                                                                                                                                                 | `docker.io`              |
+| `image.repository`         | MinIO&reg; image repository                                                                                                                                                                               | `bitnami/minio`          |
+| `image.tag`                | MinIO&reg; image tag (immutable tags are recommended)                                                                                                                                                     | `2022.8.22-debian-11-r0` |
+| `image.digest`             | MinIO&reg; image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag                                                                                                | `""`                     |
+| `image.pullPolicy`         | Image pull policy                                                                                                                                                                                         | `IfNotPresent`           |
+| `image.pullSecrets`        | Specify docker-registry secret names as an array                                                                                                                                                          | `[]`                     |
+| `image.debug`              | Specify if debug logs should be enabled                                                                                                                                                                   | `false`                  |
+| `clientImage.registry`     | MinIO&reg; Client image registry                                                                                                                                                                          | `docker.io`              |
+| `clientImage.repository`   | MinIO&reg; Client image repository                                                                                                                                                                        | `bitnami/minio-client`   |
+| `clientImage.tag`          | MinIO&reg; Client image tag (immutable tags are recommended)                                                                                                                                              | `2022.8.11-debian-11-r3` |
+| `clientImage.digest`       | MinIO&reg; Client image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag                                                                                         | `""`                     |
+| `mode`                     | MinIO&reg; server mode (`standalone` or `distributed`)                                                                                                                                                    | `standalone`             |
+| `auth.rootUser`            | MinIO&reg; root username                                                                                                                                                                                  | `admin`                  |
+| `auth.rootPassword`        | Password for MinIO&reg; root user                                                                                                                                                                         | `""`                     |
+| `auth.existingSecret`      | Use existing secret for credentials details (`auth.rootUser` and `auth.rootPassword` will be ignored and picked up from this secret). The secret has to contain the keys `root-user` and `root-password`) | `""`                     |
+| `auth.forcePassword`       | Force users to specify required passwords                                                                                                                                                                 | `false`                  |
+| `auth.useCredentialsFiles` | Mount credentials as a files instead of using an environment variable                                                                                                                                     | `false`                  |
+| `auth.forceNewKeys`        | Force root credentials (user and password) to be reconfigured every time they change in the secrets                                                                                                       | `false`                  |
+| `defaultBuckets`           | Comma, semi-colon or space separated list of buckets to create at initialization (only in standalone mode)                                                                                                | `""`                     |
+| `disableWebUI`             | Disable MinIO&reg; Web UI                                                                                                                                                                                 | `false`                  |
+| `tls.enabled`              | Enable tls in front of the container                                                                                                                                                                      | `false`                  |
+| `tls.autoGenerated`        | Generate automatically self-signed TLS certificates                                                                                                                                                       | `false`                  |
+| `tls.existingSecret`       | Name of an existing secret holding the certificate information                                                                                                                                            | `""`                     |
+| `tls.mountPath`            | The mount path where the secret will be located                                                                                                                                                           | `""`                     |
+| `extraEnvVars`             | Extra environment variables to be set on MinIO&reg; container                                                                                                                                             | `{}`                     |
+| `extraEnvVarsCM`           | ConfigMap with extra environment variables                                                                                                                                                                | `""`                     |
+| `extraEnvVarsSecret`       | Secret with extra environment variables                                                                                                                                                                   | `""`                     |
+| `command`                  | Default container command (useful when using custom images). Use array form                                                                                                                               | `[]`                     |
+| `args`                     | Default container args (useful when using custom images). Use array form                                                                                                                                  | `[]`                     |
+
+
+### MinIO&reg; deployment/statefulset parameters
+
+| Name                                                 | Description                                                                                                                                                                                   | Value           |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `schedulerName`                                      | Specifies the schedulerName, if it's nil uses kube-scheduler                                                                                                                                  | `""`            |
+| `terminationGracePeriodSeconds`                      | In seconds, time the given to the MinIO pod needs to terminate gracefully                                                                                                                     | `""`            |
+| `deployment.updateStrategy.type`                     | Deployment strategy type                                                                                                                                                                      | `Recreate`      |
+| `statefulset.updateStrategy.type`                    | StatefulSet strategy type                                                                                                                                                                     | `RollingUpdate` |
+| `statefulset.podManagementPolicy`                    | StatefulSet controller supports relax its ordering guarantees while preserving its uniqueness and identity guarantees. There are two valid pod management policies: OrderedReady and Parallel | `Parallel`      |
+| `statefulset.replicaCount`                           | Number of pods per zone (only for MinIO&reg; distributed mode). Should be even and `>= 4`                                                                                                     | `4`             |
+| `statefulset.zones`                                  | Number of zones (only for MinIO&reg; distributed mode)                                                                                                                                        | `1`             |
+| `statefulset.drivesPerNode`                          | Number of drives attached to every node (only for MinIO&reg; distributed mode)                                                                                                                | `1`             |
+| `provisioning.enabled`                               | Enable MinIO&reg; provisioning Job                                                                                                                                                            | `false`         |
+| `provisioning.schedulerName`                         | Name of the k8s scheduler (other than default) for MinIO&reg; provisioning                                                                                                                    | `""`            |
+| `provisioning.podAnnotations`                        | Provisioning Pod annotations.                                                                                                                                                                 | `{}`            |
+| `provisioning.command`                               | Default provisioning container command (useful when using custom images). Use array form                                                                                                      | `[]`            |
+| `provisioning.args`                                  | Default provisioning container args (useful when using custom images). Use array form                                                                                                         | `[]`            |
+| `provisioning.extraCommands`                         | Optionally specify extra list of additional commands for MinIO&reg; provisioning pod                                                                                                          | `[]`            |
+| `provisioning.extraVolumes`                          | Optionally specify extra list of additional volumes for MinIO&reg; provisioning pod                                                                                                           | `[]`            |
+| `provisioning.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for MinIO&reg; provisioning container                                                                                                | `[]`            |
+| `provisioning.resources.limits`                      | The resources limits for the container                                                                                                                                                        | `{}`            |
+| `provisioning.resources.requests`                    | The requested resources for the container                                                                                                                                                     | `{}`            |
+| `provisioning.policies`                              | MinIO&reg; policies provisioning                                                                                                                                                              | `[]`            |
+| `provisioning.users`                                 | MinIO&reg; users provisioning. Can be used in addition to provisioning.usersExistingSecrets.                                                                                                  | `[]`            |
+| `provisioning.usersExistingSecrets`                  | Array if existing secrets containing MinIO&reg; users to be provisioned. Can be used in addition to provisioning.users.                                                                       | `[]`            |
+| `provisioning.groups`                                | MinIO&reg; groups provisioning                                                                                                                                                                | `[]`            |
+| `provisioning.buckets`                               | MinIO&reg; buckets, versioning, lifecycle, quota and tags provisioning                                                                                                                        | `[]`            |
+| `provisioning.config`                                | MinIO&reg; config provisioning                                                                                                                                                                | `[]`            |
+| `provisioning.podSecurityContext.enabled`            | Enable pod Security Context                                                                                                                                                                   | `true`          |
+| `provisioning.podSecurityContext.fsGroup`            | Group ID for the container                                                                                                                                                                    | `1001`          |
+| `provisioning.containerSecurityContext.enabled`      | Enable container Security Context                                                                                                                                                             | `true`          |
+| `provisioning.containerSecurityContext.runAsUser`    | User ID for the container                                                                                                                                                                     | `1001`          |
+| `provisioning.containerSecurityContext.runAsNonRoot` | Avoid running as root User                                                                                                                                                                    | `true`          |
+| `hostAliases`                                        | MinIO&reg; pod host aliases                                                                                                                                                                   | `[]`            |
+| `containerPorts.api`                                 | MinIO&reg; container port to open for MinIO&reg; API                                                                                                                                          | `9000`          |
+| `containerPorts.console`                             | MinIO&reg; container port to open for MinIO&reg; Console                                                                                                                                      | `9001`          |
+| `podSecurityContext.enabled`                         | Enable pod Security Context                                                                                                                                                                   | `true`          |
+| `podSecurityContext.fsGroup`                         | Group ID for the container                                                                                                                                                                    | `1001`          |
+| `containerSecurityContext.enabled`                   | Enable container Security Context                                                                                                                                                             | `true`          |
+| `containerSecurityContext.runAsUser`                 | User ID for the container                                                                                                                                                                     | `1001`          |
+| `containerSecurityContext.runAsNonRoot`              | Avoid running as root User                                                                                                                                                                    | `true`          |
+| `podLabels`                                          | Extra labels for MinIO&reg; pods                                                                                                                                                              | `{}`            |
+| `podAnnotations`                                     | Annotations for MinIO&reg; pods                                                                                                                                                               | `{}`            |
+| `podAffinityPreset`                                  | Pod affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`                                                                                                           | `""`            |
+| `podAntiAffinityPreset`                              | Pod anti-affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`                                                                                                      | `soft`          |
+| `nodeAffinityPreset.type`                            | Node affinity preset type. Ignored if `affinity` is set. Allowed values: `soft` or `hard`                                                                                                     | `""`            |
+| `nodeAffinityPreset.key`                             | Node label key to match. Ignored if `affinity` is set.                                                                                                                                        | `""`            |
+| `nodeAffinityPreset.values`                          | Node label values to match. Ignored if `affinity` is set.                                                                                                                                     | `[]`            |
+| `affinity`                                           | Affinity for pod assignment. Evaluated as a template.                                                                                                                                         | `{}`            |
+| `nodeSelector`                                       | Node labels for pod assignment. Evaluated as a template.                                                                                                                                      | `{}`            |
+| `tolerations`                                        | Tolerations for pod assignment. Evaluated as a template.                                                                                                                                      | `[]`            |
+| `topologySpreadConstraints`                          | Topology Spread Constraints for MinIO&reg; pods assignment spread across your cluster among failure-domains                                                                                   | `[]`            |
+| `priorityClassName`                                  | MinIO&reg; pods' priorityClassName                                                                                                                                                            | `""`            |
+| `resources.limits`                                   | The resources limits for the MinIO&reg; container                                                                                                                                             | `{}`            |
+| `resources.requests`                                 | The requested resources for the MinIO&reg; container                                                                                                                                          | `{}`            |
+| `livenessProbe.enabled`                              | Enable livenessProbe                                                                                                                                                                          | `true`          |
+| `livenessProbe.initialDelaySeconds`                  | Initial delay seconds for livenessProbe                                                                                                                                                       | `5`             |
+| `livenessProbe.periodSeconds`                        | Period seconds for livenessProbe                                                                                                                                                              | `5`             |
+| `livenessProbe.timeoutSeconds`                       | Timeout seconds for livenessProbe                                                                                                                                                             | `5`             |
+| `livenessProbe.failureThreshold`                     | Failure threshold for livenessProbe                                                                                                                                                           | `5`             |
+| `livenessProbe.successThreshold`                     | Success threshold for livenessProbe                                                                                                                                                           | `1`             |
+| `readinessProbe.enabled`                             | Enable readinessProbe                                                                                                                                                                         | `true`          |
+| `readinessProbe.initialDelaySeconds`                 | Initial delay seconds for readinessProbe                                                                                                                                                      | `5`             |
+| `readinessProbe.periodSeconds`                       | Period seconds for readinessProbe                                                                                                                                                             | `5`             |
+| `readinessProbe.timeoutSeconds`                      | Timeout seconds for readinessProbe                                                                                                                                                            | `1`             |
+| `readinessProbe.failureThreshold`                    | Failure threshold for readinessProbe                                                                                                                                                          | `5`             |
+| `readinessProbe.successThreshold`                    | Success threshold for readinessProbe                                                                                                                                                          | `1`             |
+| `startupProbe.enabled`                               | Enable startupProbe                                                                                                                                                                           | `false`         |
+| `startupProbe.initialDelaySeconds`                   | Initial delay seconds for startupProbe                                                                                                                                                        | `0`             |
+| `startupProbe.periodSeconds`                         | Period seconds for startupProbe                                                                                                                                                               | `10`            |
+| `startupProbe.timeoutSeconds`                        | Timeout seconds for startupProbe                                                                                                                                                              | `5`             |
+| `startupProbe.failureThreshold`                      | Failure threshold for startupProbe                                                                                                                                                            | `60`            |
+| `startupProbe.successThreshold`                      | Success threshold for startupProbe                                                                                                                                                            | `1`             |
+| `customLivenessProbe`                                | Override default liveness probe                                                                                                                                                               | `{}`            |
+| `customReadinessProbe`                               | Override default readiness probe                                                                                                                                                              | `{}`            |
+| `customStartupProbe`                                 | Override default startup probe                                                                                                                                                                | `{}`            |
+| `lifecycleHooks`                                     | for the MinIO&reg container(s) to automate configuration before or after startup                                                                                                              | `{}`            |
+| `extraVolumes`                                       | Optionally specify extra list of additional volumes for MinIO&reg; pods                                                                                                                       | `[]`            |
+| `extraVolumeMounts`                                  | Optionally specify extra list of additional volumeMounts for MinIO&reg; container(s)                                                                                                          | `[]`            |
+| `initContainers`                                     | Add additional init containers to the MinIO&reg; pods                                                                                                                                         | `[]`            |
+| `sidecars`                                           | Add additional sidecar containers to the MinIO&reg; pods                                                                                                                                      | `[]`            |
+
+
+### Traffic exposure parameters
+
+| Name                               | Description                                                                                                                      | Value                    |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| `service.type`                     | MinIO&reg; service type                                                                                                          | `ClusterIP`              |
+| `service.ports.api`                | MinIO&reg; API service port                                                                                                      | `9000`                   |
+| `service.ports.console`            | MinIO&reg; Console service port                                                                                                  | `9001`                   |
+| `service.nodePorts.api`            | Specify the MinIO&reg API nodePort value for the LoadBalancer and NodePort service types                                         | `""`                     |
+| `service.nodePorts.console`        | Specify the MinIO&reg Console nodePort value for the LoadBalancer and NodePort service types                                     | `""`                     |
+| `service.clusterIP`                | Service Cluster IP                                                                                                               | `""`                     |
+| `service.loadBalancerIP`           | loadBalancerIP if service type is `LoadBalancer` (optional, cloud specific)                                                      | `""`                     |
+| `service.loadBalancerSourceRanges` | Addresses that are allowed when service is LoadBalancer                                                                          | `[]`                     |
+| `service.externalTrafficPolicy`    | Enable client source IP preservation                                                                                             | `Cluster`                |
+| `service.extraPorts`               | Extra ports to expose in the service (normally used with the `sidecar` value)                                                    | `[]`                     |
+| `service.annotations`              | Annotations for MinIO&reg; service                                                                                               | `{}`                     |
+| `ingress.enabled`                  | Enable ingress controller resource                                                                                               | `false`                  |
+| `ingress.apiVersion`               | Force Ingress API version (automatically detected if not set)                                                                    | `""`                     |
+| `ingress.ingressClassName`         | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)                                                    | `""`                     |
+| `ingress.hostname`                 | Default host for the ingress resource                                                                                            | `minio.local`            |
+| `ingress.path`                     | The Path to MinIO&reg;. You may need to set this to '/*' in order to use this with ALB ingress controllers.                      | `/`                      |
+| `ingress.pathType`                 | Ingress path type                                                                                                                | `ImplementationSpecific` |
+| `ingress.servicePort`              | Service port to be used                                                                                                          | `minio-console`          |
+| `ingress.annotations`              | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`                     |
+| `ingress.tls`                      | Enable TLS configuration for the hostname defined at `ingress.hostname` parameter                                                | `false`                  |
+| `ingress.selfSigned`               | Create a TLS secret for this ingress record using self-signed certificates generated by Helm                                     | `false`                  |
+| `ingress.extraHosts`               | The list of additional hostnames to be covered with this ingress record.                                                         | `[]`                     |
+| `ingress.extraPaths`               | Any additional paths that may need to be added to the ingress under the main host                                                | `[]`                     |
+| `ingress.extraTls`                 | The tls configuration for additional hostnames to be covered with this ingress record.                                           | `[]`                     |
+| `ingress.secrets`                  | If you're providing your own certificates, please use this to add the certificates as secrets                                    | `[]`                     |
+| `ingress.extraRules`               | Additional rules to be covered with this ingress record                                                                          | `[]`                     |
+| `apiIngress.enabled`               | Enable ingress controller resource                                                                                               | `false`                  |
+| `apiIngress.apiVersion`            | Force Ingress API version (automatically detected if not set)                                                                    | `""`                     |
+| `apiIngress.ingressClassName`      | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)                                                    | `""`                     |
+| `apiIngress.hostname`              | Default host for the ingress resource                                                                                            | `minio.local`            |
+| `apiIngress.path`                  | The Path to MinIO&reg;. You may need to set this to '/*' in order to use this with ALB ingress controllers.                      | `/`                      |
+| `apiIngress.pathType`              | Ingress path type                                                                                                                | `ImplementationSpecific` |
+| `apiIngress.servicePort`           | Service port to be used                                                                                                          | `minio-api`              |
+| `apiIngress.annotations`           | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`                     |
+| `apiIngress.tls`                   | Enable TLS configuration for the hostname defined at `apiIngress.hostname` parameter                                             | `false`                  |
+| `apiIngress.selfSigned`            | Create a TLS secret for this ingress record using self-signed certificates generated by Helm                                     | `false`                  |
+| `apiIngress.extraHosts`            | The list of additional hostnames to be covered with this ingress record.                                                         | `[]`                     |
+| `apiIngress.extraPaths`            | Any additional paths that may need to be added to the ingress under the main host                                                | `[]`                     |
+| `apiIngress.extraTls`              | The tls configuration for additional hostnames to be covered with this ingress record.                                           | `[]`                     |
+| `apiIngress.secrets`               | If you're providing your own certificates, please use this to add the certificates as secrets                                    | `[]`                     |
+| `apiIngress.extraRules`            | Additional rules to be covered with this ingress record                                                                          | `[]`                     |
+| `networkPolicy.enabled`            | Enable the default NetworkPolicy policy                                                                                          | `false`                  |
+| `networkPolicy.allowExternal`      | Don't require client label for connections                                                                                       | `true`                   |
+| `networkPolicy.extraFromClauses`   | Allows to add extra 'from' clauses to the NetworkPolicy                                                                          | `{}`                     |
+
+
+### Persistence parameters
+
+| Name                        | Description                                                          | Value               |
+| --------------------------- | -------------------------------------------------------------------- | ------------------- |
+| `persistence.enabled`       | Enable MinIO&reg; data persistence using PVC. If false, use emptyDir | `true`              |
+| `persistence.storageClass`  | PVC Storage Class for MinIO&reg; data volume                         | `""`                |
+| `persistence.mountPath`     | Data volume mount path                                               | `/data`             |
+| `persistence.accessModes`   | PVC Access Modes for MinIO&reg; data volume                          | `["ReadWriteOnce"]` |
+| `persistence.size`          | PVC Storage Request for MinIO&reg; data volume                       | `8Gi`               |
+| `persistence.annotations`   | Annotations for the PVC                                              | `{}`                |
+| `persistence.existingClaim` | Name of an existing PVC to use (only in `standalone` mode)           | `""`                |
+
+
+### Volume Permissions parameters
+
+| Name                                                   | Description                                                                                                                       | Value                   |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `volumePermissions.enabled`                            | Enable init container that changes the owner and group of the persistent volume(s) mountpoint to `runAsUser:fsGroup`              | `false`                 |
+| `volumePermissions.image.registry`                     | Init container volume-permissions image registry                                                                                  | `docker.io`             |
+| `volumePermissions.image.repository`                   | Init container volume-permissions image repository                                                                                | `bitnami/bitnami-shell` |
+| `volumePermissions.image.tag`                          | Init container volume-permissions image tag (immutable tags are recommended)                                                      | `11-debian-11-r28`      |
+| `volumePermissions.image.digest`                       | Init container volume-permissions image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`                    |
+| `volumePermissions.image.pullPolicy`                   | Init container volume-permissions image pull policy                                                                               | `IfNotPresent`          |
+| `volumePermissions.image.pullSecrets`                  | Specify docker-registry secret names as an array                                                                                  | `[]`                    |
+| `volumePermissions.resources.limits`                   | Init container volume-permissions resource limits                                                                                 | `{}`                    |
+| `volumePermissions.resources.requests`                 | Init container volume-permissions resource requests                                                                               | `{}`                    |
+| `volumePermissions.containerSecurityContext.runAsUser` | User ID for the init container                                                                                                    | `0`                     |
+
+
+### RBAC parameters
+
+| Name                                          | Description                                                 | Value  |
+| --------------------------------------------- | ----------------------------------------------------------- | ------ |
+| `serviceAccount.create`                       | Enable the creation of a ServiceAccount for MinIO&reg; pods | `true` |
+| `serviceAccount.name`                         | Name of the created ServiceAccount                          | `""`   |
+| `serviceAccount.automountServiceAccountToken` | Enable/disable auto mounting of the service account token   | `true` |
+| `serviceAccount.annotations`                  | Custom annotations for MinIO&reg; ServiceAccount            | `{}`   |
+
+
+### Other parameters
+
+| Name                 | Description                                                                       | Value   |
+| -------------------- | --------------------------------------------------------------------------------- | ------- |
+| `pdb.create`         | Enable/disable a Pod Disruption Budget creation                                   | `false` |
+| `pdb.minAvailable`   | Minimum number/percentage of pods that must still be available after the eviction | `1`     |
+| `pdb.maxUnavailable` | Maximum number/percentage of pods that may be made unavailable after the eviction | `""`    |
+
+
+### Metrics parameters
+
+| Name                                       | Description                                                                                                                   | Value                       |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| `metrics.prometheusAuthType`               | Authentication mode for Prometheus (`jwt` or `public`)                                                                        | `public`                    |
+| `metrics.serviceMonitor.enabled`           | If the operator is installed in your cluster, set to true to create a Service Monitor Entry                                   | `false`                     |
+| `metrics.serviceMonitor.namespace`         | Namespace which Prometheus is running in                                                                                      | `""`                        |
+| `metrics.serviceMonitor.labels`            | Extra labels for the ServiceMonitor                                                                                           | `{}`                        |
+| `metrics.serviceMonitor.jobLabel`          | The name of the label on the target service to use as the job name in Prometheus                                              | `""`                        |
+| `metrics.serviceMonitor.path`              | HTTP path to scrape for metrics                                                                                               | `/minio/v2/metrics/cluster` |
+| `metrics.serviceMonitor.interval`          | Interval at which metrics should be scraped                                                                                   | `30s`                       |
+| `metrics.serviceMonitor.scrapeTimeout`     | Specify the timeout after which the scrape is ended                                                                           | `""`                        |
+| `metrics.serviceMonitor.metricRelabelings` | MetricRelabelConfigs to apply to samples before ingestion                                                                     | `[]`                        |
+| `metrics.serviceMonitor.relabelings`       | Metrics relabelings to add to the scrape endpoint, applied before scraping                                                    | `[]`                        |
+| `metrics.serviceMonitor.honorLabels`       | Specify honorLabels parameter to add the scrape endpoint                                                                      | `false`                     |
+| `metrics.serviceMonitor.selector`          | Prometheus instance selector labels                                                                                           | `{}`                        |
+| `metrics.prometheusRule.enabled`           | Create a Prometheus Operator PrometheusRule (also requires `metrics.enabled` to be `true` and `metrics.prometheusRule.rules`) | `false`                     |
+| `metrics.prometheusRule.namespace`         | Namespace for the PrometheusRule Resource (defaults to the Release Namespace)                                                 | `""`                        |
+| `metrics.prometheusRule.additionalLabels`  | Additional labels that can be used so PrometheusRule will be discovered by Prometheus                                         | `{}`                        |
+| `metrics.prometheusRule.rules`             | Prometheus Rule definitions                                                                                                   | `[]`                        |
+
+
+### Gateway parameters
+
+| Name                                                     | Description                                                                                        | Value                      |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------- |
+| `gateway.enabled`                                        | Use MinIO&reg; as Gateway for other storage systems                                                | `false`                    |
+| `gateway.type`                                           | Gateway type. Supported types are: `azure`, `gcs`, `nas`, `s3`                                     | `s3`                       |
+| `gateway.replicaCount`                                   | Number of MinIO&reg; Gateway replicas                                                              | `4`                        |
+| `gateway.updateStrategy.type`                            | Update strategy type for MinIO&reg; Gateway replicas                                               | `Recreate`                 |
+| `gateway.autoscaling.enabled`                            | Enable autoscaling for MinIO&reg; Gateway deployment                                               | `false`                    |
+| `gateway.autoscaling.minReplicas`                        | Minimum number of replicas to scale back                                                           | `4`                        |
+| `gateway.autoscaling.maxReplicas`                        | Maximum number of replicas to scale out                                                            | `4`                        |
+| `gateway.autoscaling.targetCPU`                          | Target CPU utilization percentage                                                                  | `""`                       |
+| `gateway.autoscaling.targetMemory`                       | Target Memory utilization percentage                                                               | `""`                       |
+| `gateway.priorityClassName`                              | Pod priority class name for MinIO&reg; Gateway                                                     | `""`                       |
+| `gateway.auth.azure.accessKey`                           | Access key to access MinIO&reg; using Azure Gateway                                                | `""`                       |
+| `gateway.auth.azure.secretKey`                           | Secret key to access MinIO&reg; using Azure Gateway                                                | `""`                       |
+| `gateway.auth.azure.serviceEndpoint`                     | Azure Blob Storage custom endpoint                                                                 | `""`                       |
+| `gateway.auth.azure.storageAccountName`                  | Azure Storage Account Name to use to access Azure Blob Storage                                     | `""`                       |
+| `gateway.auth.azure.storageAccountKey`                   | Azure Storage Account Key to use to access Azure Blob Storage                                      | `""`                       |
+| `gateway.auth.azure.storageAccountNameExistingSecret`    | Existing Secret name to extract Azure Storage Account Name from to access Azure Blob Storage       | `""`                       |
+| `gateway.auth.azure.storageAccountNameExistingSecretKey` | Existing Secret key to extract Azure Storage Account Name from to use to access Azure Blob Storage | `""`                       |
+| `gateway.auth.azure.storageAccountKeyExistingSecret`     | Existing Secret name to extract Azure Storage Account Key from to access Azure Blob Storage        | `""`                       |
+| `gateway.auth.azure.storageAccountKeyExistingSecretKey`  | Existing Secret key to extract Azure Storage Account Key from to use to access Azure Blob Storage  | `""`                       |
+| `gateway.auth.gcs.accessKey`                             | Access key to access MinIO&reg; using GCS Gateway                                                  | `""`                       |
+| `gateway.auth.gcs.secretKey`                             | Secret key to access MinIO&reg; using GCS Gateway                                                  | `""`                       |
+| `gateway.auth.gcs.keyJSON`                               | Service Account key to access GCS                                                                  | `""`                       |
+| `gateway.auth.gcs.projectID`                             | GCP Project ID to use                                                                              | `""`                       |
+| `gateway.auth.nas.accessKey`                             | Access key to access MinIO&reg; using NAS Gateway                                                  | `""`                       |
+| `gateway.auth.nas.secretKey`                             | Secret key to access MinIO&reg; using NAS Gateway                                                  | `""`                       |
+| `gateway.auth.s3.accessKey`                              | Access key to use to access AWS S3                                                                 | `""`                       |
+| `gateway.auth.s3.secretKey`                              | Secret key to use to access AWS S3                                                                 | `""`                       |
+| `gateway.auth.s3.serviceEndpoint`                        | AWS S3 endpoint                                                                                    | `https://s3.amazonaws.com` |
+
+
+Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
+
+```console
+$ helm install my-release \
+  --set auth.rootUser=minio-admin \
+  --set auth.rootPassword=minio-secret-password \
+    bitnami/minio
 ```
 
-Then change the field `image.tag` in `old_values.yaml` file with MinIO image tag you want to use. Now update the chart using
+The above command sets the MinIO&reg; Server root user and password to `minio-admin` and `minio-secret-password`, respectively.
 
-```bash
-$ helm upgrade -f old_values.yaml my-release minio/minio
+Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
+
+```console
+$ helm install my-release -f values.yaml bitnami/minio
 ```
 
-Default upgrade strategies are specified in the `values.yaml` file. Update these fields if you'd like to use a different strategy.
+> **Tip**: You can use the default [values.yaml](values.yaml)
 
-Configuration
--------------
+## Configuration and installation details
 
-The following table lists the configurable parameters of the MinIO chart and their default values.
+### [Rolling VS Immutable tags](https://docs.bitnami.com/containers/how-to/understand-rolling-tags-containers/)
 
-| Parameter                                        | Description                                                                                                                             | Default                          |
-|:-------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|
-| `nameOverride`                                   | Provide a name in place of `minio`                                                                                                      | `""`                             |
-| `fullnameOverride`                               | Provide a name to substitute for the full names of resources                                                                            | `""`                             |
-| `image.repository`                               | Image repository                                                                                                                        | `minio/minio`                    |
-| `image.tag`                                      | MinIO image tag. Possible values listed [here](https://hub.docker.com/r/minio/minio/tags/).                                             | `RELEASE.2020-11-06T23-17-07Z`   |
-| `image.pullPolicy`                               | Image pull policy                                                                                                                       | `IfNotPresent`                   |
-| `imagePullSecrets`                               | List of container registry secrets                                                                                                      | `[]`                             |
-| `mcImage.repository`                             | Client image repository                                                                                                                 | `minio/mc`                       |
-| `mcImage.tag`                                    | mc image tag. Possible values listed [here](https://hub.docker.com/r/minio/mc/tags/).                                                   | `RELEASE.2020-10-03T02-54-56Z`   |
-| `mcImage.pullPolicy`                             | mc Image pull policy                                                                                                                    | `IfNotPresent`                   |
-| `ingress.enabled`                                | Enables Ingress                                                                                                                         | `false`                          |
-| `ingress.labels     `                            | Ingress labels                                                                                                                          | `{}`                             |
-| `ingress.annotations`                            | Ingress annotations                                                                                                                     | `{}`                             |
-| `ingress.hosts`                                  | Ingress accepted hostnames                                                                                                              | `[]`                             |
-| `ingress.path`                                   | Ingress path                                                                                                                            | `/`                              |
-| `ingress.pathType`                               | Ingress path type                                                                                                                       | `ImplementationSpecific`         |
-| `ingress.tls`                                    | Ingress TLS configuration                                                                                                               | `[]`                             |
-| `trustedCertsSecret`                             | Kubernetes secret with trusted certificates to be mounted on `{{ .Values.certsPath }}/CAs`                                              | `""`                             |
-| `mode`                                           | MinIO server mode (`standalone` or `distributed`)                                                                                       | `standalone`                     |
-| `extraArgs`                                      | Additional command line arguments to pass to the MinIO server                                                                           | `[]`                             |
-| `replicas`                                       | Number of nodes (applicable only for MinIO distributed mode).                                                                           | `4`                              |
-| `zones`                                          | Number of zones (applicable only for MinIO distributed mode).                                                                           | `1`                              |
-| `drivesPerNode`                                  | Number of drives per node (applicable only for MinIO distributed mode).                                                                 | `1`                              |
-| `existingSecret`                                 | Name of existing secret with access and secret key.                                                                                     | `""`                             |
-| `accessKey`                                      | Default access key (5 to 20 characters)                                                                                                 | random 20 chars                  |
-| `secretKey`                                      | Default secret key (8 to 40 characters)                                                                                                 | random 40 chars                  |
-| `certsPath`                                      | Default certs path location                                                                                                             | `/etc/minio/certs`               |
-| `configPathmc`                                   | Default config file location for MinIO client - mc                                                                                      | `/etc/minio/mc`                  |
-| `mountPath`                                      | Default mount location for persistent drive                                                                                             | `/export`                        |
-| `bucketRoot`                                     | Directory from where minio should serve buckets.                                                                                        | Value of `.mountPath`            |
-| `clusterDomain`                                  | domain name of kubernetes cluster where pod is running.                                                                                 | `cluster.local`                  |
-| `service.type`                                   | Kubernetes service type                                                                                                                 | `ClusterIP`                      |
-| `service.port`                                   | Kubernetes port where service is exposed                                                                                                | `9000`                           |
-| `service.externalIPs`                            | service external IP addresses                                                                                                           | `nil`                            |
-| `service.annotations`                            | Service annotations                                                                                                                     | `{}`                             |
-| `serviceAccount.create`                          | Toggle creation of new service account                                                                                                  | `true`                           |
-| `serviceAccount.name`                            | Name of service account to create and/or use                                                                                            | `""`                             |
-| `persistence.enabled`                            | Use persistent volume to store data                                                                                                     | `true`                           |
-| `persistence.size`                               | Size of persistent volume claim                                                                                                         | `500Gi`                          |
-| `persistence.existingClaim`                      | Use an existing PVC to persist data                                                                                                     | `nil`                            |
-| `persistence.storageClass`                       | Storage class name of PVC                                                                                                               | `nil`                            |
-| `persistence.accessMode`                         | ReadWriteOnce or ReadOnly                                                                                                               | `ReadWriteOnce`                  |
-| `persistence.subPath`                            | Mount a sub directory of the persistent volume if set                                                                                   | `""`                             |
-| `resources.requests.memory`                      | Memory resource requests                                                                                                                | Memory: `4Gi`                    |
-| `priorityClassName`                              | Pod priority settings                                                                                                                   | `""`                             |
-| `securityContext.enabled`                        | Enable to run containers as non-root. NOTE: if `persistence.enabled=false` then securityContext will be automatically disabled          | `true`                           |
-| `securityContext.runAsUser`                      | User id of the user for the container                                                                                                   | `1000`                           |
-| `securityContext.runAsGroup`                     | Group id of the user for the container                                                                                                  | `1000`                           |
-| `securityContext.fsGroup`                        | Group id of the persistent volume mount for the container                                                                               | `1000`                           |
-| `nodeSelector`                                   | Node labels for pod assignment                                                                                                          | `{}`                             |
-| `affinity`                                       | Affinity settings for pod assignment                                                                                                    | `{}`                             |
-| `tolerations`                                    | Toleration labels for pod assignment                                                                                                    | `[]`                             |
-| `additionalLabels`                               | Additional labels for Deployment in standalone mode or StatefulSet in distributed mode                                                  | `[]`                             |
-| `additionalAnnotations`                          | Additional annotations for Deployment in standalone mode or StatefulSet in distributed mode                                             | `[]`                             |
-| `podAnnotations`                                 | Pod annotations                                                                                                                         | `{}`                             |
-| `podLabels`                                      | Pod Labels                                                                                                                              | `{}`                             |
-| `tls.enabled`                                    | Enable TLS for MinIO server                                                                                                             | `false`                          |
-| `tls.certSecret`                                 | Kubernetes Secret with `public.crt` and `private.key` files.                                                                            | `""`                             |
-| `defaultBucket.enabled`                          | If set to true, a bucket will be created after MinIO install                                                                            | `false`                          |
-| `defaultBucket.name`                             | Bucket name                                                                                                                             | `bucket`                         |
-| `defaultBucket.policy`                           | Bucket policy                                                                                                                           | `none`                           |
-| `defaultBucket.purge`                            | Purge the bucket if already exists                                                                                                      | `false`                          |
-| `defaultBucket.versioning`                       | Enable / Suspend versioning for bucket                                                                                                  | `nil`                            |
-| `buckets`                                        | List of buckets to create after MinIO install                                                                                           | `[]`                             |
-| `makeBucketJob.annotations`                      | Additional annotations for the Kubernetes Batch (make-bucket-job)                                                                       | `""`                             |
-| `makeBucketJob.podAnnotations`                   | Additional annotations for the pods of the Kubernetes Batch (make-bucket-job)                                                           | `""`                             |
-| `makeBucketJob.securityContext.enabled`          | Enable to run Kubernetes Batch (make-bucket-job) containers as non-root.                                                                | `false`                          |
-| `makeBucketJob.securityContext.runAsUser`        | User id of the user for the container                                                                                                   | `1000`                           |
-| `makeBucketJob.securityContext.runAsGroup`       | Group id of the user for the container                                                                                                  | `1000`                           |
-| `makeBucketJob.securityContext.fsGroup`          | Group id of the persistent volume mount for the container                                                                               | `1000`                           |
-| `makeBucketJob.resources.requests.memory`        | Memory resource requests for 'make bucket' job                                                                                          | `128Mi`                          |
-| `updatePrometheusJob.podAnnotations`             | Additional annotations for the pods of the Kubernetes Batch (update-prometheus-secret)                                                  | `""`                             |
-| `updatePrometheusJob.securityContext.enabled`    | Enable to run Kubernetes Batch (update-prometheus-secret) containers as non-root.                                                       | `false`                          |
-| `updatePrometheusJob.securityContext.runAsUser`  | User id of the user for the container                                                                                                   | `1000`                           |
-| `updatePrometheusJob.securityContext.runAsGroup` | Group id of the user for the container                                                                                                  | `1000`                           |
-| `updatePrometheusJob.securityContext.fsGroup`    | Group id of the persistent volume mount for the container                                                                               | `1000`                           |
-| `s3gateway.enabled`                              | Use MinIO as a [s3 gateway](https://github.com/minio/minio/blob/master/docs/gateway/s3.md)                                              | `false`                          |
-| `s3gateway.replicas`                             | Number of s3 gateway instances to run in parallel                                                                                       | `4`                              |
-| `s3gateway.serviceEndpoint`                      | Endpoint to the S3 compatible service                                                                                                   | `""`                             |
-| `s3gateway.accessKey`                            | Access key of S3 compatible service                                                                                                     | `""`                             |
-| `s3gateway.secretKey`                            | Secret key of S3 compatible service                                                                                                     | `""`                             |
-| `azuregateway.enabled`                           | Use MinIO as an [azure gateway](https://docs.minio.io/docs/minio-gateway-for-azure)                                                     | `false`                          |
-| `azuregateway.replicas`                          | Number of azure gateway instances to run in parallel                                                                                    | `4`                              |
-| `gcsgateway.enabled`                             | Use MinIO as a [Google Cloud Storage gateway](https://docs.minio.io/docs/minio-gateway-for-gcs)                                         | `false`                          |
-| `gcsgateway.gcsKeyJson`                          | credential json file of service account key                                                                                             | `""`                             |
-| `gcsgateway.projectId`                           | Google cloud project id                                                                                                                 | `""`                             |
-| `nasgateway.enabled`                             | Use MinIO as a [NAS gateway](https://docs.MinIO.io/docs/minio-gateway-for-nas)                                                          | `false`                          |
-| `nasgateway.replicas`                            | Number of NAS gateway instances to be run in parallel on a PV                                                                           | `4`                              |
-| `environment`                                    | Set MinIO server relevant environment variables in `values.yaml` file. MinIO containers will be passed these variables when they start. | `MINIO_STORAGE_CLASS_STANDARD: EC:4"` |
-| `metrics.serviceMonitor.enabled`                 | Set this to `true` to create ServiceMonitor for Prometheus operator                                                                     | `false`                          |
-| `metrics.serviceMonitor.additionalLabels`        | Additional labels that can be used so ServiceMonitor will be discovered by Prometheus                                                   | `{}`                             |
-| `metrics.serviceMonitor.namespace`               | Optional namespace in which to create ServiceMonitor                                                                                    | `nil`                            |
-| `metrics.serviceMonitor.interval`                | Scrape interval. If not set, the Prometheus default scrape interval is used                                                             | `nil`                            |
-| `metrics.serviceMonitor.scrapeTimeout`           | Scrape timeout. If not set, the Prometheus default scrape timeout is used                                                               | `nil`                            |
-| `metrics.serviceMonitor.relabelConfigs`          | Relabel configs that can be used on Endpoints                                                                                            | `{}`                             |
-| `etcd.endpoints`                                 | Endpoints of etcd                                                                                                                        | `[]`                             |
-| `etcd.pathPrefix`                                | Prefix for all etcd keys                                                                                                                | `""`                             |
-| `etcd.corednsPathPrefix`                         | Prefix for all CoreDNS etcd keys                                                                                                        | `""`                             |
-| `etcd.clientCert`                                | Certificate used for SSL/TLS connections to etcd [(etcd Security)](https://etcd.io/docs/latest/op-guide/security/)                      | `""`                             |
-| `etcd.clientCertKey`                             | Key for the certificate [(etcd Security)](https://etcd.io/docs/latest/op-guide/security/)                                               | `""`                             |
+It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
-Some of the parameters above map to the env variables defined in the [MinIO DockerHub image](https://hub.docker.com/r/minio/minio/).
+Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
 
-You can specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
+### Distributed mode
 
-```bash
-$ helm install --name my-release --set persistence.size=1Ti minio/minio
+By default, this chart provisions a MinIO&reg; server in standalone mode. You can start MinIO&reg; server in [distributed mode](https://docs.minio.io/docs/distributed-minio-quickstart-guide) with the following parameter: `mode=distributed`
+
+This chart bootstrap MinIO&reg; server in distributed mode with 4 nodes by default. You can change the number of nodes using the `statefulset.replicaCount` parameter. For instance, you can deploy the chart with 8 nodes using the following parameters:
+
+```console
+mode=distributed
+statefulset.replicaCount=8
 ```
 
-The above command deploys MinIO server with a 1Ti backing persistent volume.
+You can also bootstrap MinIO&reg; server in distributed mode in several zones, and using multiple drives per node. For instance, you can deploy the chart with 2 nodes per zone on 2 zones, using 2 drives per node:
 
-Alternately, you can provide a YAML file that specifies parameter values while installing the chart. For example,
-
-```bash
-$ helm install --name my-release -f values.yaml minio/minio
+```console
+mode=distributed
+statefulset.replicaCount=2
+statefulset.zones=2
+statefulset.drivesPerNode=2
 ```
 
-> **Tip**: You can use the default [values.yaml](minio/values.yaml)
+> Note: The total number of drives should be greater than 4 to guarantee erasure coding. Please set a combination of nodes, and drives per node that match this condition.
 
-Distributed MinIO
------------
+### Prometheus exporter
 
-This chart provisions a MinIO server in standalone mode, by default. To provision MinIO server in [distributed mode](https://docs.minio.io/docs/distributed-minio-quickstart-guide), set the `mode` field to `distributed`,
+MinIO&reg; exports Prometheus metrics at `/minio/v2/metrics/cluster`. To allow Prometheus collecting your MinIO&reg; metrics, modify the `values.yaml` adding the corresponding annotations:
 
-```bash
-$ helm install --set mode=distributed minio/minio
+```diff
+- podAnnotations: {}
++ podAnnotations:
++   prometheus.io/scrape: "true"
++   prometheus.io/path: "/minio/v2/metrics/cluster"
++   prometheus.io/port: "9000"
 ```
 
-This provisions MinIO server in distributed mode with 4 nodes. To change the number of nodes in your distributed MinIO server, set the `replicas` field,
+> Find more information about MinIO&reg; metrics at https://docs.min.io/docs/how-to-monitor-minio-using-prometheus.html
 
-```bash
-$ helm install --set mode=distributed,replicas=8 minio/minio
+## Persistence
+
+The [Bitnami Object Storage based on MinIO(&reg;)](https://github.com/bitnami/containers/tree/main/bitnami/minio) image stores data at the `/data` path of the container.
+
+The chart mounts a [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) at this location. The volume is created using dynamic volume provisioning.
+
+### Adjust permissions of persistent volume mountpoint
+
+As the image run as non-root by default, it is necessary to adjust the ownership of the persistent volume so that the container can write data into it.
+
+By default, the chart is configured to use Kubernetes Security Context to automatically change the ownership of the volume. However, this feature does not work in all Kubernetes distributions.
+As an alternative, this chart supports using an initContainer to change the ownership of the volume before mounting it in the final destination.
+
+You can enable this initContainer by setting `volumePermissions.enabled` to `true`.
+
+### Ingress
+
+This chart provides support for Ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress-controller](https://github.com/bitnami/charts/tree/master/bitnami/nginx-ingress-controller) or [contour](https://github.com/bitnami/charts/tree/master/bitnami/contour) you can utilize the ingress controller to serve your application.
+
+To enable Ingress integration, set `ingress.enabled` to `true`. The `ingress.hostname` property can be used to set the host name. The `ingress.tls` parameter can be used to add the TLS configuration for this host. It is also possible to have more than one host, with a separate TLS configuration for each host. [Learn more about configuring and using Ingress](https://docs.bitnami.com/kubernetes/infrastructure/geode/configuration/configure-ingress/).
+
+### TLS secrets
+
+The chart also facilitates the creation of TLS secrets for use with the Ingress controller, with different options for certificate management. [Learn more about TLS secrets](https://docs.bitnami.com/kubernetes/infrastructure/geode/administration/enable-tls-ingress/).
+
+### MinIO&reg; Gateway
+
+MinIO&reg; can be configured as a Gateway for other other storage systems. Currently this chart supports to setup MinIO&reg; as a Gateway for the storage systems below:
+
+- [Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs/)
+- [GCS](https://cloud.google.com/storage)
+- NAS: Network Attached Storage
+- [AWS S3](https://aws.amazon.com/s3/)
+
+The enable this feature, install the chart setting `gateway.enabled` to `true`. You can choose the Gateway type setting the `gateway.type` parameter. For instance, to install the chart as a S3 Gateway, install the chart the using the following parameters:
+
+```console
+gateway.enabled=true
+gateway.replicaCount=4
+gateway.type=s3
+gateway.auth.s3.serviceEndpoint=https://s3.amazonaws.com
+gateway.auth.s3.accessKey=S3_ACCESS_KEY
+gateway.auth.s3.secretKey=S3_SECRET_KEY
 ```
 
-This provisions MinIO server in distributed mode with 8 nodes. Note that the `replicas` value should be a minimum value of 4, there is no limit on number of servers you can run.
+> Note: remember to replace the S3_ACCESS_KEY and S3_SECRET_KEY placeholders with your actual S3 access & secret keys.
 
-You can also expand an existing deployment by adding new zones, following command will create a total of 16 nodes with each zone running 8 nodes.
+Find all the available parameters to configure MinIO&reg; as a Gateway in the [Gateway parameters section](#gateway-parameters).
 
-```bash
-$ helm install --set mode=distributed,replicas=8,zones=2 minio/minio
+> Note: when using MinIO&reg; as a NAS Gateway, you need ReadWriteMany PVs to deploy multiple MinIO&reg; instances. Ensure you K8s cluster supports this kind of cluster, and install the chart setting `persistence.accessModes[0]` to `ReadWriteMany` to do so.
+
+### Adding extra environment variables
+
+In case you want to add extra environment variables (useful for advanced operations like custom init scripts), you can use the `extraEnv` property.
+
+```yaml
+extraEnv:
+  - name: MINNIO_LOG_LEVEL
+    value: DEBUG
 ```
 
-### StatefulSet [limitations](http://kubernetes.io/docs/concepts/abstractions/controllers/statefulsets/#limitations) applicable to distributed MinIO
+Alternatively, you can use a ConfigMap or a Secret with the environment variables. To do so, use the `extraEnvVarsCM` or the `extraEnvVarsSecret` values.
 
-1. StatefulSets need persistent storage, so the `persistence.enabled` flag is ignored when `mode` is set to `distributed`.
-2. When uninstalling a distributed MinIO release, you'll need to manually delete volumes associated with the StatefulSet.
+### Sidecars and Init Containers
 
-NAS Gateway
------------
+If you have a need for additional containers to run within the same pod as the MinIO&reg; app (e.g. an additional metrics or logging exporter), you can do so via the `sidecars` config parameter. Simply define your container according to the Kubernetes container spec.
 
-### Prerequisites
-
-MinIO in [NAS gateway mode](https://docs.minio.io/docs/minio-gateway-for-nas) can be used to create multiple MinIO instances backed by single PV in `ReadWriteMany` mode. Currently few [Kubernetes volume plugins](https://kubernetes.io/docs/user-guide/persistent-volumes/#access-modes) support `ReadWriteMany` mode. To deploy MinIO NAS gateway with Helm chart you'll need to have a Persistent Volume running with one of the supported volume plugins. [This document](https://kubernetes.io/docs/user-guide/volumes/#nfs)
-outlines steps to create a NFS PV in Kubernetes cluster.
-
-### Provision NAS Gateway MinIO instances
-
-To provision MinIO servers in [NAS gateway mode](https://docs.minio.io/docs/minio-gateway-for-nas), set the `nasgateway.enabled` field to `true`,
-
-```bash
-$ helm install --set nasgateway.enabled=true minio/minio
+```yaml
+sidecars:
+  - name: your-image-name
+    image: your-image
+    imagePullPolicy: Always
+    ports:
+      - name: portname
+       containerPort: 1234
 ```
 
-This provisions 4 MinIO NAS gateway instances backed by single storage. To change the number of instances in your MinIO deployment, set the `replicas` field,
+Similarly, you can add extra init containers using the `initContainers` parameter.
 
-```bash
-$ helm install --set nasgateway.enabled=true,nasgateway.replicas=8 minio/minio
+```yaml
+initContainers:
+  - name: your-image-name
+    image: your-image
+    imagePullPolicy: Always
+    ports:
+      - name: portname
+        containerPort: 1234
 ```
 
-This provisions MinIO NAS gateway with 8 instances.
+### Setting Pod's affinity
 
-Persistence
------------
+This chart allows you to set your custom affinity using the `affinity` parameter. Find more information about Pod's affinity in the [kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
 
-This chart provisions a PersistentVolumeClaim and mounts corresponding persistent volume to default location `/export`. You'll need physical storage available in the Kubernetes cluster for this to work. If you'd rather use `emptyDir`, disable PersistentVolumeClaim by:
+As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/master/bitnami/common#affinities) chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
 
-```bash
-$ helm install --set persistence.enabled=false minio/minio
-```
+### Deploying extra resources
 
-> *"An emptyDir volume is first created when a Pod is assigned to a Node, and exists as long as that Pod is running on that node. When a Pod is removed from a node for any reason, the data in the emptyDir is deleted forever."*
+There are cases where you may want to deploy extra objects, such a ConfigMap containing your app's configuration or some extra deployment with a micro service used by your app. For covering this case, the chart allows adding the full specification of other objects using the `extraDeploy` parameter.
 
-Existing PersistentVolumeClaim
-------------------------------
+## Troubleshooting
 
-If a Persistent Volume Claim already exists, specify it during installation.
+Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
 
-1. Create the PersistentVolume
-2. Create the PersistentVolumeClaim
-3. Install the chart
+## Upgrading
 
-```bash
-$ helm install --set persistence.existingClaim=PVC_NAME minio/minio
-```
+### To 11.0.0
 
-NetworkPolicy
--------------
+This version deprecates the usage of `MINIO_ACCESS_KEY` and `MINIO_SECRET_KEY` environment variables in MINIO&reg; container in favor of `MINIO_ROOT_USER` and `MINIO_ROOT_PASSWORD`.
 
-To enable network policy for MinIO,
-install [a networking plugin that implements the Kubernetes
-NetworkPolicy spec](https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy#before-you-begin),
-and set `networkPolicy.enabled` to `true`.
+If you were already using the new variables, no issues are expected during upgrade.
 
-For Kubernetes v1.5 & v1.6, you must also turn on NetworkPolicy by setting
-the DefaultDeny namespace annotation. Note: this will enforce policy for _all_ pods in the namespace:
+### To 9.0.0
 
-    kubectl annotate namespace default "net.beta.kubernetes.io/network-policy={\"ingress\":{\"isolation\":\"DefaultDeny\"}}"
+This version updates MinIO&reg; authentication parameters so they're aligned with the [current terminology](https://docs.min.io/minio/baremetal/security/minio-identity-management/user-management.html#minio-users-root). As a result the following parameters have been affected:
 
-With NetworkPolicy enabled, traffic will be limited to just port 9000.
+- `accessKey.password` has been renamed to `auth.rootUser`.
+- `secretKey.password` has been renamed to `auth.rootPassword`.
+- `accessKey.forcePassword` and `secretKey.forcePassword` have been unified into `auth.forcePassword`.
+- `existingSecret`, `useCredentialsFile` and `forceNewKeys` have been renamed to `auth.existingSecret`, `auth.useCredentialsFiles` and `forceNewKeys`, respectively.
 
-For more precise policy, set `networkPolicy.allowExternal=true`. This will
-only allow pods with the generated client label to connect to MinIO.
-This label will be displayed in the output of a successful install.
+### To 8.0.0
 
-Existing secret
----------------
+This version updates MinIO&reg; after some major changes, affecting its Web UI. MinIO&reg; has replaced its MinIO&reg; Browser with the MinIO&reg; Console, and Web UI has been moved to a separated port. As a result the following variables have been affected:
+- `service.port` has been slit into `service.ports.api` (default: 9000) and `service.ports.console` (default: 9001).
+- `containerPort` has been slit into `containerPorts.api` (default: 9000) and `containerPort.console` (default: 9001).
+- `service.nodePort`has been slit into `service.nodePorts.api` and `service.nodePorts.console`.
+- Service port `minio` has been replaced with `minio-api` and `minio-console` with target ports minio-api and minio-console respectively.
+- Liveness, readiness and startup probes now use port `minio-console` instead of `minio`.
 
-Instead of having this chart create the secret for you, you can supply a preexisting secret, much
-like an existing PersistentVolumeClaim.
+Please note that Web UI, previously running on port 9000 will now use port 9001 leaving port 9000 for the MinIO&reg; Server API.
 
-First, create the secret:
-```bash
-$ kubectl create secret generic my-minio-secret --from-literal=accesskey=foobarbaz --from-literal=secretkey=foobarbazqux
-```
+### To 7.0.0
 
-Then install the chart, specifying that you want to use an existing secret:
-```bash
-$ helm install --set existingSecret=my-minio-secret minio/minio
-```
+This version introduces pod and container securityContext support. The previous configuration of `securityContext` has moved to `podSecurityContext` and `containerSecurityContext`. Apart from this case, no issues are expected to appear when upgrading.
 
-The following fields are expected in the secret:
+### To 5.0.0
 
-| .data.<key> in Secret      | Corresponding variable  | Description                                                                       |
-|:---------------------------|:------------------------|:----------------------------------------------------------------------------------|
-| `accesskey`                | `accessKey`             | Access key ID. Mandatory.                                                         |
-| `secretkey`                | `secretKey`             | Secret key. Mandatory.                                                            |
-| `gcs_key.json`             | `gcsgateway.gcsKeyJson` | GCS key if you are using the GCS gateway feature. Optional                        |
-| `awsAccessKeyId`           | `s3gateway.accessKey`   | S3 access key if you are using the S3 gateway feature. Optional                   |
-| `awsSecretAccessKey`       | `s3gateway.secretKey`   | S3 secret key if you are using the S3 gateway feature. Optional                   |
-| `etcd_client_cert.pem`     | `etcd.clientCert`       | Certificate for SSL/TLS connections to etcd. Optional                             |
-| `etcd_client_cert_key.pem` | `etcd.clientCertKey`    | Corresponding key for certificate above. Mandatory when etcd certificate defined. |
+This version standardizes the way of defining Ingress rules. When configuring a single hostname for the Ingress rule, set the `ingress.hostname` value. When defining more than one, set the `ingress.extraHosts` array. Apart from this case, no issues are expected to appear when upgrading.
 
-All corresponding variables will be ignored in values file.
+### To 4.1.0
 
-Configure TLS
--------------
+This version introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/master/bitnami/common#bitnami-common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
 
-To enable TLS for MinIO containers, acquire TLS certificates from a CA or create self-signed certificates. While creating / acquiring certificates ensure the corresponding domain names are set as per the standard [DNS naming conventions](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#pod-identity) in a Kubernetes StatefulSet (for a distributed MinIO setup). Then create a secret using
+### To 4.0.0
 
-```bash
-$ kubectl create secret generic tls-ssl-minio --from-file=path/to/private.key --from-file=path/to/public.crt
-```
+[On November 13, 2020, Helm v2 support was formally finished](https://github.com/helm/charts#status-of-the-project), this major version is the result of the required changes applied to the Helm Chart to be able to incorporate the different features added in Helm v3 and to be consistent with the Helm project itself regarding the Helm v2 EOL.
 
-Then install the chart, specifying that you want to use the TLS secret:
+**What changes were introduced in this major version?**
 
-```bash
-$ helm install --set tls.enabled=true,tls.certSecret=tls-ssl-minio minio/minio
-```
+- Previous versions of this Helm Chart use `apiVersion: v1` (installable by both Helm 2 and 3), this Helm Chart was updated to `apiVersion: v2` (installable by Helm 3 only). [Here](https://helm.sh/docs/topics/charts/#the-apiversion-field) you can find more information about the `apiVersion` field.
+- The different fields present in the *Chart.yaml* file has been ordered alphabetically in a homogeneous way for all the Bitnami Helm Charts
 
-Pass environment variables to MinIO containers
-----------------------------------------------
+**Considerations when upgrading to this version**
 
-To pass environment variables to MinIO containers when deploying via Helm chart, use the below command line format
+- If you want to upgrade to this version from a previous one installed with Helm v3, you shouldn't face any issues
+- If you want to upgrade to this version using Helm v2, this scenario is not supported as this version doesn't support Helm v2 anymore
+- If you installed the previous version with Helm v2 and wants to upgrade to this version with Helm v3, please refer to the [official Helm documentation](https://helm.sh/docs/topics/v2_v3_migration/#migration-use-cases) about migrating from Helm v2 to v3
 
-```bash
-$ helm install --set environment.MINIO_BROWSER=on,environment.MINIO_DOMAIN=domain-name minio/minio
-```
+**Useful links**
 
-You can add as many environment variables as required, using the above format. Just add `environment.<VARIABLE_NAME>=<value>` under `set` flag.
+- https://docs.bitnami.com/tutorials/resolve-helm2-helm3-post-migration-issues/
+- https://helm.sh/docs/topics/v2_v3_migration/
+- https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/
 
-Create buckets after install
----------------------------
+## License
 
-Install the chart, specifying the buckets you want to create after install:
+Copyright &copy; 2022 Bitnami
 
-```bash
-$ helm install --set buckets[0].name=bucket1,buckets[0].policy=none,buckets[0].purge=false minio/minio
-```
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Description of the configuration parameters used above -
+    http://www.apache.org/licenses/LICENSE-2.0
 
-- `buckets[].name` - name of the bucket to create, must be a string with length > 0
-- `buckets[].policy` - can be one of none|download|upload|public
-- `buckets[].purge` - purge if bucket exists already
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
