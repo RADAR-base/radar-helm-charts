@@ -1,0 +1,6 @@
+dependencies:
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  version: 2.0.0
+digest: sha256:32f8f28730874ffdf93b268eceaf557251b6a538de5ea12ac19bc3a385862ef5
+generated: "2022-08-23T17:07:06.298202+02:00"
