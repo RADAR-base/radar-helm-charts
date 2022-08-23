@@ -1210,6 +1210,39 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/management-portal-0.1.3/management-portal-0.1.3.tgz
     version: 0.1.3
   minio:
+  - annotations:
+      category: Infrastructure
+    apiVersion: v2
+    appVersion: 2022.8.22
+    created: "2022-08-23T15:12:06.326546402Z"
+    dependencies:
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: MinIO(R) is an object storage server, compatible with Amazon S3 cloud
+      storage service, mainly used for storing unstructured data (such as photos,
+      videos, log files, etc.).
+    digest: 130b429278ffe9a4d8d8fb0786362e0e3b864d623f2aa713a7b20557b16877ed
+    home: https://github.com/bitnami/charts/tree/master/bitnami/minio
+    icon: https://bitnami.com/assets/stacks/minio/img/minio-stack-220x234.png
+    keywords:
+    - minio
+    - storage
+    - object-storage
+    - s3
+    - cluster
+    maintainers:
+    - name: Bitnami
+      url: https://github.com/bitnami/charts
+    name: minio
+    sources:
+    - https://github.com/bitnami/containers/tree/main/bitnami/minio
+    - https://min.io
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/minio-11.9.1/minio-11.9.1.tgz
+    version: 11.9.1
   - apiVersion: v1
     appVersion: master
     created: "2022-07-14T07:27:35.254917111Z"
@@ -3497,4 +3530,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2022-08-23T13:17:27.220244323Z"
+generated: "2022-08-23T15:12:06.326759406Z"
