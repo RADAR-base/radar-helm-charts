@@ -50,3 +50,9 @@ Selector labels
 app.kubernetes.io/name: {{ include "radar-jdbc-connector.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "radar-jdbc-connector.validateValues" -}}
+{{- if not (has .Values.mode (list "sink" "source")) }}
+{{- fail "Mode must be 'source' for JDBC source connector or 'sink' for JDBC sink connector."}}
+{{- end -}}
+{{- end -}}

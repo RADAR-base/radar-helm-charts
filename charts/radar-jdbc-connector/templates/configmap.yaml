@@ -1,3 +1,5 @@
+{{- include "radar-jdbc-connector.validateValues" . }}
+{{ $name := ternary  .Values.sink.name .Values.source.name (eq .Values.mode "sink") }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,34 +8,55 @@ metadata:
     {{- include "radar-jdbc-connector.labels" . | nindent 4 }}
 data:
   sink-timescale.properties: |
-    # Kafka consumer configuration
-    name = radar-timescale-sink
     # Kafka connector configuration
-    connector.class = io.confluent.connect.jdbc.JdbcSinkConnector
-    tasks.max = 2
-    transforms=mergeKey,timestamp
-    transforms.mergeKey.type=org.radarbase.kafka.connect.transforms.MergeKey
-    transforms.timestamp.type=org.radarbase.kafka.connect.transforms.TimestampConverter
-    transforms.timestamp.fields=time,timeReceived,timeCompleted,timestamp
-    # Topics that will be consumed
-    topics = {{ .Values.topics }}
-    connection.url=jdbc:postgresql://{{ .Values.timescaledb.host }}/{{ .Values.timescaledb.database_name }}
-    connection.user={{ .Values.timescaledb.username }}
-    connection.password={{ .Values.timescaledb.password }}
-    dialect.name = TimescaleDBDatabaseDialect
-    insert.mode = upsert
-    pk.mode = record_value
-    pk.fields = time, userId, projectId
-    auto.create = true
+    name = {{ $name }}
+
+    tasks.max = {{ .Values.maxTasks }}
+
+    # General connection parameters
+    connection.url={{ .Values.jdbc.url }}
+    connection.user={{ .Values.jdbc.user }}
+    connection.password={{ .Values.jdbc.password }}
+    dialect.name = {{ .Values.jdbc.dialect }}
     max.retries = 15
     # Wait 10 minutes before retrying failed task
     retry.backoff.ms = 600000
     connection.attempts = 15
     # Wait 10 minutes before attempting connection 
     connection.backoff.ms = 600000
+
+    {{- if eq .Values.mode "sink" }}
+    {{- with .Values.sink }}
+    # Kafka connector configuration
+    connector.class = io.confluent.connect.jdbc.JdbcSinkConnector
+    insert.mode = {{ .insertMode }}
+    # Topics that will be consumed
+    topics = {{ .topics }}
+    table.name.format = {{ .tableNameFormat }}
+    auto.create = {{ .enabled }}
+    {{- with .primaryKeys }}
+    pk.mode = {{ .mode }}
+    pk.fields = {{ join ", " .fields }}
+    {{- end }}
+    transforms=mergeKey,timestamp
+    transforms.mergeKey.type=org.radarbase.kafka.connect.transforms.MergeKey
+    transforms.timestamp.type=org.radarbase.kafka.connect.transforms.TimestampConverter
+    transforms.timestamp.fields=time,timeReceived,timeCompleted,timestamp
+    {{- end }}
+    {{- end }}
+    {{- if eq .Values.mode "source" }}
+    {{- with .Values.source }}
+    # Kafka connector configuration
+    connector.class = io.confluent.connect.jdbc.JdbcSourceConnector
+    table.whitelist = {{ .tableWhitelist }}
+    topic.prefix = {{ .topicPrefix }}
+    mode = {{ .mode }}
+    incrementing.column.name = {{ .incrementingColumnName }}
+    {{- end }}
+    {{- end }}
   healthcheck.sh: |
     #!/bin/sh
-    STATUS=$(curl -sf localhost:8083/connectors/radar-timescale-sink/status | grep -o '\"state\":\"[^\"]*\"')
+    STATUS=$(curl -sf localhost:8083/connectors/{{ $name }}/status | grep -o '\"state\":\"[^\"]*\"')
     if echo "$STATUS" | tr '\\n' ',' | grep -q FAILED; then
       exit 1
     elif [ $(echo "$STATUS" | grep RUNNING | wc -l) -le 1 ]; then
