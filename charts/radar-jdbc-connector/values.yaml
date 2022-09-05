@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- Number of radar-fitbit-connector replicas to deploy
+# -- Number of radar-jdbc-connector replicas to deploy
 replicaCount: 1
 
 image:
@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-jdbc-connector
   # -- radar-jdbc-connector image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: dev
+  tag: 10.5.2
   # -- radar-jdbc-connector image pull policy
   pullPolicy: IfNotPresent
 
@@ -71,6 +71,7 @@ kafka_num_brokers: "3"
 # -- URL of the Kafka schema registry
 schema_registry: http://cp-schema-registry:8081
 
+# -- Maximum number of worker threads inside a connector pod.
 maxTasks: 2
 
 # -- Either source or sink
@@ -83,9 +84,9 @@ source:
   tableWhitelist: ""
   # -- Prefix to prepend to table names to generate the name of the Kafka topic to publish data to.
   topicPrefix: ""
-  # -- How to detect new values
+  # -- How to detect new values in a table.
   mode: incrementing
-  # -- When using mode incrementing, which colum to use as incrementing. If empty, autodetection will be used.
+  # -- When using mode incrementing, which column to use as incrementing. If empty, autodetection will be used.
   incrementingColumnName: ""
 
 sink:
@@ -98,13 +99,14 @@ sink:
   primaryKeys:
     #-- where to read the primary keys from when creating the table
     mode: record_value
-    #-- fields to include as primary keys when creating the table
+    # -- fields to include as primary keys when creating the table
     fields:
       - time
       - userId
       - projectId
   # -- Comma-separated list of topics the connector will read from and ingest into the database
   topics: android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps
+  # -- How to format a table name based on the inserted topic
   tableNameFormat: "${topic}"
 
 # -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
@@ -119,4 +121,5 @@ jdbc:
   user: grafana
   # -- TimescaleDB database password
   password: password
+  # -- JDBC connect dialect that the database uses
   dialect: TimescaleDBDatabaseDialect
