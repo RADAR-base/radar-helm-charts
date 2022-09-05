@@ -22,7 +22,7 @@ data:
     # Wait 10 minutes before retrying failed task
     retry.backoff.ms = 600000
     connection.attempts = 15
-    # Wait 10 minutes before attempting connection 
+    # Wait 10 minutes before attempting connection
     connection.backoff.ms = 600000
 
     {{- if eq .Values.mode "sink" }}
@@ -33,7 +33,7 @@ data:
     # Topics that will be consumed
     topics = {{ .topics }}
     table.name.format = {{ .tableNameFormat }}
-    auto.create = {{ .enabled }}
+    auto.create = {{ .autoCreate }}
     {{- with .primaryKeys }}
     pk.mode = {{ .mode }}
     pk.fields = {{ join ", " .fields }}

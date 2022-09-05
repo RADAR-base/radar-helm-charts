@@ -93,6 +93,8 @@ sink:
   name: radar-jdbc-sink
   # -- create table if it does not exist
   autoCreate: true
+  # -- How to insert new values into the database
+  insertMode: upsert
   primaryKeys:
     #-- where to read the primary keys from when creating the table
     mode: record_value
