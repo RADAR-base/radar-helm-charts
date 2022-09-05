@@ -58,7 +58,7 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | sink.name | string | `"radar-jdbc-sink"` | Name of the connector Kafka consumer group |
 | sink.autoCreate | bool | `true` | create table if it does not exist |
 | sink.insertMode | string | `"upsert"` | How to insert new values into the database |
-| sink.primaryKeys.mode | string | `"record_value"` |  |
+| sink.primaryKeys.mode | string | `"record_value"` | where to read the primary keys from when creating the table |
 | sink.primaryKeys.fields | list | `["time","userId","projectId"]` | fields to include as primary keys when creating the table |
 | sink.topics | string | `"android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps"` | Comma-separated list of topics the connector will read from and ingest into the database |
 | sink.tableNameFormat | string | `"${topic}"` | How to format a table name based on the inserted topic |

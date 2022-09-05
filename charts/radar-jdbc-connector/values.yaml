@@ -97,7 +97,7 @@ sink:
   # -- How to insert new values into the database
   insertMode: upsert
   primaryKeys:
-    #-- where to read the primary keys from when creating the table
+    # -- where to read the primary keys from when creating the table
     mode: record_value
     # -- fields to include as primary keys when creating the table
     fields:
