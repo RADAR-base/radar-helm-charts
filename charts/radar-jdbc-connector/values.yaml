@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- Number of radar-fitbit-connector replicas to deploy
+# -- Number of radar-jdbc-connector replicas to deploy
 replicaCount: 1
 
 image:
@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-jdbc-connector
   # -- radar-jdbc-connector image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 10.3.2
+  tag: 10.5.2
   # -- radar-jdbc-connector image pull policy
   pullPolicy: IfNotPresent
 
@@ -64,27 +64,62 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
-# -- URI of Zookeeper instances of the cluster
-zookeeper: cp-zookeeper-headless:2181
 # -- URI of Kafka brokers of the cluster
 kafka: PLAINTEXT://cp-kafka-headless:9092
 # -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
 kafka_num_brokers: "3"
 # -- URL of the Kafka schema registry
 schema_registry: http://cp-schema-registry:8081
-# -- Comma-separated list of topics the connector will read from and ingest into the database
-topics: android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps
+
+# -- Maximum number of worker threads inside a connector pod.
+maxTasks: 2
+
+# -- Either source or sink
+mode: sink
+
+source:
+  # -- Name of the connector Kafka producer group
+  name: radar-jdbc-source
+  # -- Comma-separted list of tables to read
+  tableWhitelist: ""
+  # -- Prefix to prepend to table names to generate the name of the Kafka topic to publish data to.
+  topicPrefix: ""
+  # -- How to detect new values in a table.
+  mode: incrementing
+  # -- When using mode incrementing, which column to use as incrementing. If empty, autodetection will be used.
+  incrementingColumnName: ""
+
+sink:
+  # -- Name of the connector Kafka consumer group
+  name: radar-jdbc-sink
+  # -- create table if it does not exist
+  autoCreate: true
+  # -- How to insert new values into the database
+  insertMode: upsert
+  primaryKeys:
+    # -- where to read the primary keys from when creating the table
+    mode: record_value
+    # -- fields to include as primary keys when creating the table
+    fields:
+      - time
+      - userId
+      - projectId
+  # -- Comma-separated list of topics the connector will read from and ingest into the database
+  topics: android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps
+  # -- How to format a table name based on the inserted topic
+  tableNameFormat: "${topic}"
+
 # -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
 environment:
   # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
   CONNECT_SECURITY_PROTOCOL: PLAINTEXT
 
-timescaledb:
+jdbc:
   # -- Host of the TimescaleDB database
-  host: timescaledb-postgresql-headless
+  url: jdbc:postgresql://timescaledb-postgresql-headless:5432/grafana-metrics
   # -- TimescaleDB database username
-  username: grafana
+  user: grafana
   # -- TimescaleDB database password
   password: password
-  # -- TimescaleDB database name
-  database_name: grafana-metrics
+  # -- JDBC connect dialect that the database uses
+  dialect: TimescaleDBDatabaseDialect
