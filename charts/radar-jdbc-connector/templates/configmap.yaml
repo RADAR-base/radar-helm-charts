@@ -7,7 +7,7 @@ metadata:
   labels:
     {{- include "radar-jdbc-connector.labels" . | nindent 4 }}
 data:
-  sink-timescale.properties: |
+  connector.properties: |
     # Kafka connector configuration
     name = {{ $name }}
 
@@ -26,9 +26,10 @@ data:
     connection.backoff.ms = 600000
 
     {{- if eq .Values.mode "sink" }}
-    {{- with .Values.sink }}
     # Kafka connector configuration
     connector.class = io.confluent.connect.jdbc.JdbcSinkConnector
+
+    {{- with .Values.sink }}
     insert.mode = {{ .insertMode }}
     # Topics that will be consumed
     topics = {{ .topics }}
@@ -38,21 +39,43 @@ data:
     pk.mode = {{ .mode }}
     pk.fields = {{ join ", " .fields }}
     {{- end }}
+
+    {{- end }}
     transforms=mergeKey,timestamp
     transforms.mergeKey.type=org.radarbase.kafka.connect.transforms.MergeKey
     transforms.timestamp.type=org.radarbase.kafka.connect.transforms.TimestampConverter
     transforms.timestamp.fields=time,timeReceived,timeCompleted,timestamp
     {{- end }}
-    {{- end }}
+
     {{- if eq .Values.mode "source" }}
-    {{- with .Values.source }}
     # Kafka connector configuration
     connector.class = io.confluent.connect.jdbc.JdbcSourceConnector
+    {{- with .Values.source }}
+    {{- if .schema }}
+    schema.pattern = {{ .schema }}
+    {{- end }}
     table.whitelist = {{ .tableWhitelist }}
     topic.prefix = {{ .topicPrefix }}
     mode = {{ .mode }}
     incrementing.column.name = {{ .incrementingColumnName }}
+    {{- if .keyField }}
+    transforms=createKey,extractField
+    transforms.createKey.type = org.apache.kafka.connect.transforms.ValueToKey
+    transforms.createKey.fields = {{ .keyField }}
+    transforms.extractField.type = org.apache.kafka.connect.transforms.ExtractField$Key
+    transforms.extractField.field = {{ .keyField }}
     {{- end }}
+
+    {{- end }}
+
+    errors.log.enable = true
+    errors.log.include.messages = true
+    topic.creation.default.replication.factor = 2
+    topic.creation.default.partitions = 3
+    key.converter = io.confluent.connect.avro.AvroConverter
+    key.converter.schema.registry.url = {{ .Values.schema_registry }}
+    value.converter = io.confluent.connect.avro.AvroConverter
+    value.converter.schema.registry.url = {{ .Values.schema_registry }}
     {{- end }}
   healthcheck.sh: |
     #!/bin/sh

@@ -2,7 +2,7 @@
 
 # radar-jdbc-connector
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.2](https://img.shields.io/badge/AppVersion-10.5.2-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.2](https://img.shields.io/badge/AppVersion-10.5.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
 
@@ -51,10 +51,12 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | maxTasks | int | `2` | Maximum number of worker threads inside a connector pod. |
 | mode | string | `"sink"` | Either source or sink |
 | source.name | string | `"radar-jdbc-source"` | Name of the connector Kafka producer group |
+| source.schema | string | `"public"` | Database schema (if any) |
 | source.tableWhitelist | string | `""` | Comma-separted list of tables to read |
 | source.topicPrefix | string | `""` | Prefix to prepend to table names to generate the name of the Kafka topic to publish data to. |
 | source.mode | string | `"incrementing"` | How to detect new values in a table. |
 | source.incrementingColumnName | string | `""` | When using mode incrementing, which column to use as incrementing. If empty, autodetection will be used. |
+| source.keyField | string | `""` | Field to use as key for the records. If empty, no key is used. |
 | sink.name | string | `"radar-jdbc-sink"` | Name of the connector Kafka consumer group |
 | sink.autoCreate | bool | `true` | create table if it does not exist |
 | sink.insertMode | string | `"upsert"` | How to insert new values into the database |

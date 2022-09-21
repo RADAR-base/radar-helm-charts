@@ -80,6 +80,8 @@ mode: sink
 source:
   # -- Name of the connector Kafka producer group
   name: radar-jdbc-source
+  # -- Database schema (if any)
+  schema: public
   # -- Comma-separted list of tables to read
   tableWhitelist: ""
   # -- Prefix to prepend to table names to generate the name of the Kafka topic to publish data to.
@@ -88,6 +90,8 @@ source:
   mode: incrementing
   # -- When using mode incrementing, which column to use as incrementing. If empty, autodetection will be used.
   incrementingColumnName: ""
+  # -- Field to use as key for the records. If empty, no key is used.
+  keyField: ""
 
 sink:
   # -- Name of the connector Kafka consumer group

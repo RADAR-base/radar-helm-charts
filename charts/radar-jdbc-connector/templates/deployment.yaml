@@ -1,3 +1,4 @@
+{{- $name := ternary  .Values.sink.name .Values.source.name (eq .Values.mode "sink") -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -94,7 +95,7 @@ spec:
           - name: CONNECT_LOG4J_LOGGERS
             value: "org.reflections=ERROR"
           - name: CONNECTOR_PROPERTY_FILE_PREFIX
-            value: "sink-timescale/sink-timescale"
+            value: "{{ $name }}/connector"
           - name: KAFKA_HEAP_OPTS
             value: "-Xms1500m"
           ports:
@@ -105,7 +106,7 @@ spec:
             exec:
               command:
               - /bin/sh
-              - /etc/kafka-connect/sink-timescale/healthcheck.sh
+              - /etc/kafka-connect/{{ $name }}/healthcheck.sh
             initialDelaySeconds: 15
             periodSeconds: 60
             timeoutSeconds: 5
@@ -115,7 +116,7 @@ spec:
             exec:
               command:
               - /bin/sh
-              - /etc/kafka-connect/sink-timescale/healthcheck.sh
+              - /etc/kafka-connect/{{ $name }}/healthcheck.sh
             initialDelaySeconds: 15
             periodSeconds: 60
             timeoutSeconds: 5
@@ -125,7 +126,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config
-              mountPath: /etc/kafka-connect/sink-timescale
+              mountPath: /etc/kafka-connect/{{ $name }}
       volumes:
         - name: config
           configMap:
