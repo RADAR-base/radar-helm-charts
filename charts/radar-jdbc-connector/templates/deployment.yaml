@@ -1,4 +1,5 @@
-{{- $name := ternary  .Values.sink.name .Values.source.name (eq .Values.mode "sink") -}}
+{{- $isSource := eq .Values.mode "source" -}}
+{{- $name := ternary  .Values.source.name .Values.sink.name $isSource -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -76,8 +77,6 @@ spec:
             value: "/var/lib/kafka-connect-jdbc/logs/connect.offsets"
           - name: CONNECT_REST_ADVERTISED_HOST_NAME
             value: "radar-jdbc-connector"
-          - name: CONNECT_ZOOKEEPER_CONNECT
-            value: "{{ .Values.zookeeper }}"
           - name: CONNECT_CONSUMER_MAX_POLL_RECORDS
             value: "500"
           - name: CONNECT_CONSUMER_MAX_POLL_INTERVAL_MS
@@ -89,15 +88,15 @@ spec:
           - name: CONNECT_PLUGIN_PATH
             value: /usr/share/kafka-connect/plugins
           - name: CONNECT_LOG4J_ROOT_LOGLEVEL
-            value: INFO
+            value: {{ .Values.logLevel.root | quote }}
           - name: KAFKA_BROKERS
             value: "{{ .Values.kafka_num_brokers }}"
           - name: CONNECT_LOG4J_LOGGERS
-            value: "org.reflections=ERROR"
+            value: {{ include "radar-jdbc-connector.loggers" . | trimSuffix "," | quote }}
           - name: CONNECTOR_PROPERTY_FILE_PREFIX
             value: "{{ $name }}/connector"
           - name: KAFKA_HEAP_OPTS
-            value: "-Xms1500m"
+            value: "{{ .Values.heapOpts }}"
           ports:
             - name: http
               containerPort: 8083
@@ -127,10 +126,23 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/kafka-connect/{{ $name }}
+            {{- if $isSource }}
+            - name: offset-storage
+              mountPath: /var/lib/kafka-connect-jdbc/logs
+            {{- end }}
       volumes:
         - name: config
           configMap:
             name: {{ include "radar-jdbc-connector.fullname" . }}
+        {{- if $isSource }}
+        - name: offset-storage
+        {{- if .Values.source.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.source.persistence.existingClaim | default (include "radar-jdbc-connector.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -2,7 +2,7 @@
 
 # radar-jdbc-connector
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.2](https://img.shields.io/badge/AppVersion-10.5.2-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.2](https://img.shields.io/badge/AppVersion-10.5.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
 
@@ -50,6 +50,9 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | schema_registry | string | `"http://cp-schema-registry:8081"` | URL of the Kafka schema registry |
 | maxTasks | int | `2` | Maximum number of worker threads inside a connector pod. |
 | mode | string | `"sink"` | Either source or sink |
+| logLevel.root | string | `"INFO"` | Default log level |
+| logLevel.loggers | object | `{"org.reflections":"ERROR"}` | Per-logger log-level |
+| heapOpts | string | `"-Xms1500m"` | Java heap options |
 | source.name | string | `"radar-jdbc-source"` | Name of the connector Kafka producer group |
 | source.schema | string | `"public"` | Database schema (if any) |
 | source.tableWhitelist | string | `""` | Comma-separted list of tables to read |
@@ -57,9 +60,14 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | source.mode | string | `"incrementing"` | How to detect new values in a table. |
 | source.incrementingColumnName | string | `""` | When using mode incrementing, which column to use as incrementing. If empty, autodetection will be used. |
 | source.keyField | string | `""` | Field to use as key for the records. If empty, no key is used. |
+| source.persistence.enabled | bool | `true` | Whether to enable persistence for storing offsets |
+| source.persistence.existingClaim | string | `nil` | Existing persistent volume claim to use |
+| source.persistence.accessMode | string | `"ReadWriteOnce"` | PVC access mode |
+| source.persistence.size | string | `"20Mi"` | PVC storage size request |
 | sink.name | string | `"radar-jdbc-sink"` | Name of the connector Kafka consumer group |
 | sink.autoCreate | bool | `true` | create table if it does not exist |
 | sink.insertMode | string | `"upsert"` | How to insert new values into the database |
+| sink.mergeKey | bool | `true` | Whether to merge the key fields into the inserted values. |
 | sink.primaryKeys.mode | string | `"record_value"` | where to read the primary keys from when creating the table |
 | sink.primaryKeys.fields | list | `["time","userId","projectId"]` | fields to include as primary keys when creating the table |
 | sink.topics | string | `"android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps"` | Comma-separated list of topics the connector will read from and ingest into the database |

@@ -1,5 +1,6 @@
 {{- include "radar-jdbc-connector.validateValues" . }}
-{{ $name := ternary  .Values.sink.name .Values.source.name (eq .Values.mode "sink") }}
+{{- $isSource := eq .Values.mode "source" -}}
+{{- $name := ternary  .Values.source.name .Values.sink.name $isSource -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -25,7 +26,7 @@ data:
     # Wait 10 minutes before attempting connection
     connection.backoff.ms = 600000
 
-    {{- if eq .Values.mode "sink" }}
+    {{- if not $isSource }}
     # Kafka connector configuration
     connector.class = io.confluent.connect.jdbc.JdbcSinkConnector
 
@@ -40,14 +41,16 @@ data:
     pk.fields = {{ join ", " .fields }}
     {{- end }}
 
-    {{- end }}
+    {{- if .mergeKey }}
     transforms=mergeKey,timestamp
     transforms.mergeKey.type=org.radarbase.kafka.connect.transforms.MergeKey
     transforms.timestamp.type=org.radarbase.kafka.connect.transforms.TimestampConverter
     transforms.timestamp.fields=time,timeReceived,timeCompleted,timestamp
     {{- end }}
+    {{- end }}
+    {{- end }}
 
-    {{- if eq .Values.mode "source" }}
+    {{- if $isSource }}
     # Kafka connector configuration
     connector.class = io.confluent.connect.jdbc.JdbcSourceConnector
     {{- with .Values.source }}
@@ -65,18 +68,18 @@ data:
     transforms.extractField.type = org.apache.kafka.connect.transforms.ExtractField$Key
     transforms.extractField.field = {{ .keyField }}
     {{- end }}
-
     {{- end }}
-
-    errors.log.enable = true
-    errors.log.include.messages = true
     topic.creation.default.replication.factor = 2
     topic.creation.default.partitions = 3
+    {{- end }}
+
     key.converter = io.confluent.connect.avro.AvroConverter
     key.converter.schema.registry.url = {{ .Values.schema_registry }}
     value.converter = io.confluent.connect.avro.AvroConverter
     value.converter.schema.registry.url = {{ .Values.schema_registry }}
-    {{- end }}
+    errors.log.enable = true
+    errors.log.include.messages = true
+    errors.tolerance = all
   healthcheck.sh: |
     #!/bin/sh
     STATUS=$(curl -sf localhost:8083/connectors/{{ $name }}/status | grep -o '\"state\":\"[^\"]*\"')

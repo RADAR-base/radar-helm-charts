@@ -77,6 +77,16 @@ maxTasks: 2
 # -- Either source or sink
 mode: sink
 
+logLevel:
+  # -- Default log level
+  root: INFO
+  # -- Per-logger log-level
+  loggers:
+    org.reflections: ERROR
+
+# -- Java heap options
+heapOpts: "-Xms1500m"
+
 source:
   # -- Name of the connector Kafka producer group
   name: radar-jdbc-source
@@ -92,6 +102,15 @@ source:
   incrementingColumnName: ""
   # -- Field to use as key for the records. If empty, no key is used.
   keyField: ""
+  persistence:
+    # -- Whether to enable persistence for storing offsets
+    enabled: true
+    # -- Existing persistent volume claim to use
+    existingClaim:
+    # -- PVC access mode
+    accessMode: ReadWriteOnce
+    # -- PVC storage size request
+    size: 20Mi
 
 sink:
   # -- Name of the connector Kafka consumer group
@@ -100,6 +119,8 @@ sink:
   autoCreate: true
   # -- How to insert new values into the database
   insertMode: upsert
+  # -- Whether to merge the key fields into the inserted values.
+  mergeKey: true
   primaryKeys:
     # -- where to read the primary keys from when creating the table
     mode: record_value
