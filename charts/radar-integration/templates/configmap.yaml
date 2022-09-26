@@ -13,12 +13,10 @@ data:
     released: 2017-08-29
 
     # ManagementPortal configuration
-    oauth_client_id: {{ .Values.oauth_client_id }} #OAuth2 clientId used by the webApp for making requests
-    oauth_client_secret: {{ .Values.oauth_client_secret }} #OAuth2 client secrete
-    management_portal_url: http://{{ .Values.management_portal_url }}:8080/managementportal/ #URL pointing Management Portal
-    token_endpoint: oauth/token #URL managing tokens
-    project_endpoint: api/projects/ #URL managing project function
-    subject_endpoint: api/subjects #URL managing subject functions
+    management_portal:
+      oauth_client_id: {{ .Values.oauth_client_id }} #OAuth2 clientId used by the webApp for making requests
+      oauth_client_secret: {{ .Values.oauth_client_secret }} #OAuth2 client secret
+      base_url: http://{{ .Values.management_portal_url }}:8080/managementportal/ #Base URL of the Management Portal
 
     # Set of supported projects
     projects:
@@ -26,6 +24,7 @@ data:
       - redcap_info:
           url: {{ .url }} #URL pointing REDCap instance
           project_id: {{ .project_id }} #REDCap project identifier
+          api_path: {{ .api_path }} # Redcap relative api path
           enrolment_event: {{ .enrolment_event }} #Unique identifier for the enrolment event
           integration_form: {{ .integration_form }} #Name of integration REDCap form
           token: {{ .token }} #REDCap API Token used to identify the REDCap user against the REDCap instance

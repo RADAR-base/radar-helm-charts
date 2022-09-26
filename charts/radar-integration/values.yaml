@@ -2,11 +2,16 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# -- Number of radar-push-endpoint replicas to deploy
 replicaCount: 2
 
 image:
+  # -- radar-integration image repository
   repository: radarbase/radar-redcapintegration
-  tag: 0.1.0
+  # -- radar-integration image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 1.0.4
+  # -- radar-integration image pull policy
   pullPolicy: IfNotPresent
 
 # -- Docker registry secret names as an array
@@ -31,22 +36,30 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
+  # -- Kubernetes Service type
   type: ClusterIP
+  # -- radar-integration port
   port: 8080
 
 ingress:
+  # -- Enable ingress controller resource
   enabled: true
+  # -- Annotations that define default ingress class, certificate issuer and deny access to sensitive URLs
+  # @default -- check values.yaml
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /redcap/$1
   # -- Path within the url structure
   path: "/redcapint/?(.*)"
+  # -- Path Type
   pathType: ImplementationSpecific
+
   # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
+    # -- Name of the secret that contains TLS certificates
     # -- TLS Secret Name
     secretName: radar-base-tls
 
@@ -58,23 +71,39 @@ resources:
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
+
+  # -- CPU/Memory resource requests
   requests:
     cpu: 100m
     memory: 128Mi
 
+# -- Node labels for pod assignment
 nodeSelector: {}
 
+# -- Toleration labels for pod assignment
 tolerations: []
 
+# -- Affinity labels for pod assignment
 affinity: {}
 
+# -- OAuth2 clientId used by the webApp for making requests
 oauth_client_id: radar_redcap_integrator
+# -- OAuth2 client secret
 oauth_client_secret: secret
+# -- Base URL of the Management Portal
 management_portal_url: management-portal
 projects:
-  - url:
-    project_id:
-    enrolment_event:
-    integration_form:
-    token:
-    mp_info_project_name:
+    # -- URL pointing REDCap instance
+  - url: ""
+    # -- REDCap project identifier
+    project_id: ""
+    # -- Redcap relative api path
+    api_path: "/api/"
+    # -- Unique identifier for the enrolment event
+    enrolment_event: ""
+    # -- Name of integration REDCap form
+    integration_form: ""
+    # -- REDCap API Token used to identify the REDCap user against the REDCap instance
+    token: ""
+    # --  Management Portal project identifier
+    mp_info_project_name: ""

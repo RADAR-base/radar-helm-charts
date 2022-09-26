@@ -1,15 +1,16 @@
 apiVersion: v2
-appVersion: "0.1.0"
+appVersion: "1.0.4"
 description: A Helm chart for RADAR-Base REDCap survey integration application.
 name: radar-integration
-version: 0.2.1
+version: 0.3.0
+sources: ["https://github.com/RADAR-base/RADAR-RedcapIntegration"]
+deprecated: false
+type: application
+home: "https://radar-base.org"
 maintainers:
-  - email: keyvan@thehyve.nl
-    name: Keyvan Hedayati
-    url: https://www.thehyve.nl
-  - email: joris@thehyve.nl
-    name: Joris Borgdorff
-    url: https://www.thehyve.nl/experts/joris-borgdorff
-  - email: nivethika@thehyve.nl
-    name: Nivethika Mahasivam
-    url: https://www.thehyve.nl/experts/nivethika-mahasivam
+  - email: yatharth.ranjan@kcl.ac.uk
+    name: Yatharth Ranjan
+    url: https://www.kcl.ac.uk/people/yatharth-ranjan
+  - email: pauline.conde@kcl.ac.uk
+    name: Pauline Conde
+    url: https://www.kcl.ac.uk/people/pauline-conde
