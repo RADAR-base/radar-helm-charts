@@ -3,13 +3,13 @@
 # Declare variables to be passed into your templates.
 
 # -- 	Number of Management Portal replicas to deploy
-replicaCount: 2
+replicaCount: 1
 
 image:
   # -- Management Portal image repository
   repository: radarbase/management-portal
   # -- Management Portal image tag (immutable tags are recommended)
-  tag: 0.8.0
+  tag: 0.8.1
   # -- Management Portal image pull policy
   pullPolicy: IfNotPresent
 
@@ -59,6 +59,7 @@ ingress:
       }
   # -- Path within the url structure
   path: "/managementportal"
+  pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
     - localhost
@@ -113,9 +114,15 @@ postgres:
   # -- password of the postgres user
   password: password
   ssl:
-    # -- set to true of the connecting to postgres using SSL
+    # -- set to true if the connecting to postgres using SSL
     enabled: false
-    keystorepassword: keystorepassword
+    # -- base64 encoded certificate needed to connect to the PostgreSQL
+    # With helmfile, this can be set in a production.yaml.gotmpl
+    # file by setting
+    #   keystore: {{ readFile "certificate.pem" | b64enc | quote }}
+    # or with SOPS
+    #   keystore: {{ exec "sops" (list "-d" "certificate.pem") | b64enc | quote }}
+    keystore: ""
 
 # -- domain name of the server
 server_name: localhost

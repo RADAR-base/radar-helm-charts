@@ -10,7 +10,7 @@ image:
   repository: radarbase/kafka-connect-transform-s3
   # -- radar-s3-connector image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "5.5.1"
+  tag: "7.1.1"
   # -- radar-s3-connector image pull policy
   pullPolicy: IfNotPresent
 
@@ -75,6 +75,11 @@ schemaRegistry:
 catalogServer:
   # -- Catalog server URL
   url: http://catalog-server:9010
+
+# -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
+environment:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  CONNECT_SECURITY_PROTOCOL: PLAINTEXT
 
 # -- List of topics to be consumed by the sink connector separated by comma.
 # @default -- check values.yaml

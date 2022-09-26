@@ -57,14 +57,22 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "app-config.labels" -}}
-app.kubernetes.io/name: {{ include "app-config.name" . }}
 helm.sh/chart: {{ include "app-config.chart" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "app-config.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end -}}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "app-config.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "app-config.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
 
 {{/*
 Create the name of the service account to use

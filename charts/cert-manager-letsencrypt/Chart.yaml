@@ -1,0 +1,19 @@
+apiVersion: v2
+appVersion: "1.0"
+description: A Helm chart for a cert-manager ClusterIssuer for letsencrypt. Requires the cert-manager release to be activated.
+name: cert-manager-letsencrypt
+version: 0.1.0
+engine: gotpl
+sources: ["https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/cert-manager-letsencrypt"]
+deprecated: false
+type: application
+maintainers:
+  - email: keyvan@thehyve.nl
+    name: Keyvan Hedayati
+    url: https://www.thehyve.nl
+  - email: joris@thehyve.nl
+    name: Joris Borgdorff
+    url: https://www.thehyve.nl/experts/joris-borgdorff
+  - email: nivethika@thehyve.nl
+    name: Nivethika Mahasivam
+    url: https://www.thehyve.nl/experts/nivethika-mahasivam

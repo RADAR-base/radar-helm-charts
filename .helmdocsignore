@@ -1,3 +1,4 @@
 charts/kafka-manager/
 charts/radar-backend/
 charts/smtp/
+external/

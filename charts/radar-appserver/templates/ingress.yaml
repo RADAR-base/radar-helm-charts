@@ -2,7 +2,13 @@
 {{- $fullName := include "radar-appserver.fullname" . -}}
 {{- $path := .Values.ingress.path -}}
 {{- $hosts := .Values.ingress.hosts -}}
+{{- $svcPort := .Values.service.port -}}
+{{- $pathType := .Values.ingress.pathType -}}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else -}}
 apiVersion: extensions/v1beta1
+{{- end }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -22,7 +28,7 @@ spec:
       {{- range $hosts }}
         - {{ . | quote }}
       {{- end }}
-      secretName: {{ .secretName }}
+      secretName: {{ .Values.ingress.tls.secretName }}
 {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
@@ -30,8 +36,18 @@ spec:
       http:
         paths:
           - path: {{ $path | quote }}
+            {{- if and $pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ $pathType }}
+            {{- end }}
             backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
               serviceName: {{ $fullName }}
-              servicePort: http
+              servicePort: {{ $svcPort }}
+              {{- end }}
   {{- end }}
 {{- end }}

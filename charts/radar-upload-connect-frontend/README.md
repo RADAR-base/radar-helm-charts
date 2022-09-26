@@ -2,7 +2,7 @@
 
 # radar-upload-connect-frontend
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.9](https://img.shields.io/badge/AppVersion-0.5.9-informational?style=flat-square)
+![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector frontend application that provides a UI for uploading files and sending them to the upload-backend.
 
@@ -12,9 +12,9 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | keyvan@thehyve.nl | https://www.thehyve.nl |
-| Joris Borgdorff | joris@thehyve.nl | https://www.thehyve.nl/experts/joris-borgdorff |
-| Nivethika Mahasivam | nivethika@thehyve.nl | https://www.thehyve.nl/experts/nivethika-mahasivam |
+| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
+| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
+| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -31,7 +31,7 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-upload-connect-frontend replicas to deploy |
 | image.repository | string | `"radarbase/radar-upload-connect-frontend"` | radar-upload-connect-frontend image repository |
-| image.tag | string | `"0.5.9"` | radar-upload-connect-frontend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.5.10"` | radar-upload-connect-frontend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-upload-connect-frontend image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-upload-connect-frontend.fullname template with a string (will prepend the release name) |
@@ -43,6 +43,7 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
 | ingress.path | string | `"/upload/?(.*)"` | Path within the url structure |
+| ingress.pathType | string | `"ImplementationSpecific"` |  |
 | ingress.hosts | list | `["localhost"]` | Host to listen to requests to |
 | ingress.tls.secretName | string | `"radar-base-tls"` | Name of the secret containing TLS certificates |
 | resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |

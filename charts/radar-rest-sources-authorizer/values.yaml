@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-rest-source-authorizer
   # -- radar-rest-sources-authorizer image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 3.2.2
+  tag: 4.0.1
   # -- radar-rest-sources-authorizer image pull policy
   pullPolicy: IfNotPresent
 
@@ -52,6 +52,7 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
   # -- Path within the url structure
   path: "/rest-sources/authorizer/?(.*)"
+  pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
     - localhost

@@ -52,11 +52,14 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /redcap/$1
   # -- Path within the url structure
   path: "/redcapint/?(.*)"
+  pathType: ImplementationSpecific
+
   # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
     # -- Name of the secret that contains TLS certificates
+    # -- TLS Secret Name
     secretName: radar-base-tls
 
 resources:

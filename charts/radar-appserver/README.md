@@ -2,7 +2,7 @@
 
 # radar-appserver
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.0](https://img.shields.io/badge/AppVersion-3.2.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.0](https://img.shields.io/badge/AppVersion-3.2.0-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Appserver
 
@@ -12,8 +12,8 @@ A Helm chart for the backend application of RADAR-base Appserver
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Yatharth Ranjan | yatharth.ranjan@kcl.ac.uk | https://www.kcl.ac.uk/people/yatharth-ranjan |
-| Pauline Conde | pauline.conde@kcl.ac.uk | https://www.kcl.ac.uk/people/pauline-conde |
+| Yatharth Ranjan | <yatharth.ranjan@kcl.ac.uk> | <https://www.kcl.ac.uk/people/yatharth-ranjan> |
+| Pauline Conde | <pauline.conde@kcl.ac.uk> | <https://www.kcl.ac.uk/people/pauline-conde> |
 
 ## Source Code
 
@@ -30,7 +30,7 @@ A Helm chart for the backend application of RADAR-base Appserver
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-appserver replicas to deploy |
 | image.repository | string | `"radarbase/radar-appserver"` | radar-appserver image repository |
-| image.tag | string | `"1.1.0"` | radar-appserver image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"1.3.0"` | radar-appserver image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-appserver image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-appserver.fullname template with a string (will prepend the release name) |
@@ -42,13 +42,14 @@ A Helm chart for the backend application of RADAR-base Appserver
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and session configuration |
 | ingress.path | string | `"/appserver/?(.*)"` | Path within the url structure |
+| ingress.pathType | string | `"ImplementationSpecific"` | Ingress path type |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
-| postgres.host | string | `"postgresql"` | host name of the postgres db |
+| postgres.host | string | `"radar-appserver-postgresql"` | host name of the postgres db |
 | postgres.port | int | `5432` | post of the postgres db |
 | postgres.database | string | `"appserver"` | database name |
 | postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
@@ -63,3 +64,4 @@ A Helm chart for the backend application of RADAR-base Appserver
 | managementportal_resource_name | string | `"res_AppServer"` | radar_is.yml config for token verification |
 | public_key_endpoints | string | `nil` |  |
 | google_application_credentials | string | `""` | Google credentials containing FCM server key, etc. |
+| github_client_token | string | `""` | Github client token which is used for authenticating requests |

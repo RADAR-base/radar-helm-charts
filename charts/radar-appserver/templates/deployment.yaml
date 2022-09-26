@@ -17,6 +17,7 @@ spec:
     metadata:
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "radar-appserver.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -55,17 +56,34 @@ spec:
           - name: SPRING_DATASOURCE_URL
             value: "jdbc:postgresql://{{ .Values.postgres.host }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}{{ .Values.postgres.connection_parameters }}"
           - name: SPRING_DATASOURCE_USERNAME
-            value: {{ .Values.postgres.user }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-appserver.secretName" . }}
+                key: databaseUser
           - name: SPRING_DATASOURCE_PASSWORD
-            value: {{ .Values.postgres.password }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-appserver.secretName" . }}
+                key: databasePassword
           - name: SECURITY_RADAR_MANAGEMENTPORTAL_URL
             value: "http://{{ .Values.managementportal_host }}/managementportal"
           - name: GOOGLE_APPLICATION_CREDENTIALS
-            value: /etc/radar-appserver/google-credentials.json
+            value: /etc/google/firebase-adminsdk.json
           - name: RADAR_ADMIN_USER
-            value: {{ .Values.radar_admin_user }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-appserver.secretName" . }}
+                key: managementPortalClientId
           - name: RADAR_ADMIN_PASSWORD
-            value: {{ .Values.radar_admin_user }}          
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-appserver.secretName" . }}
+                key: managementPortalClientSecret
+          - name: SECURITY_GITHUB_CLIENT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-appserver.secretName" . }}
+                key: githubClientToken
           imagePullPolicy: Always
           ports:
             - name: http
@@ -96,10 +114,16 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/radar-appserver/
+            - name: secrets
+              mountPath: /etc/google/firebase-adminsdk.json
+              subPath: firebaseAdminSdkKey
       volumes:
         - name: config
           configMap:
             name: {{ include "radar-appserver.fullname" . }}
+        - name: secrets
+          secret:
+            secretName: {{ include "radar-appserver.fullname" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

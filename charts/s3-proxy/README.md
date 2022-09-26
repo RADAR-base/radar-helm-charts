@@ -2,7 +2,7 @@
 
 # s3-proxy
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
 A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy to proxy S3 API requests to any supported cloud provider. For more examples see Find some example configurations at https://github.com/gaul/s3proxy/wiki/Storage-backend-examples.
 
@@ -12,9 +12,9 @@ A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy t
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | keyvan@thehyve.nl | https://www.thehyve.nl |
-| Joris Borgdorff | joris@thehyve.nl | https://www.thehyve.nl/experts/joris-borgdorff |
-| Nivethika Mahasivam | nivethika@thehyve.nl | https://www.thehyve.nl/experts/nivethika-mahasivam |
+| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
+| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
+| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 

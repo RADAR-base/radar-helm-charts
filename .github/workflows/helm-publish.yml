@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           submodules: true
@@ -21,26 +21,25 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Install Helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
 
       - name: Add Helm repos
         run: |
-          helm repo add jetstack https://charts.jetstack.io
+          helm repo add radar https://radar-base.github.io/radar-helm-charts
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-          helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.2.1
+        uses: helm/chart-releaser-action@v1.4.0
         with:
           config: .github/cr.yaml
           charts_dir: charts
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Run chart-releaser -- cp-helm-charts
-        uses: helm/chart-releaser-action@v1.2.1
+      - name: Run chart-releaser -- external dependencies
+        uses: helm/chart-releaser-action@v1.4.0
         with:
           config: .github/cr.yaml
-          charts_dir: cp-helm-charts/charts
+          charts_dir: external
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

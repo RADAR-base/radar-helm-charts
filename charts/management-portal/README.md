@@ -2,7 +2,7 @@
 
 # management-portal
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
+![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.1](https://img.shields.io/badge/AppVersion-0.8.1-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -12,9 +12,9 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | keyvan@thehyve.nl | https://www.thehyve.nl |
-| Joris Borgdorff | joris@thehyve.nl | https://www.thehyve.nl/experts/joris-borgdorff |
-| Nivethika Mahasivam | nivethika@thehyve.nl | https://www.thehyve.nl/experts/nivethika-mahasivam |
+| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
+| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
+| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -29,9 +29,9 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| replicaCount | int | `2` | Number of Management Portal replicas to deploy |
+| replicaCount | int | `1` | Number of Management Portal replicas to deploy |
 | image.repository | string | `"radarbase/management-portal"` | Management Portal image repository |
-| image.tag | string | `"0.8.0"` | Management Portal image tag (immutable tags are recommended) |
+| image.tag | string | `"0.8.1"` | Management Portal image tag (immutable tags are recommended) |
 | image.pullPolicy | string | `"IfNotPresent"` | Management Portal image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override management-portal.fullname template with a string (will prepend the release name) |
@@ -43,6 +43,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and rate limiter |
 | ingress.path | string | `"/managementportal"` | Path within the url structure |
+| ingress.pathType | string | `"ImplementationSpecific"` |  |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | resources.limits | object | `{"cpu":2,"memory":"1.7Gi"}` | CPU/Memory resource limits |
@@ -57,8 +58,8 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
 | postgres.user | string | `"postgres"` | postgres user |
 | postgres.password | string | `"password"` | password of the postgres user |
-| postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
-| postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
+| postgres.ssl.enabled | bool | `false` | set to true if the connecting to postgres using SSL |
+| postgres.ssl.keystore | string | `""` | base64 encoded certificate needed to connect to the PostgreSQL With helmfile, this can be set in a production.yaml.gotmpl file by setting   keystore: {{ readFile "certificate.pem" | b64enc | quote }} or with SOPS   keystore: {{ exec "sops" (list "-d" "certificate.pem") | b64enc | quote }} |
 | server_name | string | `"localhost"` | domain name of the server |
 | catalogue_server | string | `"catalog-server"` | Hostname of the catalogue-server |
 | managementportal.catalogue_server_enable_auto_import | string | `"false"` | set to true, if automatic source-type import from catalogue server should be enabled |

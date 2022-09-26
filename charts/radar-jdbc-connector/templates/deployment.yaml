@@ -47,6 +47,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+          {{- range $k, $v := .Values.environment }}
+          - name: {{ $k }}
+            value: {{ $v | quote }}
+          {{- end }}
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka }}"
           - name: CONNECT_REST_PORT
@@ -67,10 +71,6 @@ spec:
             value: "{{ .Values.schema_registry }}"
           - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL
             value: "{{ .Values.schema_registry }}"
-          - name: CONNECT_INTERNAL_KEY_CONVERTER
-            value: "org.apache.kafka.connect.json.JsonConverter"
-          - name: CONNECT_INTERNAL_VALUE_CONVERTER
-            value: "org.apache.kafka.connect.json.JsonConverter"
           - name: CONNECT_OFFSET_STORAGE_FILE_FILENAME
             value: "/var/lib/kafka-connect-jdbc/logs/connect.offsets"
           - name: CONNECT_REST_ADVERTISED_HOST_NAME
@@ -88,7 +88,7 @@ spec:
           - name: CONNECT_PLUGIN_PATH
             value: /usr/share/kafka-connect/plugins
           - name: CONNECT_LOG4J_ROOT_LOGLEVEL
-            value: WARN
+            value: INFO
           - name: KAFKA_BROKERS
             value: "{{ .Values.kafka_num_brokers }}"
           - name: CONNECT_LOG4J_LOGGERS

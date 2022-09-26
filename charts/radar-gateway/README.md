@@ -2,7 +2,7 @@
 
 # radar-gateway
 
-![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.9](https://img.shields.io/badge/AppVersion-0.5.9-informational?style=flat-square)
+![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.13](https://img.shields.io/badge/AppVersion-0.5.13-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -12,9 +12,9 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | keyvan@thehyve.nl | https://www.thehyve.nl |
-| Joris Borgdorff | joris@thehyve.nl | https://www.thehyve.nl/experts/joris-borgdorff |
-| Nivethika Mahasivam | nivethika@thehyve.nl | https://www.thehyve.nl/experts/nivethika-mahasivam |
+| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
+| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
+| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -31,7 +31,7 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-gateway replicas to deploy |
 | image.repository | string | `"radarbase/radar-gateway"` | radar-gateway image repository |
-| image.tag | string | `"0.5.9"` | radar-gateway image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.5.13"` | radar-gateway image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-gateway image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-gateway.fullname template with a string (will prepend the release name) |
@@ -43,6 +43,7 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and deny access to sensitive URLs |
 | ingress.path | string | `"/kafka/?(.*)"` | Path within the url structure |
+| ingress.pathType | string | `"ImplementationSpecific"` |  |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` | Name of the secret that contains TLS certificates |
 | resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
@@ -58,6 +59,8 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | adminProperties | object | `{}` | Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs. |
 | producerProperties | object | `{"compression.type":"lz4"}` | Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs. |
 | serializationProperties | object | `{}` | Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig]. |
+| serverProperties | object | `{"maxRequestSize":25165824}` | Additional gateway server properties |
+| serverProperties.maxRequestSize | int | `25165824` | Maximum request size, also after decompression. |
 | cc.enabled | bool | `false` | set to true, if requests should be forwarded to Confluent Cloud based brokers. |
 | cc.apiKey | string | `"ccApikey"` | Confluent Cloud cluster API key |
 | cc.apiSecret | string | `"ccApiSecret"` | Confluent Cloud cluster API secret |

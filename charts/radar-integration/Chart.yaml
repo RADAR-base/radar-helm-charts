@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "1.0.4"
 description: A Helm chart for RADAR-Base REDCap survey integration application.
 name: radar-integration
-version: 0.1.2
+version: 0.3.0
 sources: ["https://github.com/RADAR-base/RADAR-RedcapIntegration"]
 deprecated: false
 type: application

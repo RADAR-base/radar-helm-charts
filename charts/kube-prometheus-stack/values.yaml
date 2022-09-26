@@ -4,75 +4,37 @@ nginx_auth: |
   test:$2y$05$/okvi.SPEUOHzFuW/lao0ejB.2XBQMDw2pNVxag8R.nKVr5Y/7pGm
 
 kube-prometheus-stack:
-  prometheusOperator:
-    tls:
-      enabled: false
-    admissionWebhooks:
-      enabled: false
-      patch:
-        enabled: false
-    tlsProxy:
-      enabled: false
 
-  prometheus:
-    prometheusSpec:
-      serviceMonitorSelectorNilUsesHelmValues: "false"
-      replicas: 1
-      resources:
-        requests:
-          memory: 1Gi
-      storageSpec:
-        volumeClaimTemplate:
-          spec:
-            accessModes: ["ReadWriteOnce"]
-            resources:
-              requests:
-                storage: 2Gi
-      ruleNamespaceSelector:
-        matchExpressions:
-          - key: name
-            operator: In
-            values:
-              - default
-              - monitoring
-              - graylog
-              - cert-manager
-              - kube-system
-      serviceMonitorNamespaceSelector:
-        matchExpressions:
-          - key: name
-            operator: In
-            values:
-              - default
-              - monitoring
-              - graylog
-              - cert-manager
-              - kube-system
-
-    ingress:
-      enabled: true
-      annotations:
-        kubernetes.io/ingress.class: nginx
-        cert-manager.io/cluster-issuer: letsencrypt-prod
-        nginx.ingress.kubernetes.io/auth-type: basic
-        nginx.ingress.kubernetes.io/auth-secret: kube-prometheus-stack-nginx-auth
-      hosts:
-        - localhost
-      tls:
-      - secretName: radar-base-tls-prometheus
-        hosts:
-        - localhost
-
+  ## Configuration for alertmanager
+  ## ref: https://prometheus.io/docs/alerting/alertmanager/
+  ##
   alertmanager:
-    alertmanagerSpec:
-      replicas: 1
-      storage:
-        volumeClaimTemplate:
-          spec:
-            accessModes: ["ReadWriteOnce"]
-            resources:
-              requests:
-                storage: 1Gi
+
+    ## Alertmanager configuration directives
+    ## ref: https://prometheus.io/docs/alerting/configuration/#configuration-file
+    ##      https://prometheus.io/webtools/alerting/routing-tree-editor/
+    ##
+    config:
+      global:
+        resolve_timeout: 5m
+      route:
+        group_by: ['job']
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 12h
+        receiver: "default"
+        routes: []
+      receivers:
+      - name: "null"
+
+    ## Alertmanager template files to format alerts
+    ## By default, templateFiles are placed in /etc/alertmanager/config/ and if
+    ## they have a .tmpl file suffix will be loaded. See config.templates above
+    ## to change, add other suffixes. If adding other suffixes, be sure to update
+    ## config.templates above to include those suffixes.
+    ## ref: https://prometheus.io/docs/alerting/notifications/
+    ##      https://prometheus.io/docs/alerting/notification_examples/
+    ##
     templateFiles:
       template_1.tmpl: |-
           {{ define "__alertmanagerURL" }}{{ .ExternalURL }}/#/alerts?receiver={{ .Receiver }}{{ end }}
@@ -98,44 +60,199 @@ kube-prometheus-stack:
           {{ define "slack.default.iconurl" }}{{ end }}
           {{ define "slack.default.text" }}{{ end }}
           {{ define "slack.default.footer" }}{{ end }}
-    config:
-      global:
-        resolve_timeout: 5m
-      receivers:
-      - name: "null"
-      route:
-        group_by:
-        - job
-        group_interval: 5m
-        group_wait: 30s
-        receiver: "default"
-        repeat_interval: 12h
-        routes: []
 
     ingress:
       enabled: true
+      # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+      # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+      # ingressClassName: nginx
       annotations:
         kubernetes.io/ingress.class: nginx
         cert-manager.io/cluster-issuer: letsencrypt-prod
         nginx.ingress.kubernetes.io/auth-type: basic
         nginx.ingress.kubernetes.io/auth-secret: kube-prometheus-stack-nginx-auth
+      ## Hosts must be provided if Ingress is enabled.
+      ##
       hosts:
         - localhost
+      ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
+      ##
+      paths:
+        - /
+
       tls:
       - secretName: radar-base-tls-alertmanager
         hosts:
         - localhost
+    alertmanagerSpec:
+
+      ## Size is the expected size of the alertmanager cluster. The controller will eventually make the size of the
+      ## running cluster equal to the expected size.
+      replicas: 1
+
+      ## Storage is the definition of how storage will be used by the Alertmanager instances.
+      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/storage.md
+      ##
+      storage:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 1Gi
 
   grafana:
     adminPassword: "prom-operator"
     ingress:
+      ## If true, Grafana Ingress will be created
+      ##
       enabled: true
+
+      ## IngressClassName for Grafana Ingress.
+      ## Should be provided if Ingress is enable.
+      ##
+      # ingressClassName: nginx
+
+      ## Annotations for Grafana Ingress
+      ##
       annotations:
         kubernetes.io/ingress.class: nginx
         cert-manager.io/cluster-issuer: letsencrypt-prod
+
+      ## Hostnames.
+      ## Must be provided if Ingress is enable.
+      ##
+      # hosts:
+      #   - grafana.domain.com
       hosts:
         - localhost
+
+      ## TLS configuration for grafana Ingress
+      ## Secret must be manually created in the namespace
+      ##
       tls:
       - secretName: radar-base-tls-grafana
         hosts:
         - localhost
+
+  ## Manages Prometheus and Alertmanager components
+  ##
+  prometheusOperator:
+    ## Prometheus-Operator v0.39.0 and later support TLS natively.
+    ##
+    tls:
+      enabled: false
+
+    ## Admission webhook support for PrometheusRules resources added in Prometheus Operator 0.30 can be enabled to prevent incorrectly formatted
+    ## rules from making their way into prometheus and potentially preventing the container from starting
+    admissionWebhooks:
+      enabled: false
+      ## If enabled, generate a self-signed certificate, then patch the webhook configurations with the generated data.
+      ## On chart upgrades (or if the secret exists) the cert will not be re-generated. You can use this to provide your own
+      ## certs ahead of time if you wish.
+      ##
+      patch:
+        enabled: false
+
+  ## Deploy a Prometheus instance
+  ##
+  prometheus:
+
+    ingress:
+      enabled: true
+
+      # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+      # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+      # ingressClassName: nginx
+
+      annotations:
+        kubernetes.io/ingress.class: nginx
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/auth-type: basic
+        nginx.ingress.kubernetes.io/auth-secret: kube-prometheus-stack-nginx-auth
+
+      ## Hostnames.
+      ## Must be provided if Ingress is enabled.
+      ##
+      # hosts:
+      #   - prometheus.domain.com
+      hosts:
+        - localhost
+      ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
+      ##
+      paths:
+        - /
+
+      ## For Kubernetes >= 1.18 you should specify the pathType (determines how Ingress paths should be matched)
+      ## See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#better-path-matching-with-path-types
+      pathType: ImplementationSpecific
+
+      ## TLS configuration for Prometheus Ingress
+      ## Secret must be manually created in the namespace
+      ##
+      tls:
+      - secretName: radar-base-tls-prometheus
+        hosts:
+        - localhost
+
+    ## Settings affecting prometheusSpec
+    ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#prometheusspec
+    ##
+    prometheusSpec:
+
+      ## If true, a nil or {} value for prometheus.prometheusSpec.serviceMonitorSelector will cause the
+      ## prometheus resource to be created with selectors based on values in the helm deployment,
+      ## which will also match the servicemonitors created
+      ##
+      serviceMonitorSelectorNilUsesHelmValues: "false"
+
+      ## Namespaces to be selected for ServiceMonitor discovery.
+      ##
+      serviceMonitorNamespaceSelector:
+        matchExpressions:
+          - key: name
+            operator: In
+            values:
+              - default
+              - monitoring
+              - graylog
+              - cert-manager
+              - kube-system
+
+
+      ## Number of replicas of each shard to deploy for a Prometheus deployment.
+      ## Number of replicas multiplied by shards is the total number of Pods created.
+      ##
+      replicas: 1
+
+      ## Resource limits & requests
+      ##
+      resources:
+        requests:
+          memory: 1Gi
+
+      ## Prometheus StorageSpec for persistent data
+      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/storage.md
+      ##
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 2Gi
+
+      ## Namespaces to be selected for PrometheusRules discovery.
+      ## If nil, select own namespace. Namespaces to be selected for ServiceMonitor discovery.
+      ## See https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#namespaceselector for usage
+      ##
+      ruleNamespaceSelector:
+        matchExpressions:
+          - key: name
+            operator: In
+            values:
+              - default
+              - monitoring
+              - graylog
+              - cert-manager
+              - kube-system
