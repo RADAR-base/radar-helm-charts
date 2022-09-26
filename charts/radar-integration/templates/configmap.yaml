@@ -9,9 +9,6 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   radar.yml: |
-    version: 0.1-alpha
-    released: 2017-08-29
-
     # ManagementPortal configuration
     management_portal:
       oauth_client_id: {{ .Values.oauth_client_id }} #OAuth2 clientId used by the webApp for making requests
