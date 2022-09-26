@@ -52,6 +52,7 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /redcap/$1
   # -- Path within the url structure
   path: "/redcapint/?(.*)"
+  # -- Path Type
   pathType: ImplementationSpecific
 
   # -- Hosts to accept requests from
