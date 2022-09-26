@@ -1839,6 +1839,26 @@ entries:
     version: 0.1.4
   radar-integration:
   - apiVersion: v2
+    appVersion: 1.0.4
+    created: "2022-09-26T12:16:52.205584306Z"
+    description: A Helm chart for RADAR-Base REDCap survey integration application.
+    digest: 247deeb9db8ea76a7f8b459bbc40d3d2906d957095d18e57a18dea24d9ed516f
+    home: https://radar-base.org
+    maintainers:
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    name: radar-integration
+    sources:
+    - https://github.com/RADAR-base/RADAR-RedcapIntegration
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-integration-0.3.0/radar-integration-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     appVersion: 0.1.0
     created: "2022-04-28T12:08:02.924931906Z"
     description: A Helm chart for RADAR-Base REDCap survey integration application.
@@ -3608,4 +3628,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2022-09-22T11:40:09.597193046Z"
+generated: "2022-09-26T12:16:52.205982537Z"
