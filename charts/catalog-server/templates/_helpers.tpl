@@ -50,3 +50,7 @@ Create chart name and version as used by the chart label.
 {{- define "catalog-server.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "catalog-server.saslJaasConfig" -}}
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="{{ .apiKey }}" password="{{ .apiSecret }}";
+{{- end -}}

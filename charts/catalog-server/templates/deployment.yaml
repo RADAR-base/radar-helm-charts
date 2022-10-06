@@ -24,9 +24,6 @@ spec:
       annotations:
         backup.velero.io/backup-volumes: config
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        {{- if .Values.cc.enabled }}
-        checksum/configmap-java-config: {{ include (print $.Template.BasePath "/configmap-java-config.yaml") . | sha256sum }}
-        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -68,9 +65,14 @@ spec:
           value: "3"
         - name: RADAR_NUM_REPLICATION_FACTOR
           value: "3"
-        - name: KAFKA_CONFIG_PATH
-          value: "/etc/config/java-config.properties"
+        - name: CONFIG_PATH
+          value: /etc/radar-schemas-tools/config.yaml
         {{- if .Values.cc.enabled }}
+        - name: KAFKA_SASL_JAAS_CONFIG
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "catalog-server.fullname" . }}
+              key: saslJaasConfig
         - name: SCHEMA_REGISTRY_API_KEY
           valueFrom:
             secretKeyRef:
@@ -84,11 +86,9 @@ spec:
         {{- end }}
         volumeMounts:
           - name: config
-            mountPath: /etc/radar-schemas
+            mountPath: /etc/radar-schemas-tools
           - name: config-schemas
             mountPath: /schema/conf
-          - name: cc-java-config
-            mountPath: /etc/config/
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -96,6 +96,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           args:
             - radar-catalog-server
+            - -c
+            - /etc/radar-schemas-tools/config.yaml
             - /schema/merged
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
@@ -124,7 +126,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config
-              mountPath: /etc/radar-schemas
+              mountPath: /etc/radar-schemas-tools
             - name: config-schemas
               mountPath: /schema/conf
       volumes:
@@ -138,9 +140,6 @@ spec:
         {{- else }}
           emptyDir: {}
         {{- end }}
-        - name: cc-java-config
-          configMap:
-            name: {{ include "catalog-server.fullname" . }}-java-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

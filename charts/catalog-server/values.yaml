@@ -95,10 +95,45 @@ kafkaProperties:
 # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
   security_protocol: PLAINTEXT
 
-# -- List of paths of specifications relative to specifications folder, if any of the specifications should be excluded from automatically registering topics and schemas.
-specificationsExclude:
-# - active/*
-# - passive/*1.0.0*
+sources:
+  include: []
+  exclude: []
+    # - active/*
+    # - passive/*1.0.0*
+  active:
+    # some active source specification, as done in RADAR-schemas/specifications/active
+  connector:
+    # some active source specification, as done in RADAR-schemas/specifications/connector
+  monitor:
+    # some active source specification, as done in RADAR-schemas/specifications/monitor
+  passive:
+    # some active source specification, as done in RADAR-schemas/specifications/passive
+  push:
+    # some active source specification, as done in RADAR-schemas/specifications/push
+  stream:
+    # some active source specification, as done in RADAR-schemas/specifications/stream
+
+schemas:
+  include: []
+  exclude: []
+    # - active/*
+    # - passive/*1.0.0*
+  active:
+    # some active source specification, as done in RADAR-schemas/commons/active
+  catalogue:
+    # some active source specification, as done in RADAR-schemas/commons/catalogue
+  connector:
+    # some active source specification, as done in RADAR-schemas/commons/connector
+  kafka:
+    # some active source specification, as done in RADAR-schemas/commons/kafka
+  monitor:
+    # some active source specification, as done in RADAR-schemas/commons/monitor
+  passive:
+    # some active source specification, as done in RADAR-schemas/commons/passive
+  push:
+    # some active source specification, as done in RADAR-schemas/commons/push
+  stream:
+    # some active source specification, as done in RADAR-schemas/commons/stream
 
 cc:
   # -- set to true if using Confluent Cloud for kafka cluster and schema registry
