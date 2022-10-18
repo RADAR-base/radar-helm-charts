@@ -182,11 +182,11 @@ paths:
 # -- Individual topic configuration
 topics:
   questionnaire_response:
-      pathProperties:
-        # -- Alternative path output of the questionnaire_response topic
-        format: ${projectId}/${userId}/${topic}/${value:name}/${filename}
-        # -- Alternative path plugins of the questionnaire_response topic
-        plugins: fixed value
+    pathProperties:
+      # -- Alternative path output of the questionnaire_response topic
+      format: ${projectId}/${userId}/${topic}/${value:name}/${filename}
+      # -- Alternative path plugins of the questionnaire_response topic
+      plugins: fixed value
   #  # topic name
   #  connect_fitbit_source:
   #    # deduplicate this topic, regardless of the format settings
