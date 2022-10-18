@@ -2,7 +2,7 @@
 
 # radar-output
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
+![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.1](https://img.shields.io/badge/AppVersion-2.3.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base output restructure service. This application reads data from intermediate storage and restructure the data into project-> subject-id-> data topic -> data split per hour. This service offers few options to choose the source and target of the pipeline.
 
@@ -31,7 +31,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-output replicas to deploy |
 | image.repository | string | `"radarbase/radar-output-restructure"` | radar-output image repository |
-| image.tag | string | `"2.2.0"` | radar-output image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"2.3.1"` | radar-output image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-output image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-output.fullname template with a string (will prepend the release name) |
@@ -44,6 +44,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
 | javaOpts | string | `"-Xms400m -Xmx3g"` |  |
+| existingSecret | string | `nil` | Existing secret for storing S3 or Azure credentials. |
 | source.type | string | `"s3"` | Type of the intermediate storage of the RADAR-base pipeline e.g. s3, hdfs |
 | source.s3.endpoint | string | `"http://minio:9000"` | s3 endpoint of the intermediate storage |
 | source.s3.accessToken | string | `"access_key"` | s3 access-key of the intermediate storage |
@@ -83,13 +84,17 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | target.azure.writeTimeout | string | `nil` | Azure HTTP write timeout in seconds |
 | target.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
 | redis.uri | string | `"redis://redis-master:6379"` | URL of the redis database |
+| worker.interval | int | `90` | Scanning interval (seconds) |
 | worker.cacheSize | int | `300` | Maximum number of files and converters to keep open while processing |
 | worker.cacheOffsetsSize | int | `500000` | Maximum number of offsets in cache. |
 | worker.minimumFileAge | int | `900` | Minimum amount of time in seconds since a file was last modified for it to be considered for processing. |
+| worker.maxFilesPerTopic | int | `20` | Maximum number of files to process in a single poll operation. Reduce to get more parallel workloads, increase to avoid idling too much if the individual file sizes are very small. |
 | worker.numThreads | int | `2` | Number of threads to do processing on |
 | cleaner.age | int | `7` | Number of days after which a source file is considered old |
 | paths.input | string | `"topics"` | Relative path to intermediate storage root to browse for data |
 | paths.output | string | `"output"` | Relative path to output storage to write data |
 | paths.factory | string | `"org.radarbase.output.path.FormattedPathFactory"` | Output path construction factory |
 | paths.properties | object | `{}` | Additional properties. For details see https://github.com/RADAR-base/radar-output-restructure/blob/master/restructure.yml |
-| topics | object | `{}` | Individual topic configuration |
+| topics | object | `{"questionnaire_response":{"pathProperties":{"format":"${projectId}/${userId}/${topic}/${value:name}/${filename}","plugins":"fixed value"}}}` | Individual topic configuration |
+| topics.questionnaire_response.pathProperties.format | string | `"${projectId}/${userId}/${topic}/${value:name}/${filename}"` | Alternative path output of the questionnaire_response topic |
+| topics.questionnaire_response.pathProperties.plugins | string | `"fixed value"` | Alternative path plugins of the questionnaire_response topic |

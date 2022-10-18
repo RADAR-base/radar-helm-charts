@@ -15,7 +15,10 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configmap: {{ include (print $.Template.BasePath "/configmap-restructure.yaml") . | sha256sum }}
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if not .Values.existingSecret }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+        {{- end }}
       labels:
         app.kubernetes.io/name: {{ include "radar-output.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -52,20 +55,89 @@ spec:
             - radar-output-restructure
           args:
             - -F
-            - /etc/restructure/restructure.yml
-            - -S
+            - /etc/radar-output/config.yaml
           env:
           - name: RADAR_HDFS_RESTRUCTURE_OPTS
             value: {{ .Values.javaOpts  | quote }}
+          - name: SOURCE_S3_ACCESS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: sourceS3AccessToken
+          - name: SOURCE_S3_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: sourceS3SecretKey
+          - name: TARGET_S3_ACCESS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: targetS3AccessToken
+          - name: TARGET_S3_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: targetS3SecretKey
+          - name: SOURCE_AZURE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: sourceAzureUsername
+          - name: SOURCE_AZURE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: sourceAzurePassword
+          - name: SOURCE_AZURE_ACCOUNT_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: sourceAzureAccountName
+          - name: SOURCE_AZURE_ACCOUNT_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: sourceAzureAccountKey
+          - name: SOURCE_AZURE_SAS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: sourceAzureSasToken
+          - name: TARGET_AZURE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: targetAzureUsername
+          - name: TARGET_AZURE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: targetAzurePassword
+          - name: TARGET_AZURE_ACCOUNT_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: targetAzureAccountName
+          - name: TARGET_AZURE_ACCOUNT_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: targetAzureAccountKey
+          - name: TARGET_AZURE_SAS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "radar-output.secretName" . }}
+                key: targetAzureSasToken
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            - name: restructure
-              mountPath:  /etc/restructure
+            - name: config
+              mountPath:  /etc/radar-output
       volumes:
-        - name: restructure
+        - name: config
           configMap:
-            name: {{ include "radar-output.fullname" . }}-restructure
+            name: {{ include "radar-output.fullname" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

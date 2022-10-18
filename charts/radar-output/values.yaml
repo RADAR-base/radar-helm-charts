@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-output-restructure
   # -- radar-output image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 2.2.0
+  tag: 2.3.1
   # -- radar-output image pull policy
   pullPolicy: IfNotPresent
 
@@ -33,7 +33,7 @@ securityContext: {}
   #   - ALL
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
-  # runAsUser: 1000
+  # runAsUser: 101
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -59,6 +59,9 @@ tolerations: []
 affinity: {}
 
 javaOpts: "-Xms400m -Xmx3g"
+
+# -- Existing secret for storing S3 or Azure credentials.
+existingSecret:
 
 source:
   # -- Type of the intermediate storage of the RADAR-base pipeline e.g. s3, hdfs
@@ -149,12 +152,16 @@ redis:
   uri: redis://redis-master:6379
 
 worker:
+  # -- Scanning interval (seconds)
+  interval: 90
   # -- Maximum number of files and converters to keep open while processing
   cacheSize: 300
   # -- Maximum number of offsets in cache.
   cacheOffsetsSize: 500000
   # -- Minimum amount of time in seconds since a file was last modified for it to be considered for processing.
   minimumFileAge: 900
+  # -- Maximum number of files to process in a single poll operation. Reduce to get more parallel workloads, increase to avoid idling too much if the individual file sizes are very small.
+  maxFilesPerTopic: 20
   # -- Number of threads to do processing on
   numThreads: 2
 
@@ -173,7 +180,13 @@ paths:
   properties: {}
 
 # -- Individual topic configuration
-topics: {}
+topics:
+  questionnaire_response:
+      pathProperties:
+        # -- Alternative path output of the questionnaire_response topic
+        format: ${projectId}/${userId}/${topic}/${value:name}/${filename}
+        # -- Alternative path plugins of the questionnaire_response topic
+        plugins: fixed value
   #  # topic name
   #  connect_fitbit_source:
   #    # deduplicate this topic, regardless of the format settings
