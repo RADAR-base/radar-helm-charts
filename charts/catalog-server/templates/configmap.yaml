@@ -8,9 +8,24 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- if .Values.specificationsExclude }}
-  specifications.exclude: |
-    {{- range .Values.specificationsExclude }}
-    {{ . }}
-    {{- end }}
-  {{- end }}
+  config.yaml: |
+    # Kafka
+    kafka:
+      {{- if .Values.kafkaProperties }}
+      {{- toYaml .Values.kafkaProperties | nindent 6 }}
+      {{- end }}
+      {{- if .Values.cc.enabled }}
+      bootstrap.servers: {{ .Values.cc.bootstrapServerurl }}
+      security.protocol: SASL_SSL
+      ssl.endpoint.identification.algorithm: https
+      sasl.mechanism: PLAIN
+      {{- end }}
+
+    sources:
+      {{- toYaml .Values.sources | nindent 6 }}
+
+    schemas:
+      {{- toYaml .Values.schemas | nindent 6 }}
+
+    topics:
+      {{- toYaml .Values.topics | nindent 6 }}

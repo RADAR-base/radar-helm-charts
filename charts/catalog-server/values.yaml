@@ -3,14 +3,14 @@
 # Declare variables to be passed into your templates.
 
 # -- Number of catalog-server replicas to deploy
-replicaCount: 2
+replicaCount: 1
 
 image:
   # -- catalog-server image repository
   repository: radarbase/radar-schemas-tools
   # -- catalog-server image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.7.5
+  tag: 0.8.0
   # -- catalog-server image pull policy
   pullPolicy: IfNotPresent
 
@@ -95,10 +95,49 @@ kafkaProperties:
 # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
   security_protocol: PLAINTEXT
 
-# -- List of paths of specifications relative to specifications folder, if any of the specifications should be excluded from automatically registering topics and schemas.
-specificationsExclude:
-# - active/*
-# - passive/*1.0.0*
+sources:
+  # -- Only include given specification directory files. You can use File glob syntax as described in <https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-> If include is specified, exclude will be ignored. The glob pattern should start from the specifications directory.
+  include: []
+  # -- Exclude all given specification directory files. You can use File glob syntax as described in <https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-> If include is specified, exclude will be ignored. The glob pattern should start from the specifications directory.
+  exclude: []
+    # - active/*
+    # - passive/*1.0.0*
+  # -- active source specifications, as done in RADAR-schemas/specifications/active. The object fields should be the file name, e.g. `application/application_uptime.avsc`.
+  active: {}
+  # -- connector source specifications, as done in RADAR-schemas/specifications/connector. The object fields should be the file name, e.g. `application/application_uptime.avsc`.
+  connector: {}
+  # -- monitor source specifications, as done in RADAR-schemas/specifications/monitor. The object fields should be the file name, e.g. `application/application_uptime.avsc`.
+  monitor: {}
+  # -- passive source specifications, as done in RADAR-schemas/specifications/passive. The object fields should be the file name, e.g. `application/application_uptime.avsc`.
+  passive: {}
+  # -- push source specifications, as done in RADAR-schemas/specifications/push. The object fields should be the file name, e.g. `application/application_uptime.avsc`.
+  push: {}
+  # -- stream source specifications, as done in RADAR-schemas/specifications/stream. The object fields should be the file name, e.g. `application/application_uptime.avsc`.
+  stream: {}
+
+schemas:
+  # -- Only include given schema directory files. You can use File glob syntax as described in <https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String->. If include is specified, exclude will be ignored. The glob pattern should start from the commons directory.
+  include: []
+  # -- Exclude all given schema directory files. You can use File glob syntax as described in <https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String->. If include is specified, exclude will be ignored. The glob pattern should start from the commons directory.
+  exclude: []
+    # - active/*
+    # - passive/*1.0.0*
+  # -- active schema specification, as done in RADAR-schemas/specifications/active. The array elements should be the full YAML specification.
+  active: []
+  # -- catalogue schema specification, as done in RADAR-schemas/specifications/catalogue. The array elements should be the full YAML specification.
+  catalogue: []
+  # -- connector schema specification, as done in RADAR-schemas/specifications/connector. The array elements should be the full YAML specification.
+  connector: []
+  # -- kafka schema specification, as done in RADAR-schemas/specifications/kafka. The array elements should be the full YAML specification.
+  kafka: []
+  # -- monitor schema specification, as done in RADAR-schemas/specifications/monitor. The array elements should be the full YAML specification.
+  monitor: []
+  # -- passive schema specification, as done in RADAR-schemas/specifications/passive. The array elements should be the full YAML specification.
+  passive: []
+  # -- push schema specification, as done in RADAR-schemas/specifications/push. The array elements should be the full YAML specification.
+  push: []
+  # -- stream schema specification, as done in RADAR-schemas/specifications/stream. The array elements should be the full YAML specification.
+  stream: []
 
 cc:
   # -- set to true if using Confluent Cloud for kafka cluster and schema registry
