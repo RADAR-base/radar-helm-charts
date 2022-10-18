@@ -2,7 +2,7 @@
 
 # radar-integration
 
-![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.4](https://img.shields.io/badge/AppVersion-1.0.4-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.4](https://img.shields.io/badge/AppVersion-1.0.4-informational?style=flat-square)
 
 A Helm chart for RADAR-Base REDCap survey integration application.
 
@@ -52,10 +52,10 @@ A Helm chart for RADAR-Base REDCap survey integration application.
 | oauth_client_id | string | `"radar_redcap_integrator"` | OAuth2 clientId used by the webApp for making requests |
 | oauth_client_secret | string | `"secret"` | OAuth2 client secret |
 | management_portal_url | string | `"management-portal"` | Base URL of the Management Portal |
-| projects[0] | object | `{"api_path":"/api/","enrolment_event":"","integration_form":"","mp_info_project_name":"","project_id":"","token":"","url":""}` | URL pointing REDCap instance |
-| projects[0].project_id | string | `""` | REDCap project identifier |
-| projects[0].api_path | string | `"/api/"` | Redcap relative api path |
-| projects[0].enrolment_event | string | `""` | Unique identifier for the enrolment event |
-| projects[0].integration_form | string | `""` | Name of integration REDCap form |
-| projects[0].token | string | `""` | REDCap API Token used to identify the REDCap user against the REDCap instance |
-| projects[0].mp_info_project_name | string | `""` | Management Portal project identifier |
+| projects[0].redcap_info.url | string | `""` | URL pointing REDCap instance |
+| projects[0].redcap_info.project_id | string | `""` | REDCap project identifier |
+| projects[0].redcap_info.api_path | string | `"/api/"` | Redcap relative api path |
+| projects[0].redcap_info.enrolment_event | string | `""` | Unique identifier for the enrolment event |
+| projects[0].redcap_info.integration_form | string | `""` | Name of integration REDCap form |
+| projects[0].redcap_info.token | string | `""` | REDCap API Token used to identify the REDCap user against the REDCap instance |
+| projects[0].mp_info.project_name | string | `""` | Management Portal project identifier |
