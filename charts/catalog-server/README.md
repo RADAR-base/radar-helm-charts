@@ -30,9 +30,9 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| replicaCount | int | `2` | Number of catalog-server replicas to deploy |
+| replicaCount | int | `1` | Number of catalog-server replicas to deploy |
 | image.repository | string | `"radarbase/radar-schemas-tools"` | catalog-server image repository |
-| image.tag | string | `"0.7.5"` | catalog-server image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.8.0"` | catalog-server image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | catalog-server image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override catalog-server.fullname template with a string (will prepend the release name) |

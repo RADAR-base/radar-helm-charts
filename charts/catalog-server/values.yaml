@@ -3,14 +3,14 @@
 # Declare variables to be passed into your templates.
 
 # -- Number of catalog-server replicas to deploy
-replicaCount: 2
+replicaCount: 1
 
 image:
   # -- catalog-server image repository
   repository: radarbase/radar-schemas-tools
   # -- catalog-server image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.7.5
+  tag: 0.8.0
   # -- catalog-server image pull policy
   pullPolicy: IfNotPresent
 
