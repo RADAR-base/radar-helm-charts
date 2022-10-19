@@ -19,13 +19,13 @@ data:
     projects:
       {{- range .Values.projects }}
       - redcap_info:
-          url: {{ .url }} #URL pointing REDCap instance
-          project_id: {{ .project_id }} #REDCap project identifier
-          api_path: {{ .api_path }} # Redcap relative api path
-          enrolment_event: {{ .enrolment_event }} #Unique identifier for the enrolment event
-          integration_form: {{ .integration_form }} #Name of integration REDCap form
-          token: {{ .token }} #REDCap API Token used to identify the REDCap user against the REDCap instance
+          url: {{ .redcap_info.url }} #URL pointing REDCap instance
+          project_id: {{ .redcap_info.project_id }} #REDCap project identifier
+          api_path: {{ .redcap_info.api_path }} # Redcap relative api path
+          enrolment_event: {{ .redcap_info.enrolment_event }} #Unique identifier for the enrolment event
+          integration_form: {{ .redcap_info.integration_form }} #Name of integration REDCap form
+          token: {{ .redcap_info.token }} #REDCap API Token used to identify the REDCap user against the REDCap instance
         mp_info:
           # Management Portal project identifier
-          project_name: {{ .mp_info_project_name }} #
+          project_name: {{ .mp_info.project_name }} #
       {{ end -}}

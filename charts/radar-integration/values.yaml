@@ -92,18 +92,21 @@ oauth_client_id: radar_redcap_integrator
 oauth_client_secret: secret
 # -- Base URL of the Management Portal
 management_portal_url: management-portal
+
 projects:
-    # -- URL pointing REDCap instance
-  - url: ""
-    # -- REDCap project identifier
-    project_id: ""
-    # -- Redcap relative api path
-    api_path: "/api/"
-    # -- Unique identifier for the enrolment event
-    enrolment_event: ""
-    # -- Name of integration REDCap form
-    integration_form: ""
-    # -- REDCap API Token used to identify the REDCap user against the REDCap instance
-    token: ""
-    # --  Management Portal project identifier
-    mp_info_project_name: ""
+  - redcap_info:
+      # -- URL pointing REDCap instance
+      url: ""
+      # -- REDCap project identifier
+      project_id: ""
+      # -- Redcap relative api path
+      api_path: "/api/"
+      # -- Unique identifier for the enrolment event
+      enrolment_event: ""
+      # -- Name of integration REDCap form
+      integration_form: ""
+      # -- REDCap API Token used to identify the REDCap user against the REDCap instance
+      token: ""
+    mp_info:
+      # --  Management Portal project identifier
+      project_name: ""
