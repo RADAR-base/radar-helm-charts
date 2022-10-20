@@ -70,7 +70,7 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /rest-sources/authorizer/
               port: http
             initialDelaySeconds: 5
             periodSeconds: 30
@@ -79,7 +79,7 @@ spec:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /
+              path: /rest-sources/authorizer/
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10
