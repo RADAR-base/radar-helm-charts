@@ -2,7 +2,7 @@
 
 # catalog-server
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
+![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 
@@ -55,22 +55,22 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | kafkaProperties.security_protocol | string | `"PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | sources.include | list | `[]` | Only include given specification directory files. You can use File glob syntax as described in <https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-> If include is specified, exclude will be ignored. The glob pattern should start from the specifications directory. |
 | sources.exclude | list | `[]` | Exclude all given specification directory files. You can use File glob syntax as described in <https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-> If include is specified, exclude will be ignored. The glob pattern should start from the specifications directory. |
-| sources.active | object | `{}` | active source specifications, as done in RADAR-schemas/specifications/active. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
-| sources.connector | object | `{}` | connector source specifications, as done in RADAR-schemas/specifications/connector. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
-| sources.monitor | object | `{}` | monitor source specifications, as done in RADAR-schemas/specifications/monitor. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
-| sources.passive | object | `{}` | passive source specifications, as done in RADAR-schemas/specifications/passive. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
-| sources.push | object | `{}` | push source specifications, as done in RADAR-schemas/specifications/push. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
-| sources.stream | object | `{}` | stream source specifications, as done in RADAR-schemas/specifications/stream. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
+| sources.active | list | `[]` | active source specification, as done in RADAR-schemas/specifications/active. The array elements should be the full YAML specification. |
+| sources.connector | list | `[]` | connector source specification, as done in RADAR-schemas/specifications/connector. The array elements should be the full YAML specification. |
+| sources.monitor | list | `[]` | monitor source specification, as done in RADAR-schemas/specifications/monitor. The array elements should be the full YAML specification. |
+| sources.passive | list | `[]` | passive source specification, as done in RADAR-schemas/specifications/passive. The array elements should be the full YAML specification. |
+| sources.push | list | `[]` | push source specification, as done in RADAR-schemas/specifications/push. The array elements should be the full YAML specification. |
+| sources.stream | list | `[]` | stream source specification, as done in RADAR-schemas/specifications/stream. The array elements should be the full YAML specification. |
 | schemas.include | list | `[]` | Only include given schema directory files. You can use File glob syntax as described in <https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String->. If include is specified, exclude will be ignored. The glob pattern should start from the commons directory. |
 | schemas.exclude | list | `[]` | Exclude all given schema directory files. You can use File glob syntax as described in <https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String->. If include is specified, exclude will be ignored. The glob pattern should start from the commons directory. |
-| schemas.active | list | `[]` | active schema specification, as done in RADAR-schemas/specifications/active. The array elements should be the full YAML specification. |
-| schemas.catalogue | list | `[]` | catalogue schema specification, as done in RADAR-schemas/specifications/catalogue. The array elements should be the full YAML specification. |
-| schemas.connector | list | `[]` | connector schema specification, as done in RADAR-schemas/specifications/connector. The array elements should be the full YAML specification. |
-| schemas.kafka | list | `[]` | kafka schema specification, as done in RADAR-schemas/specifications/kafka. The array elements should be the full YAML specification. |
-| schemas.monitor | list | `[]` | monitor schema specification, as done in RADAR-schemas/specifications/monitor. The array elements should be the full YAML specification. |
-| schemas.passive | list | `[]` | passive schema specification, as done in RADAR-schemas/specifications/passive. The array elements should be the full YAML specification. |
-| schemas.push | list | `[]` | push schema specification, as done in RADAR-schemas/specifications/push. The array elements should be the full YAML specification. |
-| schemas.stream | list | `[]` | stream schema specification, as done in RADAR-schemas/specifications/stream. The array elements should be the full YAML specification. |
+| schemas.active | object | `{}` | active record schemas, as done in RADAR-schemas/commons/active. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
+| schemas.catalogue | object | `{}` | catalogue record schemas, as done in RADAR-schemas/commons/catalogue. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
+| schemas.connector | object | `{}` | connector record schemas, as done in RADAR-schemas/commons/connector. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
+| schemas.kafka | object | `{}` | catalogue record schemas, as done in RADAR-schemas/commons/kafka. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
+| schemas.monitor | object | `{}` | monitor record schemas, as done in RADAR-schemas/commons/monitor. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
+| schemas.passive | object | `{}` | passive record schemas, as done in RADAR-schemas/commons/passive. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
+| schemas.push | object | `{}` | push record schemas, as done in RADAR-schemas/commons/push. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
+| schemas.stream | object | `{}` | stream record schemas, as done in RADAR-schemas/commons/stream. The object fields should be the file name, e.g. `application/application_uptime.avsc`. |
 | cc.enabled | bool | `false` | set to true if using Confluent Cloud for kafka cluster and schema registry |
 | cc.bootstrapServerurl | string | `"confluent-url"` | URL of the bootstrap server of Confluent Cloud based kafka cluster |
 | cc.apiKey | string | `"ccApikey"` | API key of the Confluent Cloud based kafka cluster |
