@@ -11,8 +11,8 @@ data:
   config.yaml: |
     # Kafka
     kafka:
-      {{- if .Values.kafkaProperties }}
-      {{- toYaml .Values.kafkaProperties | nindent 6 }}
+      {{- range $key, $value := .Values.kafkaProperties }}
+      {{ $key | replace "_" "." }}: {{ $value }}
       {{- end }}
       {{- if .Values.cc.enabled }}
       bootstrap.servers: {{ .Values.cc.bootstrapServerurl }}
