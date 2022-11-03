@@ -25,7 +25,7 @@ kube-prometheus-stack:
         receiver: "default"
         routes: []
       receivers:
-      - name: "null"
+      - name: 'null'
 
     ## Alertmanager template files to format alerts
     ## By default, templateFiles are placed in /etc/alertmanager/config/ and if

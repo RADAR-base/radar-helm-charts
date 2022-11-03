@@ -43,6 +43,7 @@ kube-prometheus-stack:
       kubeApiserverBurnrate: true
       kubeApiserverHistogram: true
       kubeApiserverSlos: true
+      kubeControllerManager: true
       kubelet: true
       kubeProxy: true
       kubePrometheusGeneral: true
@@ -51,7 +52,8 @@ kube-prometheus-stack:
       kubernetesResources: true
       kubernetesStorage: true
       kubernetesSystem: true
-      kubeScheduler: true
+      kubeSchedulerAlerting: true
+      kubeSchedulerRecording: true
       kubeStateMetrics: true
       network: true
       node: true
@@ -263,6 +265,7 @@ kube-prometheus-stack:
       ##
       hosts: []
         # - alertmanager.domain.com
+
       ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
       ##
       paths: []
@@ -413,6 +416,10 @@ kube-prometheus-stack:
 
       ## scheme: HTTP scheme to use for scraping. Can be used with `tlsConfig` for example if using istio mTLS.
       scheme: ""
+
+      ## enableHttp2: Whether to enable HTTP2.
+      ## See https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#endpoint
+      enableHttp2: true
 
       ## tlsConfig: TLS configuration to use when scraping the endpoint. For example if using istio mTLS.
       ## Of type: https://github.com/coreos/prometheus-operator/blob/main/Documentation/api.md#tlsconfig
@@ -644,7 +651,7 @@ kube-prometheus-stack:
       containers: []
       # containers:
       # - name: oauth-proxy
-      #   image: quay.io/oauth2-proxy/oauth2-proxy:v7.1.2
+      #   image: quay.io/oauth2-proxy/oauth2-proxy:v7.3.0
       #   args:
       #   - --upstream=http://127.0.0.1:9093
       #   - --http-address=0.0.0.0:8081
@@ -684,6 +691,10 @@ kube-prometheus-stack:
       ## ForceEnableClusterMode ensures Alertmanager does not deactivate the cluster mode when running with a single replica.
       ## Use case is e.g. spanning an Alertmanager cluster across Kubernetes clusters with a single replica in each.
       forceEnableClusterMode: false
+
+      ## Minimum number of seconds for which a newly created pod should be ready without any of its container crashing for it to
+      ## be considered available. Defaults to 0 (pod will be considered available as soon as it is ready).
+      minReadySeconds: 0
 
     ## ExtraSecret can be used to store various data in an extra secret
     ## (use it for example to store hashed basic auth credentials)
@@ -923,6 +934,11 @@ kube-prometheus-stack:
       # - targetLabel: __address__
       #   replacement: kubernetes.default.svc:443
 
+      ## Additional labels
+      ##
+      additionalLabels: {}
+      #  foo: bar
+
   ## Component scraping the kubelet and kubelet-hosted cAdvisor
   ##
   kubelet:
@@ -984,10 +1000,6 @@ kube-prometheus-stack:
           regex: 'container_spec.*'
         # Drop cgroup metrics with no pod.
         - sourceLabels: [id, pod]
-          action: drop
-          regex: '.+;'
-        # Drop cgroup metrics with no container.
-        - sourceLabels: [id, container]
           action: drop
           regex: '.+;'
       # - sourceLabels: [__name__, image]
@@ -1085,6 +1097,11 @@ kube-prometheus-stack:
       #   replacement: $1
       #   action: replace
 
+      ## Additional labels
+      ##
+      additionalLabels: {}
+      #  foo: bar
+
   ## Component scraping the kube controller manager
   ##
   kubeControllerManager:
@@ -1150,6 +1167,11 @@ kube-prometheus-stack:
       #   replacement: $1
       #   action: replace
 
+      ## Additional labels
+      ##
+      additionalLabels: {}
+      #  foo: bar
+
   ## Component scraping coreDns. Use either this or kubeDns
   ##
   coreDns:
@@ -1186,6 +1208,11 @@ kube-prometheus-stack:
       #   targetLabel: nodename
       #   replacement: $1
       #   action: replace
+
+      ## Additional labels
+      ##
+      additionalLabels: {}
+      #  foo: bar
 
   ## Component scraping kubeDns. Use either this or coreDns
   ##
@@ -1247,6 +1274,11 @@ kube-prometheus-stack:
       #   replacement: $1
       #   action: replace
 
+      ## Additional labels
+      ##
+      additionalLabels: {}
+      #  foo: bar
+
   ## Component scraping etcd
   ##
   kubeEtcd:
@@ -1263,8 +1295,8 @@ kube-prometheus-stack:
     ##
     service:
       enabled: true
-      port: 2379
-      targetPort: 2379
+      port: 2381
+      targetPort: 2381
       # selector:
       #   component: etcd
 
@@ -1313,6 +1345,10 @@ kube-prometheus-stack:
       #   replacement: $1
       #   action: replace
 
+      ## Additional labels
+      ##
+      additionalLabels: {}
+      #  foo: bar
 
   ## Component scraping kube scheduler
   ##
@@ -1377,6 +1413,10 @@ kube-prometheus-stack:
       #   replacement: $1
       #   action: replace
 
+      ## Additional labels
+      ##
+      additionalLabels: {}
+      #  foo: bar
 
   ## Component scraping kube proxy
   ##
@@ -1428,6 +1468,10 @@ kube-prometheus-stack:
       #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
       #   sourceLabels: [__name__]
 
+      ## Additional labels
+      ##
+      additionalLabels: {}
+      #  foo: bar
 
   ## Component scraping kube state metrics
   ##
@@ -1496,6 +1540,7 @@ kube-prometheus-stack:
       ## Add the 'node-exporter' label to be used by serviceMonitor to match standard common usage in rules and grafana dashboards
       ##
       jobLabel: node-exporter
+    releaseLabel: true
     extraArgs:
       - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
       - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$
@@ -1562,6 +1607,8 @@ kube-prometheus-stack:
     ## rules from making their way into prometheus and potentially preventing the container from starting
     admissionWebhooks:
       failurePolicy: Fail
+      ## The default timeoutSeconds is 10 and the maximum value is 30.
+      timeoutSeconds: 10
       enabled: true
       ## A PEM encoded CA bundle which will be used to validate the webhook's server certificate.
       ## If unspecified, system trust roots on the apiserver are used.
@@ -1570,17 +1617,23 @@ kube-prometheus-stack:
       ## On chart upgrades (or if the secret exists) the cert will not be re-generated. You can use this to provide your own
       ## certs ahead of time if you wish.
       ##
+      annotations: {}
+      #   argocd.argoproj.io/hook: PreSync
+      #   argocd.argoproj.io/hook-delete-policy: HookSucceeded
       patch:
         enabled: true
         image:
           repository: k8s.gcr.io/ingress-nginx/kube-webhook-certgen
-          tag: v1.1.1
+          tag: v1.3.0
           sha: ""
           pullPolicy: IfNotPresent
         resources: {}
         ## Provide a priority class name to the webhook patching job
         ##
         priorityClassName: ""
+        annotations: {}
+        #   argocd.argoproj.io/hook: PreSync
+        #   argocd.argoproj.io/hook-delete-policy: HookSucceeded
         podAnnotations: {}
         nodeSelector: {}
         affinity: {}
@@ -1594,6 +1647,14 @@ kube-prometheus-stack:
           runAsGroup: 2000
           runAsNonRoot: true
           runAsUser: 2000
+
+      # Security context for create job container
+      createSecretJob:
+        securityContext: {}
+
+        # Security context for patch job container
+      patchWebhookJob:
+        securityContext: {}
 
       # Use certmanager to generate webhook certs
       certManager:
@@ -1622,6 +1683,7 @@ kube-prometheus-stack:
     ## Filter namespaces to look for prometheus-operator custom resources
     ##
     alertmanagerInstanceNamespaces: []
+    alertmanagerConfigNamespaces: []
     prometheusInstanceNamespaces: []
     thanosRulerInstanceNamespaces: []
 
@@ -1630,6 +1692,11 @@ kube-prometheus-stack:
     ## With this specified option cluster.peer will have value alertmanager-monitoring-alertmanager-0.alertmanager-operated.namespace.svc.cluster-domain:9094
     ##
     # clusterDomain: "cluster.local"
+
+    networkPolicy:
+      ## Enable creation of NetworkPolicy resources.
+      ##
+      enabled: false
 
     ## Service account for Alertmanager to use.
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
@@ -1676,6 +1743,10 @@ kube-prometheus-stack:
       ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
       ##
       externalIPs: []
+
+    # ## Labels to add to the operator deployment
+    # ##
+    labels: {}
 
     ## Annotations to add to the operator deployment
     ##
@@ -1800,11 +1871,31 @@ kube-prometheus-stack:
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true
 
+    # Enable vertical pod autoscaler support for prometheus-operator
+    verticalPodAutoscaler:
+      enabled: false
+      # List of resources that the vertical pod autoscaler can control. Defaults to cpu and memory
+      controlledResources: []
+
+      # Define the max allowed resources for the pod
+      maxAllowed: {}
+      # cpu: 200m
+      # memory: 100Mi
+      # Define the min allowed resources for the pod
+      minAllowed: {}
+      # cpu: 200m
+      # memory: 100Mi
+
+      updatePolicy:
+        # Specifies whether recommended updates are applied when a Pod is started and whether recommended updates
+        # are applied during the life of a Pod. Possible values are "Off", "Initial", "Recreate", and "Auto".
+        updateMode: Auto
+
     ## Prometheus-operator image
     ##
     image:
       repository: quay.io/prometheus-operator/prometheus-operator
-      tag: v0.57.0
+      tag: v0.60.1
       sha: ""
       pullPolicy: IfNotPresent
 
@@ -1819,10 +1910,9 @@ kube-prometheus-stack:
     ## Prometheus-config-reloader
     ##
     prometheusConfigReloader:
-      # image to use for config and rule reloading
       image:
         repository: quay.io/prometheus-operator/prometheus-config-reloader
-        tag: v0.57.0
+        tag: v0.60.1
         sha: ""
 
       # resource config for prometheusConfigReloader
@@ -1838,7 +1928,7 @@ kube-prometheus-stack:
     ##
     thanosImage:
       repository: quay.io/thanos/thanos
-      tag: v0.25.2
+      tag: v0.28.1
       sha: ""
 
     ## Set a Field Selector to filter watched secrets
@@ -2226,6 +2316,10 @@ kube-prometheus-stack:
       ##
       apiserverConfig: {}
 
+      ## Allows setting additional arguments for the Prometheus container
+      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#monitoring.coreos.com/v1.Prometheus
+      additionalArgs: []
+
       ## Interval between consecutive scrapes.
       ## Defaults to 30s.
       ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/release-0.44/pkg/prometheus/promcfg.go#L180-L183
@@ -2254,6 +2348,14 @@ kube-prometheus-stack:
       ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#webtlsconfig
       web: {}
 
+      ## Exemplars related settings that are runtime reloadable.
+      ## It requires to enable the exemplar storage feature to be effective.
+      exemplars: ""
+        ## Maximum number of exemplars stored in memory for all series.
+        ## If not set, Prometheus uses its default value.
+        ## A value of zero or less than zero disables the storage.
+        # maxSize: 100000
+
       # EnableFeatures API enables access to Prometheus disabled features.
       # ref: https://prometheus.io/docs/prometheus/latest/disabled_features/
       enableFeatures: []
@@ -2263,7 +2365,7 @@ kube-prometheus-stack:
       ##
       image:
         repository: quay.io/prometheus/prometheus
-        tag: v2.36.1
+        tag: v2.39.1
         sha: ""
 
       ## Tolerations for use with node taints
@@ -2455,7 +2557,7 @@ kube-prometheus-stack:
 
       ## Enable compression of the write-ahead log using Snappy.
       ##
-      walCompression: false
+      walCompression: true
 
       ## If true, the Operator won't process any Prometheus configuration changes
       ##
@@ -2660,6 +2762,7 @@ kube-prometheus-stack:
       additionalAlertManagerConfigsSecret: {}
         # name:
         # key:
+        # optional: false
 
       ## AdditionalAlertRelabelConfigs allows specifying Prometheus alert relabel configurations. Alert relabel configurations specified are appended
       ## to the configurations generated by the Prometheus Operator. Alert relabel configurations specified must have the form as specified in the
@@ -2715,7 +2818,7 @@ kube-prometheus-stack:
       containers: []
       # containers:
       # - name: oauth-proxy
-      #   image: quay.io/oauth2-proxy/oauth2-proxy:v7.1.2
+      #   image: quay.io/oauth2-proxy/oauth2-proxy:v7.3.0
       #   args:
       #   - --upstream=http://127.0.0.1:9093
       #   - --http-address=0.0.0.0:8081
@@ -2801,6 +2904,10 @@ kube-prometheus-stack:
       ## AllowOverlappingBlocks enables vertical compaction and vertical query merge in Prometheus. This is still experimental
       ## in Prometheus so it may change in any upcoming release.
       allowOverlappingBlocks: false
+
+      ## Minimum number of seconds for which a newly created pod should be ready without any of its container crashing for it to
+      ## be considered available. Defaults to 0 (pod will be considered available as soon as it is ready).
+      minReadySeconds: 0
 
     additionalRulesForClusterRole: []
     #  - apiGroups: [ "" ]
@@ -3093,7 +3200,7 @@ kube-prometheus-stack:
       ##
       image:
         repository: quay.io/thanos/thanos
-        tag: v0.24.0
+        tag: v0.28.1
         sha: ""
 
       ## Namespaces to be selected for PrometheusRules discovery.
@@ -3144,6 +3251,10 @@ kube-prometheus-stack:
       ##
       retention: 24h
 
+      ## Interval between consecutive evaluations.
+      ##
+      evaluationInterval: ""
+
       ## Storage is the definition of how storage will be used by the ThanosRuler instances.
       ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/storage.md
       ##
@@ -3157,6 +3268,22 @@ kube-prometheus-stack:
       #         storage: 50Gi
       #   selector: {}
 
+      ## AlertmanagerConfig define configuration for connecting to alertmanager.
+      ## Only available with Thanos v0.10.0 and higher. Maps to the alertmanagers.config Thanos Ruler arg.
+      alertmanagersConfig: {}
+      #   - api_version: v2
+      #     http_config:
+      #       basic_auth:
+      #         username: some_user
+      #         password: some_pass
+      #     static_configs:
+      #       - alertmanager.thanos.io
+      #     scheme: http
+      #     timeout: 10s
+
+      ## DEPRECATED. Define URLs to send alerts to Alertmanager. For Thanos v0.10.0 and higher, alertmanagersConfig should be used instead.
+      ## Note: this field will be ignored if alertmanagersConfig is specified. Maps to the alertmanagers.url Thanos Ruler arg.
+      # alertmanagersUrl:
 
       ## The external URL the Thanos Ruler instances will be available under. This is necessary to generate correct URLs. This is necessary if Thanos Ruler is not served from root of a DNS name. string false
       ##
@@ -3174,6 +3301,14 @@ kube-prometheus-stack:
       ## ObjectStorageConfigFile specifies the path of the object storage configuration file.
       ## When used alongside with ObjectStorageConfig, ObjectStorageConfigFile takes precedence.
       objectStorageConfigFile: ""
+
+      ## QueryEndpoints defines Thanos querier endpoints from which to query metrics.
+      ## Maps to the --query flag of thanos ruler.
+      queryEndpoints: []
+
+      ## Define configuration for connecting to thanos query instances. If this is defined, the queryEndpoints field will be ignored.
+      ## Maps to the query.config CLI argument. Only available with thanos v0.11.0 and higher.
+      queryConfig: {}
 
       ## Labels configure the external label pairs to ThanosRuler. A default replica
       ## label `thanos_ruler_replica` will be always added as a label with the value
@@ -3289,3 +3424,7 @@ kube-prometheus-stack:
     #   auth: |
     #     foo:$apr1$OFG3Xybp$ckL0FHDAkoXYIlH9.cysT0
     #     someoneelse:$apr1$DMZX2Z4q$6SbQIfyuLQd.xmo/P0m2c.
+
+  ## Setting to true produces cleaner resource names, but requires a data migration because the name of the persistent volume changes. Therefore this should only be set once on initial installation.
+  ##
+  cleanPrometheusOperatorObjectNames: false
