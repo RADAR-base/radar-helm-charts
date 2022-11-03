@@ -991,6 +991,27 @@ entries:
     version: 2.1.4
   kube-prometheus-stack:
   - apiVersion: v2
+    appVersion: 0.60.1
+    created: "2022-11-03T16:13:17.133912525Z"
+    dependencies:
+    - name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 41.7.3
+    description: A Helm chart for Prometheus operator stack. This chart is an overlay
+      for original kube-prometheus-stack chart. It defines some the default values
+      for namespaces to monitor, alert templates, Nginx configuration and authentication
+      and a few extra charts for Grafana. For more details on how to customize those
+      values refer to original chart.
+    digest: 2ce7a5f69acbf0e92215e656d41fb46fb11bedeca269554f960f998ed72c0997
+    home: https://prometheus-operator.dev
+    name: kube-prometheus-stack
+    sources:
+    - https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/kube-prometheus-stack-0.4.0/kube-prometheus-stack-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
     appVersion: 0.57.0
     created: "2022-08-18T10:55:23.705302817Z"
     dependencies:
@@ -3897,4 +3918,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-02T20:31:23.436744509Z"
+generated: "2022-11-03T16:13:17.134178529Z"
