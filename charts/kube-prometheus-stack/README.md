@@ -2,7 +2,7 @@
 
 # kube-prometheus-stack
 
-![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.57.0](https://img.shields.io/badge/AppVersion-0.57.0-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.60.1](https://img.shields.io/badge/AppVersion-0.60.1-informational?style=flat-square)
 
 A Helm chart for Prometheus operator stack. This chart is an overlay for original kube-prometheus-stack chart. It defines some the default values for namespaces to monitor, alert templates, Nginx configuration and authentication and a few extra charts for Grafana. For more details on how to customize those values refer to original chart.
 
@@ -22,4 +22,4 @@ A Helm chart for Prometheus operator stack. This chart is an overlay for origina
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://prometheus-community.github.io/helm-charts | kube-prometheus-stack | 37.2.0 |
+| https://prometheus-community.github.io/helm-charts | kube-prometheus-stack | 41.7.3 |
