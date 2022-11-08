@@ -68,6 +68,9 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | sink.autoCreate | bool | `true` | create table if it does not exist |
 | sink.insertMode | string | `"upsert"` | How to insert new values into the database |
 | sink.mergeKey | bool | `true` | Whether to merge the key fields into the inserted values. |
+| sink.transforms.mergeKeyType | string | `org.radarbase.kafka.connect.transforms.MergeKey` | The MergeKey transformation copies all fields from the record key into the record value, and adds a timestamp.|
+| sink.transforms.timestampType | string | `org.radarbase.kafka.connect.transforms.TimestampConverter` | The TimestampConverter transformation converts milliseconds value fields and floating point seconds value fields to logical timestamp fields.|
+| sink.transforms.timestampFields | list | `["time", "timeReceived", "timeCompleted", "timestamp"]` | The timestamp fields that should be converted can be configured with the fields configuration.|
 | sink.primaryKeys.mode | string | `"record_value"` | where to read the primary keys from when creating the table |
 | sink.primaryKeys.fields | list | `["time","userId","projectId"]` | fields to include as primary keys when creating the table |
 | sink.topics | string | `"android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps"` | Comma-separated list of topics the connector will read from and ingest into the database |
