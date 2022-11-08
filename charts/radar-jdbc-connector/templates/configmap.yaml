@@ -42,10 +42,12 @@ data:
     {{- end }}
 
     {{- if .mergeKey }}
+    {{- with .transforms }}
     transforms=mergeKey,timestamp
-    transforms.mergeKey.type=org.radarbase.kafka.connect.transforms.MergeKey
-    transforms.timestamp.type=org.radarbase.kafka.connect.transforms.TimestampConverter
-    transforms.timestamp.fields=time,timeReceived,timeCompleted,timestamp
+    transforms.mergeKey.type={{ .mergeKeyType }}
+    transforms.timestamp.type={{ .timestampType }}
+    transforms.timestamp.fields={{ join ", " .timestampFields }}
+    {{- end }}
     {{- end }}
     {{- end }}
     {{- end }}
