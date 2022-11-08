@@ -2,7 +2,7 @@
 
 # radar-jdbc-connector
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.2](https://img.shields.io/badge/AppVersion-10.5.2-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.2](https://img.shields.io/badge/AppVersion-10.5.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
 
@@ -67,7 +67,10 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | sink.name | string | `"radar-jdbc-sink"` | Name of the connector Kafka consumer group |
 | sink.autoCreate | bool | `true` | create table if it does not exist |
 | sink.insertMode | string | `"upsert"` | How to insert new values into the database |
-| sink.mergeKey | bool | `true` | Whether to merge the key fields into the inserted values. |
+| sink.transforms.enabled | bool | `true` | Whether to merge the key fields into the inserted values. |
+| sink.transforms.mergeKeyType | string | `"org.radarbase.kafka.connect.transforms.MergeKey"` | Class to handle merging the key into the record |
+| sink.transforms.timestampType | string | `"org.radarbase.kafka.connect.transforms.TimestampConverter"` | Class to convert time-based fields into SQL timestamps |
+| sink.transforms.timestampFields | list | `["time","timeReceived","timeCompleted","timestamp"]` | Field names to consider for converting to timestamp |
 | sink.primaryKeys.mode | string | `"record_value"` | where to read the primary keys from when creating the table |
 | sink.primaryKeys.fields | list | `["time","userId","projectId"]` | fields to include as primary keys when creating the table |
 | sink.topics | string | `"android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps"` | Comma-separated list of topics the connector will read from and ingest into the database |
