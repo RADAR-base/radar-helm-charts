@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-rest-source-auth-backend
   # -- radar-rest-sources-backend image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 4.1.0
+  tag: 4.1.3
   # -- radar-rest-sources-backend image pull policy
   pullPolicy: IfNotPresent
 
@@ -56,7 +56,7 @@ ingress:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
   # -- Path within the url structure
-  path: "/rest-sources/backend/?(.*)"
+  path: /rest-sources/backend
   pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
