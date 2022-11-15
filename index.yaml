@@ -3834,6 +3834,22 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/s3-proxy-0.1.1/s3-proxy-0.1.1.tgz
     version: 0.1.1
+  trivy:
+  - apiVersion: v2
+    appVersion: 0.30.4
+    created: "2022-11-15T16:21:09.189853327Z"
+    description: Trivy helm chart
+    digest: 585f38dc5a69d56ac53c68910263b15b24ec5e8ffa961d7852a23936f31c3bbd
+    keywords:
+    - scanner
+    - trivy
+    - vulnerability
+    name: trivy
+    sources:
+    - https://github.com/aquasecurity/trivy
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/trivy-0.4.17/trivy-0.4.17.tgz
+    version: 0.4.17
   velero:
   - apiVersion: v2
     appVersion: 1.9.0
@@ -3975,4 +3991,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-08T18:00:12.520120497Z"
+generated: "2022-11-15T16:21:09.190182125Z"
