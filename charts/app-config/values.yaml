@@ -9,7 +9,7 @@ image:
   # -- Appconfig image repository
   repository: radarbase/radar-app-config
   # -- Appconfig image tag (immutable tags are recommended)
-  tag: 0.3.3
+  tag: 0.4.2
   # -- Appconfig image pull policy
   pullPolicy: IfNotPresent
 
@@ -59,7 +59,7 @@ ingress:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
   # -- Path within the url structure
-  path: "/appconfig/api($|/)(.*)"
+  path: /appconfig/api
   pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
