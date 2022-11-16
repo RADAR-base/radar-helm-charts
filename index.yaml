@@ -2,6 +2,31 @@ apiVersion: v1
 entries:
   app-config:
   - apiVersion: v2
+    appVersion: 0.4.2
+    created: "2022-11-16T12:02:03.304484725Z"
+    description: A Helm chart for RADAR-base application config (app-config) backend
+      service which is used as mobile app configuration engine with per-project and
+      per-user configuration.
+    digest: f37d51fb83512aed79e3417c21e1b243285a2fcdee979dbc737b6e73077dc824
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: app-config
+    sources:
+    - https://github.com/RADAR-base/radar-app-config
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/app-config-0.2.4/app-config-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
     appVersion: 0.3.3
     created: "2022-04-28T12:08:01.291320304Z"
     description: A Helm chart for RADAR-base application config (app-config) backend
@@ -127,6 +152,30 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/app-config-0.1.1/app-config-0.1.1.tgz
     version: 0.1.1
   app-config-frontend:
+  - apiVersion: v2
+    appVersion: 0.4.2
+    created: "2022-11-16T12:02:03.450584782Z"
+    description: A Helm chart for the frontend application of RADAR-base application
+      config (app-config).
+    digest: df6f8f03e17a7c67421e087fa18301e75dc7cac7e6769da0e9a67ab9b47d488d
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: app-config-frontend
+    sources:
+    - https://github.com/RADAR-base/radar-app-config
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/app-config-frontend-0.2.3/app-config-frontend-0.2.3.tgz
+    version: 0.2.3
   - apiVersion: v2
     appVersion: 0.3.3
     created: "2022-04-28T12:08:01.687197509Z"
@@ -3991,4 +4040,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-15T16:21:09.190182125Z"
+generated: "2022-11-16T12:02:03.450864284Z"
