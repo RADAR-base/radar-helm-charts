@@ -229,12 +229,14 @@ spec:
           volumeMounts:
             - name: config-original
               mountPath: /etc/kafka-connect/sink-s3/original
-            - name: config-updated
+            - name: {{ if .Values.initTopics.enabled }}config-updated{{ else }}config-original{{ end }}
               mountPath: /etc/kafka-connect/sink-s3
+      {{- if .Values.initTopics.enabled }}
       initContainers:
         - name: init-topics
-          image: alpine:latest
-          args:
+          image: {{ .Values.initTopics.image.repository }}:{{ .Values.initTopics.image.tag }}
+          imagePullPolicy: {{ .Values.initTopics.image.pullPolicy }}
+          command:
             - /bin/sh
             - /etc/kafka-connect/sink-s3/original/add-topics-to-config.sh
             - /etc/kafka-connect/sink-s3/original/sink-s3.properties
@@ -244,6 +246,7 @@ spec:
               mountPath: /etc/kafka-connect/sink-s3/original
             - name: config-updated
               mountPath: /etc/kafka-connect/sink-s3
+      {{- end }}
       volumes:
         - name: config-original
           configMap:
