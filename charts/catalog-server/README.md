@@ -2,7 +2,7 @@
 
 # catalog-server
 
-![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
+![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.2](https://img.shields.io/badge/AppVersion-0.8.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 
@@ -32,7 +32,7 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of catalog-server replicas to deploy |
 | image.repository | string | `"radarbase/radar-schemas-tools"` | catalog-server image repository |
-| image.tag | string | `"0.8.0"` | catalog-server image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.8.2"` | catalog-server image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | catalog-server image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override catalog-server.fullname template with a string (will prepend the release name) |
