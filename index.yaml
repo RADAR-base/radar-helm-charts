@@ -274,6 +274,31 @@ entries:
     version: 0.1.1
   catalog-server:
   - apiVersion: v2
+    appVersion: 0.8.2
+    created: "2022-12-07T18:35:25.037580756Z"
+    description: A Helm chart for RADAR-base catalogue server. This application creates
+      RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a
+      catalog of available source types.
+    digest: 00e86118daea7a09565de3cdecb6bd1f9f8f5a33723bb098a8066b70e2565b39
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: catalog-server
+    sources:
+    - https://github.com/RADAR-base/RADAR-Schemas/tree/master/java-sdk
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/catalog-server-0.4.3/catalog-server-0.4.3.tgz
+    version: 0.4.3
+  - apiVersion: v2
     appVersion: 0.8.0
     created: "2022-11-02T20:31:23.436400293Z"
     description: A Helm chart for RADAR-base catalogue server. This application creates
@@ -3246,6 +3271,32 @@ entries:
     version: 0.2.0
   radar-s3-connector:
   - apiVersion: v2
+    appVersion: 7.3.0
+    created: "2022-12-07T18:35:25.2622679Z"
+    description: A Helm chart for RADAR-base s3 connector. This connector uses Confluent
+      s3 connector with a custom data transformers. These configurations enable a
+      sink connector. See full list of properties here https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options
+    digest: 1efcfb09e613fa6680b6a5d4e07c3c31a339266895a67e236030dacb452b24ca
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-s3-connector
+    sources:
+    - https://github.com/RADAR-base/kafka-connect-transform-keyvalue
+    - https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-s3-connector-0.2.4/radar-s3-connector-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
     appVersion: 7.1.1
     created: "2022-04-25T15:56:27.493189774Z"
     description: A Helm chart for RADAR-base s3 connector. This connector uses Confluent
@@ -4089,4 +4140,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-16T12:02:22.621623325Z"
+generated: "2022-12-07T18:35:25.262918107Z"
