@@ -2062,6 +2062,26 @@ entries:
     version: 0.1.4
   radar-home:
   - apiVersion: v2
+    appVersion: 0.1.2
+    created: "2022-12-08T14:32:57.844765257Z"
+    description: RADAR-base home page.
+    digest: d6f33917acbdf7df2494476e3ab0e243eb1c1ee02737cc788a7e1ad83c330745
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    name: radar-home
+    sources:
+    - https://github.com/RADAR-base/radar-home
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-home-0.1.1/radar-home-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     appVersion: 0.1.1
     created: "2022-12-08T14:30:34.140577269Z"
     description: RADAR-base home page.
@@ -4161,4 +4181,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-08T14:30:34.140915271Z"
+generated: "2022-12-08T14:32:57.845380356Z"
