@@ -9,7 +9,7 @@ image:
   # -- Appconfig image repository
   repository: radarbase/radar-home
   # -- Appconfig image tag (immutable tags are recommended)
-  tag: 0.1.1
+  tag: 0.1.2
   # -- Appconfig image pull policy
   pullPolicy: IfNotPresent
 
