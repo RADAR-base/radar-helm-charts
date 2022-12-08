@@ -67,6 +67,22 @@ spec:
             - name: UPLOAD_PORTAL_ENABLED
               value: "true"
             {{- end }}
+            {{- if .Values.logging.enabled }}
+            - name: GRAYLOG_ENABLED
+              value: "true"
+            {{- end }}
+            {{- if .Values.logging.url }}
+            - name: GRAYLOG_URL
+              value: {{ .Values.logging.url | quote }}
+            {{- end }}
+            {{- if .Values.monitoring.enabled }}
+            - name: MONITOR_ENABLED
+              value: "true"
+            {{- end }}
+            {{- if .Values.monitoring.url }}
+            - name: MONITOR_URL
+              value: {{ .Values.monitoring.url | quote }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 8080

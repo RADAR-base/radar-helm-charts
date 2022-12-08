@@ -90,3 +90,15 @@ uploadPortal:
 restAuthorizer:
   # -- Enable link to rest source authorizer
   enabled: false
+
+monitoring:
+  # -- Enable link to the monitoring stack, usually Prometheus
+  enabled: false
+  # -- URL to the monitoring stack, usually Prometheus
+  url:
+
+logging:
+  # -- Enable link to the logging stack, usually Graylog
+  enabled: false
+  # -- URL to the monitoring stack, usually Graylog
+  url:

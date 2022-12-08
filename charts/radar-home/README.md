@@ -55,3 +55,7 @@ RADAR-base home page.
 | dashboard.url | string | `nil` | URL to dashboard |
 | uploadPortal.enabled | bool | `false` | Enable link to upload portal |
 | restAuthorizer.enabled | bool | `false` | Enable link to rest source authorizer |
+| monitoring.enabled | bool | `false` | Enable link to the monitoring stack, usually Prometheus |
+| monitoring.url | string | `nil` | URL to the monitoring stack, usually Prometheus |
+| logging.enabled | bool | `false` | Enable link to the logging stack, usually Graylog |
+| logging.url | string | `nil` | URL to the monitoring stack, usually Graylog |
