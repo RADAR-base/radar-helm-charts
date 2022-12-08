@@ -1,0 +1,104 @@
+# Default values for radar-home.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of Appconfig replicas to deploy
+replicaCount: 1
+
+image:
+  # -- Appconfig image repository
+  repository: radarbase/radar-home
+  # -- Appconfig image tag (immutable tags are recommended)
+  tag: 0.1.1
+  # -- Appconfig image pull policy
+  pullPolicy: IfNotPresent
+
+# -- Docker registry secret names as an array
+imagePullSecrets: []
+
+# -- String to partially override management-portal.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override management-portal.fullname template with a string
+fullnameOverride: ""
+
+# -- Kubernetes namespace that Appconfig is going to be deployed on
+namespace: default
+
+service:
+  # -- Kubernetes Service type
+  type: ClusterIP
+  # -- Port
+  port: 8080
+
+ingress:
+  # -- Enable ingress controller resource
+  enabled: true
+  # -- Annotations that define default ingress class, certificate issuer
+  # @default -- check values.yaml
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  # -- Path within the url structure
+  path: /
+  pathType: ImplementationSpecific
+  # -- Hosts to accept requests from
+  hosts:
+    - localhost
+  tls:
+    # -- TLS Secret Name
+    secretName: radar-base-tls
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+
+  # -- CPU/Memory resource limits
+  limits:
+    cpu: 200m
+  # -- CPU/Memory resource requests
+  requests:
+    cpu: 10m
+    memory: 5Mi
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Toleration labels for pod assignment
+tolerations: []
+
+# -- Affinity labels for pod assignment
+affinity: {}
+
+s3:
+  # -- Enable link to S3
+  enabled: false
+  # -- URL to S3
+  url:
+
+dashboard:
+  # -- Enable link to dashboard
+  enabled: false
+  # -- URL to dashboard
+  url:
+
+uploadPortal:
+  # -- Enable link to upload portal
+  enabled: false
+
+restAuthorizer:
+  # -- Enable link to rest source authorizer
+  enabled: false
+
+monitoring:
+  # -- Enable link to the monitoring stack, usually Prometheus
+  enabled: false
+  # -- URL to the monitoring stack, usually Prometheus
+  url:
+
+logging:
+  # -- Enable link to the logging stack, usually Graylog
+  enabled: false
+  # -- URL to the monitoring stack, usually Graylog
+  url:
