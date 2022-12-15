@@ -72,3 +72,11 @@ Return true if a secret object should be created
     {{- true -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "radar-rest-sources-backend.enabledMapElementsAsList" -}}
+{{- range $elemId, $elem := . -}}
+{{- if and $elem.enable (ne $elem.enable "false") }}
+{{ (list (omit $elem "enable")) | toYaml }}
+{{- end -}}
+{{- end -}}
+{{ end -}}

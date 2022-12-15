@@ -1,3 +1,4 @@
+{{- $restSourceClients := trim (include "radar-rest-sources-backend.enabledMapElementsAsList" .Values.restSourceClients) -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -35,11 +36,10 @@ data:
       dialect: org.hibernate.dialect.PostgreSQLDialect
 
     restSourceClients:
-      {{- range $clientId, $client := .Values.restSourceClients -}}
-      {{- if $client.enable -}}
-      {{ (list (omit $client "enable")) | toYaml | nindent 6 }}
-      {{- end -}}
-      {{- end }}
+    {{- if $restSourceClients }}
+      {{- $restSourceClients | nindent 6 }}
+    {{- else }} []
+    {{- end }}
 
     redis:
         uri: {{ .Values.redis.uri }}
