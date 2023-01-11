@@ -57,33 +57,75 @@ spec:
               secretKeyRef:
                 name: {{ template "s3-proxy.fullname" . }}
                 key: s3Credential
+          {{- if .Values.target.endpoint }}
           - name: JCLOUDS_ENDPOINT
-            value: "{{ .Values.target.endpoint }}"
+            value: {{ .Values.target.endpoint | quote }}
+          {{- end }}
           - name: JCLOUDS_PROVIDER
-            value: "{{ .Values.target.provider }}"
+            value: {{ .Values.target.provider | quote }}
+          {{- if .Values.target.identity }}
           - name: JCLOUDS_IDENTITY
-            value: "{{ .Values.target.identity }}"
+            value: {{ .Values.target.identity | quote }}
+          {{- end }}
+          {{- if .Values.target.credential }}
           - name: JCLOUDS_CREDENTIAL
             valueFrom:
               secretKeyRef:
                 name: {{ template "s3-proxy.fullname" . }}
                 key: targetCredential
+          {{- end }}
+          {{- if .Values.target.api }}
+          - name: JCLOUDS_API
+            value: {{ .Values.target.api | quote }}
+          {{- end }}
+          {{- if eq .Values.target.provider "azureblob" }}
+          - name: JCLOUDS_AZUREBLOB_AUTH
+            value: {{ .Values.target.azureblob.auth | quote }}
+          {{- end }}
+          {{- if .Values.target.keystone.version }}
+          - name: JCLOUDS_KEYSTONE_VERSION
+            value: {{ .Values.target.keystone.version | quote }}
+          {{- end }}
+          {{- if .Values.target.keystone.credentialType }}
+          - name: JCLOUDS_KEYSTONE_CREDENTIAL_TYPE
+            value: {{ .Values.target.keystone.credentialType | quote }}
+          {{- end }}
+          {{- if .Values.target.keystone.scope }}
+          - name: JCLOUDS_KEYSTONE_SCOPE
+            value: {{ .Values.target.keystone.scope | quote }}
+          {{- end }}
+          {{- if .Values.target.keystone.projectDomainName }}
+          - name: JCLOUDS_KEYSTONE_PROJECT_DOMAIN_NAME
+            value: {{ .Values.target.keystone.projectDomainName | quote }}
+          {{- end }}
+          {{- if eq .Values.target.provider "filesystem" }}
+          - name: JCLOUDS_FILESYSTEM_BASEDIR
+            value: {{ .Values.target.filesystem.basedir | quote }}
+          {{- end }}
+          {{- if .Values.target.region }}
+          - name: JCLOUDS_REGION
+            value: {{ .Values.target.region | quote }}
+          {{- end }}
+          {{- if .Values.target.regions }}
+          - name: JCLOUDS_REGIONS
+            value: {{ .Values.target.regions | quote }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
-            exec:
-              command: [/usr/bin/nc, -zv, localhost, "80"]
-            initialDelaySeconds: 5
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 15
             periodSeconds: 60
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 3
           readinessProbe:
-            exec:
-              command: [/usr/bin/nc, -zv, localhost, "80"]
-            initialDelaySeconds: 5
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 15
             periodSeconds: 60
             timeoutSeconds: 3
             successThreshold: 1

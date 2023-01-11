@@ -2,7 +2,7 @@
 
 # s3-proxy
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy to proxy S3 API requests to any supported cloud provider. For more examples see Find some example configurations at https://github.com/gaul/s3proxy/wiki/Storage-backend-examples.
 
@@ -31,7 +31,7 @@ A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy t
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of s3-proxy replicas to deploy |
 | image.repository | string | `"andrewgaul/s3proxy"` | s3-proxy image repository |
-| image.tag | string | `"travis-1430"` | s3-proxy image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"sha-b5d090d"` | s3-proxy image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | s3-proxy image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override s3-proxy.fullname template with a string (will prepend the release name) |
@@ -51,3 +51,12 @@ A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy t
 | target.endpoint | string | `nil` | Target endpoint |
 | target.identity | string | `nil` | Target identity |
 | target.credential | string | `""` | Target credential |
+| target.api | string | `nil` | Target Swift / Keystone API |
+| target.region | string | `nil` | Singular region |
+| target.regions | string | `nil` | Multiple regions (keystone) |
+| target.filesystem.basedir | string | `"/data"` | Base directory for filesystem provider |
+| target.azureblob.auth | string | `"azureKey"` | Authentication method for Azure |
+| target.keystone.version | string | `nil` | Keystone (Swift) version |
+| target.keystone.credentialType | string | `nil` | Keystone (Swift) credential type |
+| target.keystone.scope | string | `nil` | Keystone (Swift) scope |
+| target.keystone.projectDomainName | string | `nil` | Keystone (Swift) project domain name |
