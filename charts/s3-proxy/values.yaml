@@ -10,7 +10,7 @@ image:
   repository: andrewgaul/s3proxy
   # -- s3-proxy image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: travis-1430
+  tag: sha-b5d090d
   # -- s3-proxy image pull policy
   pullPolicy: IfNotPresent
 
@@ -81,3 +81,24 @@ target:
   identity: null
   # -- Target credential
   credential: ""
+  # -- Target API
+  api: null
+  # -- Singular region
+  region: null
+  # -- Multiple regions (keystone)
+  regions: null
+  filesystem:
+    # -- Base directory for filesystem provider
+    basedir: /data
+  azureblob:
+    # -- Authentication method for Azure
+    auth: azureKey
+  keystone:
+    # -- Keystone (Swift) version
+    version: null
+    # -- Keystone (Swift) credential type
+    credentialType: null
+    # -- Keystone (Swift) scope
+    scope: null
+    # -- Keystone (Swift) project domain name
+    projectDomainName: null
