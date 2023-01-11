@@ -1715,6 +1715,30 @@ entries:
     version: 0.1.1
   radar-fitbit-connector:
   - apiVersion: v2
+    appVersion: 0.4.0
+    created: "2023-01-11T10:49:20.576276655Z"
+    description: A Helm chart for RADAR-base fitbit connector. This application collects
+      data from participants via the Fitbit Web API.
+    digest: bf8c681c3495c3993957e4ff088f1bdf8949d6566749b225b34a48e69d1d3a09
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-fitbit-connector
+    sources:
+    - https://github.com/RADAR-base/RADAR-REST-Connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-fitbit-connector-0.2.2/radar-fitbit-connector-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
     appVersion: 0.3.3
     created: "2022-04-21T15:48:38.273466811Z"
     description: A Helm chart for RADAR-base fitbit connector. This application collects
@@ -4278,4 +4302,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-15T10:45:30.633793301Z"
+generated: "2023-01-11T10:49:20.57667265Z"
