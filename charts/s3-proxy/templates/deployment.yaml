@@ -74,6 +74,10 @@ spec:
                 name: {{ template "s3-proxy.fullname" . }}
                 key: targetCredential
           {{- end }}
+          {{- if .Values.target.api }}
+          - name: JCLOUDS_API
+            value: {{ .Values.target.api | quote }}
+          {{- end }}
           {{- if eq .Values.target.provider "azureblob" }}
           - name: JCLOUDS_AZUREBLOB_AUTH
             value: {{ .Values.target.azureblob.auth | quote }}

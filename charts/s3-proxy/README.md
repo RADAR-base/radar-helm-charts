@@ -51,7 +51,7 @@ A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy t
 | target.endpoint | string | `nil` | Target endpoint |
 | target.identity | string | `nil` | Target identity |
 | target.credential | string | `""` | Target credential |
-| target.api | string | `nil` | Target API |
+| target.api | string | `nil` | Target Swift / Keystone API |
 | target.region | string | `nil` | Singular region |
 | target.regions | string | `nil` | Multiple regions (keystone) |
 | target.filesystem.basedir | string | `"/data"` | Base directory for filesystem provider |

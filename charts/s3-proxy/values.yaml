@@ -81,7 +81,7 @@ target:
   identity: null
   # -- Target credential
   credential: ""
-  # -- Target API
+  # -- Target Swift / Keystone API
   api: null
   # -- Singular region
   region: null
