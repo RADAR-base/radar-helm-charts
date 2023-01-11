@@ -41,5 +41,7 @@ data:
     {{- else }} []
     {{- end }}
 
+    {{- if .Values.redis.uri }}
     redis:
         uri: {{ .Values.redis.uri }}
+    {{- end }}
