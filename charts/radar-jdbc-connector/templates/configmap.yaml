@@ -41,7 +41,7 @@ data:
     pk.fields = {{ join ", " .fields }}
     {{- end }}
 
-    {{- if or (and (hasKey . "mergeKey") .mergeKey) (and (hasKey .transforms "enabled") .transforms.enabled) }}
+    {{- if or (dig "mergeKey" false .) (dig "transforms" "enabled" false .) }}
     {{- with .transforms }}
     transforms=mergeKey,timestamp
     transforms.mergeKey.type={{ .mergeKeyType }}

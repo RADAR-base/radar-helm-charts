@@ -49,10 +49,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          {{- range $k, $v := .Values.environment }}
-          - name: {{ $k }}
-            value: {{ $v | quote }}
-          {{- end }}
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka }}"
           - name: CONNECT_REST_PORT
@@ -97,6 +93,10 @@ spec:
             value: "{{ $name }}/connector"
           - name: KAFKA_HEAP_OPTS
             value: "{{ .Values.heapOpts }}"
+          {{- range $k, $v := .Values.environment }}
+          - name: {{ $k }}
+            value: {{ $v | quote }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8083
