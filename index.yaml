@@ -1547,6 +1547,40 @@ entries:
   - annotations:
       category: Database
     apiVersion: v2
+    appVersion: 15.1.0
+    created: "2023-01-12T14:58:04.736134881Z"
+    dependencies:
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: PostgreSQL (Postgres) is an open source object-relational database
+      known for reliability and data integrity. ACID-compliant, it supports foreign
+      keys, joins, views, triggers and stored procedures.
+    digest: 3a7582c5ddbba5a6b4c786e9dc2d8f4315439ec8f126ba744c4058152e502477
+    home: https://github.com/bitnami/charts/tree/main/bitnami/postgresql
+    icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-220x234.png
+    keywords:
+    - postgresql
+    - postgres
+    - database
+    - sql
+    - replication
+    - cluster
+    maintainers:
+    - name: Bitnami
+      url: https://github.com/bitnami/charts
+    name: postgresql
+    sources:
+    - https://github.com/bitnami/containers/tree/main/bitnami/postgresql
+    - https://www.postgresql.org/
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/postgresql-12.1.9/postgresql-12.1.9.tgz
+    version: 12.1.9
+  - annotations:
+      category: Database
+    apiVersion: v2
     appVersion: 14.2.0
     created: "2022-07-04T12:36:03.0523381Z"
     dependencies:
@@ -4432,4 +4466,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2023-01-12T10:25:58.072010477Z"
+generated: "2023-01-12T14:58:04.73659608Z"
