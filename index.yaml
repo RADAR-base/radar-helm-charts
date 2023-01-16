@@ -3572,6 +3572,32 @@ entries:
     version: 0.2.0
   radar-s3-connector:
   - apiVersion: v2
+    appVersion: 7.3.1
+    created: "2023-01-16T19:44:44.408740344Z"
+    description: A Helm chart for RADAR-base s3 connector. This connector uses Confluent
+      s3 connector with a custom data transformers. These configurations enable a
+      sink connector. See full list of properties here https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options
+    digest: d623200c915ad06d346f982d138fe9ffa706d9082c60e0e94a29e4e8ff0f6b2b
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-s3-connector
+    sources:
+    - https://github.com/RADAR-base/kafka-connect-transform-keyvalue
+    - https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-s3-connector-0.2.5/radar-s3-connector-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v2
     appVersion: 7.3.0
     created: "2022-12-07T18:35:25.2622679Z"
     description: A Helm chart for RADAR-base s3 connector. This connector uses Confluent
@@ -4466,4 +4492,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2023-01-12T14:58:04.73659608Z"
+generated: "2023-01-16T19:44:44.409049042Z"
