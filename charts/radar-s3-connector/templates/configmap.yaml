@@ -24,7 +24,6 @@ data:
     {{- if .Values.s3Endpoint }}
     store.url={{ .Values.s3Endpoint }}
     {{- end }}
-    s3.object.tagging=true
     storage.class=io.confluent.connect.s3.storage.S3Storage
     format.class=io.confluent.connect.s3.format.avro.AvroFormat
     transforms=combineKeyValue
