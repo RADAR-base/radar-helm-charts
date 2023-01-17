@@ -76,7 +76,7 @@ resources:
   # -- CPU/Memory resource limits
   limits:
     cpu: 2
-    memory: 1.7Gi
+    memory: 1700Mi
   # -- CPU/Memory resource requests
   requests:
     cpu: 100m
