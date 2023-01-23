@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "0.1.2"
+appVersion: "0.1.3"
 description: RADAR-base home page.
 name: radar-home
-version: 0.1.1
+version: 0.1.2
 sources: ["https://github.com/RADAR-base/radar-home"]
 type: application
 home: "https://radar-base.org"

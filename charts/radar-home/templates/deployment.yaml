@@ -67,6 +67,10 @@ spec:
             - name: UPLOAD_PORTAL_ENABLED
               value: "true"
             {{- end }}
+            {{- if .Values.appConfig.enabled }}
+            - name: APP_CONFIG_ENABLED
+              value: "true"
+            {{- end }}
             {{- if .Values.logging.enabled }}
             - name: GRAYLOG_ENABLED
               value: "true"
