@@ -2,7 +2,7 @@
 
 # radar-home
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.2](https://img.shields.io/badge/AppVersion-0.1.2-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.3](https://img.shields.io/badge/AppVersion-0.1.3-informational?style=flat-square)
 
 RADAR-base home page.
 
@@ -30,7 +30,7 @@ RADAR-base home page.
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of Appconfig replicas to deploy |
 | image.repository | string | `"radarbase/radar-home"` | Appconfig image repository |
-| image.tag | string | `"0.1.2"` | Appconfig image tag (immutable tags are recommended) |
+| image.tag | string | `"0.1.3"` | Appconfig image tag (immutable tags are recommended) |
 | image.pullPolicy | string | `"IfNotPresent"` | Appconfig image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override management-portal.fullname template with a string (will prepend the release name) |
@@ -53,6 +53,7 @@ RADAR-base home page.
 | s3.url | string | `nil` | URL to S3 |
 | dashboard.enabled | bool | `false` | Enable link to dashboard |
 | dashboard.url | string | `nil` | URL to dashboard |
+| appConfig.enabled | bool | `false` | Enable link to app-config service |
 | uploadPortal.enabled | bool | `false` | Enable link to upload portal |
 | restAuthorizer.enabled | bool | `false` | Enable link to rest source authorizer |
 | monitoring.enabled | bool | `false` | Enable link to the monitoring stack, usually Prometheus |

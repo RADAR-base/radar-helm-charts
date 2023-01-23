@@ -9,7 +9,7 @@ image:
   # -- Appconfig image repository
   repository: radarbase/radar-home
   # -- Appconfig image tag (immutable tags are recommended)
-  tag: 0.1.2
+  tag: 0.1.3
   # -- Appconfig image pull policy
   pullPolicy: IfNotPresent
 
@@ -82,6 +82,10 @@ dashboard:
   enabled: false
   # -- URL to dashboard
   url:
+
+appConfig:
+  # -- Enable link to app-config service
+  enabled: false
 
 uploadPortal:
   # -- Enable link to upload portal
