@@ -2,7 +2,7 @@
 
 # radar-output
 
-![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.1](https://img.shields.io/badge/AppVersion-2.3.1-informational?style=flat-square)
+![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.1](https://img.shields.io/badge/AppVersion-2.3.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base output restructure service. This application reads data from intermediate storage and restructure the data into project-> subject-id-> data topic -> data split per hour. This service offers few options to choose the source and target of the pipeline.
 
@@ -84,13 +84,14 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | target.azure.writeTimeout | string | `nil` | Azure HTTP write timeout in seconds |
 | target.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
 | redis.uri | string | `"redis://redis-master:6379"` | URL of the redis database |
-| worker.interval | int | `90` | Scanning interval (seconds) |
+| worker.interval | int | `900` | Scanning interval (seconds) |
 | worker.cacheSize | int | `300` | Maximum number of files and converters to keep open while processing |
 | worker.cacheOffsetsSize | int | `500000` | Maximum number of offsets in cache. |
 | worker.minimumFileAge | int | `900` | Minimum amount of time in seconds since a file was last modified for it to be considered for processing. |
 | worker.maxFilesPerTopic | int | `20` | Maximum number of files to process in a single poll operation. Reduce to get more parallel workloads, increase to avoid idling too much if the individual file sizes are very small. |
 | worker.numThreads | int | `2` | Number of threads to do processing on |
 | cleaner.age | int | `7` | Number of days after which a source file is considered old |
+| cleaner.interval | int | `86400` | Interval in seconds between cleanups |
 | paths.input | string | `"topics"` | Relative path to intermediate storage root to browse for data |
 | paths.output | string | `"output"` | Relative path to output storage to write data |
 | paths.factory | string | `"org.radarbase.output.path.FormattedPathFactory"` | Output path construction factory |
