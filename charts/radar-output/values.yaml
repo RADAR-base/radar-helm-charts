@@ -153,7 +153,7 @@ redis:
 
 worker:
   # -- Scanning interval (seconds)
-  interval: 90
+  interval: 900
   # -- Maximum number of files and converters to keep open while processing
   cacheSize: 300
   # -- Maximum number of offsets in cache.
@@ -168,6 +168,8 @@ worker:
 cleaner:
   # -- Number of days after which a source file is considered old
   age: 7
+  # -- Interval in seconds between cleanups
+  interval: 86400
 
 paths:
   # -- Relative path to intermediate storage root to browse for data
