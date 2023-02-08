@@ -2,7 +2,7 @@
 
 # radar-output
 
-![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.1](https://img.shields.io/badge/AppVersion-2.3.1-informational?style=flat-square)
+![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.1](https://img.shields.io/badge/AppVersion-2.3.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base output restructure service. This application reads data from intermediate storage and restructure the data into project-> subject-id-> data topic -> data split per hour. This service offers few options to choose the source and target of the pipeline.
 
@@ -91,6 +91,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | worker.maxFilesPerTopic | int | `20` | Maximum number of files to process in a single poll operation. Reduce to get more parallel workloads, increase to avoid idling too much if the individual file sizes are very small. |
 | worker.numThreads | int | `2` | Number of threads to do processing on |
 | cleaner.age | int | `7` | Number of days after which a source file is considered old |
+| cleaner.interval | int | `86400` | Interval in seconds between cleanups |
 | paths.input | string | `"topics"` | Relative path to intermediate storage root to browse for data |
 | paths.output | string | `"output"` | Relative path to output storage to write data |
 | paths.factory | string | `"org.radarbase.output.path.FormattedPathFactory"` | Output path construction factory |
@@ -98,3 +99,14 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | topics | object | `{"questionnaire_response":{"pathProperties":{"format":"${projectId}/${userId}/${topic}/${value:name}/${filename}","plugins":"fixed value"}}}` | Individual topic configuration |
 | topics.questionnaire_response.pathProperties.format | string | `"${projectId}/${userId}/${topic}/${value:name}/${filename}"` | Alternative path output of the questionnaire_response topic |
 | topics.questionnaire_response.pathProperties.plugins | string | `"fixed value"` | Alternative path plugins of the questionnaire_response topic |
+| deduplication.enable | bool | `true` | Whether to enable deduplication |
+| compression.type | string | `"gzip"` | Compression type to use for output files. Can be one of: gzip, zip, none |
+
+## Cost Considerations
+
+If you are using paid S3 services (like AWS S3), then you might want to update the following values to reduce the involved costs -
+
+1. `worker.interval` - Increase this value to reduce the number of times the worker runs. This will reduce the number of times the worker will check for new files in the S3 bucket. The default value is 90 seconds. You can increase this value to 900 seconds (15 minutes) or more depending on your use case. Make sure to increase the `worker.maxFilesPerTopic` value to match the number of files you expect to be processed in the given interval.
+2. `worker.cacheSize` - Increase this value to reduce S3 costs. This will increase local storage and memory requirements of radar-output.
+3. `paths.properties.format`- Change the output path format to `${project}/${user}/${topic}/${time:YYYYmmdd}${attempt}${extension}` to only create one file per day.
+4. `deduplication.enable` - Set this to false. This will reduce the number of requests and memory used by the output converter, but it may increase the storage size and will require analysts to remove duplicates at a later time.

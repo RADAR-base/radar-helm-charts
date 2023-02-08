@@ -168,6 +168,8 @@ worker:
 cleaner:
   # -- Number of days after which a source file is considered old
   age: 7
+  # -- Interval in seconds between cleanups
+  interval: 86400
 
 paths:
   # -- Relative path to intermediate storage root to browse for data
@@ -200,3 +202,11 @@ topics:
   #    # Disable deduplication
   #    deduplication:
   #      enable: false
+
+deduplication:
+  # -- Whether to enable deduplication
+  enable: true
+
+compression:
+  # -- Compression type to use for output files. Can be one of: gzip, zip, none
+  type: gzip

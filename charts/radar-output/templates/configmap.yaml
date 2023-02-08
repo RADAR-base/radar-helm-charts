@@ -88,7 +88,7 @@ data:
     # Compression characteristics
     compression:
       # Compression type: none, zip or gzip
-      type: gzip
+      type: {{ .Values.compression.type }}
       # Compression Factory class
       # factory: org.radarbase.hdfs.data.CompressionFactory
       # Additional compression properties
@@ -100,7 +100,7 @@ data:
       type: csv
       # Whether to deduplicate the files in each topic by default
       deduplication:
-        enable: true
+        enable: {{ .Values.deduplication.enable }}
       # Format factory class
       # factory: org.radarbase.hdfs.data.FormatFactory
       # Additional format properties
@@ -122,7 +122,7 @@ data:
       # Enable cleaning up old source files
       enable: {{ gt (int (toString (.Values.cleaner.age))) 0 }}
       # Interval in seconds to clean data
-      interval: 1800  # 21 minutes
+      interval: {{ .Values.cleaner.interval | int }}
       # Number of days after which a source file is considered old
       age: {{ .Values.cleaner.age }}
 
