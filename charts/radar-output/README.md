@@ -84,7 +84,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | target.azure.writeTimeout | string | `nil` | Azure HTTP write timeout in seconds |
 | target.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
 | redis.uri | string | `"redis://redis-master:6379"` | URL of the redis database |
-| worker.interval | int | `900` | Scanning interval (seconds) |
+| worker.interval | int | `90` | Scanning interval (seconds) |
 | worker.cacheSize | int | `300` | Maximum number of files and converters to keep open while processing |
 | worker.cacheOffsetsSize | int | `500000` | Maximum number of offsets in cache. |
 | worker.minimumFileAge | int | `900` | Minimum amount of time in seconds since a file was last modified for it to be considered for processing. |
