@@ -153,7 +153,7 @@ redis:
 
 worker:
   # -- Scanning interval (seconds)
-  interval: 900
+  interval: 90
   # -- Maximum number of files and converters to keep open while processing
   cacheSize: 300
   # -- Maximum number of offsets in cache.
