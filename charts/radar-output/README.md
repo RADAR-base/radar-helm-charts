@@ -99,3 +99,5 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | topics | object | `{"questionnaire_response":{"pathProperties":{"format":"${projectId}/${userId}/${topic}/${value:name}/${filename}","plugins":"fixed value"}}}` | Individual topic configuration |
 | topics.questionnaire_response.pathProperties.format | string | `"${projectId}/${userId}/${topic}/${value:name}/${filename}"` | Alternative path output of the questionnaire_response topic |
 | topics.questionnaire_response.pathProperties.plugins | string | `"fixed value"` | Alternative path plugins of the questionnaire_response topic |
+| deduplication.enable | bool | `true` | Whether to enable deduplication |
+| compression.type | string | `"gzip"` | Compression type to use for output files. Can be one of: gzip, zip, none |

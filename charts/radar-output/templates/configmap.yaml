@@ -88,7 +88,7 @@ data:
     # Compression characteristics
     compression:
       # Compression type: none, zip or gzip
-      type: gzip
+      type: {{ .Values.compression.type }}
       # Compression Factory class
       # factory: org.radarbase.hdfs.data.CompressionFactory
       # Additional compression properties
@@ -100,7 +100,7 @@ data:
       type: csv
       # Whether to deduplicate the files in each topic by default
       deduplication:
-        enable: true
+        enable: {{ .Values.deduplication.enable }}
       # Format factory class
       # factory: org.radarbase.hdfs.data.FormatFactory
       # Additional format properties
