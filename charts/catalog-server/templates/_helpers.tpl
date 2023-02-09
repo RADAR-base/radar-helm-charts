@@ -52,5 +52,5 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{- define "catalog-server.saslJaasConfig" -}}
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="{{ .apiKey }}" password="{{ .apiSecret }}";
+{{- printf "sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s\" password=\"%s\";" .apiKey .apiSecret | b64enc | quote -}}
 {{- end -}}
