@@ -275,6 +275,31 @@ entries:
   catalog-server:
   - apiVersion: v2
     appVersion: 0.8.2
+    created: "2023-02-09T09:38:11.701193146Z"
+    description: A Helm chart for RADAR-base catalogue server. This application creates
+      RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a
+      catalog of available source types.
+    digest: 873e0d7b89a19abf9f98f937bd23911e935b9359f208d7bbf78e44ee50049bc7
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: catalog-server
+    sources:
+    - https://github.com/RADAR-base/RADAR-Schemas/tree/master/java-sdk
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/catalog-server-0.4.4/catalog-server-0.4.4.tgz
+    version: 0.4.4
+  - apiVersion: v2
+    appVersion: 0.8.2
     created: "2022-12-07T18:35:25.037580756Z"
     description: A Helm chart for RADAR-base catalogue server. This application creates
       RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a
@@ -4562,4 +4587,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2023-02-09T09:37:39.025563551Z"
+generated: "2023-02-09T09:38:11.701838854Z"
