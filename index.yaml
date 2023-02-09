@@ -1244,6 +1244,30 @@ entries:
   management-portal:
   - apiVersion: v2
     appVersion: 0.8.1
+    created: "2023-02-09T09:37:39.02525855Z"
+    description: A Helm chart for RADAR-Base Management Portal to manage projects
+      and participants throughout RADAR-base.
+    digest: e5a9c8d824302fde2e7984e44044c37b191c5be57b2956ad59611db885e885fd
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: management-portal
+    sources:
+    - https://github.com/RADAR-base/ManagementPortal
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/management-portal-0.2.6/management-portal-0.2.6.tgz
+    version: 0.2.6
+  - apiVersion: v2
+    appVersion: 0.8.1
     created: "2022-04-26T13:01:53.894910357Z"
     description: A Helm chart for RADAR-Base Management Portal to manage projects
       and participants throughout RADAR-base.
@@ -4538,4 +4562,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2023-02-08T18:12:29.970782859Z"
+generated: "2023-02-09T09:37:39.025563551Z"
