@@ -8,3 +8,18 @@ owners:
     name: yatharthranjan
   - email: pauline.conde@kcl.ac.uk
     name: mpgxvii
+ignore:
+  - name: cert-manager
+  - name: common
+  - name: elasticsearch
+  - name: fluent-bit
+  - name: grafana
+  - name: graylog
+  - name: ingress-nginx
+  - name: kube-prometheus-stack
+  - name: minio
+  - name: mongodb
+  - name: postgresql
+  - name: redis
+  - name: trivy
+  - name: velero  
