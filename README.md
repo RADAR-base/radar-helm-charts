@@ -1,5 +1,6 @@
 # radar-helm-charts
 
+[![Build](https://github.com/RADAR-base/radar-helm-charts/actions/workflows/lint-test.yaml/badge.svg)](https://github.com/RADAR-base/radar-helm-charts/actions/workflows/lint-test.yaml)
 [![Apache Licensed](https://img.shields.io/github/license/radar-base/radar-kubernetes)](LICENSE)
 [![Join our community Slack](https://img.shields.io/badge/slack-radarbase-success.svg?logo=slack)](https://docs.google.com/forms/d/e/1FAIpQLScKNZ-QonmxNkekDMLLbP-b_IrNHyDRuQValBy1BAsLOjEFpg/viewform)
 
