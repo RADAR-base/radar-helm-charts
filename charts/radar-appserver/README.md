@@ -22,8 +22,8 @@ A Helm chart for the backend application of RADAR-base Appserver
 * <https://github.com/RADAR-base/RADAR-Appserver>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values

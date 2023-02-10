@@ -24,8 +24,8 @@ A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 conne
 * <https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values

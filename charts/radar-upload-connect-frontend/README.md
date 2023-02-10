@@ -23,8 +23,8 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 * <https://github.com/RADAR-base/radar-upload-source-connector>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values

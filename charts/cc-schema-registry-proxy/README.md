@@ -22,8 +22,8 @@ A Helm chart for Confluent Cloud schema registry proxy. This proxy service is us
 * <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/cc-schema-registry-proxy>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values

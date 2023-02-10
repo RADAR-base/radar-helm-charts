@@ -24,8 +24,8 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 * <https://github.com/RADAR-base/RADAR-JDBC-Connector>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values

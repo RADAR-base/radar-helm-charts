@@ -23,8 +23,8 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 * <https://github.com/RADAR-base/RADAR-REST-Connector>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 * PV provisioner support in the underlying infrastructure
 

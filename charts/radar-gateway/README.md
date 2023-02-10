@@ -23,8 +23,8 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 * <https://github.com/RADAR-base/RADAR-Gateway>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values

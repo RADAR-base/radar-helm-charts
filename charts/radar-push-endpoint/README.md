@@ -22,8 +22,8 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 * <https://github.com/RADAR-base/RADAR-PushEndpoint>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values

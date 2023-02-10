@@ -3,7 +3,7 @@
 # cert-manager-letsencrypt
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/cert-manager-letsencrypt)](https://artifacthub.io/packages/helm/radar-base/cert-manager-letsencrypt)
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
 A Helm chart for a cert-manager ClusterIssuer for letsencrypt. Requires the cert-manager release to be activated.
 
@@ -20,8 +20,8 @@ A Helm chart for a cert-manager ClusterIssuer for letsencrypt. Requires the cert
 * <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/cert-manager-letsencrypt>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values
