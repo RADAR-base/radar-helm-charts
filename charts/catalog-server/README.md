@@ -1,8 +1,9 @@
 
 
 # catalog-server
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/catalog-server)](https://artifacthub.io/packages/helm/radar-base/catalog-server)
 
-![Version: 0.4.4](https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.2](https://img.shields.io/badge/AppVersion-0.8.2-informational?style=flat-square)
+![Version: 0.4.5](https://img.shields.io/badge/Version-0.4.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.2](https://img.shields.io/badge/AppVersion-0.8.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 
@@ -18,6 +19,7 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 
 ## Source Code
 
+* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/catalog-server>
 * <https://github.com/RADAR-base/RADAR-Schemas/tree/master/java-sdk>
 
 ## Prerequisites

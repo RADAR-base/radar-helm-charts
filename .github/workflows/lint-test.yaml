@@ -51,6 +51,23 @@ jobs:
 
       - name: Run chart-testing (lint)
         run: ct lint --config .github/ct-lint.yaml
+
+  lint-artifacthub:
+    container:
+      image: artifacthub/ah
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Lint internal charts
+        working-directory: ./charts/
+        run: ah lint
+
+      - name: Lint external charts
+        working-directory: ./external/
+        run: ah lint
   #
   # test:
   #   runs-on: ubuntu-latest
