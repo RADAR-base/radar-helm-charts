@@ -3,10 +3,51 @@ name: Release Helm Charts
 on:
   push:
     branches:
-      - main
+      - pr-on-release
 
 jobs:
-  release:
+  # release:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #         submodules: true
+
+  #     - name: Configure Git
+  #       run: |
+  #         git config user.name "$GITHUB_ACTOR"
+  #         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+  #     - name: Install Helm
+  #       uses: azure/setup-helm@v3
+  #       with:
+  #         version: v3.9.0
+
+  #     - name: Add Helm repos
+  #       run: |
+  #         helm repo add radar https://radar-base.github.io/radar-helm-charts
+  #         helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+  #     - name: Run chart-releaser
+  #       uses: helm/chart-releaser-action@v1.4.0
+  #       with:
+  #         config: .github/cr.yaml
+  #         charts_dir: charts
+  #       env:
+  #         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+  #     - name: Run chart-releaser -- external dependencies
+  #       uses: helm/chart-releaser-action@v1.4.0
+  #       with:
+  #         config: .github/cr.yaml
+  #         charts_dir: external
+  #       env:
+  #         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+  pr:
+    # needs: release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -15,33 +56,47 @@ jobs:
           fetch-depth: 0
           submodules: true
 
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          repository: 'RADAR-base/RADAR-Kubernetes'
+          fetch-depth: 0
+          ref: 'dev'
+
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Install Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: v3.9.0
-
-      - name: Add Helm repos
+      - name: Install yq
         run: |
-          helm repo add radar https://radar-base.github.io/radar-helm-charts
-          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          YQ_VERSION=$(curl -Ls "https://github.com/mikefarah/yq/releases" | \grep 'href="/mikefarah/yq/releases/tag/v[0-9]*.[0-9]*.[0-9]*\"' | sed -E 's/.*\/mikefarah\/yq\/releases\/tag\/(v[0-9\.]+)".*/\1/g' | head -1)
+          curl -fsSL -o yq "https://github.com/mikefarah/yq/releases/download/$YQ_VERSION/yq_${OS}_${ARCH}"
+          sudo install -o root -g root -m 0755 yq /usr/local/bin/yq
+          yq --version
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.4.0
-        with:
-          config: .github/cr.yaml
-          charts_dir: charts
+      - name: Update chart versions
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for release in `git tag --points-at | rev | cut -d- -f 2- | rev`; do
+           version=`git tag --points-at | grep $release | rev | cut -d- -f 1 | rev`
+           yaml_version=`echo .$release._chart_version | tr '-' '_'`
+           yq -i "$yaml_version = \"$version\"" RADAR-Kubernetes/etc/base.yaml
+          done
 
-      - name: Run chart-releaser -- external dependencies
-        uses: helm/chart-releaser-action@v1.4.0
-        with:
-          config: .github/cr.yaml
-          charts_dir: external
+      - name: Commit changes
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd RADAR-Kubernetes
+          git checkout -b charts-update
+          git commit -am "Updated helm charts to latest version"
+          git push origin charts-update
+
+      - name: Create pull request
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create -B dev -H charts-update --title 'Updated helm charts to latest version' --body 'Created by Github action'
