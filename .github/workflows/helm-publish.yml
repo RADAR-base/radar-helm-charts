@@ -60,7 +60,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: true
-          repository: 'RADAR-base/RADAR-Kubernetes'
+          repository: RADAR-base/RADAR-Kubernetes
+          path: RADAR-Kubernetes
           fetch-depth: 0
           ref: 'dev'
 
@@ -71,6 +72,8 @@ jobs:
 
       - name: Install yq
         run: |
+          OS="$(uname | tr '[:upper:]' '[:lower:]')"
+          ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')"
           YQ_VERSION=$(curl -Ls "https://github.com/mikefarah/yq/releases" | \grep 'href="/mikefarah/yq/releases/tag/v[0-9]*.[0-9]*.[0-9]*\"' | sed -E 's/.*\/mikefarah\/yq\/releases\/tag\/(v[0-9\.]+)".*/\1/g' | head -1)
           curl -fsSL -o yq "https://github.com/mikefarah/yq/releases/download/$YQ_VERSION/yq_${OS}_${ARCH}"
           sudo install -o root -g root -m 0755 yq /usr/local/bin/yq
@@ -80,11 +83,8 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for release in `git tag --points-at | rev | cut -d- -f 2- | rev`; do
-           version=`git tag --points-at | grep $release | rev | cut -d- -f 1 | rev`
-           yaml_version=`echo .$release._chart_version | tr '-' '_'`
-           yq -i "$yaml_version = \"$version\"" RADAR-Kubernetes/etc/base.yaml
-          done
+          find . -name Chart.yaml -exec yq '{.name: {"_chart_version": .version}}' {} >> new-base.yaml \;
+          yq -i '. *? load("new-base.yaml")' RADAR-Kubernetes/etc/base.yaml
 
       - name: Commit changes
         env:
@@ -99,4 +99,5 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          cd RADAR-Kubernetes
           gh pr create -B dev -H charts-update --title 'Updated helm charts to latest version' --body 'Created by Github action'
