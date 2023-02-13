@@ -82,8 +82,6 @@ jobs:
           cat RADAR-Kubernetes/etc/base.yaml
 
       - name: Commit changes
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd RADAR-Kubernetes
           git config user.name "$GITHUB_ACTOR"
