@@ -79,8 +79,11 @@ jobs:
         run: |
           find . -name Chart.yaml -exec yq '{.name: {"_chart_version": .version}}' {} >> new-base.yaml \;
           cat new-base.yaml
-          yq -i '. *? load("new-base.yaml")' RADAR-Kubernetes/etc/base.yaml
-          cat RADAR-Kubernetes/etc/base.yaml
+          cd RADAR-Kubernetes
+          git checkout -b charts-update
+          git pull origin charts-update --ff-only
+          yq -i '. *? load("../new-base.yaml")' etc/base.yaml
+          cat etc/base.yaml
 
       - name: Commit changes
         env:
@@ -90,7 +93,6 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git diff
-          git checkout -b charts-update
           git commit -am "Updated helm charts to latest version"
           git push origin charts-update
 
