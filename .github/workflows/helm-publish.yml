@@ -93,7 +93,7 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git diff
-          git commit -am "Updated helm charts to latest version"
+          git commit -am "Updated helm charts to latest version" || echo "Nothing to commit, , working tree clean"
           git push origin charts-update
 
       - name: Create pull request
