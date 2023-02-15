@@ -97,6 +97,8 @@ jobs:
           git push origin charts-update
 
       - name: Create pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           cd RADAR-Kubernetes
           gh pr create -B dev -H charts-update --title 'Updated helm charts to latest version' --body 'Created by Github action'
