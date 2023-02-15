@@ -81,7 +81,7 @@ jobs:
           cat new-base.yaml
           cd RADAR-Kubernetes
           git checkout -b charts-update
-          git pull origin charts-update --ff-only
+          git pull origin charts-update --ff-only || echo "Remote branch doesn't exist"
           yq -i '. *? load("../new-base.yaml")' etc/base.yaml
           cat etc/base.yaml
 
