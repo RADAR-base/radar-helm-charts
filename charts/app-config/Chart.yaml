@@ -2,8 +2,16 @@ apiVersion: v2
 appVersion: "0.4.2"
 description: A Helm chart for RADAR-base application config (app-config) backend service which is used as mobile app configuration engine with per-project and per-user configuration.
 name: app-config
-version: 0.2.4
-sources: ["https://github.com/RADAR-base/radar-app-config"]
+version: 0.2.5
+icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
+sources:
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/app-config
+- https://github.com/RADAR-base/radar-app-config
+keywords:
+  - radar-base
+  - remote-trial
+annotations:
+  artifacthub.io/license: Apache-2.0
 type: application
 home: "https://radar-base.org"
 maintainers:

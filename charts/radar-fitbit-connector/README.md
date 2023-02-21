@@ -1,8 +1,9 @@
 
 
 # radar-fitbit-connector
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-fitbit-connector)](https://artifacthub.io/packages/helm/radar-base/radar-fitbit-connector)
 
-![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
+![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base fitbit connector. This application collects data from participants via the Fitbit Web API.
 
@@ -18,11 +19,12 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 
 ## Source Code
 
+* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-fitbit-connector>
 * <https://github.com/RADAR-base/RADAR-REST-Connector>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 * PV provisioner support in the underlying infrastructure
 

@@ -2,8 +2,16 @@ apiVersion: v2
 appVersion: "0.1.3"
 description: RADAR-base home page.
 name: radar-home
-version: 0.1.2
-sources: ["https://github.com/RADAR-base/radar-home"]
+version: 0.1.3
+icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
+sources:
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-home
+- https://github.com/RADAR-base/radar-home
+keywords:
+  - radar-base
+  - remote-trial
+annotations:
+  artifacthub.io/license: Apache-2.0
 type: application
 home: "https://radar-base.org"
 maintainers:

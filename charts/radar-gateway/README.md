@@ -1,8 +1,9 @@
 
 
 # radar-gateway
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-gateway)](https://artifacthub.io/packages/helm/radar-base/radar-gateway)
 
-![Version: 0.2.6](https://img.shields.io/badge/Version-0.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
+![Version: 0.2.7](https://img.shields.io/badge/Version-0.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -18,11 +19,12 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 
 ## Source Code
 
+* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-gateway>
 * <https://github.com/RADAR-base/RADAR-Gateway>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values

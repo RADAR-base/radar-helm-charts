@@ -1,8 +1,9 @@
 
 
 # s3-proxy
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/s3-proxy)](https://artifacthub.io/packages/helm/radar-base/s3-proxy)
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy to proxy S3 API requests to any supported cloud provider. For more examples see Find some example configurations at https://github.com/gaul/s3proxy/wiki/Storage-backend-examples.
 
@@ -21,8 +22,8 @@ A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy t
 * <https://github.com/gaul/s3proxy>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values
