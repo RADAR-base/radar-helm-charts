@@ -1,6 +1,38 @@
 apiVersion: v1
 entries:
   app-config:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.4.2
+    created: "2023-02-21T06:49:02.157565165Z"
+    description: A Helm chart for RADAR-base application config (app-config) backend
+      service which is used as mobile app configuration engine with per-project and
+      per-user configuration.
+    digest: 812a1c94b5a3e3c844677617560d11f937f4b9582879a9729b6d8ba8969da1be
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: app-config
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/app-config
+    - https://github.com/RADAR-base/radar-app-config
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/app-config-0.2.5/app-config-0.2.5.tgz
+    version: 0.2.5
   - apiVersion: v2
     appVersion: 0.4.2
     created: "2022-11-16T12:02:03.304484725Z"
@@ -152,6 +184,37 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/app-config-0.1.1/app-config-0.1.1.tgz
     version: 0.1.1
   app-config-frontend:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.4.2
+    created: "2023-02-21T06:49:02.425326332Z"
+    description: A Helm chart for the frontend application of RADAR-base application
+      config (app-config).
+    digest: 74aabe06e8c519a6cd046874803f54748943ba38c6b6b170e70c5a50dbe3a5f9
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: app-config-frontend
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/app-config-frontend
+    - https://github.com/RADAR-base/radar-app-config
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/app-config-frontend-0.2.4/app-config-frontend-0.2.4.tgz
+    version: 0.2.4
   - apiVersion: v2
     appVersion: 0.4.2
     created: "2022-11-16T12:02:03.450584782Z"
@@ -273,6 +336,38 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/app-config-frontend-0.1.1/app-config-frontend-0.1.1.tgz
     version: 0.1.1
   catalog-server:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.8.2
+    created: "2023-02-21T06:49:02.669085486Z"
+    description: A Helm chart for RADAR-base catalogue server. This application creates
+      RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a
+      catalog of available source types.
+    digest: 0609ea72ef1b6c54e03f6f872f7f52ac2b8ab12381554251691545e5e4727953
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: catalog-server
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/catalog-server
+    - https://github.com/RADAR-base/RADAR-Schemas/tree/master/java-sdk
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/catalog-server-0.4.6/catalog-server-0.4.6.tgz
+    version: 0.4.6
   - apiVersion: v2
     appVersion: 0.8.2
     created: "2023-02-15T14:55:34.081629934Z"
@@ -574,6 +669,39 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/catalog-server-0.2.1/catalog-server-0.2.1.tgz
     version: 0.2.1
   cc-schema-registry-proxy:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: "1.0"
+    created: "2023-02-21T06:49:02.905944606Z"
+    description: A Helm chart for Confluent Cloud schema registry proxy. This proxy
+      service is used when RADAR-base platform is used with Confluent Cloud based
+      schema registry. It forwards requests to schema registry with an additonal basic
+      authentication header with Confluent Cloud schema registry credentials. This
+      service will be enabled if `cc.enabled = true`.
+    digest: 12b3680a5c558c8371b81ceb26654402a43fbdcc62acae8a73bf266f6447e326
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: cc-schema-registry-proxy
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/cc-schema-registry-proxy
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/cc-schema-registry-proxy-0.2.4/cc-schema-registry-proxy-0.2.4.tgz
+    version: 0.2.4
   - apiVersion: v2
     appVersion: "1.0"
     created: "2022-04-28T12:08:01.940905593Z"
@@ -842,6 +970,29 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/cert-manager-0.1.0/cert-manager-0.1.0.tgz
     version: 0.1.0
   cert-manager-letsencrypt:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2023-02-21T06:49:03.204201018Z"
+    description: A Helm chart for a cert-manager ClusterIssuer for letsencrypt. Requires
+      the cert-manager release to be activated.
+    digest: 2679d192d959e688a906d31ba3090b1bccdf704352cdac761a9142f81b91ea30
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: cert-manager-letsencrypt
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/cert-manager-letsencrypt
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/cert-manager-letsencrypt-0.1.1/cert-manager-letsencrypt-0.1.1.tgz
+    version: 0.1.1
   - apiVersion: v2
     appVersion: "1.0"
     created: "2022-07-11T08:29:46.169347032Z"
@@ -1171,6 +1322,27 @@ entries:
   kube-prometheus-stack:
   - apiVersion: v2
     appVersion: 0.60.1
+    created: "2023-02-21T06:49:03.486194852Z"
+    dependencies:
+    - name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 41.7.3
+    description: A Helm chart for Prometheus operator stack. This chart is an overlay
+      for original kube-prometheus-stack chart. It defines some the default values
+      for namespaces to monitor, alert templates, Nginx configuration and authentication
+      and a few extra charts for Grafana. For more details on how to customize those
+      values refer to original chart.
+    digest: 4f970d1aff140446ab22c4d90a80ea54e86398a70bca603c7527bed7613e32dd
+    home: https://prometheus-operator.dev
+    name: kube-prometheus-stack
+    sources:
+    - https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/kube-prometheus-stack-0.4.1/kube-prometheus-stack-0.4.1.tgz
+    version: 0.4.1
+  - apiVersion: v2
+    appVersion: 0.60.1
     created: "2022-11-03T16:13:17.133912525Z"
     dependencies:
     - name: kube-prometheus-stack
@@ -1292,6 +1464,37 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/kube-prometheus-stack-0.1.0/kube-prometheus-stack-0.1.0.tgz
     version: 0.1.0
   management-portal:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.8.1
+    created: "2023-02-21T06:49:03.722502571Z"
+    description: A Helm chart for RADAR-Base Management Portal to manage projects
+      and participants throughout RADAR-base.
+    digest: d8621ed99137bc69509431349f153fc51bb786f33cd5feaf23904b4ae5f515aa
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: management-portal
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/management-portal
+    - https://github.com/RADAR-base/ManagementPortal
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/management-portal-0.2.7/management-portal-0.2.7.tgz
+    version: 0.2.7
   - apiVersion: v2
     appVersion: 0.8.1
     created: "2023-02-09T09:37:39.02525855Z"
@@ -1687,6 +1890,33 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/postgresql-11.1.24/postgresql-11.1.24.tgz
     version: 11.1.24
   radar-appserver:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 3.2.0
+    created: "2023-02-21T06:49:04.024214099Z"
+    description: A Helm chart for the backend application of RADAR-base Appserver
+    digest: 632423b893f5a7f9e4395389e58ddc31b1c87ae22acf5252b63d3d2320cebaa4
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    name: radar-appserver
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-appserver
+    - https://github.com/RADAR-base/RADAR-Appserver
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-appserver-0.1.5/radar-appserver-0.1.5.tgz
+    version: 0.1.5
   - apiVersion: v2
     appVersion: 3.2.0
     created: "2022-07-12T10:18:32.3564467Z"
@@ -1808,6 +2038,37 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-appserver-0.0.1/radar-appserver-0.0.1.tgz
     version: 0.0.1
   radar-backend:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.4.0
+    created: "2023-02-21T06:49:04.277817199Z"
+    description: A Helm chart for RADAR-Base backend services which provides a layer
+      to monitor and analyze streams of wearable data and write data to  storage.
+    digest: 2f1caab1ee15a19d472fa43eb9baebe2a9fc10ab369c00d3497f65dd66c76efb
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-backend
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-backend
+    - https://github.com/RADAR-base/RADAR-Appserver
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-backend-0.1.3/radar-backend-0.1.3.tgz
+    version: 0.1.3
   - apiVersion: v2
     appVersion: 0.4.0
     created: "2022-04-07T21:27:54.169595245Z"
@@ -1849,6 +2110,37 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-backend-0.1.1/radar-backend-0.1.1.tgz
     version: 0.1.1
   radar-fitbit-connector:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.4.0
+    created: "2023-02-21T06:49:04.491834211Z"
+    description: A Helm chart for RADAR-base fitbit connector. This application collects
+      data from participants via the Fitbit Web API.
+    digest: db17861a6e66f69a6fe0b1911f65088734989b600629e65588d92eae8f757a9a
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-fitbit-connector
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-fitbit-connector
+    - https://github.com/RADAR-base/RADAR-REST-Connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-fitbit-connector-0.2.3/radar-fitbit-connector-0.2.3.tgz
+    version: 0.2.3
   - apiVersion: v2
     appVersion: 0.4.0
     created: "2023-01-11T10:49:20.576276655Z"
@@ -1994,6 +2286,38 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-fitbit-connector-0.1.1/radar-fitbit-connector-0.1.1.tgz
     version: 0.1.1
   radar-gateway:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.5.14
+    created: "2023-02-21T06:49:04.775282053Z"
+    description: A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming
+      participant data. It performs authentication, authorization, content validation
+      and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
+    digest: f0b7c6f613a472f92758237367af0f27bf6ec971c6720c298cf1d2f1ce2fd960
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-gateway
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-gateway
+    - https://github.com/RADAR-base/RADAR-Gateway
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-gateway-0.2.7/radar-gateway-0.2.7.tgz
+    version: 0.2.7
   - apiVersion: v2
     appVersion: 0.5.14
     created: "2022-11-01T13:10:11.560018124Z"
@@ -2220,6 +2544,33 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-gateway-0.1.4/radar-gateway-0.1.4.tgz
     version: 0.1.4
   radar-home:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.1.3
+    created: "2023-02-21T06:49:05.008564357Z"
+    description: RADAR-base home page.
+    digest: 09b347481414619ca702d4eee737287096b2cbebdebc5a91e304ea7834cf72b3
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    name: radar-home
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-home
+    - https://github.com/RADAR-base/radar-home
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-home-0.1.3/radar-home-0.1.3.tgz
+    version: 0.1.3
   - apiVersion: v2
     appVersion: 0.1.3
     created: "2023-01-23T13:30:25.000616436Z"
@@ -2281,6 +2632,33 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-home-0.1.0/radar-home-0.1.0.tgz
     version: 0.1.0
   radar-integration:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.4
+    created: "2023-02-21T06:49:05.22472928Z"
+    description: A Helm chart for RADAR-Base REDCap survey integration application.
+    digest: d6c9280e78951a72bf5e72c93db5a9597321189e65db207fa5d38bcd7f11901a
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    name: radar-integration
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-integration
+    - https://github.com/RADAR-base/RADAR-RedcapIntegration
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-integration-0.4.1/radar-integration-0.4.1.tgz
+    version: 0.4.1
   - apiVersion: v2
     appVersion: 1.0.4
     created: "2022-10-19T14:37:06.414843189Z"
@@ -2418,6 +2796,42 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-integration-0.1.1/radar-integration-0.1.1.tgz
     version: 0.1.1
   radar-jdbc-connector:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 10.5.2
+    created: "2023-02-21T06:49:05.438834493Z"
+    description: A Helm chart for RADAR-base JDBC Kafka connector. This is a fork
+      of the Kafka JDBC connector which allows data from topics to be imported into
+      JDBC databases (including TimescaleDB databases which is used in the dashboard
+      pipeline).
+    digest: 3ac0ca100ceb9f91d9922061364b582955a69ce1fc7ef4d11165990f3522827b
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-jdbc-connector
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-jdbc-connector
+    - https://github.com/RADAR-base/RADAR-JDBC-Connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-jdbc-connector-0.4.2/radar-jdbc-connector-0.4.2.tgz
+    version: 0.4.2
   - apiVersion: v2
     appVersion: 10.5.2
     created: "2023-01-11T10:53:06.237480558Z"
@@ -2704,6 +3118,39 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-jdbc-connector-0.1.1/radar-jdbc-connector-0.1.1.tgz
     version: 0.1.1
   radar-output:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 2.3.1
+    created: "2023-02-21T06:49:05.673408344Z"
+    description: A Helm chart for RADAR-base output restructure service. This application
+      reads data from intermediate storage and restructure the data into project->
+      subject-id-> data topic -> data split per hour. This service offers few options
+      to choose the source and target of the pipeline.
+    digest: b7feee3868e114f6a5bed9430f59d505cf0663886a65cca822f3974739d4933d
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-output
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-output
+    - https://github.com/RADAR-base/radar-output-restructure
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-output-0.3.3/radar-output-0.3.3.tgz
+    version: 0.3.3
   - apiVersion: v2
     appVersion: 2.3.1
     created: "2023-02-08T18:12:29.970145557Z"
@@ -2887,6 +3334,36 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-output-0.1.1/radar-output-0.1.1.tgz
     version: 0.1.1
   radar-push-endpoint:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.2.2
+    created: "2023-02-21T06:49:05.87692258Z"
+    description: A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka,
+      for incoming data from Push or Subscription based WEB APIs. It performs authentication,
+      authorization and content validation. For more details of the configurations,
+      see https://github.com/RADAR-base/RADAR-PushEndpoint.
+    digest: 62b37ff760053307acca1bf9c24b32d0936ea812c1361d0877d73b599bd14fb6
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    name: radar-push-endpoint
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-push-endpoint
+    - https://github.com/RADAR-base/RADAR-PushEndpoint
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-push-endpoint-0.1.5/radar-push-endpoint-0.1.5.tgz
+    version: 0.1.5
   - apiVersion: v2
     appVersion: 0.2.2
     created: "2022-07-13T12:56:49.1295562Z"
@@ -2980,6 +3457,38 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-push-endpoint-0.1.1/radar-push-endpoint-0.1.1.tgz
     version: 0.1.1
   radar-rest-sources-authorizer:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.2.0
+    created: "2023-02-21T06:49:06.11155149Z"
+    description: A Helm chart for the front-end application of RADAR-base Rest Sources
+      Authorizer which is a portal to authorize the Fitbit connector to read data
+      from Fitbit accounts.
+    digest: 31167e366a790f2fb0d2188c29b486f5449f40b683bb003cc49b3996dfacb002
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-rest-sources-authorizer
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-rest-sources-authorizer
+    - https://github.com/RADAR-base/RADAR-Rest-Source-Auth
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-authorizer-0.4.7/radar-rest-sources-authorizer-0.4.7.tgz
+    version: 0.4.7
   - apiVersion: v2
     appVersion: 4.2.0
     created: "2023-01-11T12:14:50.211390739Z"
@@ -3306,6 +3815,37 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-authorizer-0.2.0/radar-rest-sources-authorizer-0.2.0.tgz
     version: 0.2.0
   radar-rest-sources-backend:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.2.0
+    created: "2023-02-21T06:49:06.334718009Z"
+    description: A Helm chart for the backend application of RADAR-base Rest Sources
+      Authorizer
+    digest: facdf53bed6e7bccbb471887513d57419e72e4f7b848fb7bb62cf8545d79d4d3
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-rest-sources-backend
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-rest-sources-backend
+    - https://github.com/RADAR-base/RADAR-Rest-Source-Auth
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-backend-0.4.8/radar-rest-sources-backend-0.4.8.tgz
+    version: 0.4.8
   - apiVersion: v2
     appVersion: 4.2.0
     created: "2023-01-11T12:14:50.39025173Z"
@@ -3691,6 +4231,39 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-backend-0.2.0/radar-rest-sources-backend-0.2.0.tgz
     version: 0.2.0
   radar-s3-connector:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 7.3.1
+    created: "2023-02-21T06:49:06.536187246Z"
+    description: A Helm chart for RADAR-base s3 connector. This connector uses Confluent
+      s3 connector with a custom data transformers. These configurations enable a
+      sink connector. See full list of properties here https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options
+    digest: 270541ba71a143428c8a21f80079c7a03d4bd23fdc63d1c2adafe59d60ff2889
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-s3-connector
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-s3-connector
+    - https://github.com/RADAR-base/kafka-connect-transform-keyvalue
+    - https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-s3-connector-0.2.6/radar-s3-connector-0.2.6.tgz
+    version: 0.2.6
   - apiVersion: v2
     appVersion: 7.3.1
     created: "2023-01-16T19:44:44.408740344Z"
@@ -3874,6 +4447,38 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-s3-connector-0.1.1/radar-s3-connector-0.1.1.tgz
     version: 0.1.1
   radar-upload-connect-backend:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.5.10
+    created: "2023-02-21T06:49:06.823218014Z"
+    description: A Helm chart for RADAR-base upload connector backend application.
+      This application is an upload system that stores uploaded data and its metadata
+      in PostgreSQL for later processing.
+    digest: 2b4d9a048524a2d4aa76c9b23d725988c17d96b61dfc3d1664345e1ecdee89a9
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-upload-connect-backend
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-upload-connect-backend
+    - https://github.com/RADAR-base/radar-upload-source-connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-upload-connect-backend-0.2.4/radar-upload-connect-backend-0.2.4.tgz
+    version: 0.2.4
   - apiVersion: v2
     appVersion: 0.5.10
     created: "2022-05-30T15:13:41.223618894Z"
@@ -4050,6 +4655,37 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-upload-connect-backend-0.1.1/radar-upload-connect-backend-0.1.1.tgz
     version: 0.1.1
   radar-upload-connect-frontend:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.5.10
+    created: "2023-02-21T06:49:07.055282526Z"
+    description: A Helm chart for RADAR-base upload connector frontend application
+      that provides a UI for uploading files and sending them to the upload-backend.
+    digest: 682e2d09197801c9b3c360d227a9a297a6230957769c6604b5a97a803fdfee51
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-upload-connect-frontend
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-upload-connect-frontend
+    - https://github.com/RADAR-base/radar-upload-source-connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-upload-connect-frontend-0.2.4/radar-upload-connect-frontend-0.2.4.tgz
+    version: 0.2.4
   - apiVersion: v2
     appVersion: 0.5.10
     created: "2022-05-30T15:13:41.389958323Z"
@@ -4171,6 +4807,38 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-upload-connect-frontend-0.1.1/radar-upload-connect-frontend-0.1.1.tgz
     version: 0.1.1
   radar-upload-source-connector:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.5.10
+    created: "2023-02-21T06:49:07.26088856Z"
+    description: A Helm chart for RADAR-base upload kafka connector. This is used
+      for reading uploaded data from backend and sending them to Kafka cluster for
+      later processing.
+    digest: 9abcc3d211176ae5d7c96f9d6def4a59a081bb5f84cf25127d2f122174c9c4b3
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-upload-source-connector
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-upload-source-connector
+    - https://github.com/RADAR-base/radar-upload-source-connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-upload-source-connector-0.2.3/radar-upload-source-connector-0.2.3.tgz
+    version: 0.2.3
   - apiVersion: v2
     appVersion: 0.5.10
     created: "2022-05-30T15:13:41.531049247Z"
@@ -4355,6 +5023,31 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/redis-16.8.7/redis-16.8.7.tgz
     version: 16.8.7
   s3-proxy:
+  - apiVersion: v2
+    appVersion: 2.0.0
+    created: "2023-02-21T06:49:07.452801505Z"
+    description: A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy
+      to proxy S3 API requests to any supported cloud provider. For more examples
+      see Find some example configurations at https://github.com/gaul/s3proxy/wiki/Storage-backend-examples.
+    digest: 42278423943f63889a2f7422456d30afa516d7b2a08fcee0bee53de6e7d50aea
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: s3-proxy
+    sources:
+    - https://github.com/gaul/s3proxy
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/s3-proxy-0.2.1/s3-proxy-0.2.1.tgz
+    version: 0.2.1
   - apiVersion: v2
     appVersion: 2.0.0
     created: "2023-01-11T16:15:50.392144112Z"
@@ -4585,6 +5278,35 @@ entries:
   velero-s3-deployment:
   - apiVersion: v2
     appVersion: "1.0"
+    created: "2023-02-21T06:49:07.658555938Z"
+    dependencies:
+    - name: velero
+      repository: https://radar-base.github.io/radar-helm-charts
+      version: 2.30.1
+    description: A Helm chart for Velero S3 deployment, this chart holds resources
+      used by Velero with a deployment to mirror the local object storage to a remote
+      object storage.
+    digest: b1e5cb130a0aaf9a415dafcb0168b82507b0a602aa7cfb06a67a6d33da6337d2
+    home: https://velero.io
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: velero-s3-deployment
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/velero-s3-deployment
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.1/velero-s3-deployment-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: "1.0"
     created: "2022-07-13T14:12:43.771268327Z"
     dependencies:
     - name: velero
@@ -4612,4 +5334,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2023-02-15T14:55:34.08201854Z"
+generated: "2023-02-21T06:49:07.659166438Z"
