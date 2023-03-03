@@ -3,7 +3,7 @@
 # radar-appserver
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-appserver)](https://artifacthub.io/packages/helm/radar-base/radar-appserver)
 
-![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.2.0](https://img.shields.io/badge/AppVersion-3.2.0-informational?style=flat-square)
+![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.1](https://img.shields.io/badge/AppVersion-2.0.1-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Appserver
 
@@ -32,7 +32,7 @@ A Helm chart for the backend application of RADAR-base Appserver
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-appserver replicas to deploy |
 | image.repository | string | `"radarbase/radar-appserver"` | radar-appserver image repository |
-| image.tag | string | `"1.3.0"` | radar-appserver image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"2.0.1"` | radar-appserver image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-appserver image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-appserver.fullname template with a string (will prepend the release name) |
