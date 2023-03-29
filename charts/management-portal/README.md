@@ -3,7 +3,7 @@
 # management-portal
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 0.2.7](https://img.shields.io/badge/Version-0.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.1](https://img.shields.io/badge/AppVersion-0.8.1-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -33,7 +33,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of Management Portal replicas to deploy |
 | image.repository | string | `"radarbase/management-portal"` | Management Portal image repository |
-| image.tag | string | `"0.8.1"` | Management Portal image tag (immutable tags are recommended) |
+| image.tag | string | `"2.0.0"` | Management Portal image tag (immutable tags are recommended) |
 | image.pullPolicy | string | `"IfNotPresent"` | Management Portal image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override management-portal.fullname template with a string (will prepend the release name) |

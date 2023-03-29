@@ -3,7 +3,7 @@
 # app-config
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/app-config)](https://artifacthub.io/packages/helm/radar-base/app-config)
 
-![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.2](https://img.shields.io/badge/AppVersion-0.4.2-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.0](https://img.shields.io/badge/AppVersion-0.5.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base application config (app-config) backend service which is used as mobile app configuration engine with per-project and per-user configuration.
 
@@ -33,7 +33,7 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of Appconfig replicas to deploy |
 | image.repository | string | `"radarbase/radar-app-config"` | Appconfig image repository |
-| image.tag | string | `"0.4.2"` | Appconfig image tag (immutable tags are recommended) |
+| image.tag | string | `"0.5.0"` | Appconfig image tag (immutable tags are recommended) |
 | image.pullPolicy | string | `"IfNotPresent"` | Appconfig image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override management-portal.fullname template with a string (will prepend the release name) |
