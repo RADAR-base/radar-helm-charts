@@ -3,7 +3,7 @@
 # app-config-frontend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/app-config-frontend)](https://artifacthub.io/packages/helm/radar-base/app-config-frontend)
 
-![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.2](https://img.shields.io/badge/AppVersion-0.4.2-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.0](https://img.shields.io/badge/AppVersion-0.5.0-informational?style=flat-square)
 
 A Helm chart for the frontend application of RADAR-base application config (app-config).
 
@@ -33,7 +33,7 @@ A Helm chart for the frontend application of RADAR-base application config (app-
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of Appconfig frontend replicas to deploy |
 | image.repository | string | `"radarbase/radar-app-config-frontend"` | Appconfig frontend image repository |
-| image.tag | string | `"0.4.2"` | Appconfig frontend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.5.0"` | Appconfig frontend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | Appconfig frontend image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override app-config-frontend.fullname template with a string (will prepend the release name) |
