@@ -10,7 +10,7 @@ image:
   repository: radarbase/kafka-connect-transform-s3
   # -- radar-s3-connector image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "7.3.1"
+  tag: "7.3.2-hotfix"
   # -- radar-s3-connector image pull policy
   pullPolicy: IfNotPresent
 
@@ -129,6 +129,6 @@ initTopics:
     # -- Image repository to fetch topics with
     repository: linuxserver/yq
     # -- Image tag to fetch topics with
-    tag: 3.1.0
+    tag: 3.2.2
     # -- Image pull policy to fetch topics with
     pullPolicy: IfNotPresent
