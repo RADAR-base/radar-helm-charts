@@ -51,7 +51,11 @@ data:
     SOURCE=$1
     TARGET=$2
     set -e
-    TOPICS=$(curl -sf {{ .Values.catalogServer.url }}/source-types | jq -r '[to_entries | .[] | select(.key | test("^.*-source-types$")) | .value[].data[].topic] | sort | unique | join(",")')
+    TOPICS="$(curl -sf {{ .Values.catalogServer.url }}/source-types | jq -r '[to_entries | .[] | select(.key | test("^.*-source-types$")) | .value[].data[].topic] | sort | unique | join(",")')"
+    if [ "$TOPICS" == "" ]; then
+      echo "No topics found!"
+      exit 1
+    fi
     sed "s/^topics=.\+\$/\\0,$TOPICS/" "$SOURCE" | sed "s/^topics=\$/\\0$TOPICS/" > "$TARGET"
     echo "Configured the following topics"
     grep "topics=" "$TARGET"
