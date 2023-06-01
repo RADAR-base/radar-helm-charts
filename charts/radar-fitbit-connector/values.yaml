@@ -10,7 +10,7 @@ image:
   repository: radarbase/kafka-connect-rest-fitbit-source
   # -- radar-fitbit-connector image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.4.0
+  tag: 0.4.1
   # -- radar-fitbit-connector image pull policy
   pullPolicy: IfNotPresent
 
@@ -97,6 +97,13 @@ environment:
 kafka_num_brokers: "3"
 # -- URL of the Kafka schema registry
 schema_registry: http://cp-schema-registry:8081
+
+kafka_wait:
+  # -- Whether to wait before the specified number of brokers are available.
+  enabled: true
+  # -- Kafka connection properties file contents during wait. If empty, all environment variables starting with
+  # `CONNECT_` will be used.
+  properties: ""
 
 # -- Base URL of the rest-sources-authorizer-backend service
 radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
