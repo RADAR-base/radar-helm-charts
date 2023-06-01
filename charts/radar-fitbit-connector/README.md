@@ -3,7 +3,7 @@
 # radar-fitbit-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-fitbit-connector)](https://artifacthub.io/packages/helm/radar-base/radar-fitbit-connector)
 
-![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
+![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.1](https://img.shields.io/badge/AppVersion-0.4.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base fitbit connector. This application collects data from participants via the Fitbit Web API.
 
@@ -34,7 +34,7 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-fitbit-connector replicas to deploy |
 | image.repository | string | `"radarbase/kafka-connect-rest-fitbit-source"` | radar-fitbit-connector image repository |
-| image.tag | string | `"0.4.0"` | radar-fitbit-connector image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.4.1"` | radar-fitbit-connector image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-fitbit-connector image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-fitbit-connector.fullname template with a string (will prepend the release name) |
@@ -56,6 +56,8 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | environment.CONNECT_SECURITY_PROTOCOL | string | `"PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | kafka_num_brokers | string | `"3"` | Number of Kafka brokers. This is used to validate the cluster availability at connector init. |
 | schema_registry | string | `"http://cp-schema-registry:8081"` | URL of the Kafka schema registry |
+| kafka_wait.enabled | bool | `true` | Whether to wait before the specified number of brokers are available. |
+| kafka_wait.properties | string | `""` | Kafka connection properties file contents during wait. If empty, all environment variables starting with `CONNECT_` will be used. |
 | radar_rest_sources_backend_url | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | Base URL of the rest-sources-authorizer-backend service |
 | connector_num_tasks | string | `"5"` | Number of connector tasks to be used in connector.properties |
 | fitbit_api_client | string | `""` | Fitbit API client id. |

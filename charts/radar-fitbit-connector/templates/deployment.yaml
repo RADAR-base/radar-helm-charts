@@ -97,6 +97,12 @@ spec:
             value: "{{ .Values.kafka_num_brokers }}"
           - name: CONNECT_LOG4J_LOGGERS
             value: "org.reflections=ERROR"
+          - name: WAIT_FOR_KAFKA
+            value: {{ if .Values.kafka_wait.enabled }}1{{ else }}0{{ end }}
+          {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
+          - name: COMMAND_CONFIG_FILE_PATH
+            value: /etc/kafka-connect/source-fitbit/kafka-wait.properties
+          {{- end }}
           ports:
             - name: http
               containerPort: 80
