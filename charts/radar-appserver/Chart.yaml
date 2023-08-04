@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "2.0.1"
+appVersion: "2.3.0"
 description: A Helm chart for the backend application of RADAR-base Appserver
 name: radar-appserver
-version: 0.1.6
+version: 0.1.7
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-appserver
