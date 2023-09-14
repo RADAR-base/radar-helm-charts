@@ -93,9 +93,8 @@ spec:
             value: "{{ $name }}/connector"
           - name: KAFKA_HEAP_OPTS
             value: "{{ .Values.heapOpts }}"
-          {{- range $k, $v := .Values.environment }}
-          - name: {{ $k }}
-            value: {{ $v | quote }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           ports:
             - name: http

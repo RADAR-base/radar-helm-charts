@@ -87,6 +87,9 @@ spec:
             - name: MONITOR_URL
               value: {{ .Values.monitoring.url | quote }}
             {{- end }}
+            {{- with .Values.extraEnvVars }}
+              {{- toYaml . | nindent 10 }}
+            {{- end }}              
           ports:
             - name: http
               containerPort: 8080

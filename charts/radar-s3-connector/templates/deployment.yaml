@@ -51,10 +51,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          {{- range $k, $v := .Values.environment }}
-          - name: {{ $k }}
-            value: {{ $v | quote }}
-          {{- end }}
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka.url }}"
           - name: CONNECT_REQUEST_TIMEOUT_MS
@@ -200,6 +196,9 @@ spec:
                 name: {{ template "radar-s3-connector.fullname" . }}
                 key: awsSecretKey
           {{- end }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}           
           ports:
             - name: http
               containerPort: 8083

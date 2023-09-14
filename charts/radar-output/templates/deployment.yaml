@@ -129,6 +129,9 @@ spec:
               secretKeyRef:
                 name: {{ template "radar-output.secretName" . }}
                 key: targetAzureSasToken
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}                
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

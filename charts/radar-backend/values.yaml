@@ -52,6 +52,11 @@ tolerations: []
 
 affinity: {}
 
+# -- Extra environment variables
+extraEnvVars:
+  - name: TOPIC_LIST
+    value: "application_record_counts"
+
 # command: "monitor"
 # command: "stream"
 
@@ -60,9 +65,6 @@ kafka: cp-kafka-headless:9092
 rest_proxy: http://cp-kafka-rest:8082
 schema_registry: http://cp-schema-registry:8081
 kafka_num_brokers: "3"
-extraEnv:
-  - name: TOPIC_LIST
-    value: "application_record_counts"
 
 smtp:
   host: smtp

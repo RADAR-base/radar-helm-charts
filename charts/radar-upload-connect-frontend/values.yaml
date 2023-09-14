@@ -47,18 +47,20 @@ ingress:
   # -- Annotations that define default ingress class, certificate issuer
   # @default -- check values.yaml
   annotations:
-    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /$1
   # -- Path within the url structure
   path: "/upload/?(.*)"
+  # -- Ingress Path type
   pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
   # -- Host to listen to requests to
   hosts:
     - localhost
   tls:
     # -- Name of the secret containing TLS certificates
-    secretName: radar-base-tls
+    secretName: radar-base-tls-radar-upload-connect-frontend
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -82,6 +84,11 @@ tolerations: []
 
 # -- Affinity labels for pod assignment
 affinity: {}
+
+# -- Extra environment variables
+extraEnvVars: []
+#  - name: BEARER_AUTH
+#    value: true
 
 # -- Server name or domain name
 server_name: localhost

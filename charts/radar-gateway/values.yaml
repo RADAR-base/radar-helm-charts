@@ -47,7 +47,6 @@ ingress:
   # -- Annotations that define default ingress class, certificate issuer and deny access to sensitive URLs
   # @default -- check values.yaml
   annotations:
-    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-headers: DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Content-Encoding
@@ -58,13 +57,16 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
   # -- Path within the url structure
   path: "/kafka/?(.*)"
+  # -- Ingress Path type
   pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
     # -- Name of the secret that contains TLS certificates
-    secretName: radar-base-tls
+    secretName: radar-base-tls-radar-gateway
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -88,6 +90,11 @@ tolerations: []
 
 # -- Affinity labels for pod assignment
 affinity: {}
+
+# -- Extra environment variables
+extraEnvVars: []
+#  - name: BEARER_AUTH
+#    value: true
 
 serviceMonitor:
   # -- Enable metrics to be collected via Prometheus-operator

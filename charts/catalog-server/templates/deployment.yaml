@@ -84,6 +84,9 @@ spec:
               name: {{ template "catalog-server.fullname" . }}
               key: srApiSecret
         {{- end }}
+        {{- with .Values.extraEnvVarsInit }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}           
         volumeMounts:
           - name: config
             mountPath: /etc/radar-schemas-tools

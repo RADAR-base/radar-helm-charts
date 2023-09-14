@@ -83,6 +83,11 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# -- Extra environment variables
+extraEnvVarsInit: []
+#  - name: BEARER_AUTH
+#    value: true
+
 # -- number of Kafka brokers to look for
 kafka_num_brokers: 3
 # -- URI of Kafka brokers
