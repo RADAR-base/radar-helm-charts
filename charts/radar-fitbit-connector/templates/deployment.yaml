@@ -55,10 +55,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          {{- range $k, $v := .Values.environment }}
-          - name: {{ $k }}
-            value: {{ $v | quote }}
-          {{- end }}
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka }}"
           - name: CONNECT_REST_PORT
@@ -102,6 +98,9 @@ spec:
           {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
           - name: COMMAND_CONFIG_FILE_PATH
             value: /etc/kafka-connect/source-fitbit/kafka-wait.properties
+          {{- end }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           ports:
             - name: http

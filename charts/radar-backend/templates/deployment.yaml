@@ -64,9 +64,9 @@ spec:
             value: "{{ .Values.schema_registry }}"
           - name: KAFKA_BROKERS
             value: "{{ .Values.kafka_num_brokers }}"
-{{- if .Values.extraEnv }}
-{{ toYaml .Values.extraEnv | indent 10 }}
-{{- end }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 80

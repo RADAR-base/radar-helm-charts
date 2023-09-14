@@ -64,6 +64,9 @@ spec:
             value: https://{{ .Values.serverName }}/rest-sources/authorizer/login
           - name: AUTH_URI
             value: https://{{ .Values.serverName }}/managementportal/oauth
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8080

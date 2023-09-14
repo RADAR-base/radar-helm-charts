@@ -3,7 +3,7 @@
 # radar-rest-sources-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-backend)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-backend)
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.3.0](https://img.shields.io/badge/AppVersion-4.3.0-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.3.0](https://img.shields.io/badge/AppVersion-4.3.0-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -45,13 +45,15 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and session configuration |
 | ingress.path | string | `"/rest-sources/backend"` | Path within the url structure |
-| ingress.pathType | string | `"ImplementationSpecific"` |  |
+| ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
+| ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
+| ingress.tls.secretName | string | `"radar-base-tls-radar-rest-sources-backend"` | TLS Secret Name |
 | resources.requests | object | `{"cpu":"100m","memory":"400Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
+| extraEnvVars | list | `[]` | Extra environment variables |
 | authorizer.tokenExpiryTimeInMinutes | int | `15` | Within how many minutes an online authorization attempt should be finalized. Steps: logging in to Fitbit, returning to the authorizer. |
 | authorizer.persistentTokenExpiryInMin | int | `7200` | Within how many minutes an authorization attempt by a participant should be finalized. Steps: passing token to participant, them logging in to Fitbit, and returning to the authorizer. |
 | postgres.host | string | `"postgresql"` | host name of the postgres db |

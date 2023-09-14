@@ -64,6 +64,11 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# -- Extra environment variables
+extraEnvVars: []
+#  - name: BEARER_AUTH
+#    value: true
+
 s3:
   # -- Credentials used to access this proxy
   identity: null

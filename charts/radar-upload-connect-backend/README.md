@@ -3,7 +3,7 @@
 # radar-upload-connect-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connect-backend)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connect-backend)
 
-![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
+![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector backend application. This application is an upload system that stores uploaded data and its metadata in PostgreSQL for later processing.
 
@@ -45,13 +45,15 @@ A Helm chart for RADAR-base upload connector backend application. This applicati
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and proxy settings |
 | ingress.path | string | `"/upload/api/?(.*)"` | Path within the url structure |
-| ingress.pathType | string | `"ImplementationSpecific"` |  |
+| ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
+| ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Host to listen to requests to |
-| ingress.tls.secretName | string | `"radar-base-tls"` | Name of the secret containing TLS certificates |
+| ingress.tls.secretName | string | `"radar-base-tls-radar-upload-connect-backend"` | Name of the secret containing TLS certificates |
 | resources.requests | object | `{"cpu":"100m","memory":"2Gi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
+| extraEnvVars | list | `[]` | Extra environment variables |
 | client_id | string | `"radar_upload_backend"` | OAuth2 client id of the upload connect backend application |
 | client_secret | string | `"secret"` | OAuth2 client secret of the upload connect backend |
 | postgres.host | string | `"radar-upload-postgresql"` | Host name of the database to store uploaded data and metadata |

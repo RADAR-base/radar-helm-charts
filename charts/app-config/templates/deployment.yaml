@@ -78,6 +78,9 @@ spec:
               secretKeyRef:
                 name: {{ template "app-config.secretName" . }}
                 key: databasePassword
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           volumeMounts:
           - name: config
             mountPath: /etc/radar-app-config/

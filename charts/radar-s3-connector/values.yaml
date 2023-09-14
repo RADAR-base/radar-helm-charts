@@ -64,6 +64,12 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
+extraEnvVars:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  - name: CONNECT_SECURITY_PROTOCOL
+    value: PLAINTEXT
+
 kafka:
   # -- Kafka broker URLs
   url: PLAINTEXT://cp-kafka-headless:9092
@@ -75,11 +81,6 @@ schemaRegistry:
 catalogServer:
   # -- Catalog server URL
   url: http://catalog-server:9010
-
-# -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
-environment:
-  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
-  CONNECT_SECURITY_PROTOCOL: PLAINTEXT
 
 # -- List of topics to be consumed by the sink connector separated by comma. Topics defined in the catalog server
 # will automatically be loaded if `initTopics.enabled` is true.

@@ -110,6 +110,9 @@ spec:
           - name: JCLOUDS_REGIONS
             value: {{ .Values.target.regions | quote }}
           {{- end }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

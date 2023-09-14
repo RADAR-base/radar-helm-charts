@@ -47,21 +47,21 @@ ingress:
   # -- Annotations that define default ingress class, certificate issuer and deny access to sensitive URLs
   # @default -- check values.yaml
   annotations:
-    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /redcap/$1
   # -- Path within the url structure
   path: "/redcapint/?(.*)"
-  # -- Path Type
+  # -- Ingress Path type
   pathType: ImplementationSpecific
-
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
     # -- Name of the secret that contains TLS certificates
     # -- TLS Secret Name
-    secretName: radar-base-tls
+    secretName: radar-base-tls-radar-integration
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious

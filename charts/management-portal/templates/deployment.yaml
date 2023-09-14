@@ -124,6 +124,9 @@ spec:
           - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
             value: {{ .Values.smtp.starttls | quote }}
           {{ end }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8080

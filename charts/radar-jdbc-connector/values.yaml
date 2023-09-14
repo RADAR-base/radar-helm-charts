@@ -64,6 +64,12 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
+extraEnvVars:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  - name: CONNECT_SECURITY_PROTOCOL
+    value: PLAINTEXT
+
 # -- URI of Kafka brokers of the cluster
 kafka: PLAINTEXT://cp-kafka-headless:9092
 # -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
@@ -145,11 +151,6 @@ sink:
   topics: android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps
   # -- How to format a table name based on the inserted topic
   tableNameFormat: "${topic}"
-
-# -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
-environment:
-  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
-  CONNECT_SECURITY_PROTOCOL: PLAINTEXT
 
 jdbc:
   # -- Host of the TimescaleDB database

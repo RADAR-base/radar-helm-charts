@@ -53,6 +53,9 @@ spec:
           env:
           - name: JAVA_OPTS
             value: "-Dlogback.configurationFile=/etc/upload-backend/logback.xml"
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8085

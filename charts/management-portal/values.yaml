@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- 	Number of Management Portal replicas to deploy
+# -- Number of Management Portal replicas to deploy
 replicaCount: 1
 
 image:
@@ -46,7 +46,6 @@ ingress:
   # -- Annotations that define default ingress class, certificate issuer and rate limiter
   # @default -- check values.yaml
   annotations:
-    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/server-snippet: |
@@ -59,13 +58,16 @@ ingress:
       }
   # -- Path within the url structure
   path: "/managementportal"
+  # -- Ingress Path type
   pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
     # -- TLS Secret Name
-    secretName: radar-base-tls
+    secretName: radar-base-tls-managementportal
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -90,6 +92,11 @@ tolerations: []
 
 # -- Affinity labels for pod assignment
 affinity: {}
+
+# -- Extra environment variables
+extraEnvVars: []
+#  - name: BEARER_AUTH
+#    value: true
 
 # -- base 64 encoded binary p12 keystore containing a ECDSA certificate with alias `radarbase-managementportal-ec` and a RSA certificate with alias `selfsigned`.
 keystore: ""

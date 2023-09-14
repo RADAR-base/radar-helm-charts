@@ -50,17 +50,19 @@ ingress:
   # -- Annotations that define default ingress class, certificate issuer
   # @default -- check values.yaml
   annotations:
-    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
   # -- Path within the url structure
   path: /appconfig
+  # -- Ingress Path type
   pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
     # -- TLS Secret Name
-    secretName: radar-base-tls
+    secretName: radar-base-tls-appconfig-frontend
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -85,6 +87,11 @@ tolerations: []
 
 # -- Affinity labels for pod assignment
 affinity: {}
+
+# -- Extra environment variables
+extraEnvVars: []
+#  - name: BEARER_AUTH
+#    value: true
 
 # -- Authorization URL of the IDP
 authUrl: http://localhost/managementportal/oauth

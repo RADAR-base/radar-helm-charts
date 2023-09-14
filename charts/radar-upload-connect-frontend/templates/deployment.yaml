@@ -58,6 +58,9 @@ spec:
             value: "{{ .Values.server_name }}/upload/login"
           - name: VUE_APP_CLIENT_ID
             value: "https://{{ .Values.vue_app_client_id }}"
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 80

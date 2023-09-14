@@ -3,7 +3,7 @@
 # radar-appserver
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-appserver)](https://artifacthub.io/packages/helm/radar-base/radar-appserver)
 
-![Version: 0.1.7](https://img.shields.io/badge/Version-0.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
+![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.0](https://img.shields.io/badge/AppVersion-2.3.0-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Appserver
 
@@ -45,12 +45,14 @@ A Helm chart for the backend application of RADAR-base Appserver
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and session configuration |
 | ingress.path | string | `"/appserver/?(.*)"` | Path within the url structure |
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress path type |
+| ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
+| ingress.tls.secretName | string | `"radar-base-tls-appserver"` | TLS Secret Name |
 | resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
+| extraEnvVars | list | `[]` | Extra environment variables |
 | postgres.host | string | `"radar-appserver-postgresql"` | host name of the postgres db |
 | postgres.port | int | `5432` | post of the postgres db |
 | postgres.database | string | `"appserver"` | database name |

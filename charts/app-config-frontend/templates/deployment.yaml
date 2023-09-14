@@ -55,6 +55,9 @@ spec:
               value: {{ .Values.authCallbackUrl }}
             - name: APP_CONFIG_URL
               value: {{ .Values.backendUrl }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8080
@@ -69,6 +72,7 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
