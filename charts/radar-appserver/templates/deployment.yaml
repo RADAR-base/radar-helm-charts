@@ -86,7 +86,7 @@ spec:
                 key: githubClientToken
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
-          {{- end }}                  
+          {{- end }}
           imagePullPolicy: Always
           ports:
             - name: http

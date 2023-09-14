@@ -131,7 +131,7 @@ spec:
                 key: targetAzureSasToken
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
-          {{- end }}                
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

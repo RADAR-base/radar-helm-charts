@@ -80,7 +80,7 @@ spec:
                 key: databasePassword
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
-          {{- end }}                  
+          {{- end }}
           volumeMounts:
           - name: config
             mountPath: /etc/radar-app-config/

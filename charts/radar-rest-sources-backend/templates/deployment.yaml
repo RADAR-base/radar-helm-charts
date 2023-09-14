@@ -61,7 +61,7 @@ spec:
             value: "10"   # gives time for the database to boot before the application
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
-          {{- end }}            
+          {{- end }}
           command:
           - authorizer-app-backend
           - /etc/radar-rest-sources-backend/authorizer.yml
