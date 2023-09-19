@@ -3,7 +3,7 @@
 # s3-proxy
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/s3-proxy)](https://artifacthub.io/packages/helm/radar-base/s3-proxy)
 
-![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy to proxy S3 API requests to any supported cloud provider. For more examples see Find some example configurations at https://github.com/gaul/s3proxy/wiki/Storage-backend-examples.
 
@@ -46,6 +46,20 @@ A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy t
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
 | extraEnvVars | list | `[]` | Extra environment variables |
+| customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
+| livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| livenessProbe.initialDelaySeconds | int | `15` | Initial delay seconds for livenessProbe |
+| livenessProbe.periodSeconds | int | `60` | Period seconds for livenessProbe |
+| livenessProbe.timeoutSeconds | int | `3` | Timeout seconds for livenessProbe |
+| livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
+| readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| readinessProbe.initialDelaySeconds | int | `15` | Initial delay seconds for readinessProbe |
+| readinessProbe.periodSeconds | int | `60` | Period seconds for readinessProbe |
+| readinessProbe.timeoutSeconds | int | `3` | Timeout seconds for readinessProbe |
+| readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | s3.identity | string | `nil` | Credentials used to access this proxy |
 | s3.credential | string | `""` | Credentials used to access this proxy |
 | target | object | Check below | Where requests should be proxied to |
