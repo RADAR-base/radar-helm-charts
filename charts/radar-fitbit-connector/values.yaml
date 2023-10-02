@@ -155,7 +155,7 @@ fitbit_api_secret: ""
 oauthClientId: radar_fitbit_connector
 # -- OAuth2 client secret from Management Portal
 oauthClientSecret: secret
-# -- Hostname of Management Portal. This will be used to create URLs to access Management Portal
-managementportal_host: management-portal
+# -- URL of Management Portal. This will be used to create URLs to access Management Portal
+managementportal_url: http://management-portal:8080/managementportal
 # -- Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties.
 includeIntradayData: true

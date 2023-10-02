@@ -3,7 +3,7 @@
 # radar-upload-source-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-source-connector)](https://artifacthub.io/packages/helm/radar-base/radar-upload-source-connector)
 
-![Version: 0.2.6](https://img.shields.io/badge/Version-0.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
+![Version: 0.2.7](https://img.shields.io/badge/Version-0.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload kafka connector. This is used for reading uploaded data from backend and sending them to Kafka cluster for later processing.
 
@@ -65,7 +65,7 @@ A Helm chart for RADAR-base upload kafka connector. This is used for reading upl
 | kafka | string | `"PLAINTEXT://cp-kafka-headless:9092"` | Kafka broker URLs |
 | kafka_num_brokers | string | `"3"` | Number of brokers in the cluster |
 | schema_registry | string | `"http://cp-schema-registry:8081"` | Schema registry URL |
-| managementportal_host | string | `"management-portal"` | Host name of the Management Portal application |
+| managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | radar_upload_connect_backend | string | `"radar-upload-connect-backend"` | Host name of the upload connect backend application |
 | client_id | string | `"radar_upload_connect"` | OAuth2 Client Id of the Upload connector |
 | client_secret | string | `"upload_secret"` | OAuth2 Client secret of the Upload connector |

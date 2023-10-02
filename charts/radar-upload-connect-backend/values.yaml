@@ -137,7 +137,7 @@ postgres:
   user: postgres
   # -- Database password
   password: password
-# -- Host name of the management portal application
-managementportal_host: management-portal
+# -- URL of the Management Portal
+managementportal_url: http://management-portal:8080/managementportal
 # -- Server name or domain name
 serverName: localhost

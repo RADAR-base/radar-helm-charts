@@ -3,7 +3,7 @@
 # radar-upload-connect-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connect-backend)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connect-backend)
 
-![Version: 0.2.6](https://img.shields.io/badge/Version-0.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
+![Version: 0.2.7](https://img.shields.io/badge/Version-0.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector backend application. This application is an upload system that stores uploaded data and its metadata in PostgreSQL for later processing.
 
@@ -73,5 +73,5 @@ A Helm chart for RADAR-base upload connector backend application. This applicati
 | postgres.host | string | `"radar-upload-postgresql"` | Host name of the database to store uploaded data and metadata |
 | postgres.user | string | `"postgres"` | Database username |
 | postgres.password | string | `"password"` | Database password |
-| managementportal_host | string | `"management-portal"` | Host name of the management portal application |
+| managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | serverName | string | `"localhost"` | Server name or domain name |

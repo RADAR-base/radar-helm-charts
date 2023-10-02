@@ -16,9 +16,9 @@ image:
 # -- Docker registry secret names as an array
 imagePullSecrets: []
 
-# -- String to partially override management-portal.fullname template with a string (will prepend the release name)
+# -- String to partially override radar-home.fullname template with a string (will prepend the release name)
 nameOverride: ""
-# -- String to fully override management-portal.fullname template with a string
+# -- String to fully override radar-home.fullname template with a string
 fullnameOverride: ""
 
 # -- Kubernetes namespace that Appconfig is going to be deployed on

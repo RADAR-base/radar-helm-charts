@@ -141,8 +141,6 @@ serviceMonitor:
   # -- Enable metrics to be collected via Prometheus-operator
   enabled: true
 
-# -- Host name of the management portal application
-managementportalHost: management-portal
 # -- Schema Registry URL
 schemaRegistry: http://cp-schema-registry:8081
 # -- Not used. To be confirmed

@@ -56,7 +56,7 @@ spec:
           - name: REST_SOURCE_AUTHORIZER_VALIDATOR
             value: "managementportal"
           - name: REST_SOURCE_AUTHORIZER_AUTH_PUBLIC_KEY_ENDPOINTS_0
-            value: "http://{{ .Values.managementportal_host }}:8080/managementportal/oauth/token_key"
+            value: "{{ .Values.managementportal_url }}/oauth/token_key"
           - name: APP_SLEEP
             value: "10"   # gives time for the database to boot before the application
           {{- with .Values.extraEnvVars }}

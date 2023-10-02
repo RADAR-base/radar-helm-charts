@@ -146,8 +146,8 @@ postgres:
 radar_admin_user: radar
 radar_admin_password: radar
 
-# -- hostname of the Management Portal
-managementportal_host: management-portal
+# -- URL of the Management Portal
+managementportal_url: http://management-portal:8080/managementportal
 
 serverName: localhost
 

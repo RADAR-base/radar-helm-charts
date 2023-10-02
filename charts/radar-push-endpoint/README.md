@@ -3,7 +3,7 @@
 # radar-push-endpoint
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-push-endpoint)](https://artifacthub.io/packages/helm/radar-base/radar-push-endpoint)
 
-![Version: 0.1.7](https://img.shields.io/badge/Version-0.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.2](https://img.shields.io/badge/AppVersion-0.2.2-informational?style=flat-square)
+![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.2](https://img.shields.io/badge/AppVersion-0.2.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming data from Push or Subscription based WEB APIs. It performs authentication, authorization and content validation. For more details of the configurations, see https://github.com/RADAR-base/RADAR-PushEndpoint.
 
@@ -67,7 +67,6 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | serviceMonitor.enabled | bool | `true` | Enable metrics to be collected via Prometheus-operator |
-| managementportalHost | string | `"management-portal"` | Host name of the management portal application |
 | schemaRegistry | string | `"http://cp-schema-registry:8081"` | Schema Registry URL |
 | max_requests | int | `1000` | Not used. To be confirmed |
 | bootstrapServers | string | `"cp-kafka-headless:9092"` | Kafka broker URLs |

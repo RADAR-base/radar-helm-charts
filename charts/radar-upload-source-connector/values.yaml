@@ -111,8 +111,8 @@ kafka: PLAINTEXT://cp-kafka-headless:9092
 kafka_num_brokers: "3"
 # -- Schema registry URL
 schema_registry: http://cp-schema-registry:8081
-# -- Host name of the Management Portal application
-managementportal_host: management-portal
+# -- URL of the Management Portal
+managementportal_url: http://management-portal:8080/managementportal
 # -- Host name of the upload connect backend application
 radar_upload_connect_backend: radar-upload-connect-backend
 # -- OAuth2 Client Id of the Upload connector

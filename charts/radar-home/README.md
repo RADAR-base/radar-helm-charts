@@ -3,7 +3,7 @@
 # radar-home
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-home)](https://artifacthub.io/packages/helm/radar-base/radar-home)
 
-![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.3](https://img.shields.io/badge/AppVersion-0.1.3-informational?style=flat-square)
+![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.3](https://img.shields.io/badge/AppVersion-0.1.3-informational?style=flat-square)
 
 RADAR-base home page.
 
@@ -35,8 +35,8 @@ RADAR-base home page.
 | image.tag | string | `"0.1.3"` | Appconfig image tag (immutable tags are recommended) |
 | image.pullPolicy | string | `"IfNotPresent"` | Appconfig image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
-| nameOverride | string | `""` | String to partially override management-portal.fullname template with a string (will prepend the release name) |
-| fullnameOverride | string | `""` | String to fully override management-portal.fullname template with a string |
+| nameOverride | string | `""` | String to partially override radar-home.fullname template with a string (will prepend the release name) |
+| fullnameOverride | string | `""` | String to fully override radar-home.fullname template with a string |
 | namespace | string | `"default"` | Kubernetes namespace that Appconfig is going to be deployed on |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8080` | Port |
