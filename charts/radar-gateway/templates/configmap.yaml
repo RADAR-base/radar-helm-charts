@@ -9,11 +9,11 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   healthcheck.sh: |
-     #!/bin/sh
-     STATUS=$(curl -s --max-time 4 localhost:{{ .Values.service.port }}/kafka/health)
-     if ! (echo "$STATUS" | grep -Fq '"kafka":{"status":"UP"'); then
-       exit 1
-     fi
+    #!/bin/sh
+    STATUS=$(curl -s --max-time 4 localhost:{{ .Values.service.port }}/kafka/health)
+    if ! (echo "$STATUS" | grep -Fq '"kafka":{"status":"UP"'); then
+      exit 1
+    fi
   gateway.yml: |
     # Resource config class
     #resourceConfig: org.radarbase.gateway.inject.ManagementPortalEnhancerFactory
@@ -57,5 +57,5 @@ data:
         schema.registry.basic.auth.user.info: {{ .Values.cc.schemaRegistryApiKey }}:{{ .Values.cc.schemaRegistryApiSecret }}
         {{- end }}
     auth:
-      managementPortalUrl: http://{{ .Values.managementportalHost }}:8080/managementportal
+      managementPortalUrl: {{ .Values.managementportal_url }}
       checkSourceId: {{ .Values.checkSourceId }}

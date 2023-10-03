@@ -13,7 +13,7 @@ data:
     management_portal:
       oauth_client_id: {{ .Values.oauth_client_id }} #OAuth2 clientId used by the webApp for making requests
       oauth_client_secret: {{ .Values.oauth_client_secret }} #OAuth2 client secret
-      base_url: http://{{ .Values.management_portal_url }}:8080/managementportal/ #Base URL of the Management Portal
+      base_url: {{ .Values.managementportal_url }} #Base URL of the Management Portal
 
     # Set of supported projects
     projects:

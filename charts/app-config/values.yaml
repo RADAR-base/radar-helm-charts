@@ -16,9 +16,9 @@ image:
 # -- Docker registry secret names as an array
 imagePullSecrets: []
 
-# -- String to partially override management-portal.fullname template with a string (will prepend the release name)
+# -- String to partially override appconfig.fullname template with a string (will prepend the release name)
 nameOverride: ""
-# -- String to fully override management-portal.fullname template with a string
+# -- String to fully override appconfig.fullname template with a string
 fullnameOverride: ""
 
 # -- Kubernetes namespace that Appconfig is going to be deployed on
@@ -138,6 +138,9 @@ javaOpts: "-Xmx550m"
 clientId: radar_appconfig
 # -- OAuth2 client secret
 clientSecret: secret
+
+# -- URL of the Management Portal
+managementportal_url: http://management-portal:8080/managementportal
 
 jdbc:
   # -- JDBC Driver to connect to the database.
