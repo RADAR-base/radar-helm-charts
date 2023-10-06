@@ -3,7 +3,7 @@
 # management-portal
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -49,6 +49,13 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls-managementportal"` | TLS Secret Name |
+| ingress_rate_limited.enabled | bool | `true` | Enable ingress controller resource |
+| ingress_rate_limited.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and rate limiter |
+| ingress_rate_limited.paths | list | `["/managementportal/oauth/token","/managementportal/login","/managementportal/api/meta-token"]` | Path within the url structure |
+| ingress_rate_limited.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
+| ingress_rate_limited.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
+| ingress_rate_limited.hosts | list | `["localhost"]` | Hosts to accept requests from |
+| ingress_rate_limited.tls.secretName | string | `"radar-base-tls-managementportal-rate-limited"` | TLS Secret Name |
 | resources.limits | object | `{"cpu":2,"memory":"1700Mi"}` | CPU/Memory resource limits |
 | resources.requests | object | `{"cpu":"100m","memory":"512Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |

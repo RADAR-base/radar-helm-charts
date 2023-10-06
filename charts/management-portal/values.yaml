@@ -48,14 +48,6 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/server-snippet: |
-      location /managementportal/oauth/ {
-        # Allow 20 fast-following requests, like when authorizing a user.
-        limit_req zone=login_limit burst=20;
-      }
-      location /managementportal/api/meta-token/ {
-        limit_req zone=login_limit;
-      }
   # -- Path within the url structure
   path: "/managementportal"
   # -- Ingress Path type
@@ -68,6 +60,32 @@ ingress:
   tls:
     # -- TLS Secret Name
     secretName: radar-base-tls-managementportal
+
+ingress_rate_limited:
+  # -- Enable ingress controller resource
+  enabled: true
+  # -- Annotations that define default ingress class, certificate issuer and rate limiter
+  # @default -- check values.yaml
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      limit_req zone=login_limit;
+  # -- Path within the url structure
+  paths:
+  - "/managementportal/oauth/token"
+  - "/managementportal/login"
+  - "/managementportal/api/meta-token"
+  # -- Ingress Path type
+  pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
+  # -- Hosts to accept requests from
+  hosts:
+    - localhost
+  tls:
+    # -- TLS Secret Name
+    secretName: radar-base-tls-managementportal-rate-limited
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
