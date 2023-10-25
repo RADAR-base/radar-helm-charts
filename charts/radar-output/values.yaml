@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-output-restructure
   # -- radar-output image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 2.3.1
+  tag: 2.4.0
   # -- radar-output image pull policy
   pullPolicy: IfNotPresent
 
@@ -110,47 +110,50 @@ source:
     # -- Azure HTTP read timeout in seconds
     readTimeout:
 
-target:
-  # -- Type of the output storage of the RADAR-base pipeline e.g. s3, local
-  type: s3
-  s3:
-    # -- s3 endpoint of the output storage
-    endpoint: "http://minio:9000"
-    # -- s3 access-key of the output storage
-    accessToken: access_key
-    # -- s3 secret-key of the output storage
-    secretKey: secret
-    # -- s3 bucket name of the output storage
-    bucket: radar-output-storage
-    # -- s3 HTTP connect timeout in seconds
-    connectTimeout:
-    # -- s3 HTTP write timeout in seconds
-    writeTimeout:
-    # -- s3 HTTP read timeout in seconds
-    readTimeout:
-  azure:
-    # -- Azure endpoint of the output storage
-    endpoint: ""
-    # -- Azure username to access the s3 endpoint when using personal login
-    username: ""
-    # -- Azure password when using personal login
-    password: ""
-    # -- Azure account name when using shared access tokens
-    accountName: ""
-    # -- Azure account key when using shared access tokens
-    accountKey: ""
-    # -- Azure SAS(shared access signature) token when using shared access tokens
-    sasToken: ""
-    # -- Azure blob container name
-    container: ""
-    # -- Azure HTTP connect timeout in seconds
-    connectTimeout:
-    # -- Azure HTTP response timeout in seconds
-    responseTimeout:
-    # -- Azure HTTP write timeout in seconds
-    writeTimeout:
-    # -- Azure HTTP read timeout in seconds
-    readTimeout:
+targets:
+  radar-output-storage:
+    # -- Type of the output storage of the RADAR-base pipeline e.g. s3, local
+    type: s3
+    # -- base path in the output storage to store data in
+    path: output
+    s3:
+      # -- s3 endpoint of the output storage
+      endpoint: "http://minio:9000"
+      # -- s3 access-key of the output storage
+      accessToken: access_key
+      # -- s3 secret-key of the output storage
+      secretKey: secret
+      # -- s3 bucket name of the output storage
+      bucket: radar-output-storage
+      # -- s3 HTTP connect timeout in seconds
+      connectTimeout:
+      # -- s3 HTTP write timeout in seconds
+      writeTimeout:
+      # -- s3 HTTP read timeout in seconds
+      readTimeout:
+    azure:
+      # -- Azure endpoint of the output storage
+      endpoint: ""
+      # -- Azure username to access the s3 endpoint when using personal login
+      username: ""
+      # -- Azure password when using personal login
+      password: ""
+      # -- Azure account name when using shared access tokens
+      accountName: ""
+      # -- Azure account key when using shared access tokens
+      accountKey: ""
+      # -- Azure SAS(shared access signature) token when using shared access tokens
+      sasToken: ""
+      # -- Azure blob container name
+      container: ""
+      # -- Azure HTTP connect timeout in seconds
+      connectTimeout:
+      # -- Azure HTTP response timeout in seconds
+      responseTimeout:
+      # -- Azure HTTP write timeout in seconds
+      writeTimeout:
+      # -- Azure HTTP read timeout in seconds
+      readTimeout:
 
 redis:
   # -- URL of the redis database
@@ -177,14 +180,13 @@ cleaner:
   interval: 86400
 
 paths:
-  # -- Relative path to intermediate storage root to browse for data
-  input: topics
-  # -- Relative path to output storage to write data
-  output: output
   # -- Output path construction factory
   factory: org.radarbase.output.path.FormattedPathFactory
   # -- Additional properties. For details see https://github.com/RADAR-base/radar-output-restructure/blob/master/restructure.yml
   properties: {}
+  target:
+    # -- Default target to write data to
+    default: radar-output-storage
 
 # -- Individual topic configuration
 topics:

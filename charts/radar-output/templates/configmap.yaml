@@ -48,38 +48,8 @@ data:
         {{- end }}
     {{- end }}
 
-    {{- with .Values.target }}
-    target:
-      type: "{{ .type }}"
-      # Minio S3 settings
-      s3:
-        endpoint: "{{ .s3.endpoint }}"
-        bucket: "{{ .s3.bucket }}"
-        {{- if .s3.connectTimeout }}
-        connectTimeout: {{ .s3.connectTimeout | int }}
-        {{- end }}
-        {{- if .s3.writeTimeout }}
-        writeTimeout: {{ .s3.writeTimeout | int }}
-        {{- end }}
-        {{- if .s3.readTimeout }}
-        readTimeout: {{ .s3.readTimeout | int }}
-        {{- end }}
-      azure:
-        endpoint: "{{ .azure.endpoint }}"
-        container: "{{ .azure.container }}"
-        {{- if .azure.connectTimeout }}
-        connectTimeout: {{ .azure.connectTimeout | int }}
-        {{- end }}
-        {{- if .azure.responseTimeout }}
-        responseTimeout: {{ .azure.responseTimeout | int }}
-        {{- end }}
-        {{- if .azure.writeTimeout }}
-        writeTimeout: {{ .azure.writeTimeout | int }}
-        {{- end }}
-        {{- if .azure.readTimeout }}
-        readTimeout: {{ .azure.readTimeout | int }}
-        {{- end }}
-    {{- end }}
+    targets:
+      {{ .Values.targets | toYaml | indent 6 }}
 
     redis:
       uri: "{{ .Values.redis.uri }}"
@@ -128,18 +98,9 @@ data:
 
     # Path settings
     paths:
-      # Input directories in HDFS
-      inputs:
-        - "{{ .Values.paths.input }}"
       # Root temporary directory for local file processing.
       temp: /output/+tmp
-      # Output directory
-      output: "{{ .Values.paths.output }}"
-      # Output path construction factory
-      factory: {{ .Values.paths.factory }}
-      # Additional properties
-      properties:
-        {{ .Values.paths.properties | toYaml | indent 8 | trim }}
+      {{ .Values.paths | toYaml | indent 6 | trim }}
 
     # Individual topic configuration
     {{- if .Values.topics }}
