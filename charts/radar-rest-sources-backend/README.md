@@ -98,3 +98,11 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.garmin.clientId | string | `"Garmin-clientid"` | Garmin client id |
 | restSourceClients.garmin.clientSecret | string | `"Garmin-clientsecret"` | Garmin client secret |
 | restSourceClients.garmin.scope | string | `"activity heartrate sleep profile"` | List of scopes of the data that should be collected from Garmin. |
+| restSourceClients.oura.enable | bool | `true` | set to true, if Oura client should be used |
+| restSourceClients.oura.sourceType | string | `"Oura"` | Type of the data sources |
+| restSourceClients.oura.authorizationEndpoint | string | `"https://cloud.ouraring.com/oauth/authorize"` | Authorization endpoint for Oura authentication and authorization |
+| restSourceClients.oura.tokenEndpoint | string | `"https://api.ouraring.com/oauth/token"` | Token endpoint to request access-token from Oura |
+| restSourceClients.oura.deregistrationEndpoint | string | `"https://api.ouraring.com/oauth/revoke"` |  |
+| restSourceClients.oura.clientId | string | `"Oura-clientid"` | Oura client id |
+| restSourceClients.oura.clientSecret | string | `"Oura-clientsecret"` | Oura client secret |
+| restSourceClients.oura.scope | string | `"daily session heartrate workout tag personal email spo2 ring_configuration"` | List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication |
