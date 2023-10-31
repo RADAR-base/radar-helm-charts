@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-rest-source-auth-backend
   # -- radar-rest-sources-backend image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 4.3.0
+  tag: 4.4.0
   # -- radar-rest-sources-backend image pull policy
   pullPolicy: IfNotPresent
 
@@ -205,3 +205,20 @@ restSourceClients:
     clientSecret: Garmin-clientsecret
     # -- List of scopes of the data that should be collected from Garmin.
     scope: activity heartrate sleep profile
+
+  oura:
+    # -- set to true, if Oura client should be used
+    enable: true
+    # -- Type of the data sources
+    sourceType: Oura
+    # -- Authorization endpoint for Oura authentication and authorization
+    authorizationEndpoint: https://cloud.ouraring.com/oauth/authorize
+    # -- Token endpoint to request access-token from Oura
+    tokenEndpoint: https://api.ouraring.com/oauth/token
+    deregistrationEndpoint: https://api.ouraring.com/oauth/revoke
+    # -- Oura client id
+    clientId: Oura-clientid
+    # -- Oura client secret
+    clientSecret: Oura-clientsecret
+    # -- List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication
+    scope: daily session heartrate workout tag personal email spo2 ring_configuration

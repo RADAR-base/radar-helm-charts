@@ -3,7 +3,7 @@
 # radar-rest-sources-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-backend)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-backend)
 
-![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.3.0](https://img.shields.io/badge/AppVersion-4.3.0-informational?style=flat-square)
+![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.0](https://img.shields.io/badge/AppVersion-4.4.0-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -33,7 +33,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-rest-sources-backend replicas to deploy |
 | image.repository | string | `"radarbase/radar-rest-source-auth-backend"` | radar-rest-sources-backend image repository |
-| image.tag | string | `"4.3.0"` | radar-rest-sources-backend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"4.4.0"` | radar-rest-sources-backend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-rest-sources-backend image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-rest-sources-backend.fullname template with a string (will prepend the release name) |
@@ -98,3 +98,11 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.garmin.clientId | string | `"Garmin-clientid"` | Garmin client id |
 | restSourceClients.garmin.clientSecret | string | `"Garmin-clientsecret"` | Garmin client secret |
 | restSourceClients.garmin.scope | string | `"activity heartrate sleep profile"` | List of scopes of the data that should be collected from Garmin. |
+| restSourceClients.oura.enable | bool | `true` | set to true, if Oura client should be used |
+| restSourceClients.oura.sourceType | string | `"Oura"` | Type of the data sources |
+| restSourceClients.oura.authorizationEndpoint | string | `"https://cloud.ouraring.com/oauth/authorize"` | Authorization endpoint for Oura authentication and authorization |
+| restSourceClients.oura.tokenEndpoint | string | `"https://api.ouraring.com/oauth/token"` | Token endpoint to request access-token from Oura |
+| restSourceClients.oura.deregistrationEndpoint | string | `"https://api.ouraring.com/oauth/revoke"` |  |
+| restSourceClients.oura.clientId | string | `"Oura-clientid"` | Oura client id |
+| restSourceClients.oura.clientSecret | string | `"Oura-clientsecret"` | Oura client secret |
+| restSourceClients.oura.scope | string | `"daily session heartrate workout tag personal email spo2 ring_configuration"` | List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication |
