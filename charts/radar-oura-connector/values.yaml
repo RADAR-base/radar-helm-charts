@@ -74,7 +74,7 @@ persistence:
   accessMode: ReadWriteOnce
   # -- PVC Storage Request for radar-oura-connector volume
   size: 5Gi
-  # -- Overrides the user of the fitbit connector logs, for example, `"1000:1000"`.
+  # -- Overrides the user of the oura connector logs, for example, `"1000:1000"`.
   fsUserOverride: null
 
 # -- Node labels for pod assignment
@@ -146,13 +146,13 @@ kafka_wait:
 radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
 # -- Number of connector tasks to be used in connector.properties
 connector_num_tasks: "5"
-# -- Fitbit API client id.
-fitbit_api_client: ""
-# -- Fitbit API client secret.
-fitbit_api_secret: ""
+# -- Oura API client id.
+oura_api_client: ""
+# -- Oura API client secret.
+oura_api_secret: ""
 
 # -- OAuth2 client id from Management Portal
-oauthClientId: radar_fitbit_connector
+oauthClientId: radar_oura_connector
 # -- OAuth2 client secret from Management Portal
 oauthClientSecret: secret
 # -- URL of Management Portal. This will be used to create URLs to access Management Portal

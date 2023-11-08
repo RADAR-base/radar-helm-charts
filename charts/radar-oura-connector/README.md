@@ -47,7 +47,7 @@ A Helm chart for RADAR-base oura connector. This application collects data from 
 | persistence.enabled | bool | `true` | Enable persistence using PVC |
 | persistence.accessMode | string | `"ReadWriteOnce"` | PVC Access Mode for radar-oura-connector volume |
 | persistence.size | string | `"5Gi"` | PVC Storage Request for radar-oura-connector volume |
-| persistence.fsUserOverride | string | `nil` | Overrides the user of the fitbit connector logs, for example, `"1000:1000"`. |
+| persistence.fsUserOverride | string | `nil` | Overrides the user of the oura connector logs, for example, `"1000:1000"`. |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
@@ -75,9 +75,9 @@ A Helm chart for RADAR-base oura connector. This application collects data from 
 | kafka_wait.properties | string | `""` | Kafka connection properties file contents during wait. If empty, all environment variables starting with `CONNECT_` will be used. |
 | radar_rest_sources_backend_url | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | Base URL of the rest-sources-authorizer-backend service |
 | connector_num_tasks | string | `"5"` | Number of connector tasks to be used in connector.properties |
-| fitbit_api_client | string | `""` | Fitbit API client id. |
-| fitbit_api_secret | string | `""` | Fitbit API client secret. |
-| oauthClientId | string | `"radar_fitbit_connector"` | OAuth2 client id from Management Portal |
+| oura_api_client | string | `""` | Oura API client id. |
+| oura_api_secret | string | `""` | Oura API client secret. |
+| oauthClientId | string | `"radar_oura_connector"` | OAuth2 client id from Management Portal |
 | oauthClientSecret | string | `"secret"` | OAuth2 client secret from Management Portal |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of Management Portal. This will be used to create URLs to access Management Portal |
 | includeIntradayData | bool | `true` | Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties. |
