@@ -3,7 +3,7 @@
 # radar-integration
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-integration)](https://artifacthub.io/packages/helm/radar-base/radar-integration)
 
-![Version: 0.4.4](https://img.shields.io/badge/Version-0.4.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.4](https://img.shields.io/badge/AppVersion-1.0.4-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.4](https://img.shields.io/badge/AppVersion-1.0.4-informational?style=flat-square)
 
 A Helm chart for RADAR-Base REDCap survey integration application.
 
@@ -30,7 +30,7 @@ A Helm chart for RADAR-Base REDCap survey integration application.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| replicaCount | int | `2` | Number of radar-push-endpoint replicas to deploy |
+| replicaCount | int | `2` | Number replicas to deploy |
 | image.repository | string | `"radarbase/radar-redcapintegration"` | radar-integration image repository |
 | image.tag | string | `"1.0.4"` | radar-integration image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-integration image pull policy |
@@ -66,6 +66,7 @@ A Helm chart for RADAR-Base REDCap survey integration application.
 | readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | oauth_client_id | string | `"radar_redcap_integrator"` | OAuth2 clientId used by the webApp for making requests |
 | oauth_client_secret | string | `"secret"` | OAuth2 client secret |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |

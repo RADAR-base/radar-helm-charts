@@ -1,0 +1,12 @@
+{{- if .Values.networkpolicy }}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ template "s3-proxy.fullname" . }}
+  labels:
+{{ include "s3-proxy.labels" . | indent 4 }}
+spec:
+  podSelector:
+{{ include "s3-proxy.labels" . | indent 4 }}
+    {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
+{{- end -}}

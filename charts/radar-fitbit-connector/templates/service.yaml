@@ -3,10 +3,7 @@ kind: Service
 metadata:
   name: {{ include "radar-fitbit-connector.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-fitbit-connector.name" . }}
-    helm.sh/chart: {{ include "radar-fitbit-connector.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "radar-fitbit-connector.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

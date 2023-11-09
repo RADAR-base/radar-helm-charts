@@ -3,10 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "s3-proxy.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "s3-proxy.name" . }}
-    helm.sh/chart: {{ include "s3-proxy.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "s3-proxy.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

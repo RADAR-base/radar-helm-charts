@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "radar-output.fullname" . }}
   labels:
-    app: {{ template "radar-output.name" . }}
-    chart: {{ template "radar-output.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "radar-output.labels" . | indent 4 }}
 data:
   config.yaml: |
     service:

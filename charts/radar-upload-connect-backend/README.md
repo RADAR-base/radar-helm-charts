@@ -3,7 +3,7 @@
 # radar-upload-connect-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connect-backend)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connect-backend)
 
-![Version: 0.2.7](https://img.shields.io/badge/Version-0.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector backend application. This application is an upload system that stores uploaded data and its metadata in PostgreSQL for later processing.
 
@@ -68,6 +68,7 @@ A Helm chart for RADAR-base upload connector backend application. This applicati
 | readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | client_id | string | `"radar_upload_backend"` | OAuth2 client id of the upload connect backend application |
 | client_secret | string | `"secret"` | OAuth2 client secret of the upload connect backend |
 | postgres.host | string | `"radar-upload-postgresql"` | Host name of the database to store uploaded data and metadata |

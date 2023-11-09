@@ -4,10 +4,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "radar-rest-sources-backend.fullname" . }}
   labels:
-    app: {{ template "radar-rest-sources-backend.name" . }}
-    chart: {{ template "radar-rest-sources-backend.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "radar-rest-sources-backend.labels" . | indent 4 }}
 data:
   authorizer.yml: |
     service:

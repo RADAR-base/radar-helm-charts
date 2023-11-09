@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "radar-backend.fullname" . }}
   labels:
-    app: {{ template "radar-backend.name" . }}
-    chart: {{ template "radar-backend.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "radar-backend.labels" . | indent 4 }}
 data:
   radar.yml: |
     version: 1.0

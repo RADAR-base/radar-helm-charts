@@ -52,3 +52,23 @@ Return true if a secret object should be created
     {{- true -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "radar-appserver.labels" -}}
+helm.sh/chart: {{ include "radar-appserver.chart" . }}
+{{ include "radar-appserver.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "radar-appserver.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "radar-appserver.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

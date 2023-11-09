@@ -3,7 +3,7 @@
 # radar-upload-connect-frontend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connect-frontend)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connect-frontend)
 
-![Version: 0.2.6](https://img.shields.io/badge/Version-0.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector frontend application that provides a UI for uploading files and sending them to the upload-backend.
 
@@ -68,5 +68,6 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 | readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | server_name | string | `"localhost"` | Server name or domain name |
 | vue_app_client_id | string | `"radar_upload_frontend"` | OAuth2 client id of the upload connect frontend application |

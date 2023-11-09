@@ -68,5 +68,6 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 | readinessProbe.timeoutSeconds | int | `3` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | clientId | string | `"radar_rest_sources_authorizer"` | OAuth2 client id of the application registered in Management Portal. It is assumed that this is a public client with empty client secret. |
 | serverName | string | `"localhost"` | Domain name of the server |

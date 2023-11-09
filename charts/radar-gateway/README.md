@@ -3,7 +3,7 @@
 # radar-gateway
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-gateway)](https://artifacthub.io/packages/helm/radar-base/radar-gateway)
 
-![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -68,6 +68,7 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | serviceMonitor.enabled | bool | `true` | Enable metrics to be collected via Prometheus-operator |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the management portal application |
 | schemaRegistry | string | `"http://cp-schema-registry:8081"` | Schema Registry URL |

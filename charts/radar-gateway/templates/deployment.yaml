@@ -3,10 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "radar-gateway.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-gateway.name" . }}
-    helm.sh/chart: {{ include "radar-gateway.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "radar-gateway.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

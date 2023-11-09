@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "radar-s3-connector.fullname" . }}
   labels:
-    app: {{ template "radar-s3-connector.name" . }}
-    chart: {{ template "radar-s3-connector.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "radar-s3-connector.labels" . | indent 4 }}
 data:
   sink-s3.properties: |
     name=radar-s3-sink-connector
