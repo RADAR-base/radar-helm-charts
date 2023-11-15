@@ -134,7 +134,16 @@ readinessProbe:
 # @default -- check `values.yaml`
 networkpolicy:
   policyTypes:
+  - Ingress
   - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
   egress:
   - to:
     - namespaceSelector:
