@@ -126,7 +126,22 @@ readinessProbe:
 # @default -- check `values.yaml`
 networkpolicy:
   policyTypes:
+  - Ingress
   - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: management-portal
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-s3-connector
   egress:
   - to:
     - ipBlock:
