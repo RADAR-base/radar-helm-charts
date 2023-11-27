@@ -3,7 +3,7 @@
 # radar-output
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-output)](https://artifacthub.io/packages/helm/radar-base/radar-output)
 
-![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.1](https://img.shields.io/badge/AppVersion-2.3.1-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.0](https://img.shields.io/badge/AppVersion-2.4.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base output restructure service. This application reads data from intermediate storage and restructure the data into project-> subject-id-> data topic -> data split per hour. This service offers few options to choose the source and target of the pipeline.
 
@@ -33,7 +33,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-output replicas to deploy |
 | image.repository | string | `"radarbase/radar-output-restructure"` | radar-output image repository |
-| image.tag | string | `"2.3.1"` | radar-output image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"2.4.0"` | radar-output image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-output image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-output.fullname template with a string (will prepend the release name) |
@@ -67,25 +67,26 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | source.azure.responseTimeout | string | `nil` | Azure HTTP response timeout in seconds |
 | source.azure.writeTimeout | string | `nil` | Azure HTTP write timeout in seconds |
 | source.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
-| target.type | string | `"s3"` | Type of the output storage of the RADAR-base pipeline e.g. s3, local |
-| target.s3.endpoint | string | `"http://minio:9000"` | s3 endpoint of the output storage |
-| target.s3.accessToken | string | `"access_key"` | s3 access-key of the output storage |
-| target.s3.secretKey | string | `"secret"` | s3 secret-key of the output storage |
-| target.s3.bucket | string | `"radar-output-storage"` | s3 bucket name of the output storage |
-| target.s3.connectTimeout | string | `nil` | s3 HTTP connect timeout in seconds |
-| target.s3.writeTimeout | string | `nil` | s3 HTTP write timeout in seconds |
-| target.s3.readTimeout | string | `nil` | s3 HTTP read timeout in seconds |
-| target.azure.endpoint | string | `""` | Azure endpoint of the output storage |
-| target.azure.username | string | `""` | Azure username to access the s3 endpoint when using personal login |
-| target.azure.password | string | `""` | Azure password when using personal login |
-| target.azure.accountName | string | `""` | Azure account name when using shared access tokens |
-| target.azure.accountKey | string | `""` | Azure account key when using shared access tokens |
-| target.azure.sasToken | string | `""` | Azure SAS(shared access signature) token when using shared access tokens |
-| target.azure.container | string | `""` | Azure blob container name |
-| target.azure.connectTimeout | string | `nil` | Azure HTTP connect timeout in seconds |
-| target.azure.responseTimeout | string | `nil` | Azure HTTP response timeout in seconds |
-| target.azure.writeTimeout | string | `nil` | Azure HTTP write timeout in seconds |
-| target.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
+| targets.radar-output-storage.type | string | `"s3"` | Type of the output storage of the RADAR-base pipeline e.g. s3, local |
+| targets.radar-output-storage.path | string | `"output"` | base path in the output storage to store data in |
+| targets.radar-output-storage.s3.endpoint | string | `"http://minio:9000"` | s3 endpoint of the output storage |
+| targets.radar-output-storage.s3.accessToken | string | `"access_key"` | s3 access-key of the output storage |
+| targets.radar-output-storage.s3.secretKey | string | `"secret"` | s3 secret-key of the output storage |
+| targets.radar-output-storage.s3.bucket | string | `"radar-output-storage"` | s3 bucket name of the output storage |
+| targets.radar-output-storage.s3.connectTimeout | string | `nil` | s3 HTTP connect timeout in seconds |
+| targets.radar-output-storage.s3.writeTimeout | string | `nil` | s3 HTTP write timeout in seconds |
+| targets.radar-output-storage.s3.readTimeout | string | `nil` | s3 HTTP read timeout in seconds |
+| targets.radar-output-storage.azure.endpoint | string | `""` | Azure endpoint of the output storage |
+| targets.radar-output-storage.azure.username | string | `""` | Azure username to access the s3 endpoint when using personal login |
+| targets.radar-output-storage.azure.password | string | `""` | Azure password when using personal login |
+| targets.radar-output-storage.azure.accountName | string | `""` | Azure account name when using shared access tokens |
+| targets.radar-output-storage.azure.accountKey | string | `""` | Azure account key when using shared access tokens |
+| targets.radar-output-storage.azure.sasToken | string | `""` | Azure SAS(shared access signature) token when using shared access tokens |
+| targets.radar-output-storage.azure.container | string | `""` | Azure blob container name |
+| targets.radar-output-storage.azure.connectTimeout | string | `nil` | Azure HTTP connect timeout in seconds |
+| targets.radar-output-storage.azure.responseTimeout | string | `nil` | Azure HTTP response timeout in seconds |
+| targets.radar-output-storage.azure.writeTimeout | string | `nil` | Azure HTTP write timeout in seconds |
+| targets.radar-output-storage.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
 | redis.uri | string | `"redis://redis-master:6379"` | URL of the redis database |
 | worker.interval | int | `90` | Scanning interval (seconds) |
 | worker.cacheSize | int | `300` | Maximum number of files and converters to keep open while processing |
@@ -95,10 +96,9 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | worker.numThreads | int | `2` | Number of threads to do processing on |
 | cleaner.age | int | `7` | Number of days after which a source file is considered old |
 | cleaner.interval | int | `86400` | Interval in seconds between cleanups |
-| paths.input | string | `"topics"` | Relative path to intermediate storage root to browse for data |
-| paths.output | string | `"output"` | Relative path to output storage to write data |
 | paths.factory | string | `"org.radarbase.output.path.FormattedPathFactory"` | Output path construction factory |
 | paths.properties | object | `{}` | Additional properties. For details see https://github.com/RADAR-base/radar-output-restructure/blob/master/restructure.yml |
+| paths.target.default | string | `"radar-output-storage"` | Default target to write data to |
 | topics | object | `{"questionnaire_response":{"pathProperties":{"format":"${projectId}/${userId}/${topic}/${value:name}/${filename}","plugins":"fixed value"}}}` | Individual topic configuration |
 | topics.questionnaire_response.pathProperties.format | string | `"${projectId}/${userId}/${topic}/${value:name}/${filename}"` | Alternative path output of the questionnaire_response topic |
 | topics.questionnaire_response.pathProperties.plugins | string | `"fixed value"` | Alternative path plugins of the questionnaire_response topic |
