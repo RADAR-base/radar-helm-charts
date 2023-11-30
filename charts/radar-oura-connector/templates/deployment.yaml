@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "radar-oura-connector.fullname" . }}
   labels:
-{{ include "radar-fitbit-connector.labels" . | indent 4 }}
+{{ include "radar-oura-connector.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

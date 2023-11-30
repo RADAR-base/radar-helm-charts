@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "radar-oura-connector.fullname" . }}
   labels:
-{{ include "radar-fitbit-connector.labels" . | indent 4 }}
+{{ include "radar-oura-connector.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
