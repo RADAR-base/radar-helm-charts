@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "radar-oura-connector.fullname" . }}-properties
   labels:
-    app: {{ template "radar-oura-connector.name" . }}
-    chart: {{ template "radar-oura-connector.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "radar-fitbit-connector.labels" . | indent 4 }}
 data:
   source-oura.properties: |
     name=radar-oura-source

@@ -4,10 +4,7 @@ apiVersion: v1
 metadata:
   name: {{ template "radar-oura-connector.fullname" . }}
   labels:
-    app: "{{ template "radar-oura-connector.fullname" . }}"
-    chart: "{{ template "radar-oura-connector.chart" . }}"
-    release: {{ .Release.Name | quote }}
-    heritage: {{ .Release.Service | quote }}
+{{ include "radar-fitbit-connector.labels" . | indent 4 }}
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}
