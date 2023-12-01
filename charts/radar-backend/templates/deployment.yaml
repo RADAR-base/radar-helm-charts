@@ -3,10 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "radar-backend.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-backend.name" . }}
-    helm.sh/chart: {{ include "radar-backend.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "radar-backend.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

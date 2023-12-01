@@ -3,10 +3,7 @@ kind: Service
 metadata:
   name: {{ include "radar-push-endpoint.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-push-endpoint.name" . }}
-    helm.sh/chart: {{ include "radar-push-endpoint.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "radar-push-endpoint.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "0.4.0"
 description: A Helm chart for RADAR-Base backend services which provides a layer to monitor and analyze streams of wearable data and write data to  storage.
 name: radar-backend
-version: 0.1.4
+version: 0.2.0
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-backend

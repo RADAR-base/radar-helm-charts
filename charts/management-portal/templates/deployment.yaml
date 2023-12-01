@@ -3,10 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "management-portal.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "management-portal.name" . }}
-    helm.sh/chart: {{ include "management-portal.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "management-portal.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

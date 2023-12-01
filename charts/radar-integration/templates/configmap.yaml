@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "radar-integration.fullname" . }}
   labels:
-    app: {{ template "radar-integration.name" . }}
-    chart: {{ template "radar-integration.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "radar-integration.labels" . | indent 4 }}
 data:
   radar.yml: |
     # ManagementPortal configuration

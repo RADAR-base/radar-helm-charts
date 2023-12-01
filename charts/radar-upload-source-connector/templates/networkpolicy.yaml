@@ -1,0 +1,12 @@
+{{- if .Values.networkpolicy }}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ template "radar-upload-source-connector.fullname" . }}
+  labels:
+{{ include "radar-upload-source-connector.labels" . | indent 4 }}
+spec:
+  podSelector:
+{{ include "radar-upload-source-connector.labels" . | indent 4 }}
+    {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
+{{- end -}}

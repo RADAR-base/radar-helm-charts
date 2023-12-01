@@ -5,7 +5,7 @@ sources: ["https://github.com/gaul/s3proxy"]
 type: application
 home: "https://radar-base.org"
 name: s3-proxy
-version: 0.2.3
+version: 0.3.0
 maintainers:
   - email: keyvan@thehyve.nl
     name: Keyvan Hedayati
