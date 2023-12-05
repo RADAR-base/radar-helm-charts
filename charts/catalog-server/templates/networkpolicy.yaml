@@ -7,6 +7,7 @@ metadata:
 {{ include "catalog-server.labels" . | indent 4 }}
 spec:
   podSelector:
-{{ include "catalog-server.labels" . | indent 4 }}
+    matchLabels:
+{{ include "catalog-server.labels" . | indent 6 }}
     {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
 {{- end -}}

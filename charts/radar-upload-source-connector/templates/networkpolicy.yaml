@@ -7,6 +7,7 @@ metadata:
 {{ include "radar-upload-source-connector.labels" . | indent 4 }}
 spec:
   podSelector:
-{{ include "radar-upload-source-connector.labels" . | indent 4 }}
+    matchLabels:
+{{ include "radar-upload-source-connector.labels" . | indent 6 }}
     {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
 {{- end -}}
