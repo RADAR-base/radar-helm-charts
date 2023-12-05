@@ -7,6 +7,7 @@ metadata:
 {{ include "management-portal.labels" . | indent 4 }}
 spec:
   podSelector:
-{{ include "management-portal.labels" . | indent 4 }}
+    matchLabels:
+{{ include "management-portal.labels" . | indent 6 }}
     {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
 {{- end -}}
