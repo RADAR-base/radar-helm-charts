@@ -11,7 +11,7 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $fullName }}-rate-limited
   labels:
 {{ include "management-portal.labels" . | indent 4 }}
   {{- with .Values.ingress_rate_limited.annotations }}
