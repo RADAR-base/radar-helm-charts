@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "0.5.10"
 description: A Helm chart for RADAR-base upload connector frontend application that provides a UI for uploading files and sending them to the upload-backend.
 name: radar-upload-connect-frontend
-version: 0.3.0
+version: 0.3.1
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-upload-connect-frontend
