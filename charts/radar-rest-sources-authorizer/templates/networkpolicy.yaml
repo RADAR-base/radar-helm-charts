@@ -8,6 +8,6 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-{{ include "radar-rest-sources-authorizer.labels" . | indent 4 }}
+{{ include "radar-rest-sources-authorizer.labels" . | indent 6 }}
     {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
 {{- end -}}
