@@ -60,7 +60,7 @@ spec:
           - name: AUTH_CALLBACK_URL
             value: https://{{ .Values.serverName }}/rest-sources/authorizer/login
           - name: AUTH_URI
-            value: https://{{ .Values.serverName }}/managementportal/oauth
+            value: https://{{ .Values.authUrl }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
