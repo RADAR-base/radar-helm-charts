@@ -3,7 +3,7 @@
 # radar-integration
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-integration)](https://artifacthub.io/packages/helm/radar-base/radar-integration)
 
-![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.4](https://img.shields.io/badge/AppVersion-1.0.4-informational?style=flat-square)
+![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.4](https://img.shields.io/badge/AppVersion-1.0.4-informational?style=flat-square)
 
 A Helm chart for RADAR-Base REDCap survey integration application.
 
@@ -76,4 +76,5 @@ A Helm chart for RADAR-Base REDCap survey integration application.
 | projects[0].redcap_info.enrolment_event | string | `""` | Unique identifier for the enrolment event |
 | projects[0].redcap_info.integration_form | string | `""` | Name of integration REDCap form |
 | projects[0].redcap_info.token | string | `""` | REDCap API Token used to identify the REDCap user against the REDCap instance |
+| projects[0].redcap_info.attributes | list | `[]` | List of REDCap fields to be used as attributes in Management Portal |
 | projects[0].mp_info.project_name | string | `""` | Management Portal project identifier |
