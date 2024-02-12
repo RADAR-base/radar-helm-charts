@@ -289,15 +289,27 @@ postgres:
 server_name: localhost
 # -- Hostname of the catalogue-server
 catalogue_server: catalog-server
+
+# Settings pertaining to the identity provider (IDP)
+identity_server:
+  # -- The admin email to link to the admin service account. This account should only be used to set up admin-users
+  admin_email: admin@example.com
+  # -- The publicly accessible server URL for the IDP
+  server_url: https://my.example-domain.net/kratos
+  # -- The admin server URL for the IDP. Only needs to be accessible from inside the cluster where the managementportal resides
+  server_admin_url: http://kratos-admin
+
 managementportal:
   # -- set to true, if automatic source-type import from catalogue server should be enabled
-  catalogue_server_enable_auto_import: "false"
+  catalogue_server_enable_auto_import: false
   # -- Override with a publicly resolvable url of the privacy-policy url for your set-up. This can be overridden on a project basis as well.
   common_privacy_policy_url: http://info.thehyve.nl/radar-cns-privacy-policy
   # -- Keystore alias to sign JWT tokens from Management Portal
   oauth_checking_key_aliases_0: radarbase-managementportal-ec
   # -- Keystore alias to sign JWT tokens from Management Portal
   oauth_checking_key_aliases_1: selfsigned
+  # -- Whether or not to require AAL2 level authentication (i.e. MFA)
+  oauth_require_aal2: true
   # -- OAuth2 Client secret of the Management Portal frontend application
   frontend_client_secret: xxx
   # -- Admin password of the default admin user created by the system

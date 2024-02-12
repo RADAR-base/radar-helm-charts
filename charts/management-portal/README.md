@@ -3,7 +3,7 @@
 # management-portal
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 1.1.2](https://img.shields.io/badge/Version-1.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 1.1.3](https://img.shields.io/badge/Version-1.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -14,7 +14,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | Name | Email | Url |
 | ---- | ------ | --- |
 | Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
-| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
+| Bastiaan de Graaf | <bastiaan@thehyve.nl> | <https://www.thehyve.nl/experts/bastiaan-de-graaf> |
 | Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
@@ -88,10 +88,14 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | postgres.ssl.keystore | string | `""` | base64 encoded certificate needed to connect to the PostgreSQL With helmfile, this can be set in a production.yaml.gotmpl file by setting   keystore: {{ readFile "certificate.pem" | b64enc | quote }} or with SOPS   keystore: {{ exec "sops" (list "-d" "certificate.pem") | b64enc | quote }} |
 | server_name | string | `"localhost"` | domain name of the server |
 | catalogue_server | string | `"catalog-server"` | Hostname of the catalogue-server |
-| managementportal.catalogue_server_enable_auto_import | string | `"false"` | set to true, if automatic source-type import from catalogue server should be enabled |
+| identity_server.admin_email | string | `"admin@example.com"` | The admin email to link to the admin service account. This account should only be used to set up admin-users |
+| identity_server.server_url | string | `"https://my.example-domain.net/kratos"` | The publicly accessible server URL for the IDP |
+| identity_server.server_admin_url | string | `"http://kratos-admin"` | The admin server URL for the IDP. Only needs to be accessible from inside the cluster where the managementportal resides |
+| managementportal.catalogue_server_enable_auto_import | bool | `false` | set to true, if automatic source-type import from catalogue server should be enabled |
 | managementportal.common_privacy_policy_url | string | `"http://info.thehyve.nl/radar-cns-privacy-policy"` | Override with a publicly resolvable url of the privacy-policy url for your set-up. This can be overridden on a project basis as well. |
 | managementportal.oauth_checking_key_aliases_0 | string | `"radarbase-managementportal-ec"` | Keystore alias to sign JWT tokens from Management Portal |
 | managementportal.oauth_checking_key_aliases_1 | string | `"selfsigned"` | Keystore alias to sign JWT tokens from Management Portal |
+| managementportal.oauth_require_aal2 | bool | `true` | Whether or not to require AAL2 level authentication (i.e. MFA) |
 | managementportal.frontend_client_secret | string | `"xxx"` | OAuth2 Client secret of the Management Portal frontend application |
 | managementportal.common_admin_password | string | `"xxx"` | Admin password of the default admin user created by the system |
 | smtp.enabled | bool | `false` | set to true, if SMTP server should be enabled. Required to be true for production setup |
