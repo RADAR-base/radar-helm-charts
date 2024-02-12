@@ -84,6 +84,12 @@ spec:
             value: "{{ .Values.managementportal.catalogue_server_enable_auto_import }}"
           - name: MANAGEMENTPORTAL_CATALOGUE_SERVER_SERVER_URL
             value: http://{{ .Values.catalogue_server }}:9010/source-types
+          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_ADMIN_EMAIL
+            value: {{ .Values.identity_server.admin_email }}
+          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_URL
+            value: {{ .Values.identity_server.server_url }}
+          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_ADMIN_URL
+            value: {{ .Values.identity_server.server_admin_url }}
           - name: MANAGEMENTPORTAL_COMMON_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
