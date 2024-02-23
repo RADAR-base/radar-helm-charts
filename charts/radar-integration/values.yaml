@@ -183,6 +183,8 @@ projects:
       integration_form: ""
       # -- REDCap API Token used to identify the REDCap user against the REDCap instance
       token: ""
+      # -- List of REDCap fields to be used as attributes in Management Portal
+      attributes: []
     mp_info:
       # --  Management Portal project identifier
       project_name: ""
