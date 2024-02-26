@@ -171,7 +171,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: '{{ .Values.postgres.host }}'
+          app.kubernetes.io/name: '{{ .Values.postgres.host | trunc 63 | trimSuffix "-" }}'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
