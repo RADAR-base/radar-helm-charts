@@ -46,7 +46,7 @@ ingress:
   # -- Hosts to accept requests from
   hosts:
     - localhost
-  tls:
+  tls:dsf
     # -- TLS Secret Name
     secretName: radar-base-tls-radar-home
 
