@@ -38,16 +38,6 @@ spec:
             - "data-dashboard-backend"
             - "/etc/data-dashboard-backend/dashboard.yml"
           env:
-          - name: MANAGEMENT_PORTAL_CLIENT_ID
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "data-dashboard-backend.secretName" . }}
-                key: managementPortalClientId
-          - name: MANAGEMENT_PORTAL_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "data-dashboard-backend.secretName" . }}
-                key: managementPortalClientSecret
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:

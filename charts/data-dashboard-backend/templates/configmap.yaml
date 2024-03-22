@@ -9,18 +9,9 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   dashboard.yml: |
-    # Interval time in minutes for syncing projects and subjects.
+
     baseUri: http://0.0.0.0:8080{{ .Values.path }}
-
-    auth:
-      # Management Portal URL
-      managementPortal:
-        url: {{ .Values.managementPortal.url }}
-      jwtResourceName: res_outcomes_dashboard_api
-
-    score:
-      {{- toYaml .Values.score | nindent 6 }}
-
+    
     database:
       driver: {{ .Values.jdbc.driver }}
       dialect: {{ .Values.jdbc.dialect }}
