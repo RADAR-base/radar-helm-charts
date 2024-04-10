@@ -36,6 +36,12 @@ Before making a PR back to the `main`, ensure that the README of the chart is up
 helm-docs -s file --template-files=charts/_templates.gotmpl --template-files=DOCS.md.gotmpl --template-files=README.md.gotmpl --chart-search-root=charts
 ```
 
+or, when using Docker:
+
+```
+docker run --rm -v "$(pwd):/helm-docs" jnorwood/helm-docs:latest -s file --template-files=charts/_templates.gotmpl --template-files=DOCS.md.gotmpl --template-files=README.md.gotmpl --chart-search-root=charts
+```
+
 For general usage and instructions view the [helm-docs](https://github.com/norwoodj/helm-docs) README. Below is a short summary.
 
 In each chart directory use the following files to define what the README contents should be.
