@@ -53,6 +53,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
             - radar-output-restructure
+            - radar-output-restructure
           args:
             - -F
             - /etc/radar-output/config.yaml
