@@ -30,10 +30,9 @@ API for data in the data dashboard
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| replicaCount | int | `2` | Number of replicas to deploy |
+| replicaCount | int | `1` | Number of replicas to deploy |
 | image.repository | string | `"ghcr.io/thehyve/radar-data-dashboard-backend"` | docker image repository |
 | image.pullPolicy | string | `"Always"` | image pull policy |
-| image.tag | string | `"v0.1.3-alpha"` |  |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
@@ -42,7 +41,7 @@ API for data in the data dashboard
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `9000` | data-dashboard-backend port |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
-| ingress.className | string | `""` | Ingress class name |
+| ingress.className | string | `"nginx"` | Ingress class name |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
 | ingress.path | string | `"/api"` | Path within the url structure |
 | ingress.pathType | string | `"ImplementationSpecific"` |  |
