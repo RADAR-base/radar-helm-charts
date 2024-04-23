@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # -- Number of replicas to deploy
-replicaCount: 2
+replicaCount: 1
 
 image:
   # -- docker image repository
