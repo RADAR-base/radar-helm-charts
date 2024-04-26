@@ -8524,6 +8524,31 @@ entries:
     version: 16.8.7
   s3-proxy:
   - apiVersion: v2
+    appVersion: 2.2.0
+    created: "2024-04-26T10:59:00.731998651Z"
+    description: A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy
+      to proxy S3 API requests to any supported cloud provider. For more examples
+      see Find some example configurations at https://github.com/gaul/s3proxy/wiki/Storage-backend-examples.
+    digest: 0e40b1259bc2e32732183f8c8926f809b005a9a25abb1e5c40a870c8b698c10e
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: bastiaan@thehyve.nl
+      name: Bastiaan de Graaf
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: s3-proxy
+    sources:
+    - https://github.com/gaul/s3proxy
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/s3-proxy-0.3.2/s3-proxy-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v2
     appVersion: 2.0.0
     created: "2023-12-05T13:23:36.995353267Z"
     description: A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy
@@ -8992,4 +9017,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-22T11:17:37.247814964Z"
+generated: "2024-04-26T10:59:00.732779274Z"
