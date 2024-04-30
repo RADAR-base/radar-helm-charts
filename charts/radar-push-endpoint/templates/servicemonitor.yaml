@@ -8,7 +8,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-{{ include "radar-push-endpoint.labels" . | indent 4 }}
+{{ include "radar-push-endpoint.labels" . | indent 6 }}
   endpoints:
   - port: metrics
     interval: 15s
