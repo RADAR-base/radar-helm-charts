@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "0.8.6"
+appVersion: "0.8.8"
 description: A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 name: catalog-server
-version: 0.5.2
+version: 0.5.3
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/catalog-server
@@ -18,9 +18,6 @@ maintainers:
   - email: keyvan@thehyve.nl
     name: Keyvan Hedayati
     url: https://www.thehyve.nl
-  - email: joris@thehyve.nl
-    name: Joris Borgdorff
-    url: https://www.thehyve.nl/experts/joris-borgdorff
   - email: nivethika@thehyve.nl
     name: Nivethika Mahasivam
     url: https://www.thehyve.nl/experts/nivethika-mahasivam
