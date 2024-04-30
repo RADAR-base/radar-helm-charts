@@ -1,3 +1,8 @@
+{{/*
+Copyright Broadcom, Inc. All Rights Reserved.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
@@ -29,6 +34,13 @@ Return the proper image name (for the init container volume-permissions image)
 {{- end -}}
 
 {{/*
+Return kubectl image
+*/}}
+{{- define "redis.kubectl.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.kubectl.image "global" .Values.global) }}
+{{- end -}}
+
+{{/*
 Return sysctl image
 */}}
 {{- define "redis.sysctl.image" -}}
@@ -39,7 +51,7 @@ Return sysctl image
 Return the proper Docker Image Registry Secret Names
 */}}
 {{- define "redis.imagePullSecrets" -}}
-{{- include "common.images.pullSecrets" (dict "images" (list .Values.image .Values.sentinel.image .Values.metrics.image .Values.volumePermissions.image .Values.sysctl.image) "global" .Values.global) -}}
+{{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image .Values.sentinel.image .Values.metrics.image .Values.volumePermissions.image .Values.sysctl.image) "context" $) -}}
 {{- end -}}
 
 {{/*
@@ -128,13 +140,43 @@ Return the path to the DH params file.
 {{- end -}}
 
 {{/*
-Create the name of the service account to use
+Create the name of the shared service account to use
 */}}
 {{- define "redis.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
     {{ default (include "common.names.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the master service account to use
+*/}}
+{{- define "redis.masterServiceAccountName" -}}
+{{- if .Values.master.serviceAccount.create -}}
+    {{ default (printf "%s-master" (include "common.names.fullname" .)) .Values.master.serviceAccount.name }}
+{{- else -}}
+    {{- if .Values.serviceAccount.create -}}
+        {{ template "redis.serviceAccountName" . }}
+    {{- else -}}
+        {{ default "default" .Values.master.serviceAccount.name }}
+    {{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the replicas service account to use
+*/}}
+{{- define "redis.replicaServiceAccountName" -}}
+{{- if .Values.replica.serviceAccount.create -}}
+    {{ default (printf "%s-replica" (include "common.names.fullname" .)) .Values.replica.serviceAccount.name }}
+{{- else -}}
+    {{- if .Values.serviceAccount.create -}}
+        {{ template "redis.serviceAccountName" . }}
+    {{- else -}}
+        {{ default "default" .Values.replica.serviceAccount.name }}
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -163,18 +205,18 @@ Get the password secret.
 */}}
 {{- define "redis.secretName" -}}
 {{- if .Values.auth.existingSecret -}}
-{{- printf "%s" .Values.auth.existingSecret -}}
+{{- printf "%s" (tpl .Values.auth.existingSecret $) -}}
 {{- else -}}
 {{- printf "%s" (include "common.names.fullname" .) -}}
 {{- end -}}
 {{- end -}}
 
 {{/*
-Get the password key to be retrieved from Redis&trade; secret.
+Get the password key to be retrieved from Redis&reg; secret.
 */}}
 {{- define "redis.secretPasswordKey" -}}
 {{- if and .Values.auth.existingSecret .Values.auth.existingSecretPasswordKey -}}
-{{- printf "%s" .Values.auth.existingSecretPasswordKey -}}
+{{- printf "%s" (tpl .Values.auth.existingSecretPasswordKey $) -}}
 {{- else -}}
 {{- printf "redis-password" -}}
 {{- end -}}
@@ -196,17 +238,19 @@ otherwise it generates a random value.
 {{- end }}
 
 {{/*
-Return Redis&trade; password
+Return Redis&reg; password
 */}}
 {{- define "redis.password" -}}
-{{- if not (empty .Values.global.redis.password) }}
-    {{- .Values.global.redis.password -}}
-{{- else if not (empty .Values.auth.password) -}}
-    {{- .Values.auth.password -}}
-{{- else -}}
-    {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "redis-password")  -}}
+{{- if or .Values.auth.enabled .Values.global.redis.password }}
+    {{- if not (empty .Values.global.redis.password) }}
+        {{- .Values.global.redis.password -}}
+    {{- else if not (empty .Values.auth.password) -}}
+        {{- .Values.auth.password -}}
+    {{- else -}}
+        {{- include "getValueFromSecret" (dict "Namespace" (include "common.names.namespace" .) "Name" (include "redis.secretName" .) "Length" 10 "Key" (include "redis.secretPasswordKey" .))  -}}
+    {{- end -}}
 {{- end -}}
-{{- end -}}
+{{- end }}
 
 {{/* Check if there are rolling tags in the images */}}
 {{- define "redis.checkRollingTags" -}}
@@ -224,6 +268,7 @@ Compile all warnings into a single message, and call fail.
 {{- $messages := append $messages (include "redis.validateValues.architecture" .) -}}
 {{- $messages := append $messages (include "redis.validateValues.podSecurityPolicy.create" .) -}}
 {{- $messages := append $messages (include "redis.validateValues.tls" .) -}}
+{{- $messages := append $messages (include "redis.validateValues.createMaster" .) -}}
 {{- $messages := without $messages "" -}}
 {{- $message := join "\n" $messages -}}
 
@@ -232,7 +277,7 @@ Compile all warnings into a single message, and call fail.
 {{- end -}}
 {{- end -}}
 
-{{/* Validate values of Redis&trade; - spreadConstrainsts K8s version */}}
+{{/* Validate values of Redis&reg; - spreadConstrainsts K8s version */}}
 {{- define "redis.validateValues.topologySpreadConstraints" -}}
 {{- if and (semverCompare "<1.16-0" .Capabilities.KubeVersion.GitVersion) .Values.replica.topologySpreadConstraints -}}
 redis: topologySpreadConstraints
@@ -241,7 +286,7 @@ redis: topologySpreadConstraints
 {{- end -}}
 {{- end -}}
 
-{{/* Validate values of Redis&trade; - must provide a valid architecture */}}
+{{/* Validate values of Redis&reg; - must provide a valid architecture */}}
 {{- define "redis.validateValues.architecture" -}}
 {{- if and (ne .Values.architecture "standalone") (ne .Values.architecture "replication") -}}
 redis: architecture
@@ -256,7 +301,7 @@ redis: architecture
 {{- end -}}
 {{- end -}}
 
-{{/* Validate values of Redis&trade; - PodSecurityPolicy create */}}
+{{/* Validate values of Redis&reg; - PodSecurityPolicy create */}}
 {{- define "redis.validateValues.podSecurityPolicy.create" -}}
 {{- if and .Values.podSecurityPolicy.create (not .Values.podSecurityPolicy.enabled) }}
 redis: podSecurityPolicy.create
@@ -265,13 +310,23 @@ redis: podSecurityPolicy.create
 {{- end -}}
 {{- end -}}
 
-{{/* Validate values of Redis&trade; - TLS enabled */}}
+{{/* Validate values of Redis&reg; - TLS enabled */}}
 {{- define "redis.validateValues.tls" -}}
 {{- if and .Values.tls.enabled (not .Values.tls.autoGenerated) (not .Values.tls.existingSecret) (not .Values.tls.certificatesSecret) }}
 redis: tls.enabled
     In order to enable TLS, you also need to provide
     an existing secret containing the TLS certificates or
     enable auto-generated certificates.
+{{- end -}}
+{{- end -}}
+
+{{/* Validate values of Redis&reg; - master service enabled */}}
+{{- define "redis.validateValues.createMaster" -}}
+{{- if and .Values.sentinel.service.createMaster (or (not .Values.rbac.create) (not .Values.replica.automountServiceAccountToken) (not .Values.serviceAccount.create)) }}
+redis: sentinel.service.createMaster
+    In order to redirect requests only to the master pod via the service, you also need to
+    create rbac and serviceAccount. In addition, you need to enable
+    replica.automountServiceAccountToken.
 {{- end -}}
 {{- end -}}
 
@@ -282,7 +337,7 @@ redis: tls.enabled
 
 {{/* Compile all annotations utilized for external-dns */}}
 {{- define "redis.externalDNS.annotations" -}}
-{{- if .Values.useExternalDNS.enabled }}
+{{- if and .Values.useExternalDNS.enabled .Values.useExternalDNS.annotationKey }}
 {{ .Values.useExternalDNS.annotationKey }}hostname: {{ include "redis.externalDNS.suffix" . }}
 {{- range $key, $val := .Values.useExternalDNS.additionalAnnotations }}
 {{ $.Values.useExternalDNS.annotationKey }}{{ $key }}: {{ $val | quote }}
