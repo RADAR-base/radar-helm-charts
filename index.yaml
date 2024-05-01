@@ -8640,6 +8640,48 @@ entries:
   redis:
   - annotations:
       category: Database
+      images: |
+        - name: kubectl
+          image: docker.io/bitnami/kubectl:1.30.0-debian-12-r0
+        - name: os-shell
+          image: docker.io/bitnami/os-shell:12-debian-12-r19
+        - name: redis
+          image: docker.io/bitnami/redis:7.2.4-debian-12-r13
+        - name: redis-exporter
+          image: docker.io/bitnami/redis-exporter:1.59.0-debian-12-r1
+        - name: redis-sentinel
+          image: docker.io/bitnami/redis-sentinel:7.2.4-debian-12-r10
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 7.2.4
+    created: "2024-05-01T12:54:28.060413597Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: Redis(R) is an open source, advanced key-value store. It is often
+      referred to as a data structure server since keys can contain strings, hashes,
+      lists, sets and sorted sets.
+    digest: 531069ed9b7e377a5746966c51f7f3f7760e8bcb8ff54704d7e1afe58beafb86
+    home: https://bitnami.com
+    icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
+    keywords:
+    - redis
+    - keyvalue
+    - database
+    maintainers:
+    - name: VMware, Inc.
+      url: https://github.com/bitnami/charts
+    name: redis
+    sources:
+    - https://github.com/bitnami/charts/tree/main/bitnami/redis
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/redis-19.1.6/redis-19.1.6.tgz
+    version: 19.1.6
+  - annotations:
+      category: Database
     apiVersion: v2
     appVersion: 6.2.6
     created: "2022-07-04T12:36:03.227344899Z"
@@ -9194,4 +9236,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-01T12:37:43.197413429Z"
+generated: "2024-05-01T12:54:28.060820538Z"
