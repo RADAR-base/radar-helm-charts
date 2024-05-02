@@ -3,7 +3,7 @@
 # catalog-server
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/catalog-server)](https://artifacthub.io/packages/helm/radar-base/catalog-server)
 
-![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.6](https://img.shields.io/badge/AppVersion-0.8.6-informational?style=flat-square)
+![Version: 0.5.3](https://img.shields.io/badge/Version-0.5.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.8](https://img.shields.io/badge/AppVersion-0.8.8-informational?style=flat-square)
 
 A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 
@@ -14,7 +14,6 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | Name | Email | Url |
 | ---- | ------ | --- |
 | Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
-| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
 | Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
@@ -34,7 +33,7 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of catalog-server replicas to deploy |
 | image.repository | string | `"radarbase/radar-schemas-tools"` | catalog-server image repository |
-| image.tag | string | `"0.8.6"` | catalog-server image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.8.8"` | catalog-server image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | catalog-server image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override catalog-server.fullname template with a string (will prepend the release name) |
