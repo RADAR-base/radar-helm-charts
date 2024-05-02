@@ -98,6 +98,10 @@ velero:
         - mountPath: /target
           name: plugins
 
+  kubectl:
+    image:
+      tag: 1.26.14-debian-11-r6
+
   metrics:
     # -- Enable monitoring metrics to be collected
     enabled: true
