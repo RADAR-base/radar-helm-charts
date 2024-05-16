@@ -593,3 +593,15 @@ oauth_clients:
     authorized_grant_types:
       - client_credentials
     access_token_validity: 900
+
+  radar_data_dashboard_backend:
+    enable: false
+    resource_ids:
+      - res_DataDashboardAPI
+    client_secret: ""
+    scope:
+      - MEASUREMENT.READ
+    authorized_grant_types:
+      - authorization_code
+      - refresh_token
+    access_token_validity: 900
