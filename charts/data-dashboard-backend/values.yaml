@@ -7,9 +7,11 @@ replicaCount: 1
 
 image:
   # -- docker image repository
-  repository: ghcr.io/thehyve/radar-data-dashboard-backend
+  repository: radarbase/radar-data-dashboard-backend
   # -- image pull policy
   pullPolicy: Always
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: latest
 
 # -- Docker registry secret names as an array
 imagePullSecrets: []
@@ -99,7 +101,7 @@ managementPortal:
   # -- ManagementPortal OAuth 2.0 client secret
   clientSecret: secret
 
-# Base path to use in application
+# -- Base path to use in application
 path: /api
 
 jdbc:
@@ -108,8 +110,8 @@ jdbc:
   # -- JDBC Connection url of the database.
   url: jdbc:postgresql://postgresql:5432/data-dashboard
   # -- Username of the database
-  user: radarbase
+  user: postgres
   # -- Password of the user
-  password: password
+  password: secret
   # -- Hibernate dialect to use for JDBC Connection
   dialect: org.hibernate.dialect.PostgreSQLDialect

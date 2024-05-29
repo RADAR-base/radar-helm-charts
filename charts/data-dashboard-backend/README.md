@@ -2,7 +2,7 @@
 
 # data-dashboard-backend
 
-![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 API for data in the data dashboard
 
@@ -31,8 +31,9 @@ API for data in the data dashboard
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of replicas to deploy |
-| image.repository | string | `"ghcr.io/thehyve/radar-data-dashboard-backend"` | docker image repository |
+| image.repository | string | `"radarbase/radar-data-dashboard-backend"` | docker image repository |
 | image.pullPolicy | string | `"Always"` | image pull policy |
+| image.tag | string | `"latest"` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
@@ -60,9 +61,9 @@ API for data in the data dashboard
 | managementPortal.url | string | `"http://management-portal:8080/managementportal"` | ManagementPortal URL |
 | managementPortal.clientId | string | `"radar_data_dashboard_backend"` | ManagementPortal OAuth 2.0 client ID, having grant type client_credentials |
 | managementPortal.clientSecret | string | `"secret"` | ManagementPortal OAuth 2.0 client secret |
-| path | string | `"/api"` |  |
+| path | string | `"/api"` | Base path to use in application |
 | jdbc.driver | string | `"org.postgresql.Driver"` | JDBC Driver to connect to the database. |
 | jdbc.url | string | `"jdbc:postgresql://postgresql:5432/data-dashboard"` | JDBC Connection url of the database. |
-| jdbc.user | string | `"radarbase"` | Username of the database |
-| jdbc.password | string | `"password"` | Password of the user |
+| jdbc.user | string | `"postgres"` | Username of the database |
+| jdbc.password | string | `"secret"` | Password of the user |
 | jdbc.dialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` | Hibernate dialect to use for JDBC Connection |
