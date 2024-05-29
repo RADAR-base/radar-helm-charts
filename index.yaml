@@ -1666,6 +1666,32 @@ entries:
   data-dashboard-backend:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2024-05-29T09:18:15.268776914Z"
+    description: API for data in the data dashboard
+    digest: 707fd59cf536e028bcc942447d6ddd4f4e9710308bc4eace7876be85da122e73
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    - email: bastiaan@thehyve.nl
+      name: Bastiaan de Graaf
+      url: https://www.thehyve.nl/experts/bastiaan-de-graaf
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: data-dashboard-backend
+    sources:
+    - https://github.com/thehyve/radar-data-dashboard-backend
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/data-dashboard-backend-0.1.8/data-dashboard-backend-0.1.8.tgz
+    version: 0.1.8
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2024-05-01T11:57:10.048978811Z"
     description: API for data in the data dashboard
     digest: 3abb4757ab21209e6b777e8bc49d75afe703bb282ced112a0a74ce3ad9a8de52
@@ -2127,6 +2153,37 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/kube-prometheus-stack-0.1.0/kube-prometheus-stack-0.1.0.tgz
     version: 0.1.0
   management-portal:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 2.0.0
+    created: "2024-05-29T09:18:15.400269426Z"
+    description: A Helm chart for RADAR-Base Management Portal to manage projects
+      and participants throughout RADAR-base.
+    digest: d1951a7909d7174ca28397a2c69976ebc46bb2fa59c075482774a4a9dad8949e
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: bastiaan@thehyve.nl
+      name: Bastiaan de Graaf
+      url: https://www.thehyve.nl/experts/bastiaan-de-graaf
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: management-portal
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/management-portal
+    - https://github.com/RADAR-base/ManagementPortal
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/management-portal-1.1.5/management-portal-1.1.5.tgz
+    version: 1.1.5
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
@@ -9444,4 +9501,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-02T15:37:40.178683636Z"
+generated: "2024-05-29T09:18:15.400742417Z"
