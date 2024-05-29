@@ -39,7 +39,8 @@ helm-docs -s file --template-files=charts/_templates.gotmpl --template-files=DOC
 or, when using Docker:
 
 ```
-docker run --rm -v "$(pwd):/helm-docs" jnorwood/helm-docs:latest -s file --template-files=charts/_templates.gotmpl --template-files=DOCS.md.gotmpl --template-files=README.md.gotmpl --chart-search-root=charts
+HELMDOCS_IMAGE=jnorwood/helm-docs:v1.8.1
+docker run --rm -v "$(pwd):/helm-docs" $HELMDOCS_IMAGE -s file --template-files=charts/_templates.gotmpl --template-files=DOCS.md.gotmpl --template-files=README.md.gotmpl --chart-search-root=charts
 ```
 
 For general usage and instructions view the [helm-docs](https://github.com/norwoodj/helm-docs) README. Below is a short summary.
