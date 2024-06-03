@@ -87,5 +87,5 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | garmin.userRepositoryUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend"` | The base url of the user repository if the repository is http(s) based. |
 | garmin.userRepositoryClientId | string | `"radar_push_endpoint"` | The client ID to access the user repository if the repository requires authorization |
 | garmin.userRepositoryClientSecret | string | `"secret"` | The client secret to access the user repository if the repository requires authorization |
-| garmin.userRepositoryTokenUrl | string | `"http://management-portal:8080/managementportal/oauth/token/"` |  |
+| garmin.userRepositoryTokenUrl | string | `"http://management-portal:8080/managementportal/oauth/token"` |  |
 | redis.url | string | `"redis://localhost:6379"` | The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties. |
