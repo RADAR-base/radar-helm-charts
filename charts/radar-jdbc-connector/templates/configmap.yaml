@@ -82,6 +82,7 @@ data:
     errors.log.enable = true
     errors.log.include.messages = true
     errors.tolerance = all
+    quote.sql.identifiers = {{ .Values.quoteSqlIdentifiers }}
   healthcheck.sh: |
     #!/bin/sh
     STATUS=$(curl -sf localhost:8083/connectors/{{ $name }}/status | grep -o '\"state\":\"[^\"]*\"')
