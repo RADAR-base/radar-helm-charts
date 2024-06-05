@@ -17,3 +17,7 @@ httpIssuer:
   environment: production
   # -- Secret to store letsencrypt certificate data in
   privateSecretRef: letsencrypt-prod
+  # -- How to match ingress that's supposed to be used. Can be class, ingressClassName, name
+  ingressMatchMethod: class
+  # -- Ingress class/name to use
+  ingressMatchValue: nginx
