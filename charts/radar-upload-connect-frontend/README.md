@@ -1,9 +1,12 @@
 
 
+
+
 # radar-upload-connect-frontend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connect-frontend)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connect-frontend)
 
-![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
+
+![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square) 
 
 A Helm chart for RADAR-base upload connector frontend application that provides a UI for uploading files and sending them to the upload-backend.
 
@@ -26,6 +29,8 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 * Kubernetes 1.22+
 * Kubectl 1.22+
 * Helm 3.1.0+
+
+
 
 ## Values
 

@@ -1,9 +1,12 @@
 
 
+
+
 # app-config-frontend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/app-config-frontend)](https://artifacthub.io/packages/helm/radar-base/app-config-frontend)
 
-![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.0](https://img.shields.io/badge/AppVersion-0.5.0-informational?style=flat-square)
+
+![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.0](https://img.shields.io/badge/AppVersion-0.5.0-informational?style=flat-square) 
 
 A Helm chart for the frontend application of RADAR-base application config (app-config).
 
@@ -26,6 +29,8 @@ A Helm chart for the frontend application of RADAR-base application config (app-
 * Kubernetes 1.22+
 * Kubectl 1.22+
 * Helm 3.1.0+
+
+
 
 ## Values
 

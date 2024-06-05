@@ -1,9 +1,12 @@
 
 
+
+
 # radar-jdbc-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-jdbc-connector)](https://artifacthub.io/packages/helm/radar-base/radar-jdbc-connector)
 
-![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.2](https://img.shields.io/badge/AppVersion-10.5.2-informational?style=flat-square)
+
+![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.2](https://img.shields.io/badge/AppVersion-10.5.2-informational?style=flat-square) 
 
 A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
 
@@ -27,6 +30,8 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 * Kubernetes 1.22+
 * Kubectl 1.22+
 * Helm 3.1.0+
+
+
 
 ## Values
 
@@ -72,6 +77,7 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | logLevel.root | string | `"INFO"` | Default log level |
 | logLevel.loggers | object | `{"org.reflections":"ERROR"}` | Per-logger log-level |
 | heapOpts | string | `"-Xms1500m"` | Java heap options |
+| quoteSqlIdentifiers | string | `"always"` | quote.sql.identifiers option (can be 'always' (default) or 'never') see: https://docs.confluent.io/kafka-connectors/jdbc/current/sink-connector/overview.html#jdbc-sink-identifier-quoting |
 | source.name | string | `"radar-jdbc-source"` | Name of the connector Kafka producer group |
 | source.schema | string | `"public"` | Database schema (if any) |
 | source.tableWhitelist | string | `""` | Comma-separted list of tables to read |

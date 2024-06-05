@@ -1,9 +1,12 @@
 
 
+
+
 # radar-rest-sources-authorizer
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-authorizer)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-authorizer)
 
-![Version: 1.1.3](https://img.shields.io/badge/Version-1.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.0](https://img.shields.io/badge/AppVersion-4.4.0-informational?style=flat-square)
+
+![Version: 1.1.3](https://img.shields.io/badge/Version-1.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.0](https://img.shields.io/badge/AppVersion-4.4.0-informational?style=flat-square) 
 
 A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer which is a portal to authorize the Fitbit connector to read data from Fitbit accounts.
 
@@ -26,6 +29,8 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 * Kubernetes 1.22+
 * Kubectl 1.22+
 * Helm 3.1.0+
+
+
 
 ## Values
 
