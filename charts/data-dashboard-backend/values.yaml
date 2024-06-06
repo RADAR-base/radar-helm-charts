@@ -56,7 +56,7 @@ ingress:
   hosts:
     - localhost
   tls:
-    secretName: radar-base-data-dashboard
+    secretName: radar-base-data-dashboard-tls
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
