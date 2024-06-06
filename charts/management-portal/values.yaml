@@ -368,8 +368,10 @@ oauth_clients:
       - res_ManagementPortal
       - res_appconfig
       - res_AppServer
+      - res_DataDashboardAPI
     client_secret: ""
     scope:
+      - MEASUREMENT.READ
       - MEASUREMENT.CREATE
       - PROJECT.READ
       - ROLE.READ
@@ -598,10 +600,14 @@ oauth_clients:
     enable: false
     resource_ids:
       - res_DataDashboardAPI
+      - res_ManagementPortal
     client_secret: ""
     scope:
+      - PROJECT.READ
+      - SUBJECT.READ
       - MEASUREMENT.READ
     authorized_grant_types:
       - authorization_code
       - refresh_token
+      - client_credentials
     access_token_validity: 900
