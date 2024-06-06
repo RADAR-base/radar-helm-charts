@@ -115,3 +115,7 @@ jdbc:
   password: secret
   # -- Hibernate dialect to use for JDBC Connection
   dialect: org.hibernate.dialect.PostgreSQLDialect
+  properties:
+    hibernate.globally_quoted_identifiers: true
+    hibernate.physical_naming_strategy: org.radarbase.datadashboard.api.domain.model.CamelCaseToUppercaseColumnNamingStrategy
+
