@@ -24,3 +24,5 @@ data:
       user: {{ .Values.jdbc.user }}
       password: {{ .Values.jdbc.password }}
       dialect: {{ .Values.jdbc.dialect }}
+      properties:
+        {{ .Values.jdbc.properties | toYaml | indent 8 | trim }}
