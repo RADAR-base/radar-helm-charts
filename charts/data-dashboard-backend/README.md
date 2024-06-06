@@ -47,7 +47,7 @@ API for data in the data dashboard
 | ingress.path | string | `"/api"` | Path within the url structure |
 | ingress.pathType | string | `"ImplementationSpecific"` |  |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-data-dashboard"` |  |
+| ingress.tls.secretName | string | `"radar-base-data-dashboard-tls"` |  |
 | resources | object | `{}` |  |
 | autoscaling.enabled | bool | `false` | Enable horizontal autoscaling |
 | autoscaling.minReplicas | int | `1` |  |
@@ -67,3 +67,5 @@ API for data in the data dashboard
 | jdbc.user | string | `"postgres"` | Username of the database |
 | jdbc.password | string | `"secret"` | Password of the user |
 | jdbc.dialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` | Hibernate dialect to use for JDBC Connection |
+| jdbc.properties."hibernate.globally_quoted_identifiers" | bool | `true` |  |
+| jdbc.properties."hibernate.physical_naming_strategy" | string | `"org.radarbase.datadashboard.api.domain.model.CamelCaseToUppercaseColumnNamingStrategy"` |  |
