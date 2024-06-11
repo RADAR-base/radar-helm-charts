@@ -1966,6 +1966,29 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/kafka-manager-2.1.4/kafka-manager-2.1.4.tgz
     version: 2.1.4
+  kratos:
+  - apiVersion: v2
+    appVersion: v1.1.0
+    created: "2024-06-11T12:09:35.584608154Z"
+    description: A ORY Kratos Helm chart for Kubernetes
+    digest: 7b0abe3a318a7369d127543fdda4064d029a27ae0334320735b3ff9b18ad9bcc
+    icon: https://raw.githubusercontent.com/ory/docs/master/docs/static/img/logo-kratos.svg
+    name: kratos
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/kratos-0.43.1/kratos-0.43.1.tgz
+    version: 0.43.1
+  kratos-selfservice-ui-node:
+  - apiVersion: v2
+    appVersion: v0.13.0-4
+    created: "2024-06-11T12:09:35.734875524Z"
+    description: A Helm chart for ORY Kratos's example ui for Kubernetes
+    digest: e9fdcb1637199d62e6289cc7f0a4486c45dc279c7e0623154a452bc18894ff06
+    name: kratos-selfservice-ui-node
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/kratos-selfservice-ui-node-0.43.1/kratos-selfservice-ui-node-0.43.1.tgz
+    version: 0.43.1
   kube-prometheus-stack:
   - apiVersion: v2
     appVersion: 0.73.1
@@ -9560,4 +9583,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-06-11T07:57:29.349747514Z"
+generated: "2024-06-11T12:09:35.73536712Z"
