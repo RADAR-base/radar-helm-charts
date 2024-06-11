@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "kratos.fullname" . }}-config
+  {{- if .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+  {{- end }}
+  labels:
+    {{- include "kratos.labels" . | nindent 4 }}
+  annotations:
+    {{- with .Values.configmap.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+data:
+  # Render the kratos config:
+  "kratos.yaml": |
+    {{- include "kratos.configmap" . | nindent 4 }}
+  # Render the identity schemas to disk:
+  {{- range $key, $value := .Values.kratos.identitySchemas }}
+  {{- printf "%s: %s" $key (toYaml (tpl $value $)) | nindent 2 }}
+  {{- end }}
