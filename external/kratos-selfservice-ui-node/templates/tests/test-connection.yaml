@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "kratos-selfservice-ui-node.fullname" . }}-test-connection"
+  {{- if .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+  {{- end }}
+  labels:
+{{ include "kratos-selfservice-ui-node.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: "{{ .Values.test.busybox.repository }}:{{ .Values.test.busybox.tag }}"
+      command: ['wget']
+      args:  ['{{ include "kratos-selfservice-ui-node.fullname" . }}:{{ .Values.service.port }}{{ .Values.basePath }}/health/ready']
+  restartPolicy: Never

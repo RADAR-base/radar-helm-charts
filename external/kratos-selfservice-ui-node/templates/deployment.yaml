@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kratos-selfservice-ui-node.fullname" . }}
+  {{- if .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+  {{- end }}
+  labels:
+    {{- include "kratos-selfservice-ui-node.labels" . | nindent 4 }}
+    {{- with .Values.deployment.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.deployment.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "kratos-selfservice-ui-node.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        {{- include "kratos-selfservice-ui-node.labels" . | nindent 8 }}
+        {{- with .Values.deployment.labels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- with .Values.deployment.annotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      automountServiceAccountToken: {{ .Values.deployment.automountServiceAccountToken }}
+      {{- with .Values.deployment.extraVolumes }}
+      volumes:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: KRATOS_PUBLIC_URL
+            value: {{ .Values.kratosPublicUrl | quote }}
+          - name: KRATOS_BROWSER_URL
+            value: {{ .Values.kratosBrowserUrl | quote }}
+          - name: PROJECT_NAME
+            value: {{ .Values.projectName | quote }}
+          - name: BASE_PATH
+            value: {{ .Values.basePath | quote }}
+          - name: JWKS_URL
+            value: {{ .Values.jwksUrl | quote }}
+          - name: KRATOS_ADMIN_URL
+            value: {{ .Values.kratosAdminUrl | quote }}
+          - name: SECURITY_MODE
+            value: {{ .Values.securityMode | quote }}
+          - name: COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "kratos-selfservice-ui-node.secretname" . }}
+                key: secretsCookie
+          - name: CSRF_COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "kratos-selfservice-ui-node.secretname" . }}
+                key: secretsCSRFCookie
+          - name: CSRF_COOKIE_NAME
+            value: {{ .Values.config.csrfCookieName | quote }}
+          {{- if .Values.deployment.extraEnv }}
+            {{- toYaml .Values.deployment.extraEnv | nindent 10 }}
+          {{- end }}
+          {{- with .Values.deployment.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.basePath }}/health/alive
+              port: http
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.basePath }}/health/ready
+              port: http
+          resources:
+            {{- toYaml .Values.deployment.resources | nindent 12 }}
+          {{- if .Values.securityContext }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
+      {{- with .Values.deployment.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.deployment.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.deployment.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.deployment.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
