@@ -55,6 +55,8 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
     nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    # Prevents XSS attacks on Grizzly (see https://github.com/Graylog2/graylog2-server/issues/3171)
+    nginx.ingress.kubernetes.io/configuration-snippet: rewrite ^ $request_uri;
   # -- Path within the url structure
   path: "/kafka/?(.*)"
   # -- Ingress Path type
