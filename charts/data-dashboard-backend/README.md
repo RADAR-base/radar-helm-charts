@@ -1,6 +1,10 @@
 
 
+
+
 # data-dashboard-backend
+
+
 
 ![Version: 0.1.9](https://img.shields.io/badge/Version-0.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.2](https://img.shields.io/badge/AppVersion-0.1.2-informational?style=flat-square) 
 
@@ -26,6 +30,8 @@ API for data in the data dashboard
 * Kubectl 1.22+
 * Helm 3.1.0+
 
+
+
 ## Values
 
 | Key | Type | Default | Description |
@@ -33,6 +39,7 @@ API for data in the data dashboard
 | replicaCount | int | `1` | Number of replicas to deploy |
 | image.repository | string | `"radarbase/radar-data-dashboard-backend"` | docker image repository |
 | image.pullPolicy | string | `"Always"` | image pull policy |
+| image.tag | string | `nil` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
