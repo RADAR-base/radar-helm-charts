@@ -3,7 +3,7 @@
 # cert-manager-letsencrypt
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/cert-manager-letsencrypt)](https://artifacthub.io/packages/helm/radar-base/cert-manager-letsencrypt)
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
 A Helm chart for a cert-manager ClusterIssuer for letsencrypt. Requires the cert-manager release to be activated.
 
@@ -34,3 +34,5 @@ A Helm chart for a cert-manager ClusterIssuer for letsencrypt. Requires the cert
 | httpIssuer.enabled | bool | `true` | Enable the letsencrypt HTTP issuer |
 | httpIssuer.environment | string | `"production"` | Environment to use. Either staging or production |
 | httpIssuer.privateSecretRef | string | `"letsencrypt-prod"` | Secret to store letsencrypt certificate data in |
+| httpIssuer.ingressMatchMethod | string | `"class"` | How to match ingress that's supposed to be used. Can be class, ingressClassName, name |
+| httpIssuer.ingressMatchValue | string | `"nginx"` | Ingress class/name to use |
