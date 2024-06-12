@@ -115,6 +115,8 @@ jdbc:
   # -- Hibernate dialect to use for JDBC Connection
   dialect: org.hibernate.dialect.PostgreSQLDialect
   properties:
+    # -- Must be _true_ for compatibility with table created by jdbc-connector
     hibernate.globally_quoted_identifiers: true
+    # -- Must be _CamelCaseToUppercaseColumnNamingStrategy_ for compatibility with table created by jdbc-connector
     hibernate.physical_naming_strategy: org.radarbase.datadashboard.api.domain.model.CamelCaseToUppercaseColumnNamingStrategy
 
