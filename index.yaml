@@ -1537,6 +1537,29 @@ entries:
   cert-manager-letsencrypt:
   - apiVersion: v2
     appVersion: "1.0"
+    created: "2024-06-12T13:32:57.658042834Z"
+    description: A Helm chart for a cert-manager ClusterIssuer for letsencrypt. Requires
+      the cert-manager release to be activated.
+    digest: c4e2f4575c250fa94c17f6bfa774c732beb813e89a8f0cdd2d6f8d8de2e52adc
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: cert-manager-letsencrypt
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/cert-manager-letsencrypt
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/cert-manager-letsencrypt-0.1.2/cert-manager-letsencrypt-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: "1.0"
     created: "2023-02-21T06:49:03.204201018Z"
     description: A Helm chart for a cert-manager ClusterIssuer for letsencrypt. Requires
       the cert-manager release to be activated.
@@ -9609,4 +9632,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-06-12T12:08:48.857663402Z"
+generated: "2024-06-12T13:32:57.658586362Z"
