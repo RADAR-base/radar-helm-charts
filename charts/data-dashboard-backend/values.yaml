@@ -100,6 +100,8 @@ managementPortal:
   clientId: radar_data_dashboard_backend
   # -- ManagementPortal OAuth 2.0 client secret
   clientSecret: secret
+# -- JWT Resource name to use for this service in ManagementPortal
+jwtResourceName: res_DataDashboardAPI
 
 # -- Base path to use in application
 path: /api
