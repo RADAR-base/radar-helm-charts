@@ -166,8 +166,8 @@ networkpolicy:
 oauth_client_id: radar_redcap_integrator
 # -- OAuth2 client secret
 oauth_client_secret: secret
-# -- URL of the Management Portal
-managementportal_url: http://management-portal:8080/managementportal
+# -- URL of the Management Portal. Make sure to include the trailing slash
+managementportal_url: http://management-portal:8080/managementportal/
 
 projects:
   - redcap_info:
