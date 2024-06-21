@@ -56,7 +56,7 @@ ingress:
   hosts:
     - localhost
   tls:
-    secretName: radar-base-data-dashboard
+    secretName: radar-base-data-dashboard-tls
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -100,6 +100,8 @@ managementPortal:
   clientId: radar_data_dashboard_backend
   # -- ManagementPortal OAuth 2.0 client secret
   clientSecret: secret
+# -- JWT Resource name to use for this service in ManagementPortal
+jwtResourceName: res_DataDashboardAPI
 
 # -- Base path to use in application
 path: /api
@@ -115,3 +117,8 @@ jdbc:
   password: secret
   # -- Hibernate dialect to use for JDBC Connection
   dialect: org.hibernate.dialect.PostgreSQLDialect
+  properties:
+    # -- Must be _true_ for compatibility with table created by jdbc-connector
+    hibernate.globally_quoted_identifiers: true
+    # -- Must be _CamelCaseToUppercaseColumnNamingStrategy_ for compatibility with table created by jdbc-connector
+    hibernate.physical_naming_strategy: org.radarbase.datadashboard.api.domain.model.CamelCaseToUppercaseColumnNamingStrategy
