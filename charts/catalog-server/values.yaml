@@ -176,8 +176,12 @@ networkpolicy:
         matchLabels:
           app.kubernetes.io/name: cp-schema-registry
 
-# -- number of Kafka brokers to look for
+# -- Number of deployed Kafka brokers
 kafka_num_brokers: 3
+# -- Number of Kafka replicates (may not be lower than kafka_num_brokers)
+kafka_num_replication: 3
+# -- Number of Kafka data partitions
+kafka_num_partitions: 3
 # -- URI of Kafka brokers
 kafka: cp-kafka-headless:9092
 # -- URL of the confluent schema registry
