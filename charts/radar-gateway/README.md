@@ -3,7 +3,7 @@
 # radar-gateway
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-gateway)](https://artifacthub.io/packages/helm/radar-base/radar-gateway)
 
-![Version: 1.1.4](https://img.shields.io/badge/Version-1.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.1](https://img.shields.io/badge/AppVersion-0.7.1-informational?style=flat-square)
+![Version: 1.1.5](https://img.shields.io/badge/Version-1.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.1](https://img.shields.io/badge/AppVersion-0.7.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -69,6 +69,10 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | serviceMonitor.enabled | bool | `true` | Enable metrics to be collected via Prometheus-operator |
+| hpa.enabled | bool | `true` | Enable HPA |
+| hpa.maxReplicas | string | `"5"` | Maximum number of replicas |
+| hpa.targetCPU | string | `"50"` | Target CPU utilization percentage |
+| hpa.targetMemory | string | `"1Gi"` | Target Memory utilization percentage |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the management portal application |
 | schemaRegistry | string | `"http://cp-schema-registry:8081"` | Schema Registry URL |
 | max_requests | int | `1000` | Not used. To be confirmed |
