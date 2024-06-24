@@ -155,6 +155,10 @@ networkpolicy:
       - port: 53
         protocol: TCP
 
+
+# -- Number of deployed Kafka broker instances
+kafka_num_brokers: 3
+
 kafka:
   # -- Kafka broker URLs
   url: PLAINTEXT://cp-kafka-headless:9092

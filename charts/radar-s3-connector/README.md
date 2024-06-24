@@ -3,7 +3,7 @@
 # radar-s3-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-s3-connector)](https://artifacthub.io/packages/helm/radar-base/radar-s3-connector)
 
-![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 7.6.0-hotfix](https://img.shields.io/badge/AppVersion-7.6.0--hotfix-informational?style=flat-square)
+![Version: 0.3.3](https://img.shields.io/badge/Version-0.3.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 7.6.0-hotfix](https://img.shields.io/badge/AppVersion-7.6.0--hotfix-informational?style=flat-square)
 
 A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 connector with a custom data transformers. These configurations enable a sink connector. See full list of properties here https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options
 
@@ -64,6 +64,7 @@ A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 conne
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
+| kafka_num_brokers | int | `3` | Number of deployed Kafka broker instances |
 | kafka.url | string | `"PLAINTEXT://cp-kafka-headless:9092"` | Kafka broker URLs |
 | schemaRegistry.url | string | `"http://cp-schema-registry:8081"` | Schema registry URL |
 | catalogServer.url | string | `"http://catalog-server:9010"` | Catalog server URL |
