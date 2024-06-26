@@ -26,6 +26,9 @@ fullnameOverride: ""
 podSecurityContext: {}
   # fsGroup: 2000
 
+# -- JVM Options
+kafkaHeapOpts: "-Xms3g -Xmx4g"
+
 # -- Configure radar-s3-connector containers' Security Context
 securityContext: {}
   # capabilities:

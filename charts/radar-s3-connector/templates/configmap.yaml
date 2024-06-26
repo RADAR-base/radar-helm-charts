@@ -27,11 +27,17 @@ data:
     transforms.combineKeyValue.type=org.radarbase.kafka.connect.transforms.CombineKeyValue
     rotate.schedule.interval.ms={{ .Values.rotateInterval | int }}
     timezone=UTC
+    # -- See https://stackoverflow.com/questions/62525026/kafka-connect-exception-replication-factor-3-larger-than-available-brokers-1
+    config.storage.replication.factor={{ .Values.kafka_num_brokers | int }}
+    offset.storage.replication.factor={{ .Values.kafka_num_brokers | int }}
+    status.storage.replication.factor={{ .Values.kafka_num_brokers | int }}
+    topic.creation.default.replication.factor={{ .Values.kafka_num_brokers | int }}
+    # --
     avro.codec=deflate
     errors.tolerance=all
     errors.log.enable=true
     errors.deadletterqueue.topic.name=dead_letter_queue_s3
-    errors.deadletterqueue.topic.replication.factor=3
+    errors.deadletterqueue.topic.replication.factor={{ .Values.kafka_num_brokers | int }}
     errors.deadletterqueue.context.headers.enable=true
     errors.retry.delay.max.ms=60000
     errors.retry.timeout=300000
