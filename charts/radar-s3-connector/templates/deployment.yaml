@@ -176,7 +176,7 @@ spec:
           - name: CONNECT_VALUE_CONVERTER_CONNECT_META_DATA
             value: "false"
           - name: KAFKA_HEAP_OPTS
-            value: "-Xms3g -Xmx4g"
+            value: "{{ .Values.kafkaHeapOpts }}"
           - name: KAFKA_BROKERS
             value: "{{ .Values.kafka_num_brokers }}"
           - name: CONNECT_LOG4J_LOGGERS
