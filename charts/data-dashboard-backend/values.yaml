@@ -44,7 +44,7 @@ ingress:
   # -- Enable ingress controller resource
   enabled: true
   # -- Ingress class name
-  className: nginx
+  ingressClassName: nginx
   # -- Annotations that define default ingress class, certificate issuer
   # @default -- check values.yaml
   annotations:
