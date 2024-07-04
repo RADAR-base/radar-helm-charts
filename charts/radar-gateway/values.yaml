@@ -191,7 +191,7 @@ hpa:
   # -- Target CPU utilization percentage
   targetCPU: "50"
   # -- Target Memory utilization percentage
-  targetMemory: "1Gi"
+  targetMemory: 85
 
 # -- URL of the management portal application
 managementportal_url: http://management-portal:8080/managementportal
