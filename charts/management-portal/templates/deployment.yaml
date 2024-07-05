@@ -47,7 +47,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: SPRING_PROFILES_ACTIVE
@@ -82,12 +82,16 @@ spec:
             value: /secrets/oauth_client_details.csv
           - name: MANAGEMENTPORTAL_CATALOGUE_SERVER_ENABLE_AUTO_IMPORT
             value: "{{ .Values.managementportal.catalogue_server_enable_auto_import }}"
+          - name: MANAGEMENTPORTAL_OAUTH_REQUIRE_AAL2
+            value: "{{ .Values.managementportal.oauth_require_aal2 }}"
           - name: MANAGEMENTPORTAL_CATALOGUE_SERVER_SERVER_URL
             value: http://{{ .Values.catalogue_server }}:9010/source-types
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_ADMIN_EMAIL
             value: {{ .Values.identity_server.admin_email }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_URL
             value: {{ .Values.identity_server.server_url }}
+          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_LOGIN_URL
+            value: {{ .Values.identity_server.login_url }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_ADMIN_URL
             value: {{ .Values.identity_server.server_admin_url }}
           - name: MANAGEMENTPORTAL_COMMON_ADMIN_PASSWORD
