@@ -213,3 +213,21 @@ google_application_credentials: ""
 
 # -- Github client token which is used for authenticating requests
 github_client_token: ""
+
+smtp:
+  # -- set to true, if sending of notifications via email should be enabled.
+  enabled: false
+  # -- Hostname of the SMTP server
+  host: smtp
+  # -- Port of the SMTP server
+  port: 25
+  # -- Username of the SMTP server
+  username: username
+  # -- Password of the SMTP server
+  password: secret
+  # -- Email address which should be used to send activation emails
+  from: noreply@example.com
+  # -- set to true,if TTLS should be enabled
+  starttls: false
+  # -- set to true, if the account should be authenticated before sending emails
+  auth: true
