@@ -82,9 +82,9 @@ spec:
                 name: {{ template "radar-appserver.secretName" . }}
                 key: githubClientToken
           {{- if .Values.smtp.enabled}}
-          - name: NOTIFICATION_EMAIL_ENABLED
+          - name: RADAR_NOTIFICATION_EMAIL_ENABLED
             value: {{ .Values.smtp.enabled }}
-          - name: NOTIFICATION_EMAIL_FROM
+          - name: RADAR_NOTIFICATION_EMAIL_FROM
             value: {{ .Values.smtp.from }}
           - name: SPRING_MAIL_HOST
             value: {{ .Values.smtp.host }}
