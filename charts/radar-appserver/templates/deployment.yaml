@@ -81,18 +81,20 @@ spec:
               secretKeyRef:
                 name: {{ template "radar-appserver.secretName" . }}
                 key: githubClientToken
-          {{- if .Values.smtp.enabled}}
+          {{- if .Values.smtp.enabled }}
           - name: RADAR_NOTIFICATION_EMAIL_ENABLED
-            value: "{{ .Values.smtp.enabled }}"
+            value: {{ .Values.smtp.enabled | quote }}
           - name: RADAR_NOTIFICATION_EMAIL_FROM
-            value: "{{ .Values.smtp.from }}"
+            value: {{ .Values.smtp.from }}
           - name: SPRING_MAIL_HOST
             value: "{{ .Values.smtp.host }}"
           - name: SPRING_MAIL_PORT
-            value: {{ .Values.smtp.port }}
+            value: {{ .Values.smtp.port | quote }}
+          - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
+            value: {{ .Values.smtp.starttls | quote }}
           - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
-            value: "{{ .Values.smtp.auth }}"
-            {{- if .Values.smtp.auth }}
+            value: {{ .Values.smtp.auth | quote }}
+            {{ if .Values.smtp.auth }}
           - name: SPRING_MAIL_USERNAME
             valueFrom:
               secretKeyRef:
@@ -104,8 +106,6 @@ spec:
                 name: {{ template "radar-appserver.secretName" . }}
                 key: smtpPassword
             {{- end }}
-          - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
-            value: "{{ .Values.smtp.starttls }}"
           {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
