@@ -61,6 +61,20 @@ update-ingress-nginx:
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-kratos:
+	@echo "Updating kratos"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://k8s.ory.sh/helm/charts
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
+
+update-kratos-selfservice-ui-node:
+	@echo "Updating kratos-selfservice-ui-node"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://k8s.ory.sh/helm/charts
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-minio:
 	@echo "Updating minio"
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -87,6 +101,13 @@ update-redis:
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
 	@rm -rf external/$(patsubst update-%,%,$@)
 	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
+	@echo ""
+
+update-trivy:
+	@echo "Updating trivy"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://aquasecurity.github.io/helm-charts/
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
 update-velero:
