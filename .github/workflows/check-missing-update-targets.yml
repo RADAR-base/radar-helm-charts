@@ -1,0 +1,26 @@
+name: Check Missing Update Targets
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-missing-update-targets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Make
+        run: sudo apt-get install make
+
+      - name: Run make list-missing-update-targets
+        id: check
+        run: |
+          OUTPUT=$(make list-missing-update-targets)
+          if [ -n "$OUTPUT" ]; then
+            echo "Missing update targets detected:"
+            echo "$OUTPUT"
+            exit 1
+          fi
