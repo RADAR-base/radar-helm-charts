@@ -1,9 +1,13 @@
 EXTERNAL_CHARTS = $(shell grep -P "^update-\S+:$$" Makefile | cut -d: -f1)
-#EXTERNAL_CHARTS = $(shell find external -mindepth 1 -maxdepth 1 -type d | sed 's/external\//update-/')
+EXTERNAL_CHARTS_ACTUAL = $(shell find external -mindepth 1 -maxdepth 1 -type d | sed 's/external\//update-/')
+MISSING_UPDATE_TARGETS = $(shell echo $(EXTERNAL_CHARTS_ACTUAL) $(EXTERNAL_CHARTS) | sed 's/ /\n/g' | sort | uniq -u)
 
-gen:
+generate-docs:
 	@echo "Generate chart docs"
 	@helm-docs -s file --template-files=charts/_templates.gotmpl --template-files=DOCS.md.gotmpl --template-files=README.md.gotmpl
+
+list-missing-update-targets:
+	@echo $(MISSING_UPDATE_TARGETS) | sed 's/ /\n/g'
 
 deps: $(EXTERNAL_CHARTS)
 	@echo "Updated chart dependencies"
