@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "management-portal.fullname" . }}
   labels:
-    app: {{ template "management-portal.name" . }}
-    chart: {{ template "management-portal.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "management-portal.labels" . | indent 4 }}
 data:
   healthcheck.sh: |
     #!/bin/sh

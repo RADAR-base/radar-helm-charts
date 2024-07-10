@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "radar-upload-source-connector.fullname" . }}
   labels:
-    app: {{ template "radar-upload-source-connector.name" . }}
-    chart: {{ template "radar-upload-source-connector.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "radar-upload-source-connector.labels" . | indent 4 }}
 data:
   source-upload.properties: |
     name=radar-upload-source
@@ -14,7 +11,7 @@ data:
     tasks.max=4
     upload.source.client.id={{ .Values.client_id }}
     upload.source.client.secret={{ .Values.client_secret }}
-    upload.source.client.tokenUrl=http://{{ .Values.managementportal_host }}:8080/managementportal/oauth/token
+    upload.source.client.tokenUrl={{ .Values.managementportal_url }}/oauth/token
     upload.source.backend.baseUrl=http://{{ .Values.radar_upload_connect_backend }}:8085/upload/api/
     upload.source.poll.interval.ms={{ .Values.poll_interval | int }}
     upload.source.queue.size={{ .Values.task.queueSize | int }}

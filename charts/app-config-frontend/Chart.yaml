@@ -15,14 +15,22 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.2.2
+version: 1.1.1
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
-appVersion: "0.3.3"
-sources: ["https://github.com/RADAR-base/radar-app-config"]
+appVersion: "0.5.0"
 home: "https://radar-base.org"
+icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
+sources:
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/app-config-frontend
+- https://github.com/RADAR-base/radar-app-config
+keywords:
+  - radar-base
+  - remote-trial
+annotations:
+  artifacthub.io/license: Apache-2.0
 maintainers:
   - email: keyvan@thehyve.nl
     name: Keyvan Hedayati

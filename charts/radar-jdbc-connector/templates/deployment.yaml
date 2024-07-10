@@ -49,10 +49,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          {{- range $k, $v := .Values.environment }}
-          - name: {{ $k }}
-            value: {{ $v | quote }}
-          {{- end }}
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka }}"
           - name: CONNECT_REST_PORT
@@ -97,30 +93,41 @@ spec:
             value: "{{ $name }}/connector"
           - name: KAFKA_HEAP_OPTS
             value: "{{ .Values.heapOpts }}"
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8083
               protocol: TCP
+          {{- if .Values.customLivenessProbe }}
+          livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.livenessProbe.enabled }}
           livenessProbe:
             exec:
               command:
               - /bin/sh
               - /etc/kafka-connect/{{ $name }}/healthcheck.sh
-            initialDelaySeconds: 15
-            periodSeconds: 60
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.customReadinessProbe }}
+          readinessProbe: {{- .Values.customReadinessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.readinessProbe.enabled }}
           readinessProbe:
             exec:
               command:
               - /bin/sh
               - /etc/kafka-connect/{{ $name }}/healthcheck.sh
-            initialDelaySeconds: 15
-            periodSeconds: 60
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

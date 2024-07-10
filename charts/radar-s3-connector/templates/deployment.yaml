@@ -3,10 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "radar-s3-connector.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-s3-connector.name" . }}
-    helm.sh/chart: {{ include "radar-s3-connector.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "radar-s3-connector.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -51,10 +48,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          {{- range $k, $v := .Values.environment }}
-          - name: {{ $k }}
-            value: {{ $v | quote }}
-          {{- end }}
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka.url }}"
           - name: CONNECT_REQUEST_TIMEOUT_MS
@@ -183,7 +176,7 @@ spec:
           - name: CONNECT_VALUE_CONVERTER_CONNECT_META_DATA
             value: "false"
           - name: KAFKA_HEAP_OPTS
-            value: "-Xms3g -Xmx4g"
+            value: "{{ .Values.kafkaHeapOpts }}"
           - name: KAFKA_BROKERS
             value: "{{ .Values.kafka_num_brokers }}"
           - name: CONNECT_LOG4J_LOGGERS
@@ -200,41 +193,54 @@ spec:
                 name: {{ template "radar-s3-connector.fullname" . }}
                 key: awsSecretKey
           {{- end }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8083
               protocol: TCP
+          {{- if .Values.customLivenessProbe }}
+          livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.livenessProbe.enabled }}
           livenessProbe:
             exec:
               command:
               - /bin/sh
               - /etc/kafka-connect/sink-s3/original/healthcheck.sh
-            initialDelaySeconds: 40
-            periodSeconds: 60
-            timeoutSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.customReadinessProbe }}
+          readinessProbe: {{- .Values.customReadinessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.readinessProbe.enabled }}
           readinessProbe:
             exec:
               command:
               - /bin/sh
               - /etc/kafka-connect/sink-s3/original/healthcheck.sh
-            initialDelaySeconds: 40
-            periodSeconds: 60
-            timeoutSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config-original
               mountPath: /etc/kafka-connect/sink-s3/original
-            - name: config-updated
+            - name: {{ if .Values.initTopics.enabled }}config-updated{{ else }}config-original{{ end }}
               mountPath: /etc/kafka-connect/sink-s3
+      {{- if .Values.initTopics.enabled }}
       initContainers:
         - name: init-topics
-          image: alpine:latest
-          args:
+          image: {{ .Values.initTopics.image.repository }}:{{ .Values.initTopics.image.tag }}
+          imagePullPolicy: {{ .Values.initTopics.image.pullPolicy }}
+          command:
             - /bin/sh
             - /etc/kafka-connect/sink-s3/original/add-topics-to-config.sh
             - /etc/kafka-connect/sink-s3/original/sink-s3.properties
@@ -244,6 +250,7 @@ spec:
               mountPath: /etc/kafka-connect/sink-s3/original
             - name: config-updated
               mountPath: /etc/kafka-connect/sink-s3
+      {{- end }}
       volumes:
         - name: config-original
           configMap:

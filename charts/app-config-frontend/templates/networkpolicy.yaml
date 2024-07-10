@@ -1,0 +1,13 @@
+{{- if .Values.networkpolicy }}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ template "app-config-frontend.fullname" . }}
+  labels:
+{{ include "app-config-frontend.labels" . | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+{{ include "app-config-frontend.labels" . | indent 6 }}
+    {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
+{{- end -}}

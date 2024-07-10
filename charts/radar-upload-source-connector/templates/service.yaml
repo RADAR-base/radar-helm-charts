@@ -3,10 +3,7 @@ kind: Service
 metadata:
   name: {{ include "radar-upload-source-connector.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-upload-source-connector.name" . }}
-    helm.sh/chart: {{ include "radar-upload-source-connector.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "radar-upload-source-connector.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

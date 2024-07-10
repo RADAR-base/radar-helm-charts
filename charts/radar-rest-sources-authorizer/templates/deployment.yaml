@@ -3,10 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "radar-rest-sources-authorizer.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-rest-sources-authorizer.name" . }}
-    helm.sh/chart: {{ include "radar-rest-sources-authorizer.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "radar-rest-sources-authorizer.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -63,29 +60,40 @@ spec:
           - name: AUTH_CALLBACK_URL
             value: https://{{ .Values.serverName }}/rest-sources/authorizer/login
           - name: AUTH_URI
-            value: https://{{ .Values.serverName }}/managementportal/oauth
+            value: https://{{ .Values.authUrl }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
+          {{- if .Values.customLivenessProbe }}
+          livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
               path: /rest-sources/authorizer/
               port: http
-            initialDelaySeconds: 5
-            periodSeconds: 30
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.customReadinessProbe }}
+          readinessProbe: {{- .Values.customReadinessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
               path: /rest-sources/authorizer/
               port: http
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

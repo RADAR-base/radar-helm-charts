@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- Number of radar-push-endpoint replicas to deploy
+# -- Number replicas to deploy
 replicaCount: 2
 
 image:
@@ -47,21 +47,21 @@ ingress:
   # -- Annotations that define default ingress class, certificate issuer and deny access to sensitive URLs
   # @default -- check values.yaml
   annotations:
-    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /redcap/$1
   # -- Path within the url structure
   path: "/redcapint/?(.*)"
-  # -- Path Type
+  # -- Ingress Path type
   pathType: ImplementationSpecific
-
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
     # -- Name of the secret that contains TLS certificates
     # -- TLS Secret Name
-    secretName: radar-base-tls
+    secretName: radar-base-tls-radar-integration
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -86,12 +86,88 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for livenessProbe
+  periodSeconds: 60
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 60
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'management-portal'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
 # -- OAuth2 clientId used by the webApp for making requests
 oauth_client_id: radar_redcap_integrator
 # -- OAuth2 client secret
 oauth_client_secret: secret
-# -- Base URL of the Management Portal
-management_portal_url: management-portal
+# -- URL of the Management Portal. Make sure to include the trailing slash
+managementportal_url: http://management-portal:8080/managementportal/
 
 projects:
   - redcap_info:
@@ -107,6 +183,8 @@ projects:
       integration_form: ""
       # -- REDCap API Token used to identify the REDCap user against the REDCap instance
       token: ""
+      # -- List of REDCap fields to be used as attributes in Management Portal
+      attributes: []
     mp_info:
       # --  Management Portal project identifier
       project_name: ""

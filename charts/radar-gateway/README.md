@@ -1,8 +1,9 @@
 
 
 # radar-gateway
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-gateway)](https://artifacthub.io/packages/helm/radar-base/radar-gateway)
 
-![Version: 0.2.6](https://img.shields.io/badge/Version-0.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
+![Version: 1.1.6](https://img.shields.io/badge/Version-1.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.1](https://img.shields.io/badge/AppVersion-0.7.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -13,16 +14,16 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | Name | Email | Url |
 | ---- | ------ | --- |
 | Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
-| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
 | Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
+* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-gateway>
 * <https://github.com/RADAR-base/RADAR-Gateway>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values
@@ -31,7 +32,7 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-gateway replicas to deploy |
 | image.repository | string | `"radarbase/radar-gateway"` | radar-gateway image repository |
-| image.tag | string | `"0.5.14"` | radar-gateway image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.7.1"` | radar-gateway image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-gateway image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-gateway.fullname template with a string (will prepend the release name) |
@@ -43,15 +44,36 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and deny access to sensitive URLs |
 | ingress.path | string | `"/kafka/?(.*)"` | Path within the url structure |
-| ingress.pathType | string | `"ImplementationSpecific"` |  |
+| ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
+| ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-tls"` | Name of the secret that contains TLS certificates |
+| ingress.tls.secretName | string | `"radar-base-tls-radar-gateway"` | Name of the secret that contains TLS certificates |
 | resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
+| extraEnvVars | list | `[]` | Extra environment variables |
+| customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
+| livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| livenessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for livenessProbe |
+| livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
+| livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
+| readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
+| readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | serviceMonitor.enabled | bool | `true` | Enable metrics to be collected via Prometheus-operator |
-| managementportalHost | string | `"management-portal"` | Host name of the management portal application |
+| hpa.enabled | bool | `true` | Enable HPA |
+| hpa.maxReplicas | string | `"5"` | Maximum number of replicas |
+| hpa.targetCPU | string | `"50"` | Target CPU utilization percentage |
+| hpa.targetMemory | int | `85` | Target Memory utilization percentage |
+| managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the management portal application |
 | schemaRegistry | string | `"http://cp-schema-registry:8081"` | Schema Registry URL |
 | max_requests | int | `1000` | Not used. To be confirmed |
 | bootstrapServers | string | `"cp-kafka-headless:9092"` | Kafka broker URLs |

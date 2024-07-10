@@ -1,9 +1,17 @@
 apiVersion: v2
-appVersion: "4.1.0"
+appVersion: "4.4.2"
 description: A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer which is a portal to authorize the Fitbit connector to read data from Fitbit accounts.
 name: radar-rest-sources-authorizer
-version: 0.4.3
-sources: ["https://github.com/RADAR-base/RADAR-Rest-Source-Auth"]
+version: 1.1.4
+icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
+sources:
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-rest-sources-authorizer
+- https://github.com/RADAR-base/RADAR-Rest-Source-Auth
+keywords:
+  - radar-base
+  - remote-trial
+annotations:
+  artifacthub.io/license: Apache-2.0
 deprecated: false
 type: application
 home: "https://radar-base.org"

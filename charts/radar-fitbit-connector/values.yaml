@@ -10,7 +10,7 @@ image:
   repository: radarbase/kafka-connect-rest-fitbit-source
   # -- radar-fitbit-connector image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.3.3
+  tag: 0.4.1
   # -- radar-fitbit-connector image pull policy
   pullPolicy: IfNotPresent
 
@@ -86,17 +86,118 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# -- Extra environment variables
+extraEnvVars:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  - name: CONNECT_SECURITY_PROTOCOL
+    value: PLAINTEXT
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for livenessProbe
+  periodSeconds: 60
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 60
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'cp-zookeeper'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'cp-kafka'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'cp-schema-registry'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-rest-sources-backend'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'management-portal'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
 # -- URI of Zookeeper instances of the cluster
 zookeeper: cp-zookeeper-headless:2181
 # -- URI of Kafka brokers of the cluster
 kafka: PLAINTEXT://cp-kafka-headless:9092
-environment:
-  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
-  CONNECT_SECURITY_PROTOCOL: PLAINTEXT
 # -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
 kafka_num_brokers: "3"
 # -- URL of the Kafka schema registry
 schema_registry: http://cp-schema-registry:8081
+
+kafka_wait:
+  # -- Whether to wait before the specified number of brokers are available.
+  enabled: true
+  # -- Kafka connection properties file contents during wait. If empty, all environment variables starting with
+  # `CONNECT_` will be used.
+  properties: ""
 
 # -- Base URL of the rest-sources-authorizer-backend service
 radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
@@ -111,7 +212,7 @@ fitbit_api_secret: ""
 oauthClientId: radar_fitbit_connector
 # -- OAuth2 client secret from Management Portal
 oauthClientSecret: secret
-# -- Hostname of Management Portal. This will be used to create URLs to access Management Portal
-managementportal_host: management-portal
+# -- URL of Management Portal. This will be used to create URLs to access Management Portal
+managementportal_url: http://management-portal:8080/managementportal
 # -- Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties.
 includeIntradayData: true

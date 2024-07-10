@@ -3,10 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "radar-fitbit-connector.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-fitbit-connector.name" . }}
-    helm.sh/chart: {{ include "radar-fitbit-connector.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "radar-fitbit-connector.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -55,10 +52,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          {{- range $k, $v := .Values.environment }}
-          - name: {{ $k }}
-            value: {{ $v | quote }}
-          {{- end }}
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka }}"
           - name: CONNECT_REST_PORT
@@ -90,59 +83,56 @@ spec:
           - name: CONNECT_ZOOKEEPER_CONNECT
             value: "{{ .Values.zookeeper }}"
           - name: CONNECTOR_PROPERTY_FILE_PREFIX
-            value: "source-fitbit"
+            value: "source-fitbit/source-fitbit"
           - name: KAFKA_HEAP_OPTS
             value: "-Xms256m -Xmx768m"
           - name: KAFKA_BROKERS
             value: "{{ .Values.kafka_num_brokers }}"
           - name: CONNECT_LOG4J_LOGGERS
             value: "org.reflections=ERROR"
-          # - name: CONNECT_NAME
-          #   value: "radar-fitbit-source"
-          # - name: CONNECT_CONNECTOR_CLASS
-          #   value: "org.radarbase.connect.rest.fitbit.FitbitSourceConnector"
-          # - name: CONNECT_TASKS_MAX
-          #   value: "4"
-          # - name: CONNECT_REST_SOURCE_BASE_URL
-          #   value: "https://api.fitbit.com"
-          # - name: CONNECT_REST_SOURCE_POLL_INTERVAL_MS
-          #   value: "5000"
-          # - name: CONNECT_REST_SOURCE_REQUEST_GENERATOR_CLASS
-          #   value: "org.radarbase.connect.rest.fitbit.request.FitbitRequestGenerator"
-          # - name: CONNECT_FITBIT_API_CLIENT
-          #   value: "{{ .Values.fitbit_api_client }}"
-          # - name: CONNECT_FITBIT_API_SECRET
-          #   value: "{{ .Values.fitbit_api_secret }}"
-          # - name: CONNECT_FITBIT_USER_REPOSITORY_CLASS
-          #   value: "org.radarbase.connect.rest.fitbit.user.ServiceUserRepository"
-          # - name: CONNECT_FITBIT_USER_REPOSITORY_URL
-          #   value: "http://{{ .Values.radar_rest_sources_backend }}:8080/"
+          - name: WAIT_FOR_KAFKA
+            value: {{ if .Values.kafka_wait.enabled }}"1"{{ else }}"0"{{ end }}
+          {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
+          - name: COMMAND_CONFIG_FILE_PATH
+            value: /etc/kafka-connect/source-fitbit/kafka-wait.properties
+          {{- end }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
+          {{- if .Values.customLivenessProbe }}
+          livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.livenessProbe.enabled }}
           livenessProbe:
             exec:
               command:
               - /bin/sh
               - -c
               - curl -sf localhost:8083/connectors/radar-fitbit-source/status | grep -o '\"state\":\"[^\"]*\"' | tr '\\n' ',' | grep -vq FAILED || exit 1
-            initialDelaySeconds: 5
-            periodSeconds: 60
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.customReadinessProbe }}
+          readinessProbe: {{- .Values.customReadinessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.readinessProbe.enabled }}
           readinessProbe:
             exec:
               command:
               - /bin/sh
               - -c
               - curl -sf localhost:8083/connectors/radar-fitbit-source/status | grep -o '\"state\":\"[^\"]*\"' | tr '\\n' ',' | grep -vq FAILED || exit 1
-            initialDelaySeconds: 5
-            periodSeconds: 60
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

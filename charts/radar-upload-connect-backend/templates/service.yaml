@@ -3,10 +3,7 @@ kind: Service
 metadata:
   name: {{ include "radar-upload-connect-backend.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-upload-connect-backend.name" . }}
-    helm.sh/chart: {{ include "radar-upload-connect-backend.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "radar-upload-connect-backend.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

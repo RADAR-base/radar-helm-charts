@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-gateway
   # -- radar-gateway image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.5.14
+  tag: 0.7.1
   # -- radar-gateway image pull policy
   pullPolicy: IfNotPresent
 
@@ -47,23 +47,28 @@ ingress:
   # -- Annotations that define default ingress class, certificate issuer and deny access to sensitive URLs
   # @default -- check values.yaml
   annotations:
-    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Content-Encoding
     nginx.ingress.kubernetes.io/rewrite-target: /kafka/$1
     nginx.ingress.kubernetes.io/proxy-body-size: 24m
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
     nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    # Prevents XSS attacks on Grizzly (see https://github.com/Graylog2/graylog2-server/issues/3171)
+    nginx.ingress.kubernetes.io/configuration-snippet: rewrite ^ $request_uri;
   # -- Path within the url structure
   path: "/kafka/?(.*)"
+  # -- Ingress Path type
   pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
     # -- Name of the secret that contains TLS certificates
-    secretName: radar-base-tls
+    secretName: radar-base-tls-radar-gateway
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -88,12 +93,108 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# -- Extra environment variables
+extraEnvVars: []
+#  - name: BEARER_AUTH
+#    value: true
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 10
+  # -- Period seconds for livenessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 10
+  # -- Period seconds for readinessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'cp-kafka'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'cp-schema-registry'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'management-portal'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
 serviceMonitor:
   # -- Enable metrics to be collected via Prometheus-operator
   enabled: true
 
-# -- Host name of the management portal application
-managementportalHost: management-portal
+hpa:
+  # -- Enable HPA
+  enabled: true
+  # -- Maximum number of replicas
+  maxReplicas: "5"
+  # -- Target CPU utilization percentage
+  targetCPU: "50"
+  # -- Target Memory utilization percentage
+  targetMemory: 85
+
+# -- URL of the management portal application
+managementportal_url: http://management-portal:8080/managementportal
 # -- Schema Registry URL
 schemaRegistry: http://cp-schema-registry:8081
 # -- Not used. To be confirmed

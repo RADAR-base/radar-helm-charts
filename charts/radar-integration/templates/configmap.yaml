@@ -3,17 +3,14 @@ kind: ConfigMap
 metadata:
   name: {{ template "radar-integration.fullname" . }}
   labels:
-    app: {{ template "radar-integration.name" . }}
-    chart: {{ template "radar-integration.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "radar-integration.labels" . | indent 4 }}
 data:
   radar.yml: |
     # ManagementPortal configuration
     management_portal:
       oauth_client_id: {{ .Values.oauth_client_id }} #OAuth2 clientId used by the webApp for making requests
       oauth_client_secret: {{ .Values.oauth_client_secret }} #OAuth2 client secret
-      base_url: http://{{ .Values.management_portal_url }}:8080/managementportal/ #Base URL of the Management Portal
+      base_url: {{ .Values.managementportal_url }} #Base URL of the Management Portal
 
     # Set of supported projects
     projects:
@@ -25,6 +22,10 @@ data:
           enrolment_event: {{ .redcap_info.enrolment_event }} #Unique identifier for the enrolment event
           integration_form: {{ .redcap_info.integration_form }} #Name of integration REDCap form
           token: {{ .redcap_info.token }} #REDCap API Token used to identify the REDCap user against the REDCap instance
+          attributes:
+            {{- range .redcap_info.attributes }}
+            - field_name: {{ . }}
+            {{- end }}
         mp_info:
           # Management Portal project identifier
           project_name: {{ .mp_info.project_name }} #

@@ -47,20 +47,22 @@ ingress:
   # -- Annotations that define default ingress class, certificate issuer and proxy settings
   # @default -- check values.yaml
   annotations:
-    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/proxy-body-size: 200m
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
   # -- Path within the url structure
   path: "/upload/api/?(.*)"
+  # -- Ingress Path type
   pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
   # -- Host to listen to requests to
   hosts:
     - localhost
   tls:
     # -- Name of the secret containing TLS certificates
-    secretName: radar-base-tls
+    secretName: radar-base-tls-radar-upload-connect-backend
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -85,6 +87,93 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# -- Extra environment variables
+extraEnvVars: []
+#  - name: BEARER_AUTH
+#    value: true
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 3
+  # -- Period seconds for livenessProbe
+  periodSeconds: 300
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 10
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 10
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 10
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: '{{ .Values.postgres.host | trunc 63 | trimSuffix "-" }}'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'management-portal'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
 # -- OAuth2 client id of the upload connect backend application
 client_id: radar_upload_backend
 # -- OAuth2 client secret of the upload connect backend
@@ -96,7 +185,7 @@ postgres:
   user: postgres
   # -- Database password
   password: password
-# -- Host name of the management portal application
-managementportal_host: management-portal
+# -- URL of the Management Portal
+managementportal_url: http://management-portal:8080/managementportal
 # -- Server name or domain name
 serverName: localhost

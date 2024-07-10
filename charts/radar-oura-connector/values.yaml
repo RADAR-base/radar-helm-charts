@@ -1,0 +1,218 @@
+# Default values for radar-oura-connector.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of radar-oura-connector replicas to deploy
+replicaCount: 1
+
+image:
+  # -- radar-oura-connector image repository
+  repository: radarbase/kafka-connect-rest-oura-source
+  # -- radar-oura-connector image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 0.5.0
+  # -- radar-oura-connector image pull policy
+  pullPolicy: IfNotPresent
+
+# -- Docker registry secret names as an array
+imagePullSecrets: []
+
+# -- String to partially override radar-oura-connector.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override radar-oura-connector.fullname template with a string
+fullnameOverride: ""
+
+# -- Configure radar-oura-connector pods' Security Context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Configure radar-oura-connector containers' Security Context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # -- Kubernetes Service type
+  type: ClusterIP
+  # -- radar-oura-connector port
+  port: 8083
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  # -- CPU/Memory resource requests
+  requests:
+    cpu: 100m
+    memory: 1Gi
+
+persistence:
+  # -- Enable persistence using PVC
+  enabled: true
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  ##
+  ## If you want to reuse an existing claim, you can pass the name of the PVC using
+  ## the existingClaim variable
+  # existingClaim: your-claim
+
+  # -- PVC Access Mode for radar-oura-connector volume
+  accessMode: ReadWriteOnce
+  # -- PVC Storage Request for radar-oura-connector volume
+  size: 5Gi
+  # -- Overrides the user of the oura connector logs, for example, `"1000:1000"`.
+  fsUserOverride: null
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Toleration labels for pod assignment
+tolerations: []
+
+# -- Affinity labels for pod assignment
+affinity: {}
+
+# -- Extra environment variables
+extraEnvVars:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  - name: CONNECT_SECURITY_PROTOCOL
+    value: PLAINTEXT
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for livenessProbe
+  periodSeconds: 60
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 60
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'cp-zookeeper'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'cp-kafka'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'cp-schema-registry'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-rest-sources-backend'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'management-portal'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
+# -- URI of Zookeeper instances of the cluster
+zookeeper: cp-zookeeper-headless:2181
+# -- URI of Kafka brokers of the cluster
+kafka: PLAINTEXT://cp-kafka-headless:9092
+# -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
+kafka_num_brokers: "3"
+# -- URL of the Kafka schema registry
+schema_registry: http://cp-schema-registry:8081
+
+kafka_wait:
+  # -- Whether to wait before the specified number of brokers are available.
+  enabled: true
+  # -- Kafka connection properties file contents during wait. If empty, all environment variables starting with
+  # `CONNECT_` will be used.
+  properties: ""
+
+# -- Base URL of the rest-sources-authorizer-backend service
+radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
+# -- Number of connector tasks to be used in connector.properties
+connector_num_tasks: "5"
+# -- Oura API client id.
+oura_api_client: ""
+# -- Oura API client secret.
+oura_api_secret: ""
+
+# -- OAuth2 client id from Management Portal
+oauthClientId: radar_oura_connector
+# -- OAuth2 client secret from Management Portal
+oauthClientSecret: secret
+# -- URL of Management Portal. This will be used to create URLs to access Management Portal
+managementportal_url: http://management-portal:8080/managementportal
+# -- Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties.
+includeIntradayData: true

@@ -1,0 +1,13 @@
+{{- if .Values.networkpolicy }}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ template "radar-push-endpoint.fullname" . }}
+  labels:
+{{ include "radar-push-endpoint.labels" . | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+{{ include "radar-push-endpoint.labels" . | indent 6 }}
+    {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
+{{- end -}}

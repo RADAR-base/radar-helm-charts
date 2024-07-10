@@ -58,6 +58,51 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# -- Extra environment variables
+extraEnvVars: []
+#  - name: BEARER_AUTH
+#    value: true
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'minio'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'redis'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
 javaOpts: "-Xms400m -Xmx3g"
 
 # -- Existing secret for storing S3 or Azure credentials.
@@ -168,6 +213,8 @@ worker:
 cleaner:
   # -- Number of days after which a source file is considered old
   age: 7
+  # -- Interval in seconds between cleanups
+  interval: 86400
 
 paths:
   # -- Relative path to intermediate storage root to browse for data
@@ -200,3 +247,11 @@ topics:
   #    # Disable deduplication
   #    deduplication:
   #      enable: false
+
+deduplication:
+  # -- Whether to enable deduplication
+  enable: true
+
+compression:
+  # -- Compression type to use for output files. Can be one of: gzip, zip, none
+  type: gzip

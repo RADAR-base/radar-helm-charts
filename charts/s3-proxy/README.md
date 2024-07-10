@@ -1,8 +1,9 @@
 
 
 # s3-proxy
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/s3-proxy)](https://artifacthub.io/packages/helm/radar-base/s3-proxy)
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.2.0](https://img.shields.io/badge/AppVersion-2.2.0-informational?style=flat-square)
 
 A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy to proxy S3 API requests to any supported cloud provider. For more examples see Find some example configurations at https://github.com/gaul/s3proxy/wiki/Storage-backend-examples.
 
@@ -13,7 +14,7 @@ A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy t
 | Name | Email | Url |
 | ---- | ------ | --- |
 | Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
-| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
+| Bastiaan de Graaf | <bastiaan@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
 | Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
@@ -21,8 +22,8 @@ A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy t
 * <https://github.com/gaul/s3proxy>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values
@@ -31,7 +32,7 @@ A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy t
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of s3-proxy replicas to deploy |
 | image.repository | string | `"andrewgaul/s3proxy"` | s3-proxy image repository |
-| image.tag | string | `"travis-1430"` | s3-proxy image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"sha-abc6d02"` | s3-proxy image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | s3-proxy image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override s3-proxy.fullname template with a string (will prepend the release name) |
@@ -44,6 +45,22 @@ A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy t
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
+| extraEnvVars | list | `[]` | Extra environment variables |
+| customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
+| livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| livenessProbe.initialDelaySeconds | int | `15` | Initial delay seconds for livenessProbe |
+| livenessProbe.periodSeconds | int | `60` | Period seconds for livenessProbe |
+| livenessProbe.timeoutSeconds | int | `3` | Timeout seconds for livenessProbe |
+| livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
+| readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| readinessProbe.initialDelaySeconds | int | `15` | Initial delay seconds for readinessProbe |
+| readinessProbe.periodSeconds | int | `60` | Period seconds for readinessProbe |
+| readinessProbe.timeoutSeconds | int | `3` | Timeout seconds for readinessProbe |
+| readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | s3.identity | string | `nil` | Credentials used to access this proxy |
 | s3.credential | string | `""` | Credentials used to access this proxy |
 | target | object | Check below | Where requests should be proxied to |
@@ -51,3 +68,12 @@ A Helm chart for S3 Proxy. It uses https://hub.docker.com/r/andrewgaul/s3proxy t
 | target.endpoint | string | `nil` | Target endpoint |
 | target.identity | string | `nil` | Target identity |
 | target.credential | string | `""` | Target credential |
+| target.api | string | `nil` | Target Swift / Keystone API |
+| target.region | string | `nil` | Singular region |
+| target.regions | string | `nil` | Multiple regions (keystone) |
+| target.filesystem.basedir | string | `"/data"` | Base directory for filesystem provider |
+| target.azureblob.auth | string | `"azureKey"` | Authentication method for Azure |
+| target.keystone.version | string | `nil` | Keystone (Swift) version |
+| target.keystone.credentialType | string | `nil` | Keystone (Swift) credential type |
+| target.keystone.scope | string | `nil` | Keystone (Swift) scope |
+| target.keystone.projectDomainName | string | `nil` | Keystone (Swift) project domain name |

@@ -1,8 +1,9 @@
 
 
 # management-portal
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 0.2.5](https://img.shields.io/badge/Version-0.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.1](https://img.shields.io/badge/AppVersion-0.8.1-informational?style=flat-square)
+![Version: 1.1.7](https://img.shields.io/badge/Version-1.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -13,16 +14,17 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | Name | Email | Url |
 | ---- | ------ | --- |
 | Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
-| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
+| Bastiaan de Graaf | <bastiaan@thehyve.nl> | <https://www.thehyve.nl/experts/bastiaan-de-graaf> |
 | Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
+* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/management-portal>
 * <https://github.com/RADAR-base/ManagementPortal>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 
 ## Values
@@ -31,7 +33,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of Management Portal replicas to deploy |
 | image.repository | string | `"radarbase/management-portal"` | Management Portal image repository |
-| image.tag | string | `"0.8.1"` | Management Portal image tag (immutable tags are recommended) |
+| image.tag | string | `"2.0.0"` | Management Portal image tag (immutable tags are recommended) |
 | image.pullPolicy | string | `"IfNotPresent"` | Management Portal image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override management-portal.fullname template with a string (will prepend the release name) |
@@ -41,16 +43,33 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8080` | Management Portal port |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
-| ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and rate limiter |
+| ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
 | ingress.path | string | `"/managementportal"` | Path within the url structure |
-| ingress.pathType | string | `"ImplementationSpecific"` |  |
+| ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
+| ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
-| resources.limits | object | `{"cpu":2,"memory":"1.7Gi"}` | CPU/Memory resource limits |
+| ingress.tls.secretName | string | `"radar-base-tls-managementportal"` | TLS Secret Name |
+| resources.limits | object | `{"cpu":2,"memory":"1700Mi"}` | CPU/Memory resource limits |
 | resources.requests | object | `{"cpu":"100m","memory":"512Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
+| extraEnvVars | list | `[]` | Extra environment variables |
+| customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
+| livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| livenessProbe.initialDelaySeconds | int | `60` | Initial delay seconds for livenessProbe |
+| livenessProbe.periodSeconds | int | `90` | Period seconds for livenessProbe |
+| livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
+| readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| readinessProbe.initialDelaySeconds | int | `60` | Initial delay seconds for readinessProbe |
+| readinessProbe.periodSeconds | int | `90` | Period seconds for readinessProbe |
+| readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | keystore | string | `""` | base 64 encoded binary p12 keystore containing a ECDSA certificate with alias `radarbase-managementportal-ec` and a RSA certificate with alias `selfsigned`. |
 | postgres.host | string | `"postgresql"` | host name of the postgres db |
 | postgres.port | int | `5432` | post of the postgres db |
@@ -62,10 +81,14 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | postgres.ssl.keystore | string | `""` | base64 encoded certificate needed to connect to the PostgreSQL With helmfile, this can be set in a production.yaml.gotmpl file by setting   keystore: {{ readFile "certificate.pem" | b64enc | quote }} or with SOPS   keystore: {{ exec "sops" (list "-d" "certificate.pem") | b64enc | quote }} |
 | server_name | string | `"localhost"` | domain name of the server |
 | catalogue_server | string | `"catalog-server"` | Hostname of the catalogue-server |
-| managementportal.catalogue_server_enable_auto_import | string | `"false"` | set to true, if automatic source-type import from catalogue server should be enabled |
+| identity_server.admin_email | string | `"admin@example.com"` | The admin email to link to the admin service account. This account should only be used to set up admin-users |
+| identity_server.server_url | string | `"https://my.example-domain.net/kratos"` | The publicly accessible server URL for the IDP |
+| identity_server.server_admin_url | string | `"http://kratos-admin"` | The admin server URL for the IDP. Only needs to be accessible from inside the cluster where the managementportal resides |
+| managementportal.catalogue_server_enable_auto_import | bool | `false` | set to true, if automatic source-type import from catalogue server should be enabled |
 | managementportal.common_privacy_policy_url | string | `"http://info.thehyve.nl/radar-cns-privacy-policy"` | Override with a publicly resolvable url of the privacy-policy url for your set-up. This can be overridden on a project basis as well. |
 | managementportal.oauth_checking_key_aliases_0 | string | `"radarbase-managementportal-ec"` | Keystore alias to sign JWT tokens from Management Portal |
 | managementportal.oauth_checking_key_aliases_1 | string | `"selfsigned"` | Keystore alias to sign JWT tokens from Management Portal |
+| managementportal.oauth_require_aal2 | bool | `true` | Whether or not to require AAL2 level authentication (i.e. MFA) |
 | managementportal.frontend_client_secret | string | `"xxx"` | OAuth2 Client secret of the Management Portal frontend application |
 | managementportal.common_admin_password | string | `"xxx"` | Admin password of the default admin user created by the system |
 | smtp.enabled | bool | `false` | set to true, if SMTP server should be enabled. Required to be true for production setup |
@@ -76,7 +99,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | smtp.from | string | `"noreply@example.com"` | Email address which should be used to send activation emails |
 | smtp.starttls | bool | `false` | set to true,if ttls should be enabled |
 | smtp.auth | bool | `true` | set to true, if the account should be authenticated before sending emails |
-| oauth_clients | object | check values.yaml | OAuth2 Client configuration |
+| oauth_clients | object | check `values.yaml` | OAuth2 Client configuration |
 
 ## OAuth Client Configuration
 List of OAuth client configurations supported by RADAR-base. Each client should be enabled separately, if relevant and used in the installation.

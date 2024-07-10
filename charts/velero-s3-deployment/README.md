@@ -1,8 +1,9 @@
 
 
 # velero-s3-deployment
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/velero-s3-deployment)](https://artifacthub.io/packages/helm/radar-base/velero-s3-deployment)
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
 A Helm chart for Velero S3 deployment, this chart holds resources used by Velero with a deployment to mirror the local object storage to a remote object storage.
 
@@ -21,8 +22,8 @@ A Helm chart for Velero S3 deployment, this chart holds resources used by Velero
 * <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/velero-s3-deployment>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 * S3-compatible object storage
 
@@ -43,6 +44,7 @@ A Helm chart for Velero S3 deployment, this chart holds resources used by Velero
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | podSecurityContext | object | `{}` | Configure object storage backup pod pods' Security Context |
 | securityContext | object | `{}` | Configure object storage backup pod containers' Security Context |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | local.address | string | `"minio.default:9000"` | Address of local object storage to backup data from |
 | local.accessKey | string | `"accessKey"` | Access key of local object storage |
 | local.secretKey | string | `"secretKey"` | Secret key of local object storage |
@@ -53,7 +55,7 @@ A Helm chart for Velero S3 deployment, this chart holds resources used by Velero
 | backup.secretKey | string | `"secretKey"` | Secret key of remote object storage |
 | backup.intermediateBucketName | string | `"radar-intermediate-storage"` | Name of remote intermediate data bucket |
 | backup.outputBucketName | string | `"radar-output-storage"` | Name of remote output data bucket |
-| velero | object | `{"configuration":{"backupStorageLocation":{"bucket":"radar-base-backups","config":{"region":"eu-central-1","s3ForcePathStyle":"true","s3Url":"https://s3.amazon.com"},"name":"default"},"provider":"aws"},"credentials":{"secretContents":{"cloud":"[default]\naws_access_key_id=accessKey\naws_secret_access_key=secretKey\n"}},"deployRestic":true,"initContainers":[{"image":"velero/velero-plugin-for-aws:v1.5.0","imagePullPolicy":"IfNotPresent","name":"velero-plugin-for-aws","volumeMounts":[{"mountPath":"/target","name":"plugins"}]}],"metrics":{"enabled":true,"serviceMonitor":{"enabled":true}},"restic":{"podVolumePath":"/var/lib/kubelet/pods","privileged":false},"schedules":{"backup":{"schedule":"0 3 * * *","template":{"includeClusterResources":true,"includedNamespaces":["cert-manager","default","graylog","kubernetes-dashboard","monitoring","velero"],"snapshotVolumes":false,"ttl":"240h"}}},"snapshotsEnabled":false}` | -- |
+| velero | object | `{"configuration":{"backupStorageLocation":{"bucket":"radar-base-backups","config":{"region":"eu-central-1","s3ForcePathStyle":"true","s3Url":"https://s3.amazon.com"},"name":"default"},"provider":"aws"},"credentials":{"secretContents":{"cloud":"[default]\naws_access_key_id=accessKey\naws_secret_access_key=secretKey\n"}},"deployRestic":true,"initContainers":[{"image":"velero/velero-plugin-for-aws:v1.5.0","imagePullPolicy":"IfNotPresent","name":"velero-plugin-for-aws","volumeMounts":[{"mountPath":"/target","name":"plugins"}]}],"kubectl":{"image":{"tag":"1.26.14-debian-11-r6"}},"metrics":{"enabled":true,"serviceMonitor":{"enabled":true}},"restic":{"podVolumePath":"/var/lib/kubelet/pods","privileged":false},"schedules":{"backup":{"schedule":"0 3 * * *","template":{"includeClusterResources":true,"includedNamespaces":["cert-manager","default","graylog","kubernetes-dashboard","monitoring","velero"],"snapshotVolumes":false,"ttl":"240h"}}},"snapshotsEnabled":false}` | -- |
 | velero.initContainers | list | check values.yaml | Add plugins to enable using different storage systems, AWS plugin is needed to be able to push to S3-compatible object storages |
 | velero.metrics.enabled | bool | `true` | Enable monitoring metrics to be collected |
 | velero.metrics.serviceMonitor.enabled | bool | `true` | Enable prometheus-operator interface |

@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "radar-push-endpoint.fullname" . }}
   labels:
-    app: {{ template "radar-push-endpoint.name" . }}
-    chart: {{ template "radar-push-endpoint.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "radar-push-endpoint.labels" . | indent 4 }}
 data:
   healthcheck.sh: |
      #!/bin/sh
@@ -72,4 +69,4 @@ data:
             uri: {{ .Values.redis.url }}
             # Key prefix for locks
             lockPrefix: radar-push-garmin/lock/
-        
+

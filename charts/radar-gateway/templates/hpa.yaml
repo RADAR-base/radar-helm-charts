@@ -1,27 +1,32 @@
-{{- if semverCompare ">=1.23-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if .Values.hpa.enabled }}
 apiVersion: autoscaling/v2
-{{- else -}}
-apiVersion: autoscaling/v2beta2
-{{- end }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "radar-gateway.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-gateway.name" . }}
-    helm.sh/chart: {{ include "radar-gateway.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "radar-gateway.labels" . | indent 4 }}
 spec:
-  maxReplicas: 5
-  minReplicas: 1
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "radar-gateway.fullname" . }}
+  minReplicas: {{ .Values.replicaCount }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
   metrics:
+    {{- if .Values.hpa.targetCPU }}
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 50
+          averageUtilization: {{ .Values.hpa.targetCPU }}
+    {{- end }}
+    {{- if .Values.hpa.targetMemory }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.targetMemory }}
+    {{- end }}
+{{- end }}

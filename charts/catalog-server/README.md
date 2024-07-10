@@ -1,8 +1,9 @@
 
 
 # catalog-server
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/catalog-server)](https://artifacthub.io/packages/helm/radar-base/catalog-server)
 
-![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.8](https://img.shields.io/badge/AppVersion-0.8.8-informational?style=flat-square)
 
 A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 
@@ -13,16 +14,16 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | Name | Email | Url |
 | ---- | ------ | --- |
 | Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
-| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
 | Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
+* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/catalog-server>
 * <https://github.com/RADAR-base/RADAR-Schemas/tree/master/java-sdk>
 
 ## Prerequisites
-* Kubernetes 1.17+
-* Kubectl 1.17+
+* Kubernetes 1.22+
+* Kubectl 1.22+
 * Helm 3.1.0+
 * PV provisioner support in the underlying infrastructure
 
@@ -32,7 +33,7 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of catalog-server replicas to deploy |
 | image.repository | string | `"radarbase/radar-schemas-tools"` | catalog-server image repository |
-| image.tag | string | `"0.8.0"` | catalog-server image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.8.8"` | catalog-server image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | catalog-server image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override catalog-server.fullname template with a string (will prepend the release name) |
@@ -48,7 +49,25 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
-| kafka_num_brokers | int | `3` | number of Kafka brokers to look for |
+| extraEnvVarsInit | list | `[]` | Extra environment variables |
+| customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
+| livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
+| livenessProbe.periodSeconds | int | `60` | Period seconds for livenessProbe |
+| livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
+| readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
+| readinessProbe.periodSeconds | int | `60` | Period seconds for readinessProbe |
+| readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
+| kafka_num_brokers | int | `3` | Number of deployed Kafka brokers |
+| kafka_num_replication | int | `3` | Number of Kafka replicates (may not be lower than kafka_num_brokers) |
+| kafka_num_partitions | int | `3` | Number of Kafka data partitions |
 | kafka | string | `"cp-kafka-headless:9092"` | URI of Kafka brokers |
 | schema_registry | string | `"http://cp-schema-registry:8081"` | URL of the confluent schema registry |
 | kafkaProperties | object | `{"security_protocol":"PLAINTEXT"}` | Additional kafka properties such as security config. The template replaces `_` with `.` in keys so property keys can be specified using `_` instead of `.`. For example `security_protocol` is same as `security.protocol` kafka config. |

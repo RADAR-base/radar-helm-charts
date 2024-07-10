@@ -1,12 +1,10 @@
+{{- $restSourceClients := trim (include "radar-rest-sources-backend.enabledMapElementsAsList" .Values.restSourceClients) -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "radar-rest-sources-backend.fullname" . }}
   labels:
-    app: {{ template "radar-rest-sources-backend.name" . }}
-    chart: {{ template "radar-rest-sources-backend.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "radar-rest-sources-backend.labels" . | indent 4 }}
 data:
   authorizer.yml: |
     service:
@@ -21,7 +19,7 @@ data:
 
     auth:
       # Management Portal URL
-      managementPortalUrl: http://{{ .Values.managementportal_host }}:8080/managementportal
+      managementPortalUrl: {{ .Values.managementportal_url }}
       # OAuth2 Client id of rest sources authorizer backend
       clientId: radar_rest_sources_auth_backend
       # OAuth2 Client Secret of rest sources authorizer backend client
@@ -35,11 +33,12 @@ data:
       dialect: org.hibernate.dialect.PostgreSQLDialect
 
     restSourceClients:
-      {{- range $clientId, $client := .Values.restSourceClients -}}
-      {{- if $client.enable -}}
-      {{ (list (omit $client "enable")) | toYaml | nindent 6 }}
-      {{- end -}}
-      {{- end }}
+    {{- if $restSourceClients }}
+      {{- $restSourceClients | nindent 6 }}
+    {{- else }} []
+    {{- end }}
 
+    {{- if .Values.redis.uri }}
     redis:
         uri: {{ .Values.redis.uri }}
+    {{- end }}

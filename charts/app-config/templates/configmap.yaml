@@ -23,7 +23,7 @@ data:
 
     auth:
       managementPortal:
-        url: http://management-portal:8080/managementportal
+        url: {{ .Values.managementportal_url }}
       jwtResourceName: res_appconfig
 
     database:

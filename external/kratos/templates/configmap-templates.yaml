@@ -1,0 +1,30 @@
+{{- $root := . -}}
+{{- range $method, $methodEntry := .Values.kratos.emailTemplates }}
+{{- range $result, $resultEntry := $methodEntry }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "kratos.fullname" $root }}-template-{{ $method | kebabcase }}-{{ $result }}
+  namespace: {{ $root.Release.Namespace }}
+  labels:
+    {{- include "kratos.labels" $root | nindent 4 }}
+  annotations: 
+    {{- with $.Values.configmap.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+data:
+  {{- if $resultEntry.subject }}
+  "email.subject.gotmpl": |
+    {{- $resultEntry.subject | nindent 4 }}
+  {{- end }}
+  {{- if $resultEntry.body }}
+  "email.body.gotmpl": |-
+    {{- $resultEntry.body | nindent 4 }}
+  {{- end }}
+  {{- if $resultEntry.plainBody }}
+  "email.body.plaintext.gotmpl": |-
+    {{- $resultEntry.plainBody | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}

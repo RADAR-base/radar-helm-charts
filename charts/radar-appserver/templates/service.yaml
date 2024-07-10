@@ -3,10 +3,7 @@ kind: Service
 metadata:
   name: {{ include "radar-appserver.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "radar-appserver.name" . }}
-    helm.sh/chart: {{ include "radar-appserver.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "radar-appserver.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

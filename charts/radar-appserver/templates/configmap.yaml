@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "radar-appserver.fullname" . }}
   labels:
-    app: {{ template "radar-appserver.name" . }}
-    chart: {{ template "radar-appserver.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "radar-appserver.labels" . | indent 4 }}
 data:
   healthcheck.sh: |
     #!/bin/sh

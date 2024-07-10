@@ -2,14 +2,14 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- 	Number of Management Portal replicas to deploy
+# -- Number of Management Portal replicas to deploy
 replicaCount: 1
 
 image:
   # -- Management Portal image repository
   repository: radarbase/management-portal
   # -- Management Portal image tag (immutable tags are recommended)
-  tag: 0.8.1
+  tag: 2.0.0
   # -- Management Portal image pull policy
   pullPolicy: IfNotPresent
 
@@ -43,29 +43,23 @@ service:
 ingress:
   # -- Enable ingress controller resource
   enabled: true
-  # -- Annotations that define default ingress class, certificate issuer and rate limiter
+  # -- Annotations that define default ingress class, certificate issuer
   # @default -- check values.yaml
   annotations:
-    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/server-snippet: |
-      location /managementportal/oauth/ {
-        # Allow 20 fast-following requests, like when authorizing a user.
-        limit_req zone=login_limit burst=20;
-      }
-      location /managementportal/api/meta-token/ {
-        limit_req zone=login_limit;
-      }
   # -- Path within the url structure
   path: "/managementportal"
+  # -- Ingress Path type
   pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
     # -- TLS Secret Name
-    secretName: radar-base-tls
+    secretName: radar-base-tls-managementportal
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -76,7 +70,7 @@ resources:
   # -- CPU/Memory resource limits
   limits:
     cpu: 2
-    memory: 1.7Gi
+    memory: 1700Mi
   # -- CPU/Memory resource requests
   requests:
     cpu: 100m
@@ -90,6 +84,147 @@ tolerations: []
 
 # -- Affinity labels for pod assignment
 affinity: {}
+
+# -- Extra environment variables
+extraEnvVars: []
+#  - name: BEARER_AUTH
+#    value: true
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 60
+  # -- Period seconds for livenessProbe
+  periodSeconds: 90
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 60
+  # -- Period seconds for readinessProbe
+  periodSeconds: 90
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: app-config
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-appserver
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-fitbit-connector
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-gateway
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-integration
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-push-endpoint
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-rest-sources-backend
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-upload-connect-backend
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-upload-source-connector
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: '{{ .Values.catalogue_server }}'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: '{{ .Values.postgres.host | trunc 63 | trimSuffix "-" }}'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
 
 # -- base 64 encoded binary p12 keystore containing a ECDSA certificate with alias `radarbase-managementportal-ec` and a RSA certificate with alias `selfsigned`.
 keystore: ""
@@ -128,15 +263,27 @@ postgres:
 server_name: localhost
 # -- Hostname of the catalogue-server
 catalogue_server: catalog-server
+
+# Settings pertaining to the identity provider (IDP)
+identity_server:
+  # -- The admin email to link to the admin service account. This account should only be used to set up admin-users
+  admin_email: admin@example.com
+  # -- The publicly accessible server URL for the IDP
+  server_url: https://my.example-domain.net/kratos
+  # -- The admin server URL for the IDP. Only needs to be accessible from inside the cluster where the managementportal resides
+  server_admin_url: http://kratos-admin
+
 managementportal:
   # -- set to true, if automatic source-type import from catalogue server should be enabled
-  catalogue_server_enable_auto_import: "false"
+  catalogue_server_enable_auto_import: false
   # -- Override with a publicly resolvable url of the privacy-policy url for your set-up. This can be overridden on a project basis as well.
   common_privacy_policy_url: http://info.thehyve.nl/radar-cns-privacy-policy
   # -- Keystore alias to sign JWT tokens from Management Portal
   oauth_checking_key_aliases_0: radarbase-managementportal-ec
   # -- Keystore alias to sign JWT tokens from Management Portal
   oauth_checking_key_aliases_1: selfsigned
+  # -- Whether or not to require AAL2 level authentication (i.e. MFA)
+  oauth_require_aal2: true
   # -- OAuth2 Client secret of the Management Portal frontend application
   frontend_client_secret: xxx
   # -- Admin password of the default admin user created by the system
@@ -162,7 +309,7 @@ smtp:
   auth: true
 
 # -- OAuth2 Client configuration
-# @default -- check values.yaml
+# @default -- check `values.yaml`
 oauth_clients:
   pRMT:
     enable: false
@@ -195,8 +342,10 @@ oauth_clients:
       - res_ManagementPortal
       - res_appconfig
       - res_AppServer
+      - res_DataDashboardAPI
     client_secret: ""
     scope:
+      - MEASUREMENT.READ
       - MEASUREMENT.CREATE
       - PROJECT.READ
       - ROLE.READ
@@ -418,5 +567,21 @@ oauth_clients:
       - PROJECT.READ
       - SUBJECT.READ
     authorized_grant_types:
+      - client_credentials
+    access_token_validity: 900
+
+  radar_data_dashboard_backend:
+    enable: false
+    resource_ids:
+      - res_DataDashboardAPI
+      - res_ManagementPortal
+    client_secret: ""
+    scope:
+      - PROJECT.READ
+      - SUBJECT.READ
+      - MEASUREMENT.READ
+    authorized_grant_types:
+      - authorization_code
+      - refresh_token
       - client_credentials
     access_token_validity: 900

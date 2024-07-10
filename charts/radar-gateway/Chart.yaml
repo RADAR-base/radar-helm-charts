@@ -1,9 +1,17 @@
 apiVersion: v2
-appVersion: "0.5.14"
+appVersion: "0.7.1"
 description: A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 name: radar-gateway
-version: 0.2.6
-sources: ["https://github.com/RADAR-base/RADAR-Gateway"]
+version: 1.1.6
+icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
+sources:
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-gateway
+- https://github.com/RADAR-base/RADAR-Gateway
+keywords:
+  - radar-base
+  - remote-trial
+annotations:
+  artifacthub.io/license: Apache-2.0
 deprecated: false
 type: application
 home: "https://radar-base.org"
@@ -11,9 +19,6 @@ maintainers:
   - email: keyvan@thehyve.nl
     name: Keyvan Hedayati
     url: https://www.thehyve.nl
-  - email: joris@thehyve.nl
-    name: Joris Borgdorff
-    url: https://www.thehyve.nl/experts/joris-borgdorff
   - email: nivethika@thehyve.nl
     name: Nivethika Mahasivam
     url: https://www.thehyve.nl/experts/nivethika-mahasivam

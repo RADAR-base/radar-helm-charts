@@ -30,3 +30,23 @@ Create chart name and version as used by the chart label.
 {{- define "radar-push-endpoint.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "radar-push-endpoint.labels" -}}
+helm.sh/chart: {{ include "radar-push-endpoint.chart" . }}
+{{ include "radar-push-endpoint.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "radar-push-endpoint.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "radar-push-endpoint.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

@@ -3,10 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "management-portal.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "management-portal.name" . }}
-    helm.sh/chart: {{ include "management-portal.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "management-portal.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -87,6 +84,12 @@ spec:
             value: "{{ .Values.managementportal.catalogue_server_enable_auto_import }}"
           - name: MANAGEMENTPORTAL_CATALOGUE_SERVER_SERVER_URL
             value: http://{{ .Values.catalogue_server }}:9010/source-types
+          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_ADMIN_EMAIL
+            value: {{ .Values.identity_server.admin_email }}
+          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_URL
+            value: {{ .Values.identity_server.server_url }}
+          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_ADMIN_URL
+            value: {{ .Values.identity_server.server_admin_url }}
           - name: MANAGEMENTPORTAL_COMMON_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -124,30 +127,41 @@ spec:
           - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
             value: {{ .Values.smtp.starttls | quote }}
           {{ end }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
+          {{- if .Values.customLivenessProbe }}
+          livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.livenessProbe.enabled }}
           livenessProbe:
             exec:
               command:
               - /bin/sh
               - /config/healthcheck.sh
-            initialDelaySeconds: 60
-            periodSeconds: 90
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.customReadinessProbe }}
+          readinessProbe: {{- .Values.customReadinessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.readinessProbe.enabled }}
           readinessProbe:
             exec:
               command:
               - /bin/sh
               - /config/healthcheck.sh
-            initialDelaySeconds: 60
-            periodSeconds: 90
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

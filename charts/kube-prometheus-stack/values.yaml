@@ -154,6 +154,11 @@ kube-prometheus-stack:
       patch:
         enabled: false
 
+  networkPolicy:
+    ## Enable creation of NetworkPolicy resources.
+    ##
+    enabled: false
+
   ## Deploy a Prometheus instance
   ##
   prometheus:

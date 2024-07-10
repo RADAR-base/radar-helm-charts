@@ -2,8 +2,7 @@ apiVersion: v2
 appVersion: "1.0"
 description: A Helm chart for Velero S3 deployment, this chart holds resources used by Velero with a deployment to mirror the local object storage to a remote object storage.
 name: velero-s3-deployment
-version: 0.1.0
-engine: gotpl
+version: 0.2.3
 sources: ["https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/velero-s3-deployment"]
 deprecated: false
 type: application

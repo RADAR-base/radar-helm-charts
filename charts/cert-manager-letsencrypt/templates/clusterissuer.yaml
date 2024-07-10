@@ -23,5 +23,5 @@ spec:
     solvers:
       - http01:
          ingress:
-           class: nginx
+           {{ .Values.httpIssuer.ingressMatchMethod }}: {{ .Values.httpIssuer.ingressMatchValue }}
 {{- end -}}

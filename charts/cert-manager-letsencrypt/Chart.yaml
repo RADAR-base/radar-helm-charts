@@ -2,8 +2,7 @@ apiVersion: v2
 appVersion: "1.0"
 description: A Helm chart for a cert-manager ClusterIssuer for letsencrypt. Requires the cert-manager release to be activated.
 name: cert-manager-letsencrypt
-version: 0.1.0
-engine: gotpl
+version: 0.1.2
 sources: ["https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/cert-manager-letsencrypt"]
 deprecated: false
 type: application

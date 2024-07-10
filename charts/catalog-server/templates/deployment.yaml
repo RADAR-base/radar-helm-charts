@@ -61,10 +61,10 @@ spec:
           value: "{{ .Values.schema_registry }}"
         - name: KAFKA_NUM_BROKERS
           value: "{{ .Values.kafka_num_brokers }}"
-        - name: RADAR_NUM_PARTITIONS
-          value: "3"
-        - name: RADAR_NUM_REPLICATION_FACTOR
-          value: "3"
+        - name: KAFKA_NUM_REPLICATION
+          value: "{{ .Values.kafka_num_replication }}"
+        - name: KAFKA_NUM_PARTITIONS
+          value: "{{ .Values.kafka_num_partitions }}"
         - name: CONFIG_PATH
           value: /etc/radar-schemas-tools/config.yaml
         {{- if .Values.cc.enabled }}
@@ -83,6 +83,9 @@ spec:
             secretKeyRef:
               name: {{ template "catalog-server.fullname" . }}
               key: srApiSecret
+        {{- end }}
+        {{- with .Values.extraEnvVarsInit }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
         volumeMounts:
           - name: config
@@ -104,24 +107,32 @@ spec:
             - name: http
               containerPort: 9010
               protocol: TCP
+          {{- if .Values.customLivenessProbe }}
+          livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
               path: /source-types
               port: http
-            initialDelaySeconds: 5
-            periodSeconds: 60
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.customReadinessProbe }}
+          readinessProbe: {{- .Values.customReadinessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
               path: /source-types
               port: http
-            initialDelaySeconds: 5
-            periodSeconds: 60
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

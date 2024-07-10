@@ -4,10 +4,7 @@ apiVersion: v1
 metadata:
   name: {{ template "radar-backend.fullname" . }}
   labels:
-    app: "{{ template "radar-backend.fullname" . }}"
-    chart: "{{ template "radar-backend.chart" . }}"
-    release: {{ .Release.Name | quote }}
-    heritage: {{ .Release.Service | quote }}
+{{ include "radar-backend.labels" . | indent 4 }}
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}
