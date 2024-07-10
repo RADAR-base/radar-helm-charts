@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "0.1.4"
+appVersion: "0.1.7"
 name: data-dashboard-backend
 description: API for data in the data dashboard
-version: 0.2.2
+version: 0.2.3
 sources: ["https://github.com/thehyve/radar-data-dashboard-backend"]
 deprecated: false
 type: application
