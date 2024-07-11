@@ -19,29 +19,25 @@ If release name contains chart name it will be used as a full name.
 Create a default mongo service name which can be overridden.
 */}}
 {{- define "mongodb.service.nameOverride" -}}
-    {{- if .Values.service -}}
-        {{- if .Values.service.nameOverride }}
-            {{- .Values.service.nameOverride -}}
-        {{- else -}}
-            {{ include "mongodb.fullname" . }}-headless
-        {{- end -}}
+    {{- if and .Values.service .Values.service.nameOverride -}}
+        {{- print .Values.service.nameOverride -}}
     {{- else -}}
-        {{ include "mongodb.fullname" . }}-headless
-    {{- end }}
-{{- end }}
+        {{- if eq .Values.architecture "replicaset" -}}
+            {{- printf "%s-headless" (include "mongodb.fullname" .) -}}
+        {{- else -}}
+            {{- printf "%s" (include "mongodb.fullname" .) -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
 
 {{/*
 Create a default mongo arbiter service name which can be overridden.
 */}}
 {{- define "mongodb.arbiter.service.nameOverride" -}}
-    {{- if .Values.arbiter.service -}}
-        {{- if .Values.arbiter.service.nameOverride }}
-            {{- .Values.arbiter.service.nameOverride -}}
-        {{- else -}}
-            {{ include "mongodb.fullname" . }}-arbiter-headless
-        {{- end -}}
+    {{- if and .Values.arbiter.service .Values.arbiter.service.nameOverride -}}
+        {{- print .Values.arbiter.service.nameOverride -}}
     {{- else -}}
-        {{ include "mongodb.fullname" . }}-arbiter-headless
+        {{- printf "%s-arbiter-headless" (include "mongodb.fullname" .) -}}
     {{- end }}
 {{- end }}
 
@@ -49,68 +45,64 @@ Create a default mongo arbiter service name which can be overridden.
 Return the proper MongoDB&reg; image name
 */}}
 {{- define "mongodb.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
+{{- include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) -}}
 {{- end -}}
 
 {{/*
 Return the proper image name (for the metrics image)
 */}}
 {{- define "mongodb.metrics.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.metrics.image "global" .Values.global) }}
+{{- include "common.images.image" (dict "imageRoot" .Values.metrics.image "global" .Values.global) -}}
 {{- end -}}
 
 {{/*
 Return the proper image name (for the init container volume-permissions image)
 */}}
 {{- define "mongodb.volumePermissions.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.volumePermissions.image "global" .Values.global) }}
+{{- include "common.images.image" (dict "imageRoot" .Values.volumePermissions.image "global" .Values.global) -}}
 {{- end -}}
 
 {{/*
 Return the proper image name (for the init container auto-discovery image)
 */}}
 {{- define "mongodb.externalAccess.autoDiscovery.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.externalAccess.autoDiscovery.image "global" .Values.global) }}
+{{- include "common.images.image" (dict "imageRoot" .Values.externalAccess.autoDiscovery.image "global" .Values.global) -}}
 {{- end -}}
 
 {{/*
 Return the proper image name (for the TLS Certs image)
 */}}
 {{- define "mongodb.tls.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.tls.image "global" .Values.global) }}
+{{- include "common.images.image" (dict "imageRoot" .Values.tls.image "global" .Values.global) -}}
 {{- end -}}
 
 {{/*
 Return the proper Docker Image Registry Secret Names
 */}}
 {{- define "mongodb.imagePullSecrets" -}}
-{{ include "common.images.pullSecrets" (dict "images" (list .Values.image .Values.metrics.image .Values.volumePermissions.image) "global" .Values.global) }}
+{{- include "common.images.pullSecrets" (dict "images" (list .Values.image .Values.metrics.image .Values.volumePermissions.image .Values.tls.image) "global" .Values.global) -}}
 {{- end -}}
 
 {{/*
 Allow the release namespace to be overridden for multi-namespace deployments in combined charts.
 */}}
 {{- define "mongodb.namespace" -}}
-    {{- if .Values.global -}}
-        {{- if .Values.global.namespaceOverride }}
-            {{- .Values.global.namespaceOverride -}}
-        {{- else -}}
-            {{- .Release.Namespace -}}
-        {{- end -}}
+    {{- if and .Values.global .Values.global.namespaceOverride -}}
+        {{- print .Values.global.namespaceOverride -}}
     {{- else -}}
-        {{- .Release.Namespace -}}
+        {{- print .Release.Namespace -}}
     {{- end }}
 {{- end -}}
 {{- define "mongodb.serviceMonitor.namespace" -}}
     {{- if .Values.metrics.serviceMonitor.namespace -}}
-        {{- .Values.metrics.serviceMonitor.namespace -}}
+        {{- print .Values.metrics.serviceMonitor.namespace -}}
     {{- else -}}
         {{- include "mongodb.namespace" . -}}
     {{- end }}
 {{- end -}}
 {{- define "mongodb.prometheusRule.namespace" -}}
     {{- if .Values.metrics.prometheusRule.namespace -}}
-        {{- .Values.metrics.prometheusRule.namespace -}}
+        {{- print .Values.metrics.prometheusRule.namespace -}}
     {{- else -}}
         {{- include "mongodb.namespace" . -}}
     {{- end }}
@@ -123,9 +115,9 @@ is true or default otherwise.
 */}}
 {{- define "mongodb.serviceAccountName" -}}
     {{- if .Values.serviceAccount.create -}}
-        {{ default (include "mongodb.fullname" .) .Values.serviceAccount.name }}
+        {{- default (include "mongodb.fullname" .) (print .Values.serviceAccount.name) -}}
     {{- else -}}
-        {{ default "default" .Values.serviceAccount.name }}
+        {{- default "default" (print .Values.serviceAccount.name) -}}
     {{- end -}}
 {{- end -}}
 
@@ -297,6 +289,8 @@ Compile all warnings into a single message, and call fail.
 {{- $messages := append $messages (include "mongodb.validateValues.loadBalancerIPsListLength" .) -}}
 {{- $messages := append $messages (include "mongodb.validateValues.nodePortListLength" .) -}}
 {{- $messages := append $messages (include "mongodb.validateValues.externalAccessAutoDiscoveryRBAC" .) -}}
+{{- $messages := append $messages (include "mongodb.validateValues.replicaset.existingSecrets" .) -}}
+{{- $messages := append $messages (include "mongodb.validateValues.hidden.existingSecrets" .) -}}
 {{- $messages := without $messages "" -}}
 {{- $message := join "\n" $messages -}}
 
@@ -397,19 +391,44 @@ mongodb: rbac.create
 {{- end -}}
 
 {{/*
+Validate values of MongoDB&reg; - Number of replicaset secrets must be the same than number of replicaset nodes.
+*/}}
+{{- define "mongodb.validateValues.replicaset.existingSecrets" -}}
+{{- if and .Values.tls.enabled (eq .Values.architecture "replicaset") (not (empty .Values.tls.replicaset.existingSecrets)) }}
+{{- $nbSecrets := len .Values.tls.replicaset.existingSecrets -}}
+{{- if not (eq $nbSecrets (int .Values.replicaCount)) }}
+mongodb: tls.replicaset.existingSecrets
+    tls.replicaset.existingSecrets Number of secrets and number of replicaset nodes must be the same.
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Validate values of MongoDB&reg; - Number of hidden secrets must be the same than number of hidden nodes.
+*/}}
+{{- define "mongodb.validateValues.hidden.existingSecrets" -}}
+{{- if and .Values.tls.enabled (include "mongodb.hidden.enabled" .) (not (empty .Values.tls.hidden.existingSecrets)) }}
+{{- $nbSecrets := len .Values.tls.hidden.existingSecrets -}}
+{{- if not (eq $nbSecrets (int .Values.hidden.replicaCount)) }}
+mongodb: tls.hidden.existingSecrets
+    tls.hidden.existingSecrets Number of secrets and number of hidden nodes must be the same.
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Validate values of MongoDB&reg; exporter URI string - auth.enabled and/or tls.enabled must be enabled or it defaults
 */}}
 {{- define "mongodb.mongodb_exporter.uri" -}}
     {{- $uriTlsArgs := ternary "tls=true&tlsCertificateKeyFile=/certs/mongodb.pem&tlsCAFile=/certs/mongodb-ca-cert" "" .Values.tls.enabled -}}
     {{- if .Values.metrics.username }}
         {{- $uriAuth := ternary "$(echo $MONGODB_METRICS_USERNAME | sed -r \"s/@/%40/g;s/:/%3A/g\"):$(echo $MONGODB_METRICS_PASSWORD | sed -r \"s/@/%40/g;s/:/%3A/g\")@" "" .Values.auth.enabled -}}
-        {{- printf "mongodb://%slocalhost:27017/admin?%s" $uriAuth $uriTlsArgs -}}
+        {{- printf "mongodb://%slocalhost:%d/admin?%s" $uriAuth (int .Values.containerPorts.mongodb) $uriTlsArgs -}}
     {{- else -}}
         {{- $uriAuth := ternary "$MONGODB_ROOT_USER:$(echo $MONGODB_ROOT_PASSWORD | sed -r \"s/@/%40/g;s/:/%3A/g\")@" "" .Values.auth.enabled -}}
-        {{- printf "mongodb://%slocalhost:27017/admin?%s" $uriAuth $uriTlsArgs -}}
+        {{- printf "mongodb://%slocalhost:%d/admin?%s" $uriAuth (int .Values.containerPorts.mongodb) $uriTlsArgs -}}
     {{- end -}}
 {{- end -}}
-
 
 {{/*
 Return the appropriate apiGroup for PodSecurityPolicy.
@@ -426,7 +445,7 @@ Return the appropriate apiGroup for PodSecurityPolicy.
 Return true if a TLS secret object should be created
 */}}
 {{- define "mongodb.createTlsSecret" -}}
-{{- if and .Values.tls.enabled (not .Values.tls.existingSecret) }}
+{{- if and .Values.tls.enabled (not .Values.tls.existingSecret) (include "mongodb.autoGenerateCerts" .) }}
     {{- true -}}
 {{- end -}}
 {{- end -}}
@@ -440,5 +459,18 @@ Return the secret containing MongoDB&reg; TLS certificates
     {{- printf "%s" (tpl $secretName $) -}}
 {{- else -}}
     {{- printf "%s-ca" (include "mongodb.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return true if certificates must be auto generated
+*/}}
+{{- define "mongodb.autoGenerateCerts" -}}
+{{- $standalone := (eq .Values.architecture "standalone") | ternary (not .Values.tls.standalone.existingSecret) true -}}
+{{- $replicaset := (eq .Values.architecture "replicaset") | ternary (empty .Values.tls.replicaset.existingSecrets) true -}}
+{{- $arbiter := (eq (include "mongodb.arbiter.enabled" .) "true") | ternary (not .Values.tls.arbiter.existingSecret) true -}}
+{{- $hidden := (eq (include "mongodb.hidden.enabled" .) "true") | ternary (empty .Values.tls.hidden.existingSecrets) true -}}
+{{- if and $standalone $replicaset $arbiter $hidden -}}
+    {{- true -}}
 {{- end -}}
 {{- end -}}
