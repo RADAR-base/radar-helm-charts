@@ -60,7 +60,7 @@ spec:
           - mountPath: /etc/radar-gateway/
             name: gateway-jmx-configmap
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["radar-gateway", "/etc/radar-gateway/gateway.yml"]
           env:
