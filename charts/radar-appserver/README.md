@@ -3,7 +3,7 @@
 # radar-appserver
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-appserver)](https://artifacthub.io/packages/helm/radar-base/radar-appserver)
 
-![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.1](https://img.shields.io/badge/AppVersion-2.4.1-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Appserver
 
@@ -84,3 +84,11 @@ A Helm chart for the backend application of RADAR-base Appserver
 | public_key_endpoints | string | `nil` |  |
 | google_application_credentials | string | `""` | Google credentials containing FCM server key, etc. |
 | github_client_token | string | `""` | Github client token which is used for authenticating requests |
+| smtp.enabled | bool | `false` | set to true, if sending of notifications via email should be enabled. |
+| smtp.host | string | `"smtp"` | Hostname of the SMTP server |
+| smtp.port | int | `25` | Port of the SMTP server |
+| smtp.username | string | `"username"` | Username of the SMTP server |
+| smtp.password | string | `"secret"` | Password of the SMTP server |
+| smtp.from | string | `"noreply@example.com"` | Email address which should be used to send activation emails |
+| smtp.starttls | bool | `false` | set to true,if TTLS should be enabled |
+| smtp.auth | bool | `true` | set to true, if the account should be authenticated before sending emails |
