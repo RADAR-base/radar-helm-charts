@@ -41,6 +41,9 @@ service:
   # -- radar-upload-connect-frontend port
   port: 80
 
+# -- Disable TLS (reconfigures Ingress and sets URLs to use HTTP)
+disable_tls: false
+
 ingress:
   # -- Enable ingress controller resource
   enabled: true
