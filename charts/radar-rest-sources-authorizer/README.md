@@ -3,7 +3,7 @@
 # radar-rest-sources-authorizer
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-authorizer)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-authorizer)
 
-![Version: 1.1.4](https://img.shields.io/badge/Version-1.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.2](https://img.shields.io/badge/AppVersion-4.4.2-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.2](https://img.shields.io/badge/AppVersion-4.4.2-informational?style=flat-square)
 
 A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer which is a portal to authorize the Fitbit connector to read data from Fitbit accounts.
 
@@ -42,6 +42,7 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 | securityContext | object | `{}` | Configure radar-rest-sources-authorizer containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8080` | radar-rest-sources-authorizer port |
+| disable_tls | bool | `false` | Disable TLS (reconfigures Ingress and sets URLs to use HTTP) |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
 | ingress.path | string | `"/rest-sources/authorizer"` | Path within the url structure |
@@ -71,4 +72,3 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | clientId | string | `"radar_rest_sources_authorizer"` | OAuth2 client id of the application registered in Management Portal. It is assumed that this is a public client with empty client secret. |
 | serverName | string | `"localhost"` | Domain name of the server |
-| authUrl | string | `"localhost/managementportal/oauth"` | Authorization URL of the IDP |
