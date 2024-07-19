@@ -3,4 +3,4 @@ dependencies:
   repository: https://radar-base.github.io/radar-helm-charts
   version: 2.2.2
 digest: sha256:f31efab5c07a4c4582f202eab8aafa300f2236941c00579f8f8c8152cffb0a54
-generated: "2023-07-18T12:15:51.458515455+02:00"
+generated: "2024-07-18T09:17:13.244383343Z"

@@ -1,5 +1,5 @@
 {{/*
-Copyright VMware, Inc.
+Copyright Broadcom, Inc. All Rights Reserved.
 SPDX-License-Identifier: APACHE-2.0
 */}}
 
@@ -31,7 +31,7 @@ Return the proper image name (for the init container volume-permissions image)
 Return the proper Docker Image Registry Secret Names
 */}}
 {{- define "minio.imagePullSecrets" -}}
-{{- include "common.images.pullSecrets" (dict "images" (list .Values.image .Values.clientImage .Values.volumePermissions.image) "global" .Values.global) -}}
+{{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image .Values.clientImage .Values.volumePermissions.image) "context" $) -}}
 {{- end -}}
 
 {{/*
@@ -82,6 +82,28 @@ Get the credentials secret.
     {{- printf "%s" (tpl .Values.auth.existingSecret $) -}}
 {{- else -}}
     {{- printf "%s" (include "common.names.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the root user key.
+*/}}
+{{- define "minio.rootUserKey" -}}
+{{- if and (.Values.auth.existingSecret) (.Values.auth.rootUserSecretKey) -}}
+    {{- printf "%s" (tpl .Values.auth.rootUserSecretKey $) -}}
+{{- else -}}
+    {{- "root-user" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the root password key.
+*/}}
+{{- define "minio.rootPasswordKey" -}}
+{{- if and (.Values.auth.existingSecret) (.Values.auth.rootPasswordSecretKey) -}}
+    {{- printf "%s" (tpl .Values.auth.rootPasswordSecretKey $) -}}
+{{- else -}}
+    {{- "root-password" -}}
 {{- end -}}
 {{- end -}}
 
@@ -162,7 +184,8 @@ Validate values of MinIO&reg; - total number of drives should be greater than 4
 {{- define "minio.validateValues.totalDrives" -}}
 {{- $replicaCount := int .Values.statefulset.replicaCount }}
 {{- $drivesPerNode := int .Values.statefulset.drivesPerNode }}
-{{- $totalDrives := mul $replicaCount $drivesPerNode }}
+{{- $zones := int .Values.statefulset.zones }}
+{{- $totalDrives := mul $replicaCount $zones $drivesPerNode }}
 {{- if and (eq .Values.mode "distributed") (lt $totalDrives 4) -}}
 minio: total drives
     The total number of drives should be greater than 4 to guarantee erasure coding!
@@ -207,8 +230,9 @@ Return true if a TLS secret object should be created
 Provisioning job labels (exclude matchLabels from standard labels)
 */}}
 {{- define "minio.labels.provisioning" -}}
-{{- $provisioningLabels := (include "common.labels.standard" . | fromYaml ) -}}
-{{- range (include "common.labels.matchLabels" . | fromYaml | keys ) -}}
+{{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.provisioning.podLabels .Values.commonLabels ) "context" . ) }}
+{{- $provisioningLabels := (include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | fromYaml ) -}}
+{{- range (include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | fromYaml | keys ) -}}
 {{- $_ := unset $provisioningLabels . -}}
 {{- end -}}
 {{- print ($provisioningLabels | toYaml) -}}
