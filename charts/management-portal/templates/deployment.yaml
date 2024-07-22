@@ -89,9 +89,9 @@ spec:
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_ADMIN_EMAIL
             value: {{ .Values.identity_server.admin_email }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_URL
-            value: {{ .Values.identity_server.server_url }}
+            value: {{ default (printf "https://%s/kratos" .Values.server_name) .Values.identity_server.server_url }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_LOGIN_URL
-            value: {{ .Values.identity_server.login_url }}
+            value: {{ default (printf "https://%s/kratos-ui" .Values.server_name) .Values.identity_server.login_url }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_ADMIN_URL
             value: {{ .Values.identity_server.server_admin_url }}
           - name: MANAGEMENTPORTAL_COMMON_ADMIN_PASSWORD

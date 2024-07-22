@@ -268,12 +268,13 @@ catalogue_server: catalog-server
 identity_server:
   # -- The admin email to link to the admin service account. This account should only be used to set up admin-users
   admin_email: admin@example.com
-  # -- The publicly accessible server URL for the IDP
-  server_url: https://my.example-domain.net/kratos
-  # -- The admin server URL for the IDP. Only needs to be accessible from inside the cluster where the managementportal resides
+  # -- The publicly accessible server URL for the IDP; needed when deviating from https://server_name/kratos
+  server_url:
+  # -- The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
   server_admin_url: http://kratos-admin
-  # -- The login URL for the IDP. Needs to be publicly accessible
-  login_url: https://my.example-domain.net/kratos-ui
+  # -- The login URL for the IDP; needed when deviating from https://server_name/kratos-ui
+  # -- Needs to be publicly accessible
+  login_url:
 
 managementportal:
   # -- set to true, if automatic source-type import from catalogue server should be enabled
