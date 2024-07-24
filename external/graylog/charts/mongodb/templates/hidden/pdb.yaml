@@ -1,9 +1,9 @@
 {{- if and (include "mongodb.hidden.enabled" .) .Values.hidden.pdb.create }}
-apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ printf "%s-hidden" (include "mongodb.fullname" . )}}
-  namespace: {{ include "mongodb.namespace" . | quote }}
+  name: {{ include "mongodb.fullname" . }}-hidden
+  namespace: {{ include "mongodb.namespace" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: hidden
     {{- if .Values.commonLabels }}

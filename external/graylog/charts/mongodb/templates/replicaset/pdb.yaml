@@ -1,9 +1,9 @@
 {{- if and (eq .Values.architecture "replicaset") .Values.pdb.create }}
-apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
+apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "mongodb.fullname" . }}
-  namespace: {{ include "mongodb.namespace" . | quote }}
+  namespace: {{ include "mongodb.namespace" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: mongodb
     {{- if .Values.commonLabels }}
