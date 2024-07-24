@@ -1,11 +1,11 @@
 apiVersion: v2
 appVersion: 4.3.8
 dependencies:
-- name: elasticsearch
-  repository: https://radar-base.github.io/radar-helm-charts
-  tags:
-  - install-elasticsearch
-  version: 7.16.2
+  #- name: elasticsearch
+  #repository: https://radar-base.github.io/radar-helm-charts
+  # tags:
+  #- install-elasticsearch
+  #version: 7.16.2
 - name: mongodb
   repository: https://radar-base.github.io/radar-helm-charts
   tags:

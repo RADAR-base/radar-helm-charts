@@ -1,0 +1,6 @@
+dependencies:
+- name: mongodb
+  repository: https://radar-base.github.io/radar-helm-charts
+  version: 15.6.12
+digest: sha256:dc573bec321f7275ec570ccdef77b6b75a79ebe332853a0bc905a64141287c13
+generated: "2024-07-24T14:30:28.213590551Z"
