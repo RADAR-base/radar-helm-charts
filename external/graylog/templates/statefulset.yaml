@@ -15,10 +15,6 @@ spec:
 {{ include "graylog.selectorLabels" . | indent 6 }}
   updateStrategy:
     type: {{ .Values.graylog.updateStrategy }}
-    {{- if .Values.graylog.maxUnavailable }}
-    rollingUpdate:
-      maxUnavailable: {{ .Values.graylog.maxUnavailable }}
-    {{- end }}
   template:
     metadata:
       labels:
@@ -55,10 +51,8 @@ spec:
 {{- if .Values.graylog.priorityClassName }}
       priorityClassName: {{ .Values.graylog.priorityClassName }}
 {{- end }}
-{{- if .Values.graylog.podSecurityContext }}
       securityContext:
         {{- toYaml .Values.graylog.podSecurityContext | nindent 8 }}
-{{- end }}
       initContainers:
         - name: "setup"
           image: {{ .Values.graylog.init.image.repository | default "busybox" }}
@@ -74,10 +68,15 @@ spec:
               rm -rf /usr/share/graylog/data/journal/messagejournal-0
               rm -rf /usr/share/graylog/data/journal/recovery-point-offset-checkpoint
             {{- end }}
+              {{- if .Values.graylog.init.kubectlLocation }}
+              wget {{ .Values.graylog.init.kubectlLocation }} -O /k8s/kubectl
+              {{- else }}
+              wget https://storage.googleapis.com/kubernetes-release/release/{{ .Values.graylog.init.kubectlVersion | default .Capabilities.KubeVersion.Version }}/bin/linux/amd64/kubectl -O /k8s/kubectl
+              {{- end }}
+              chmod +x /k8s/kubectl
+
               GRAYLOG_HOME=/usr/share/graylog
               chown -R 1100:1100 ${GRAYLOG_HOME}/data/
-          securityContext:
-            runAsUser: 0 # We require permission to change the volume owner
           env:
             {{- range $key, $value := .Values.graylog.init.env }}
             - name: {{ $key }}
@@ -86,6 +85,8 @@ spec:
           volumeMounts:
             - name: journal
               mountPath: /usr/share/graylog/data/journal
+            - name: kubectl
+              mountPath: /k8s
 {{- if .Values.graylog.init.resources }}
           resources:
 {{ toYaml .Values.graylog.init.resources | indent 12 }}
@@ -100,18 +101,12 @@ spec:
           command:
             - /entrypoint.sh
           env:
-            # Kubernetes Auto Master Selection
-            # https://go2docs.graylog.org/5-0/downloading_and_installing_graylog/docker_installation.htm#KubernetesAutomaticMasterSelection
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
             - name: GRAYLOG_SERVER_JAVA_OPTS
               {{- $javaOpts := .Values.graylog.javaOpts }}
               {{- if .Values.graylog.heapSize }}
               value: "{{ $javaOpts }} {{ printf "-Xms%s -Xmx%s" .Values.graylog.heapSize .Values.graylog.heapSize}}"
               {{- else }}
-              value: "{{ $javaOpts }} -XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport"
+              value: "{{ $javaOpts }} -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
               {{- end }}
             - name: GRAYLOG_PASSWORD_SECRET
               valueFrom:
@@ -123,12 +118,12 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.graylog.existingRootSecret | default (include "graylog.fullname" .) }}
                   key: graylog-password-sha2
-            {{- if .Values.graylog.opensearch.uriSecretKey }}
+            {{- if .Values.graylog.elasticsearch.uriSecretKey }}
             - name: GRAYLOG_ELASTICSEARCH_HOSTS
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.graylog.opensearch.uriSecretName | default (printf "%s-es" (include "graylog.fullname" .)) }}
-                  key: {{ .Values.graylog.opensearch.uriSecretKey }}
+                  name: {{ .Values.graylog.elasticsearch.uriSecretName | default (printf "%s-es" (include "graylog.fullname" .)) }}
+                  key: {{ .Values.graylog.elasticsearch.uriSecretKey }}
             {{- end }}
             {{- if .Values.graylog.mongodb.uriSecretKey }}
             - name: GRAYLOG_MONGODB_URI
@@ -146,10 +141,8 @@ spec:
                 {{- toYaml . | nindent 12 }}
             {{- end }}
             {{- end }}
-{{- if .Values.graylog.securityContext }}
           securityContext:
             {{- toYaml .Values.graylog.securityContext | nindent 12 }}
-{{- end}}
           ports:
             - containerPort: 9000
               name: graylog
@@ -227,9 +220,25 @@ spec:
             - name: files
               mountPath: /etc/graylog/server
           {{- end }}
-
+            - name: kubectl
+              mountPath: /k8s
           {{- if .Values.graylog.extraVolumeMounts }}
           {{ toYaml .Values.graylog.extraVolumeMounts | nindent 12 }}
+          {{- end }}
+          {{ $graylogVersion := .Values.graylog.image.tag | default .Chart.AppVersion }}
+          {{- if semverCompare "< 4.2.0-0" ( $graylogVersion ) }}
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - bash
+                  - -ec
+                  - |
+                    ROOT_PASSWORD=`/k8s/kubectl get secret {{ template "graylog.fullname" . }} -o "jsonpath={.data['graylog-password-secret']}" | base64 -d`
+                    curl {{ if .Values.graylog.tls.enabled }}-k{{ end }} -XPOST -sS \
+                      -u "{{ .Values.graylog.rootUsername }}:${ROOT_PASSWORD}" \
+                      -H "X-Requested-By: {{ template "graylog.fullname" . }}" \
+                      {{ template "graylog.formatUrl" (list . "localhost:9000/api/system/shutdown/shutdown") }}
           {{- end }}
       {{- if .Values.graylog.sidecarContainers }}
         {{ toYaml .Values.graylog.sidecarContainers | nindent 8 }}
@@ -258,6 +267,8 @@ spec:
           configMap:
             name: {{ template "graylog.fullname" . }}-files
         {{- end }}
+        - name: kubectl
+          emptyDir: {}
         {{- if .Values.graylog.extraVolumes }}
         {{ toYaml .Values.graylog.extraVolumes | nindent 8 }}
         {{- end }}

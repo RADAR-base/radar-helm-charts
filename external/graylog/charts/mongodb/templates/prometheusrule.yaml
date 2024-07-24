@@ -13,6 +13,5 @@ metadata:
     {{- end }}
 spec:
   groups:
-    - name: {{ include "mongodb.fullname" . }}
-      rules: {{- include "common.tplvalues.render" ( dict "value" .Values.metrics.prometheusRule.rules "context" $ ) | nindent 8 }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.metrics.prometheusRule.rules "context" $) | nindent 2 }}
 {{- end }}

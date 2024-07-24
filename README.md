@@ -80,6 +80,13 @@ In each chart directory use the following files to define what the README conten
 3. In `Chart.yaml` define as many metadata fields as possible, including at least the description, homepage, maintainer, sources, and requirements.
 4. In the `values.yaml` file, put a comment line before each variable with two dashes `--`. Any text after the two dashes will be used as documentation for that variable.
 
+## Updating external charts
+External charts can be updated by running `make update-<chart-name>`. At the moment there are a few manual steps are needed which should be automated.
+The external charts that have a depedency need manual steps:
+- The external dependency should be mirrored in the this repository with `helm pull` commands that are in the `Makefile`, make sure the mirrored version is same as the one specified in the `Chart.yaml`.
+- In the `Chart.yaml` the repository should be changd to `https://radar-base.github.io/radar-helm-charts`.
+- The `Chart.lock` file should be removed and then run `helm dependency build` to recreate the file with new repository URL.
+
 ## Feedback and Contributions
 
 Enabling RADAR-base community to use RADAR-Kubernetes is important for us. If you have troubles setting up the platform using provided instructions, you can create an issue with exact details to reproduce and the expected behaviour.
