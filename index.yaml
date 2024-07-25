@@ -1665,6 +1665,33 @@ entries:
   common:
   - annotations:
       category: Infrastructure
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 2.20.5
+    created: "2024-07-25T07:48:34.706209576Z"
+    description: A Library Helm Chart for grouping common logic between bitnami charts.
+      This chart is not deployable by itself.
+    digest: b8bba6a1ad1d225b1e10506ecfdb41cab068c2130a29ed1b9e3f3c244a9179d2
+    home: https://bitnami.com
+    icon: https://bitnami.com/downloads/logos/bitnami-mark.png
+    keywords:
+    - common
+    - helper
+    - template
+    - function
+    - bitnami
+    maintainers:
+    - name: Broadcom, Inc. All Rights Reserved.
+      url: https://github.com/bitnami/charts
+    name: common
+    sources:
+    - https://github.com/bitnami/charts/tree/main/bitnami/common
+    type: library
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/common-2.20.5/common-2.20.5.tgz
+    version: 2.20.5
+  - annotations:
+      category: Infrastructure
     apiVersion: v2
     appVersion: 2.2.2
     created: "2023-01-12T10:25:58.071275763Z"
@@ -1944,6 +1971,22 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/elasticsearch-7.17.3/elasticsearch-7.17.3.tgz
     version: 7.17.3
+  - apiVersion: v1
+    appVersion: 7.16.2
+    created: "2024-07-25T07:48:34.919834101Z"
+    description: Official Elastic helm chart for Elasticsearch
+    digest: 7549e0852ddb6bfd3002e125c3f0b22eb403172a1f8fc26d20f28489d0924154
+    home: https://github.com/elastic/helm-charts
+    icon: https://helm.elastic.co/icons/elasticsearch.png
+    maintainers:
+    - email: helm-charts@elastic.co
+      name: Elastic
+    name: elasticsearch
+    sources:
+    - https://github.com/elastic/elasticsearch
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/elasticsearch-7.16.2/elasticsearch-7.16.2.tgz
+    version: 7.16.2
   fluent-bit:
   - annotations:
       artifacthub.io/changes: |
@@ -1977,6 +2020,45 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/fluent-bit-0.19.24/fluent-bit-0.19.24.tgz
     version: 0.19.24
   grafana:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/grafana/helm-charts
+        - name: Upstream Project
+          url: https://github.com/grafana/grafana
+    apiVersion: v2
+    appVersion: 11.1.0
+    created: "2024-07-25T07:48:35.077617091Z"
+    description: The leading tool for querying and visualizing time series and metrics.
+    digest: 28046174b75791c48a29cdd08dd320a88393a292acf9e2331a21b314c102feb0
+    home: https://grafana.com
+    icon: https://artifacthub.io/image/b4fed1a7-6c8f-4945-b99d-096efa3e4116
+    keywords:
+    - monitoring
+    - metric
+    kubeVersion: ^1.8.0-0
+    maintainers:
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+    - email: rluckie@cisco.com
+      name: rtluckie
+    - email: maor.friedman@redhat.com
+      name: maorfr
+    - email: miroslav.hadzhiev@gmail.com
+      name: Xtigyro
+    - email: mail@torstenwalter.de
+      name: torstenwalter
+    - email: github@jkroepke.de
+      name: jkroepke
+    name: grafana
+    sources:
+    - https://github.com/grafana/grafana
+    - https://github.com/grafana/helm-charts
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/grafana-8.3.2/grafana-8.3.2.tgz
+    version: 8.3.2
   - apiVersion: v2
     appVersion: 8.5.0
     created: "2022-07-04T12:27:40.016193643Z"
@@ -2004,6 +2086,35 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/grafana-6.26.8/grafana-6.26.8.tgz
     version: 6.26.8
   graylog:
+  - apiVersion: v2
+    appVersion: 4.3.8
+    created: "2024-07-25T07:48:35.272374816Z"
+    dependencies:
+    - name: mongodb
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - install-mongodb
+      version: 15.6.12
+    description: Graylog is the centralized log management solution built to open
+      standards for capturing, storing, and enabling real-time analysis of terabytes
+      of machine data.
+    digest: 7c3c93d7d5be044eb91cdfb62d265a2ca16911d0c39c85cc48e2975e3886e314
+    home: https://www.graylog.org
+    icon: https://global-uploads.webflow.com/5a218ef7897bf400019e2f16/5a218ef7897bf400019e2f60_logo-graylog.png
+    keywords:
+    - graylog
+    - logs
+    - syslog
+    - gelf
+    maintainers:
+    - email: goonohc@gmail.com
+      name: KongZ
+    name: graylog
+    sources:
+    - https://github.com/KongZ/charts
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/graylog-2.2.0/graylog-2.2.0.tgz
+    version: 2.2.0
   - apiVersion: v2
     appVersion: 4.2.7
     created: "2022-07-04T12:59:21.420102935Z"
@@ -3038,6 +3149,46 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/management-portal-0.1.3/management-portal-0.1.3.tgz
     version: 0.1.3
   minio:
+  - annotations:
+      category: Infrastructure
+      images: |
+        - name: minio
+          image: docker.io/bitnami/minio:2024.7.4-debian-12-r0
+        - name: minio-client
+          image: docker.io/bitnami/minio-client:2024.7.3-debian-12-r0
+        - name: os-shell
+          image: docker.io/bitnami/os-shell:12-debian-12-r24
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 2024.7.4
+    created: "2024-07-25T07:48:35.449534216Z"
+    dependencies:
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: MinIO(R) is an object storage server, compatible with Amazon S3 cloud
+      storage service, mainly used for storing unstructured data (such as photos,
+      videos, log files, etc.).
+    digest: cc220b964712f798152ef813126fa56a0c2a55e40096cb04285daea23dff5bba
+    home: https://bitnami.com
+    icon: https://bitnami.com/assets/stacks/minio/img/minio-stack-220x234.png
+    keywords:
+    - minio
+    - storage
+    - object-storage
+    - s3
+    - cluster
+    maintainers:
+    - name: Broadcom, Inc. All Rights Reserved.
+      url: https://github.com/bitnami/charts
+    name: minio
+    sources:
+    - https://github.com/bitnami/charts/tree/main/bitnami/minio
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/minio-14.6.19/minio-14.6.19.tgz
+    version: 14.6.19
   - annotations:
       category: Infrastructure
       licenses: Apache-2.0
@@ -10269,4 +10420,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-17T17:22:58.914386847Z"
+generated: "2024-07-25T07:48:35.610712596Z"
