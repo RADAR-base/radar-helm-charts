@@ -84,8 +84,9 @@ In each chart directory use the following files to define what the README conten
 External charts can be updated by running `make update-<chart-name>`. At the moment there are a few manual steps are needed which should be automated.
 The external charts that have a depedency need manual steps:
 - The external dependency should be mirrored in the this repository with `helm pull` commands that are in the `Makefile`, make sure the mirrored version is same as the one specified in the `Chart.yaml`.
+- The external dependency should be relased on the main branch first so there will be a valid release of it in our chart repository.
 - In the `Chart.yaml` the repository should be changd to `https://radar-base.github.io/radar-helm-charts`.
-- The `Chart.lock` file should be removed and then run `helm dependency build` to recreate the file with new repository URL.
+- The `Chart.lock` file should be removed and then run `helm dependency build` to recreate the file with new repository URL and remove any `.tgz` files that gets created.
 
 ## Feedback and Contributions
 
