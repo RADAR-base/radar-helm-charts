@@ -3,7 +3,7 @@
 # management-portal
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 1.1.8](https://img.shields.io/badge/Version-1.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.1](https://img.shields.io/badge/AppVersion-2.1.1-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.1](https://img.shields.io/badge/AppVersion-2.1.1-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -42,11 +42,12 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | securityContext | object | `{}` | Configure management-portal containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8080` | Management Portal port |
+| disable_tls | bool | `false` | Disable TLS (reconfigures Ingress and sets URLs to use HTTP) |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
 | ingress.path | string | `"/managementportal"` | Path within the url structure |
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
-| ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
+| ingress.ingressClassName | string | `"nginx"` | IngressClass that will be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls-managementportal"` | TLS Secret Name |
 | resources.limits | object | `{"cpu":2,"memory":"1700Mi"}` | CPU/Memory resource limits |
@@ -82,9 +83,9 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | server_name | string | `"localhost"` | domain name of the server |
 | catalogue_server | string | `"catalog-server"` | Hostname of the catalogue-server |
 | identity_server.admin_email | string | `"admin@example.com"` | The admin email to link to the admin service account. This account should only be used to set up admin-users |
-| identity_server.server_url | string | `"https://my.example-domain.net/kratos"` | The publicly accessible server URL for the IDP |
-| identity_server.server_admin_url | string | `"http://kratos-admin"` | The admin server URL for the IDP. Only needs to be accessible from inside the cluster where the managementportal resides |
-| identity_server.login_url | string | `"https://my.example-domain.net/kratos-ui"` | The login URL for the IDP. Needs to be publicly accessible |
+| identity_server.server_url | string | `nil` | The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos |
+| identity_server.server_admin_url | string | `"http://kratos-admin"` | The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
+| identity_server.login_url | string | `nil` | The publicly accessible login URL for the IDP; needed when deviating from http(s)://server_name/kratos-ui |
 | managementportal.catalogue_server_enable_auto_import | bool | `false` | set to true, if automatic source-type import from catalogue server should be enabled |
 | managementportal.common_privacy_policy_url | string | `"http://info.thehyve.nl/radar-cns-privacy-policy"` | Override with a publicly resolvable url of the privacy-policy url for your set-up. This can be overridden on a project basis as well. |
 | managementportal.oauth_checking_key_aliases_0 | string | `"radarbase-managementportal-ec"` | Keystore alias to sign JWT tokens from Management Portal |

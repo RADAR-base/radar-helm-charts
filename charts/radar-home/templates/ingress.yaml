@@ -20,7 +20,7 @@ metadata:
   {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
-{{- if .Values.ingress.tls }}
+{{- if and .Values.ingress.tls (not .Values.disable_tls) }}
   tls:
     - hosts:
       {{- range $hosts }}

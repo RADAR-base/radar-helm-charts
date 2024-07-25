@@ -1,3 +1,4 @@
+{{ $https := ternary "http" "https" (or .Values.disable_tls (not .Values.ingress.tls)) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -48,9 +49,9 @@ spec:
           - name: VUE_APP_BASE_URL
             value: "/upload"
           - name: VUE_APP_API_BASE_URL
-            value: "https://{{ .Values.server_name }}/upload/api/"
+            value: {{ printf "%s://%s/upload/api" .Values.server_name}}
           - name: VUE_APP_AUTH_API
-            value: "https://{{ .Values.server_name }}/managementportal/oauth"
+            value: {{ printf "%s://%s/managementportal/oauth" .Values.server_name }}
           - name: VUE_APP_AUTH_CALLBACK
             value: "{{ .Values.server_name }}/upload/login"
           - name: VUE_APP_CLIENT_ID

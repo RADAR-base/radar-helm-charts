@@ -3,7 +3,7 @@
 # app-config-frontend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/app-config-frontend)](https://artifacthub.io/packages/helm/radar-base/app-config-frontend)
 
-![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.0](https://img.shields.io/badge/AppVersion-0.5.0-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.0](https://img.shields.io/badge/AppVersion-0.5.0-informational?style=flat-square)
 
 A Helm chart for the frontend application of RADAR-base application config (app-config).
 
@@ -71,6 +71,4 @@ A Helm chart for the frontend application of RADAR-base application config (app-
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
-| authUrl | string | `"http://localhost/managementportal/oauth"` | Authorization URL of the IDP |
-| authCallbackUrl | string | `"http://localhost/appconfig/login"` | Callback URL to where authorization-code should be returned |
-| backendUrl | string | `"/appconfig/api"` | Base-URL of the App Config backend service |
+| serverName | string | `"localhost"` | Resolvable server name, needed to find the advertised URL and callback URL |

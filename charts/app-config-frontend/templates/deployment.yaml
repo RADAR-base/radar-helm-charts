@@ -1,3 +1,4 @@
+{{ $https := ternary "http" "https" (or .Values.disable_tls (not .Values.ingress.tls)) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,12 +50,12 @@ spec:
           env:
             - name: BASE_HREF
               value: /appconfig/
-            - name: AUTH_URL
-              value: {{ .Values.authUrl }}
-            - name: AUTH_CALLBACK_URL
-              value: {{ .Values.authCallbackUrl }}
             - name: APP_CONFIG_URL
-              value: {{ .Values.backendUrl }}
+              value: /appconfig/api
+            - name: AUTH_URL
+              value: {{ printf "%s://%s/managementportal/oauth" $https .Values.serverName }}
+            - name: AUTH_CALLBACK_URL
+              value: {{ printf "%s://%s/appconfig/login" $https .Values.serverName }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}

@@ -1,84 +1,61 @@
-# Kafka Manager Helm Chart
 
-[Kafka Manager](https://github.com/yahoo/kafka-manager) is a tool for managing [Apache Kafka](http://kafka.apache.org/).
 
-## TL;DR;
+# kafka-manager
 
-```bash
-$ helm install stable/kafka-manager
-```
+![Version: 2.2.0](https://img.shields.io/badge/Version-2.2.0-informational?style=flat-square) ![AppVersion: 1.3.3.18](https://img.shields.io/badge/AppVersion-1.3.3.18-informational?style=flat-square)
 
-## Prerequisites
+A tool for managing Apache Kafka.
 
-- Kubernetes 1.9+ with Beta APIs enabled
+**Homepage:** <https://github.com/yahoo/kafka-manager>
 
-## Installing the Chart
+## Maintainers
 
-To install the chart with the release name `my-release`:
+| Name | Email | Url |
+| ---- | ------ | --- |
+| giacomoguiulfo | <giacomoguiulfo@gmail.com> |  |
+| ssalaues | <salim.salaues@scality.com> |  |
 
-```bash
-$ helm install --name my-release stable/kafka-manager
-```
+## Source Code
 
-The command deploys Kafka Manager on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
+* <https://github.com/yahoo/kafka-manager>
 
-> **Tip**: List all releases using `helm list`
+## Requirements
 
-## Uninstalling the Chart
+Kubernetes: `^1.8.0-0`
 
-To uninstall/delete the `my-release` deployment:
+## Values
 
-```bash
-$ helm delete my-release
-```
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| serviceAccount.create | bool | `true` |  |
+| serviceAccount.name | string | `""` |  |
+| clusters | string | `nil` |  |
+| applicationSecret | string | `""` |  |
+| basicAuth.enabled | bool | `false` |  |
+| basicAuth.username | string | `"admin"` |  |
+| basicAuth.password | string | `""` |  |
+| javaOptions | string | `""` |  |
+| service.type | string | `"ClusterIP"` |  |
+| service.port | int | `9000` |  |
+| service.annotations | object | `{}` |  |
+| resources.requests.cpu | string | `"100m"` |  |
+| resources.requests.memory | string | `"400Mi"` |  |
+| nodeSelector | object | `{}` |  |
+| tolerations | list | `[]` |  |
+| affinity | object | `{}` |  |
+| zookeeper | object | `{"enabled":false,"env":{"ZK_HEAP_SIZE":"1G"},"persistence":{"enabled":false}}` | ---------------------------------------------------------------------------- |
+| zkHosts | string | `"cp-zookeeper:2181"` |  |
+| image.repository | string | `"radarbase/kafka-manager"` |  |
+| image.tag | string | `"1.3.3.18"` |  |
+| image.pullPolicy | string | `"IfNotPresent"` |  |
+| imagePullSecrets | list | `[]` | Docker registry secret names as an array |
+| disable_tls | bool | `false` | Disable TLS (reconfigures Ingress and sets URLs to use HTTP) |
+| ingress.enabled | bool | `true` | Enable ingress controller resource |
+| ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
+| ingress.path | string | `"/kafkamanager/"` | Path within the url structure |
+| ingress.pathType | string | `"ImplementationSpecific"` |  |
+| ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
+| ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 
-The command removes all the Kubernetes components associated with the chart and deletes the release.
-
-## Configuration
-
-The following table lists the configurable parameters of the Kafka Manager chart and their default values.
-
-Parameter | Description | Default
---------- | ----------- | -------
-`serviceAccount.create` | If true, create a service account for kafka-manager | `true`
-`serviceAccount.name` | Name of the service account to create or use | `{{ kafka-manager.fullname }}`
-`image.repository` | Container image repository | `zenko/kafka-manager`
-`image.tag` | Container image tag | `1.3.3.18`
-`image.pullPolicy` | Container image pull policy | `IfNotPresent`
-`zkHosts` | Zookeeper hosts required by the kafka-manager | `localhost:2181`
-`clusters` | Configuration of the clusters to manage | `{}`
-`applicationSecret` | Kafka-manager application secret | `""`
-`basicAuth.enabled` | If ture, enable basic authentication | `false`
-`basicAuth.username` | Username for basic auth | `admin`
-`basicAuth.password` | Paswword for basic auth | `""`
-`javaOptions` | Java runtime options | `""`
-`service.type` | Kafka-manager service type | `ClusterIP`
-`service.port` | Kafka-manager service port | `9000`
-`service.annotations` | Optional service annotations | `{}`
-`ingress.enabled` | If true, create an ingress resource | `false`
-`ingress.annotations` | Optional ingress annotations | `{}`
-`ingress.path` | Ingress path | `/`
-`ingress.hosts` | Ingress hostnames | `kafka-manager.local`
-`ingress.tls` | Ingress TLS configuration | `[]`
-`resources` | Pod resource requests and limits | `{}`
-`nodeSelector` | Node labels for pod assignment | `{}`
-`tolerations` | Tolerations for pod assignment | `[]`
-`affinity` | Affinity for pod assignment | `{}`
-`zookeeper.enabled` | If true, deploy Zookeeper | `false`
-`zookeeper.env` | Enviromental variables for Zookeeper | `ZK_HEAP_SIZE: "1G"`
-`zookeeper.persistence` | If true, enable persistence for Zookeeper | `false`
-
-Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
-
-```console
-$ helm install stable/kafka-manager --name my-release \
-    --set ingress.enabled=true
-```
-
-Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
-
-```console
-$ helm install stable/kafka-manager --name my-release -f values.yaml
-```
-
-> **Tip**: You can use the default [values.yaml](values.yaml)
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.13.1](https://github.com/norwoodj/helm-docs/releases/v1.13.1)

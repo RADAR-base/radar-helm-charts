@@ -41,6 +41,9 @@ service:
   # -- radar-rest-sources-backend port
   port: 8080
 
+# -- Disable TLS (reconfigures Ingress and sets URLs to use HTTP)
+disable_tls: false
+
 ingress:
   # -- Enable ingress controller resource
   enabled: true
@@ -58,7 +61,7 @@ ingress:
   path: /rest-sources/backend
   # -- Ingress Path type
   pathType: ImplementationSpecific
-  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  # -- IngressClass that will be used to implement the Ingress (Kubernetes 1.18+)
   ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:

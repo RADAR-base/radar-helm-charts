@@ -1,3 +1,4 @@
+{{ $https := ternary "http" "https" (or .Values.disable_tls (not .Values.ingress.tls)) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,7 +8,7 @@ metadata:
 data:
   upload.yml: |
     baseUri: "http://0.0.0.0:8085/upload/api/"
-    advertisedBaseUri: https://{{ .Values.serverName }}/upload/api/
+    advertisedBaseUri: {{ printf "%s://%s/upload/api" $https .Values.serverName }}
     enableCors: yes
     clientId: {{ .Values.client_id }}
     clientSecret: {{ .Values.client_secret }}

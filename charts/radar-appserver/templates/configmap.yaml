@@ -1,3 +1,4 @@
+{{ $https := ternary "http" "https" (or .Values.disable_tls (not .Values.ingress.tls)) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -16,7 +17,7 @@ data:
 
     # Set of supported public key endpoints for authentication
     publicKeyEndpoints:
-        - https://{{ .Values.serverName }}/managementportal/oauth/token_key
+        - {{ printf "%s://%s/managementportal/oauth/token_key" $https .Values.serverName | quote }}
         {{- range .Values.public_key_endpoints }}
         - {{ . | quote }}
         {{ end -}}
