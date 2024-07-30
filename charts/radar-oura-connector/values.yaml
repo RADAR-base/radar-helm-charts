@@ -10,7 +10,7 @@ image:
   repository: radarbase/kafka-connect-rest-oura-source
   # -- radar-oura-connector image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.5.0
+  tag: 0.5.3
   # -- radar-oura-connector image pull policy
   pullPolicy: IfNotPresent
 

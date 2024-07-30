@@ -10,7 +10,7 @@ image:
   repository: radarbase/kafka-connect-rest-fitbit-source
   # -- radar-fitbit-connector image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag:
+  tag: 0.5.3
   # -- radar-fitbit-connector image pull policy
   pullPolicy: IfNotPresent
 
