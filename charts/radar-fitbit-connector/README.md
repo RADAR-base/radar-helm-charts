@@ -34,7 +34,7 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-fitbit-connector replicas to deploy |
 | image.repository | string | `"radarbase/kafka-connect-rest-fitbit-source"` | radar-fitbit-connector image repository |
-| image.tag | string | `nil` | radar-fitbit-connector image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.5.3"` | radar-fitbit-connector image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.pullPolicy | string | `"IfNotPresent"` | radar-fitbit-connector image pull policy |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-fitbit-connector.fullname template with a string (will prepend the release name) |
