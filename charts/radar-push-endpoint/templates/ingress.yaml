@@ -2,7 +2,13 @@
 {{- $fullName := include "radar-push-endpoint.fullname" . -}}
 {{- $path := .Values.ingress.path -}}
 {{- $hosts := .Values.ingress.hosts -}}
+{{- $svcPort := .Values.service.port -}}
+{{- $pathType := .Values.ingress.pathType -}}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -28,11 +34,18 @@ spec:
       http:
         paths:
           - path: {{ $path | quote }}
-            pathType: Prefix
+            {{- if and $pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ $pathType }}
+            {{- end }}
             backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
                 name: {{ $fullName }}
                 port:
-                  name: http
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}
+              servicePort: {{ $svcPort }}
+              {{- end }}
   {{- end }}
 {{- end }}

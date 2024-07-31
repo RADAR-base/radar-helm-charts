@@ -51,7 +51,6 @@ ingress:
   # @default -- check values.yaml
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/rewrite-target: /push/integrations/$1
     nginx.ingress.kubernetes.io/server-snippet: |
       location /push-endpoint/garmin {
         # set client body size to 20M #
@@ -67,7 +66,9 @@ ingress:
         deny all;
       }
   # -- Path within the url structure
-  path: "/push-endpoint/?(.*)"
+  path: "/push-endpoint"
+  # -- Ingress Path type
+  pathType: ImplementationSpecific
   # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
   ingressClassName: nginx
   # -- Hosts to accept requests from
