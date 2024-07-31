@@ -6975,6 +6975,36 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 0.2.2
+    created: "2024-07-31T15:45:07.518734621Z"
+    description: A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka,
+      for incoming data from Push or Subscription based WEB APIs. It performs authentication,
+      authorization and content validation. For more details of the configurations,
+      see https://github.com/RADAR-base/RADAR-PushEndpoint.
+    digest: 9275cf98a18527270672f97fb07eebc678475b079fe9a3cb7b6f125b79932c22
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    name: radar-push-endpoint
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-push-endpoint
+    - https://github.com/RADAR-base/RADAR-PushEndpoint
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-push-endpoint-0.3.1/radar-push-endpoint-0.3.1.tgz
+    version: 0.3.1
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.2.2
     created: "2024-07-25T10:13:15.29638193Z"
     description: A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka,
       for incoming data from Push or Subscription based WEB APIs. It performs authentication,
@@ -10927,4 +10957,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-30T08:36:18.846077067Z"
+generated: "2024-07-31T15:45:07.519751829Z"
