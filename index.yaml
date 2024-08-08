@@ -7576,6 +7576,38 @@ entries:
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: 4.4.3
+    created: "2024-08-08T16:07:40.246287166Z"
+    description: A Helm chart for the front-end application of RADAR-base Rest Sources
+      Authorizer which is a portal to authorize the Fitbit connector to read data
+      from Fitbit accounts.
+    digest: 80872ed96630450f1871ef73c746fc74bc5616803de950d5df42169b3487d758
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-rest-sources-authorizer
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-rest-sources-authorizer
+    - https://github.com/RADAR-base/RADAR-Rest-Source-Auth
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-authorizer-2.0.1/radar-rest-sources-authorizer-2.0.1.tgz
+    version: 2.0.1
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 4.4.2
     created: "2024-07-25T10:13:15.491204089Z"
     description: A Helm chart for the front-end application of RADAR-base Rest Sources
@@ -8251,6 +8283,37 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-authorizer-0.2.0/radar-rest-sources-authorizer-0.2.0.tgz
     version: 0.2.0
   radar-rest-sources-backend:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.4.3
+    created: "2024-08-08T16:07:40.420439602Z"
+    description: A Helm chart for the backend application of RADAR-base Rest Sources
+      Authorizer
+    digest: df0f7797f11095b908a8d97bc47e0e1af95721ee40a629d66e9024a2820a9993
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: joris@thehyve.nl
+      name: Joris Borgdorff
+      url: https://www.thehyve.nl/experts/joris-borgdorff
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-rest-sources-backend
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-rest-sources-backend
+    - https://github.com/RADAR-base/RADAR-Rest-Source-Auth
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-rest-sources-backend-1.1.5/radar-rest-sources-backend-1.1.5.tgz
+    version: 1.1.5
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
@@ -11166,4 +11229,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-08T12:50:02.103575249Z"
+generated: "2024-08-08T16:07:40.421109378Z"
