@@ -3808,6 +3808,33 @@ entries:
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: 2.4.2
+    created: "2024-08-08T12:50:02.103039093Z"
+    description: A Helm chart for the backend application of RADAR-base Appserver
+    digest: 38253161a457cc726d91df07c573aff640affd1707cba4b04a55ba327932eecb
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    name: radar-appserver
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-appserver
+    - https://github.com/RADAR-base/RADAR-Appserver
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-appserver-0.5.1/radar-appserver-0.5.1.tgz
+    version: 0.5.1
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 2.4.3
     created: "2024-08-02T11:42:33.000796737Z"
     description: A Helm chart for the backend application of RADAR-base Appserver
@@ -11139,4 +11166,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-08T12:49:56.600742014Z"
+generated: "2024-08-08T12:50:02.103575249Z"
