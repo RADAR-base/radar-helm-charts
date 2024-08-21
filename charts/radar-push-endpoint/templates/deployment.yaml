@@ -60,7 +60,7 @@ spec:
           - mountPath: /etc/radar-push-endpoint/
             name: gateway-jmx-configmap
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
             - radar-push-endpoint

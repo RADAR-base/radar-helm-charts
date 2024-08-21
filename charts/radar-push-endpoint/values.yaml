@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-push-endpoint
   # -- radar-push-endpoint image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.2.2
+  tag:
   # -- radar-push-endpoint image pull policy
   pullPolicy: IfNotPresent
 
