@@ -140,7 +140,8 @@ zkHosts: cp-zookeeper:2181
 ##
 image:
   repository: radarbase/kafka-manager
-  tag: 1.3.3.18
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag:
   pullPolicy: IfNotPresent
 
 # -- Docker registry secret names as an array

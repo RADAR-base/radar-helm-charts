@@ -10,7 +10,7 @@ image:
   repository: radarbase/radar-redcapintegration
   # -- radar-integration image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.0.4
+  tag:
   # -- radar-integration image pull policy
   pullPolicy: IfNotPresent
 

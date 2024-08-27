@@ -6,7 +6,8 @@ replicaCount: 2
 
 image:
   repository: radarbase/radar-backend
-  tag: 0.4.0
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag:
   pullPolicy: IfNotPresent
 
 # -- Docker registry secret names as an array

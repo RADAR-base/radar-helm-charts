@@ -9,7 +9,8 @@ mc_image:
   # -- Object storage backup pod image repository
   repository: minio/mc
   # -- Object storage backup pod image tag (immutable tags are recommended)
-  tag: RELEASE.2022-07-06T14-54-36Z
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
   # -- Object storage backup pod image pull policy
   pullPolicy: IfNotPresent
 

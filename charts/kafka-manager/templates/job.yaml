@@ -22,7 +22,7 @@ spec:
             defaultMode: 0744
       containers:
         - name: {{ .Chart.Name }}-bootstrap
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/usr/local/script/addClusters.sh"]
           env:

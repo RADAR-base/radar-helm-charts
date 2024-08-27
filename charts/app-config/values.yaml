@@ -6,10 +6,11 @@
 replicaCount: 2
 
 image:
-  # -- Appconfig image repository
+  # -- Appconfig image repositorys
   repository: radarbase/radar-app-config
   # -- Appconfig image tag (immutable tags are recommended)
-  tag: 0.5.0
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
   # -- Appconfig image pull policy
   pullPolicy: IfNotPresent
 
