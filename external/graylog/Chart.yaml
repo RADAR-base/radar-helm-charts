@@ -1,16 +1,5 @@
 apiVersion: v2
 appVersion: 4.3.8
-dependencies:
-- name: elasticsearch
-  repository: https://radar-base.github.io/radar-helm-charts
-  tags:
-  - install-elasticsearch
-  version: 7.16.2
-- name: mongodb
-  repository: https://radar-base.github.io/radar-helm-charts
-  tags:
-  - install-mongodb
-  version: 15.6.12
 description: Graylog is the centralized log management solution built to open standards
   for capturing, storing, and enabling real-time analysis of terabytes of machine
   data.

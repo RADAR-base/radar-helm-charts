@@ -1,9 +1,0 @@
-dependencies:
-- name: elasticsearch
-  repository: https://radar-base.github.io/radar-helm-charts
-  version: 7.16.2
-- name: mongodb
-  repository: https://radar-base.github.io/radar-helm-charts
-  version: 15.6.12
-digest: sha256:45098d9fad22b5436d36c2cc5124dbcbe4cedbfebd8b82e746b1962e669d3d13
-generated: "2024-07-25T07:58:40.556046281Z"
