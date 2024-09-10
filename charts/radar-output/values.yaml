@@ -109,7 +109,7 @@ javaOpts: "-Xms400m -Xmx3g"
 existingSecret:
 
 source:
-  # -- Type of the intermediate storage of the RADAR-base pipeline e.g. s3, hdfs
+  # -- Type of the intermediate storage of the RADAR-base pipeline (e.g., s3 or azure)
   type: s3
   s3:
     # -- s3 endpoint of the intermediate storage
@@ -151,7 +151,7 @@ source:
     readTimeout:
 
 target:
-  # -- Type of the output storage of the RADAR-base pipeline e.g. s3, local
+  # -- Type of the output storage of the RADAR-base pipeline (e.g., s3 or azure)
   type: s3
   s3:
     # -- s3 endpoint of the output storage
