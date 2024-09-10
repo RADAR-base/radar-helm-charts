@@ -87,7 +87,7 @@ data:
       # Compression type: none, zip or gzip
       type: {{ .Values.compression.type }}
       # Compression Factory class
-      # factory: org.radarbase.hdfs.data.CompressionFactory
+      # factory: org.radarbase.output.data.CompressionFactory
       # Additional compression properties
       # properties: {}
 
@@ -99,7 +99,7 @@ data:
       deduplication:
         enable: {{ .Values.deduplication.enable }}
       # Format factory class
-      # factory: org.radarbase.hdfs.data.FormatFactory
+      # factory: org.radarbase.output.data.FormatFactory
       # Additional format properties
       # properties: {}
 
@@ -125,7 +125,7 @@ data:
 
     # Path settings
     paths:
-      # Input directories in HDFS
+      # Input directories
       inputs:
         - "{{ .Values.paths.input }}"
       # Root temporary directory for local file processing.

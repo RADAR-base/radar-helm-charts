@@ -57,7 +57,7 @@ spec:
             - -F
             - /etc/radar-output/config.yaml
           env:
-          - name: RADAR_HDFS_RESTRUCTURE_OPTS
+          - name: RADAR_OUTPUT_RESTRUCTURE_OPTS
             value: {{ .Values.javaOpts  | quote }}
           - name: SOURCE_S3_ACCESS_TOKEN
             valueFrom:

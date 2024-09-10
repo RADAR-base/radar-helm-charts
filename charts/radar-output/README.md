@@ -3,7 +3,7 @@
 # radar-output
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-output)](https://artifacthub.io/packages/helm/radar-base/radar-output)
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.3.1](https://img.shields.io/badge/AppVersion-2.3.1-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.1](https://img.shields.io/badge/AppVersion-3.0.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base output restructure service. This application reads data from intermediate storage and restructure the data into project-> subject-id-> data topic -> data split per hour. This service offers few options to choose the source and target of the pipeline.
 
@@ -14,7 +14,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | Name | Email | Url |
 | ---- | ------ | --- |
 | Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
-| Joris Borgdorff | <joris@thehyve.nl> | <https://www.thehyve.nl/experts/joris-borgdorff> |
+| Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
 | Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
@@ -49,7 +49,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | javaOpts | string | `"-Xms400m -Xmx3g"` |  |
 | existingSecret | string | `nil` | Existing secret for storing S3 or Azure credentials. |
-| source.type | string | `"s3"` | Type of the intermediate storage of the RADAR-base pipeline e.g. s3, hdfs |
+| source.type | string | `"s3"` | Type of the intermediate storage of the RADAR-base pipeline (e.g., s3 or azure) |
 | source.s3.endpoint | string | `"http://minio:9000"` | s3 endpoint of the intermediate storage |
 | source.s3.accessToken | string | `"access_key"` | s3 access-key of the intermediate storage |
 | source.s3.secretKey | string | `"secret"` | s3 secret-key of the intermediate storage |
@@ -68,7 +68,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | source.azure.responseTimeout | string | `nil` | Azure HTTP response timeout in seconds |
 | source.azure.writeTimeout | string | `nil` | Azure HTTP write timeout in seconds |
 | source.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
-| target.type | string | `"s3"` | Type of the output storage of the RADAR-base pipeline e.g. s3, local |
+| target.type | string | `"s3"` | Type of the output storage of the RADAR-base pipeline (e.g., s3 or azure) |
 | target.s3.endpoint | string | `"http://minio:9000"` | s3 endpoint of the output storage |
 | target.s3.accessToken | string | `"access_key"` | s3 access-key of the output storage |
 | target.s3.secretKey | string | `"secret"` | s3 secret-key of the output storage |
