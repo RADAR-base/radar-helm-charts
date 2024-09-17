@@ -9,9 +9,9 @@ revisionHistoryLimit: 5
 ## -- Deployment image settings
 image:
   # SELFSERVICE image
-  repository: oryd/kratos-selfservice-ui-node
+  repository: ghcr.io/radar-base/radar-self-enrolment-ui
   # -- ORY KRATOS VERSION
-  tag: "v0.13.0-20"
+  tag: dev
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
