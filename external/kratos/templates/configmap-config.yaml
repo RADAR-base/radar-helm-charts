@@ -14,8 +14,15 @@ metadata:
     {{- end }}
 data:
   # Render the kratos config:
-  "kratos.yaml": |
+  kratos.yaml: |
     {{- include "kratos.configmap" . | nindent 4 }}
+  # Render the webhook jsonnet:
+  webhook_body.jsonnet: |
+    function(ctx) {
+        identity: if std.objectHas(ctx, "identity") then ctx.identity else null,
+        payload: if std.objectHas(ctx, "flow") && std.objectHas(ctx.flow, "transient_payload") then ctx.flow.transient_payload else null,
+        cookies: ctx.request_cookies
+    }
   # Render the identity schemas to disk:
   {{- range $key, $value := .Values.kratos.identitySchemas }}
   {{- printf "%s: %s" $key (toYaml (tpl $value $)) | nindent 2 }}
