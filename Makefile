@@ -82,6 +82,13 @@ update-hydra:
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-ory-commons:
+	@echo "Updating Hydra"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://k8s.ory.sh/helm/charts
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-minio:
 	@echo "Updating minio"
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
