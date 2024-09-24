@@ -26,8 +26,3 @@ dependencies:
     version: 0.1.0
     repository: file://../ory-commons
     alias: ory
-  - name: hydra-maester
-    version: 0.48.0
-    condition: maester.enabled
-    alias: hydra-maester
-    repository: file://../hydra-maester

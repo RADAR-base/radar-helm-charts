@@ -458,7 +458,7 @@ affinity: {}
 
 ## -- Configures controller setup
 maester:
-  enabled: true
+  enabled: false
 
 ## -- Values for the hydra admin service arguments to hydra-maester
 hydra-maester:
