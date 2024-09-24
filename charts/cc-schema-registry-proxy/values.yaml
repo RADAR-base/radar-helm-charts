@@ -18,14 +18,16 @@ ingress:
   # -- Annotations that define default ingress class, certificate issuer
   # @default -- check values.yaml
   annotations:
-    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     ingress.kubernetes.io/preserve-host: "false"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/backend-protocol: https
   # -- Path within the url structure
   path: "/schema/?(.*)"
+  # -- Ingress Path type
   pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:
     - localhost

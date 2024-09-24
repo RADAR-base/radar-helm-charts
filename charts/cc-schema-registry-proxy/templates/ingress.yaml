@@ -27,6 +27,7 @@ metadata:
     nginx.ingress.kubernetes.io/upstream-vhost: {{ $externalName }}
   {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
 {{- if and .Values.ingress.tls (not .Values.disable_tls) }}
   tls:
     - hosts:
@@ -56,3 +57,4 @@ spec:
               {{- end }}
   {{- end }}
 {{- end }}
+
