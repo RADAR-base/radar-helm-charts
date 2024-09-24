@@ -48,9 +48,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: KRATOS_ADMIN_URL
-            value: {{ .Values.kratosAdminUrl | quote }}
-          - name: KRATOS_PUBLIC_URL
+          - name: ORY_SDK_URL
             value: {{ .Values.kratosPublicUrl | quote }}
           - name: HYDRA_ADMIN_URL
             value: {{ .Values.hydraAdminUrl | quote }}
