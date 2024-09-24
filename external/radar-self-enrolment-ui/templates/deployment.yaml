@@ -48,18 +48,20 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+          - name: KRATOS_ADMIN_URL
+            value: {{ .Values.kratosAdminUrl | quote }}
           - name: KRATOS_PUBLIC_URL
             value: {{ .Values.kratosPublicUrl | quote }}
-          - name: KRATOS_BROWSER_URL
-            value: {{ .Values.kratosBrowserUrl | quote }}
+          - name: HYDRA_ADMIN_URL
+            value: {{ .Values.hydraAdminUrl | quote }}
+          - name: HYDRA_PUBLIC_URL
+            value: {{ .Values.hydraPublicUrl | quote }}
           - name: PROJECT_NAME
             value: {{ .Values.projectName | quote }}
           - name: BASE_PATH
             value: {{ .Values.basePath | quote }}
           - name: JWKS_URL
             value: {{ .Values.jwksUrl | quote }}
-          - name: KRATOS_ADMIN_URL
-            value: {{ .Values.kratosAdminUrl | quote }}
           - name: SECURITY_MODE
             value: {{ .Values.securityMode | quote }}
           - name: COOKIE_SECRET

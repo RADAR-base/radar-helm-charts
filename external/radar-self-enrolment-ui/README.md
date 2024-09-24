@@ -13,7 +13,7 @@ A Helm chart for ORY Kratos's example ui for Kubernetes
 | replicaCount | int | `1` | Number of replicas in deployment |
 | revisionHistoryLimit | int | `5` | Number of revisions kept in history |
 | image.repository | string | `"ghcr.io/radar-base/radar-self-enrolment-ui"` |  |
-| image.tag | string | `"dev"` | ORY KRATOS VERSION |
+| image.tag | string | `"dev"` | Image version |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecrets | list | `[]` |  |
 | nameOverride | string | `""` |  |
@@ -27,7 +27,7 @@ A Helm chart for ORY Kratos's example ui for Kubernetes
 | service.name | string | `"http"` | The service port name. Useful to set a custom service port name if it must follow a scheme (e.g. Istio) |
 | secret.enabled | bool | `true` | switch to false to prevent creating the secret |
 | secret.nameOverride | string | `""` | Provide custom name of existing secret, or custom name of secret to be created |
-| secret.secretAnnotations | object | `{"helm.sh/hook":"pre-install, pre-upgrade","helm.sh/hook-delete-policy":"before-hook-creation","helm.sh/hook-weight":"0","helm.sh/resource-policy":"keep"}` | Annotations to be added to secret. Annotations are added only when secret is being created. Existing secret will not be modified. |
+| secret.secretAnnotations | object | `{"helm.sh/hook":"pre-install, pre-upgrade","helm.sh/hook-delete-policy":"before-hook-creation","helm.sh/hook-weight":0,"helm.sh/resource-policy":"keep"}` | Annotations to be added to secret. Annotations are added only when secret is being created. Existing secret will not be modified. |
 | secret.hashSumEnabled | bool | `true` | switch to false to prevent checksum annotations being maintained and propogated to the pods |
 | ingress.enabled | bool | `false` |  |
 | ingress.className | string | `""` |  |
@@ -64,9 +64,10 @@ A Helm chart for ORY Kratos's example ui for Kubernetes
 | deployment.automountServiceAccountToken | bool | `false` |  |
 | deployment.terminationGracePeriodSeconds | int | `60` |  |
 | affinity | object | `{}` |  |
-| kratosAdminUrl | string | `"http://kratos-admin"` | Set this to ORY Kratos's Admin URL |
-| kratosPublicUrl | string | `"http://kratos-public"` | Set this to ORY Kratos's public URL |
-| kratosBrowserUrl | string | `"http://kratos-browserui"` | Set this to ORY Kratos's public URL accessible from the outside world. |
+| kratosAdminUrl | string | `"http://kratos:4434"` | Set this to ORY Kratos's Admin URL |
+| kratosPublicUrl | string | `"http://kratos:4433"` | Set this to ORY Kratos's public URL |
+| hydraAdminUrl | string | `"http://hydra:4445"` | Set this to ORY Hydra's Admin URL |
+| hydraPublicUrl | string | `"http://hydra:4444"` | Set this to ORY Hydra's public URL |
 | basePath | string | `""` | The basePath |
 | jwksUrl | string | `"http://oathkeeper-api"` | The jwksUrl |
 | projectName | string | `"SecureApp"` |  |
