@@ -3,7 +3,7 @@
 # management-portal
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 1.2.2](https://img.shields.io/badge/Version-1.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.4](https://img.shields.io/badge/AppVersion-2.1.4-informational?style=flat-square)
+![Version: 1.2.3](https://img.shields.io/badge/Version-1.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.4](https://img.shields.io/badge/AppVersion-2.1.4-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -14,8 +14,8 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | Name | Email | Url |
 | ---- | ------ | --- |
 | Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
-| Bastiaan de Graaf | <bastiaan@thehyve.nl> | <https://www.thehyve.nl/experts/bastiaan-de-graaf> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
+| Yatharth Ranjan | <yatharthranjan89@gmail.com> | <https://www.kcl.ac.uk/people/yatharth-ranjan> |
+| Pauline Conde | <mpgxvii@gmail.com> | <https://www.kcl.ac.uk/people/pauline-conde> |
 
 ## Source Code
 
@@ -86,6 +86,9 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | identity_server.server_url | string | `nil` | The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos |
 | identity_server.server_admin_url | string | `"http://kratos-admin"` | The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
 | identity_server.login_url | string | `nil` | The publicly accessible login URL for the IDP; needed when deviating from http(s)://server_name/kratos-ui |
+| authserver.server_url | string | `"http://hydra:4444"` | The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth |
+| authserver.server_admin_url | string | `"http://hydra:4445"` | The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
+| authserver.login_url | string | `"http://localhost:4444"` | The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login |
 | managementportal.catalogue_server_enable_auto_import | bool | `false` | set to true, if automatic source-type import from catalogue server should be enabled |
 | managementportal.common_privacy_policy_url | string | `"http://info.thehyve.nl/radar-cns-privacy-policy"` | Override with a publicly resolvable url of the privacy-policy url for your set-up. This can be overridden on a project basis as well. |
 | managementportal.oauth_checking_key_aliases_0 | string | `"radarbase-managementportal-ec"` | Keystore alias to sign JWT tokens from Management Portal |

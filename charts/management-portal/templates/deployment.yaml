@@ -95,6 +95,12 @@ spec:
             value: {{ default (printf "%s://%s/kratos-ui" $https .Values.server_name) .Values.identity_server.login_url }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_ADMIN_URL
             value: {{ .Values.identity_server.server_admin_url }}
+          - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERURL
+            value: {{ .Values.authserver.server_url | quote }}
+          - name: MANAGEMENTPORTAL_AUTHSERVER_LOGINURL
+            value: {{ .Values.authserver.login_url | quote }}
+          - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERADMINURL
+            value: {{ .Values.authserver.server_admin_url | quote }}
           - name: MANAGEMENTPORTAL_COMMON_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
