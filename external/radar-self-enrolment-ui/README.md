@@ -64,12 +64,11 @@ A Helm chart for ORY Kratos's example ui for Kubernetes
 | deployment.automountServiceAccountToken | bool | `false` |  |
 | deployment.terminationGracePeriodSeconds | int | `60` |  |
 | affinity | object | `{}` |  |
-| kratosAdminUrl | string | `"http://kratos:4434"` | Set this to ORY Kratos's Admin URL |
 | kratosPublicUrl | string | `"http://kratos:4433"` | Set this to ORY Kratos's public URL |
 | hydraAdminUrl | string | `"http://hydra:4445"` | Set this to ORY Hydra's Admin URL |
 | hydraPublicUrl | string | `"http://hydra:4444"` | Set this to ORY Hydra's public URL |
 | basePath | string | `""` | The basePath |
-| jwksUrl | string | `"http://oathkeeper-api"` | The jwksUrl |
+| jwksUrl | string | `"http://hydra:4445/admin/keys/hydra.jwt.access-token"` | The jwksUrl |
 | projectName | string | `"SecureApp"` |  |
 | test.busybox | object | `{"repository":"busybox","tag":1}` | use a busybox image from another repository |
 

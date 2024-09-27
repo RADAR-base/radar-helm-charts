@@ -166,9 +166,6 @@ deployment:
 
 affinity: {}
 
-# -- Set this to ORY Kratos's Admin URL
-kratosAdminUrl: http://kratos:4434
-
 # -- Set this to ORY Kratos's public URL
 kratosPublicUrl: http://kratos:4433
 
@@ -182,7 +179,7 @@ hydraPublicUrl: http://hydra:4444
 basePath: ""
 
 # -- The jwksUrl
-jwksUrl: http://oathkeeper-api
+jwksUrl: http://hydra:4445/admin/keys/hydra.jwt.access-token
 
 projectName: SecureApp
 
