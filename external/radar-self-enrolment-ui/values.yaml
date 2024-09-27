@@ -1,4 +1,4 @@
-# Default values for kratos-selfservice-ui-node.
+# Default values for radar-self-enrolment-ui.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -8,10 +8,10 @@ replicaCount: 1
 revisionHistoryLimit: 5
 ## -- Deployment image settings
 image:
-  # SELFSERVICE image
-  repository: oryd/kratos-selfservice-ui-node
-  # -- ORY KRATOS VERSION
-  tag: "v0.13.0-20"
+  # Portal image
+  repository: ghcr.io/radar-base/radar-self-enrolment-ui
+  # -- Image version
+  tag: dev
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -44,10 +44,10 @@ secret:
   secretAnnotations:
     # Create the secret before installation, and only then. This saves the secret from regenerating during an upgrade
     # pre-upgrade is needed to upgrade from 0.7.0 to newer. Can be deleted afterwards.
-    helm.sh/hook-weight: "0"
-    helm.sh/hook: "pre-install, pre-upgrade"
-    helm.sh/hook-delete-policy: "before-hook-creation"
-    helm.sh/resource-policy: "keep"
+    helm.sh/hook-weight: 0
+    helm.sh/hook: pre-install, pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/resource-policy: keep
   # -- switch to false to prevent checksum annotations being maintained and propogated to the pods
   hashSumEnabled: true
 
@@ -83,11 +83,11 @@ securityContext:
   seccompProfile:
     type: RuntimeDefault
   seLinuxOptions:
-    level: "s0:c123,c456"
+    level: s0:c123,c456
 
 ## -- Pod level security context
 podSecurityContext:
-  fsGroupChangePolicy: "OnRootMismatch"
+  fsGroupChangePolicy: OnRootMismatch
   runAsNonRoot: true
   runAsUser: 10000
   fsGroup: 10000
@@ -141,8 +141,8 @@ deployment:
   #   whenUnsatisfiable: DoNotSchedule
   #   labelSelector:
   #     matchLabels:
-  #       app.kubernetes.io/name: kratos-selfservice-ui-node
-  #       app.kubernetes.io/instance: kratos-selfservice-ui-node
+  #       app.kubernetes.io/name: radar-self-enrolment-ui
+  #       app.kubernetes.io/instance: radar-self-enrolment-ui
 
   # -- Configure pod dnsConfig.
   dnsConfig: {}
@@ -166,22 +166,22 @@ deployment:
 
 affinity: {}
 
-# -- Set this to ORY Kratos's Admin URL
-kratosAdminUrl: "http://kratos-admin"
-
 # -- Set this to ORY Kratos's public URL
-kratosPublicUrl: "http://kratos-public"
+kratosPublicUrl: http://kratos:4433
 
-# -- Set this to ORY Kratos's public URL accessible from the outside world.
-kratosBrowserUrl: "http://kratos-browserui"
+# -- Set this to ORY Hydra's Admin URL
+hydraAdminUrl: http://hydra:4445
+
+# -- Set this to ORY Hydra's public URL
+hydraPublicUrl: http://hydra:4444
 
 # -- The basePath
 basePath: ""
 
 # -- The jwksUrl
-jwksUrl: "http://oathkeeper-api"
+jwksUrl: http://hydra:4445/admin/keys/hydra.jwt.access-token
 
-projectName: "SecureApp"
+projectName: SecureApp
 
 test:
   # -- use a busybox image from another repository
