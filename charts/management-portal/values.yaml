@@ -278,6 +278,14 @@ identity_server:
   # -- The publicly accessible login URL for the IDP; needed when deviating from http(s)://server_name/kratos-ui
   login_url:
 
+authserver:
+  # -- The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth
+  server_url: http://hydra:4444
+  # -- The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
+  server_admin_url: http://hydra:4445
+  # -- The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login
+  login_url: http://localhost:4444
+
 managementportal:
   # -- set to true, if automatic source-type import from catalogue server should be enabled
   catalogue_server_enable_auto_import: false
