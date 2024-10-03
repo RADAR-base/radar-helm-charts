@@ -11,7 +11,7 @@ data:
     service:
       # Interval time in minutes for syncing projects and subjects.
       baseUri: http://0.0.0.0:8080/rest-sources/backend/
-      advertisedBaseUri: {{ printf "%s://%s/rest-sources/backend/" $https .Values.serverName }}
+      advertisedBaseUri: {{ printf "%s://%s/rest-sources/backend" $https .Values.serverName }}
       enableCors: true
       syncParticipantsIntervalMin: 2
       {{- if .Values.authorizer -}}
