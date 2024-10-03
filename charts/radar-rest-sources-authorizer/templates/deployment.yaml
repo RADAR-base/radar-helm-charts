@@ -49,7 +49,7 @@ spec:
           - name: BASE_HREF
             value: /rest-sources/authorizer/
           - name: BACKEND_BASE_URL
-            value: {{ printf "%s://%s/rest-sources/backend/" $https .Values.serverName }}
+            value: {{ printf "%s://%s/rest-sources/backend" $https .Values.serverName }}
           - name: VALIDATE
             value: "true"
           - name: AUTH_GRANT_TYPE
