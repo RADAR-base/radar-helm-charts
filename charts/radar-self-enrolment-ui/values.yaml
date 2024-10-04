@@ -222,3 +222,4 @@ readinessProbe:
   successThreshold: 1
   # -- Failure threshold for readinessProbe
   failureThreshold: 3
+  
