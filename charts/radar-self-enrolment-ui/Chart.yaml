@@ -4,4 +4,3 @@ description: A Helm chart for ORY Kratos's example ui for Kubernetes
 name: radar-self-enrolment-ui
 version: 0.0.2
 type: application
-
