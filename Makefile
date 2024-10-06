@@ -68,13 +68,6 @@ update-kratos:
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
-update-radar-self-enrolment-ui:
-	@echo "Updating radar-self-enrolment-ui"
-	@rm -rf external/$(patsubst update-%,%,$@)
-	@helm repo add $(patsubst update-%,%,$@) https://k8s.ory.sh/helm/charts
-	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
-	@echo ""
-
 update-hydra:
 	@echo "Updating Hydra"
 	@rm -rf external/$(patsubst update-%,%,$@)

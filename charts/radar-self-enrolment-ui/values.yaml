@@ -44,7 +44,7 @@ secret:
   secretAnnotations:
     # Create the secret before installation, and only then. This saves the secret from regenerating during an upgrade
     # pre-upgrade is needed to upgrade from 0.7.0 to newer. Can be deleted afterwards.
-    helm.sh/hook-weight: 0
+    helm.sh/hook-weight: "0"
     helm.sh/hook: pre-install, pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/resource-policy: keep
@@ -188,3 +188,37 @@ test:
   busybox:
     repository: busybox
     tag: 1
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 3
+  # -- Period seconds for livenessProbe
+  periodSeconds: 300
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 10
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 10
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 10
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
