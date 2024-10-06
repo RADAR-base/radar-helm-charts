@@ -10047,6 +10047,16 @@ entries:
   radar-self-enrolment-ui:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2024-10-06T15:01:30.668889373Z"
+    description: A Helm chart for ORY Kratos's example ui for Kubernetes
+    digest: 9eb96d1dda0a2215b986ba4e18a2466ade62735074e0e5f4e1e1640d44b966dc
+    name: radar-self-enrolment-ui
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-self-enrolment-ui-0.0.2/radar-self-enrolment-ui-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2024-09-27T11:56:19.473885949Z"
     description: A Helm chart for ORY Kratos's example ui for Kubernetes
     digest: 47dd10be8f7b375cbc483c1e00c842119438500a375812591e8d862de74a60c0
@@ -11914,4 +11924,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-03T07:57:11.353233814Z"
+generated: "2024-10-06T15:01:30.669579713Z"
