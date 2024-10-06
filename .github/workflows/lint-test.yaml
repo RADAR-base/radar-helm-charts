@@ -29,7 +29,7 @@ jobs:
 
       - name: Check helm docs did not change anything
         run: |
-          CHANGES=$(git diff --stat charts :^charts/kafka-manager)
+          CHANGES=$(git diff charts :^charts/kafka-manager)
           if [ -n "${CHANGES}" ]; then
             printf "README is not up to date with helm-docs. Following mismatches are detected:\n$CHANGES\n"
             exit 1
