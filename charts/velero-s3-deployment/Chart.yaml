@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "1.0"
 description: A Helm chart for Velero S3 deployment, this chart holds resources used by Velero with a deployment to mirror the local object storage to a remote object storage.
 name: velero-s3-deployment
-version: 0.3.0
+version: 0.3.1
 sources: ["https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/velero-s3-deployment"]
 deprecated: false
 type: application
@@ -15,9 +15,9 @@ maintainers:
   - email: keyvan@thehyve.nl
     name: Keyvan Hedayati
     url: https://www.thehyve.nl
-  - email: joris@thehyve.nl
-    name: Joris Borgdorff
-    url: https://www.thehyve.nl/experts/joris-borgdorff
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
   - email: nivethika@thehyve.nl
     name: Nivethika Mahasivam
     url: https://www.thehyve.nl/experts/nivethika-mahasivam

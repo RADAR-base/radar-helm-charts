@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "0.4.0"
 description: A Helm chart for RADAR-Base backend services which provides a layer to monitor and analyze streams of wearable data and write data to  storage.
 name: radar-backend
-version: 0.3.0
+version: 0.3.1
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-backend
@@ -19,9 +19,9 @@ maintainers:
   - email: keyvan@thehyve.nl
     name: Keyvan Hedayati
     url: https://www.thehyve.nl
-  - email: joris@thehyve.nl
-    name: Joris Borgdorff
-    url: https://www.thehyve.nl/experts/joris-borgdorff
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
   - email: nivethika@thehyve.nl
     name: Nivethika Mahasivam
     url: https://www.thehyve.nl/experts/nivethika-mahasivam
