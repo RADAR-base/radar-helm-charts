@@ -9,8 +9,7 @@ image:
   # -- s3-proxy image repository
   repository: andrewgaul/s3proxy
   # -- s3-proxy image tag (immutable tags are recommended)
-  # Overrides the image tag whose default is the chart appVersion.
-  tag:
+  tag: sha-85b0f98
   # -- s3-proxy image pull policy
   pullPolicy: IfNotPresent
 
