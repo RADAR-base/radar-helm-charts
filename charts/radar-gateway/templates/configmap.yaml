@@ -56,3 +56,7 @@ data:
     auth:
       managementPortalUrl: {{ .Values.managementportal_url }}
       checkSourceId: {{ .Values.checkSourceId }}
+      publicKeyUrls:
+        {{- range .Values.public_key_endpoints }}
+        - {{ . | quote }}
+        {{ end -}}

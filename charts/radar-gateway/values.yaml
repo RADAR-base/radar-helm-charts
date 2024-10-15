@@ -228,3 +228,7 @@ cc:
   schemaRegistryApiKey: srApiKey
   # -- Confluent Cloud schema registry API secret
   schemaRegistryApiSecret: srApiSecret
+
+public_key_endpoints:
+  # List of public key endpoints for token verification
+  # - https://localhost/managementportal/oauth/token_key
