@@ -234,3 +234,26 @@ smtp:
   starttls: false
   # -- set to true, if the account should be authenticated before sending emails
   auth: true
+
+upload:
+  # -- if set to true, file upload endpoint will be enabled
+  enabled: false
+  # -- Maximum file size for upload
+  max_file_size: "20MB"
+  # Settings for file storage
+  storage:
+    # -- Type of storage to use for file upload (s3)
+    type: s3
+    # -- Internal url to storage
+    url: http://minio-headless:9000
+    # -- Bucket name of the S3 storage
+    bucket_name: radar-output-storage
+    # -- Access key of the S3 storage
+    access_key: secret
+    # -- Secret key of the S3 storage
+    secret_key: secret
+    path:
+      # -- Prefix for the path in the storage; will become <bucket>/<prefix>/<project>/<subject>/<topic>
+      prefix: output
+      # -- if set to true, a new folder will be created for each day
+      collection_per_day: false

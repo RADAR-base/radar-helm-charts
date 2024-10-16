@@ -3,7 +3,7 @@
 # radar-appserver
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-appserver)](https://artifacthub.io/packages/helm/radar-base/radar-appserver)
 
-![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.3](https://img.shields.io/badge/AppVersion-2.4.3-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.3](https://img.shields.io/badge/AppVersion-2.4.3-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Appserver
 
@@ -93,3 +93,12 @@ A Helm chart for the backend application of RADAR-base Appserver
 | smtp.from | string | `"noreply@example.com"` | Email address which should be used to send activation emails |
 | smtp.starttls | bool | `false` | set to true,if TTLS should be enabled |
 | smtp.auth | bool | `true` | set to true, if the account should be authenticated before sending emails |
+| upload.enabled | bool | `false` | if set to true, file upload endpoint will be enabled |
+| upload.max_file_size | string | `"20MB"` | Maximum file size for upload |
+| upload.storage.type | string | `"s3"` | Type of storage to use for file upload (s3) |
+| upload.storage.url | string | `"http://minio-headless:9000"` | Internal url to storage |
+| upload.storage.bucket_name | string | `"radar-output-storage"` | Bucket name of the S3 storage |
+| upload.storage.access_key | string | `"secret"` | Access key of the S3 storage |
+| upload.storage.secret_key | string | `"secret"` | Secret key of the S3 storage |
+| upload.storage.path.prefix | string | `"output"` | Prefix for the path in the storage; will become <bucket>/<prefix>/<project>/<subject>/<topic> |
+| upload.storage.path.collection_per_day | bool | `false` | if set to true, a new folder will be created for each day |
