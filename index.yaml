@@ -476,6 +476,37 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 0.5.1
+    created: "2024-10-17T13:12:16.051630577Z"
+    description: A Helm chart for the frontend application of RADAR-base application
+      config (app-config).
+    digest: 2fe1fd8a3ee26c229dfd4c4c25eb3550acdeddfa4f57563a732be0fbf347985f
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: app-config-frontend
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/app-config-frontend
+    - https://github.com/RADAR-base/radar-app-config
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/app-config-frontend-2.0.2/app-config-frontend-2.0.2.tgz
+    version: 2.0.2
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.5.1
     created: "2024-10-11T08:57:39.290366803Z"
     description: A Helm chart for the frontend application of RADAR-base application
       config (app-config).
@@ -12798,4 +12829,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-17T10:04:03.821785685Z"
+generated: "2024-10-17T13:12:16.052216309Z"
