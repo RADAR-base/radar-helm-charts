@@ -595,3 +595,55 @@ oauth_clients:
     authorized_grant_types:
       - client_credentials
     access_token_validity: 900
+
+  # This client is used for the CI to authenticate with the Management Portal
+  # Tokens obtained with it can be used for every activity in the platform.
+  ci_test_client:
+    # WARNING: never enable in production!
+    enable: false
+    resource_ids:
+      - res_ManagementPortal
+      - res_appconfig
+      - res_gateway
+      - res_upload
+      - res_restAuthorizer
+      - res_DataDashboardAPI
+      - res_appserver
+      - res_fitbit
+      - res_push
+      - res_integration
+      - res_redcap
+    # This secret is never randomized because it is used by the CI.
+    client_secret: secret
+    scope:
+      - PROJECT.CREATE
+      - PROJECT.READ
+      - PROJECT.UPDATE
+      - USER.CREATE
+      - USER.READ
+      - USER.UPDATE
+      - SUBJECT.CREATE
+      - SUBJECT.READ
+      - SUBJECT.UPDATE
+      - ROLE.CREATE
+      - ROLE.READ
+      - ROLE.UPDATE
+      - SOURCE.CREATE
+      - SOURCE.READ
+      - SOURCE.UPDATE
+      - SOURCEDATA.CREATE
+      - SOURCEDATA.READ
+      - SOURCEDATA.UPDATE
+      - SOURCETYPE.CREATE
+      - SOURCETYPE.READ
+      - SOURCETYPE.UPDATE
+      - MEASUREMENT.CREATE
+      - MEASUREMENT.READ
+      - MEASUREMENT.UPDATE
+    authorized_grant_types:
+      - refresh_token
+      - authorization_code
+      - client_credentials
+    access_token_validity: 86400000
+    refresh_token_validity: 86400000
+    additional_information: '{"dynamic_registration": true}'
