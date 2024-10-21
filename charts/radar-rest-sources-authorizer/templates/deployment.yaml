@@ -61,7 +61,7 @@ spec:
           - name: AUTH_CALLBACK_URL
             value: {{ printf "%s://%s/rest-sources/authorizer/login" $https .Values.serverName }}
           - name: AUTH_URI
-            value: {{ printf "%s://%s/managementportal/oauth" $https .Values.serverName }}
+            value: {{ .Values.authUrl | default (printf "%s://%s/managementportal/oauth" $https .Values.serverName) }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
