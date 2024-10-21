@@ -84,6 +84,8 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | serverName | string | `"localhost"` | Resolvable server name, needed to find the advertised URL and callback URL |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | client_secret | string | `"secret"` | OAuth2 client secret of the radar-rest-sources-backend client from Management Portal |
+| public_key_endpoints | list | `[]` | List of public key endpoints for token verification |
+| auth_url | string | `"http://management-portal:8080/managementportal/oauth/token"` | Auth url for MP client |
 | restSourceClients.fitbit.enable | bool | `false` | set to true, if Fitbit client should be used |
 | restSourceClients.fitbit.sourceType | string | `"FitBit"` | Type of the data sources |
 | restSourceClients.fitbit.authorizationEndpoint | string | `"https://www.fitbit.com/oauth2/authorize"` | Authorization endpoint for Fitbit authentication and authorization |
