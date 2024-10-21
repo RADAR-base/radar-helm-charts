@@ -1,4 +1,6 @@
 {{ $https := ternary "http" "https" (or .Values.disable_tls (not .Values.ingress.tls)) }}
+{{ $idpLoginUrl  := .Values.identity_server.login_url | default (printf "%s://%s/kratos-ui" $https .Values.server_name) }}
+{{ $idpServerUrl := .Values.identity_server.server_url | default (printf "%s://%s/kratos"   $https .Values.server_name) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -90,15 +92,15 @@ spec:
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_ADMIN_EMAIL
             value: {{ .Values.identity_server.admin_email }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_URL
-            value: {{ default (printf "%s://%s/kratos" $https .Values.server_name) .Values.identity_server.server_url }}
+            value: {{ $idpServerUrl }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_LOGIN_URL
-            value: {{ default (printf "%s://%s/kratos-ui" $https .Values.server_name) .Values.identity_server.login_url }}
+            value: {{ $idpLoginUrl }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_ADMIN_URL
             value: {{ .Values.identity_server.server_admin_url }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERURL
-            value: {{ .Values.authserver.server_url | quote }}
+            value:  {{ $idpServerUrl }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_LOGINURL
-            value: {{ .Values.authserver.login_url | quote }}
+            value: {{ $idpLoginUrl }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERADMINURL
             value: {{ .Values.authserver.server_admin_url | quote }}
           - name: MANAGEMENTPORTAL_COMMON_ADMIN_PASSWORD
