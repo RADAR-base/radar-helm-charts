@@ -88,6 +88,12 @@ The external charts that have a depedency need manual steps:
 - In the `Chart.yaml` the repository should be changd to `https://radar-base.github.io/radar-helm-charts`.
 - The `Chart.lock` file should be removed and then run `helm dependency build` to recreate the file with new repository URL and remove any `.tgz` files that gets created.
 
+### kube-prometheus-stack
+For this chart, `Chart.yaml` needs to be updated to the latest version, remove `Chart.lock` and run `helm dependency build`. Make sure to copy the CRDs from
+https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack/charts/crds/crds
+to 
+https://github.com/RADAR-base/RADAR-Kubernetes/blob/main/etc/kube-prometheus-stack/files/crds.yaml
+
 ## Feedback and Contributions
 
 Enabling RADAR-base community to use RADAR-Kubernetes is important for us. If you have troubles setting up the platform using provided instructions, you can create an issue with exact details to reproduce and the expected behaviour.
