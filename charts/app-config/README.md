@@ -3,7 +3,7 @@
 # app-config
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/app-config)](https://artifacthub.io/packages/helm/radar-base/app-config)
 
-![Version: 1.3.2](https://img.shields.io/badge/Version-1.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.2](https://img.shields.io/badge/AppVersion-0.5.2-informational?style=flat-square)
+![Version: 1.3.3](https://img.shields.io/badge/Version-1.3.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.2](https://img.shields.io/badge/AppVersion-0.5.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base application config (app-config) backend service which is used as mobile app configuration engine with per-project and per-user configuration.
 
@@ -45,7 +45,7 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 | securityContext | object | `{}` | Configure Appconfig containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8090` | Appconfig port |
-| disable_tls | bool | `false` | Disable TLS (reconfigures Ingress and sets URLs to use HTTP) |
+| disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
 | ingress.path | string | `"/appconfig/api"` | Path within the url structure |

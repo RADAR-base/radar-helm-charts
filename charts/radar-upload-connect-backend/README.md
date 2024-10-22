@@ -42,8 +42,8 @@ A Helm chart for RADAR-base upload connector backend application. This applicati
 | securityContext | object | `{}` | Configure radar-upload-connect-backend containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8085` | radar-upload-connect-backend port |
-| disable_tls | bool | `false` | Disable TLS (reconfigures Ingress and sets URLs to use HTTP) |
-| advertised_protocol | string | `"https"` |  |
+| disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
+| advertised_protocol | string | `"https"` | The protocol in advertised URIs (https, http) |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and proxy settings |
 | ingress.path | string | `"/upload/api/?(.*)"` | Path within the url structure |

@@ -51,7 +51,7 @@ service:
   # -- Appconfig port
   port: 8090
 
-# -- Disable TLS (reconfigures Ingress and sets URLs to use HTTP)
+# -- Reconfigure Ingress to not force TLS
 disable_tls: false
 
 ingress:

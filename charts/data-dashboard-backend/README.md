@@ -2,7 +2,7 @@
 
 # data-dashboard-backend
 
-![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.2](https://img.shields.io/badge/AppVersion-0.2.2-informational?style=flat-square)
+![Version: 0.3.5](https://img.shields.io/badge/Version-0.3.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.2](https://img.shields.io/badge/AppVersion-0.2.2-informational?style=flat-square)
 
 API for data in the data dashboard
 
@@ -40,7 +40,7 @@ API for data in the data dashboard
 | securityContext | object | `{}` | Configure container's Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `9000` | data-dashboard-backend port |
-| disable_tls | bool | `false` | Disable TLS (reconfigures Ingress and sets URLs to use HTTP) |
+| disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.ingressClassName | string | `"nginx"` | Ingress class name |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |

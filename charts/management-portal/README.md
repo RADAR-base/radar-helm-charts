@@ -42,8 +42,8 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | securityContext | object | `{}` | Configure management-portal containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8080` | Management Portal port |
-| disable_tls | bool | `false` | Disable TLS (reconfigures Ingress and sets URLs to use HTTP) |
-| advertised_protocol | string | `"https"` |  |
+| disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
+| advertised_protocol | string | `"https"` | The protocol in advertised URIs (https, http) |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
 | ingress.path | string | `"/managementportal"` | Path within the url structure |

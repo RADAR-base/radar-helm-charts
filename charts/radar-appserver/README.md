@@ -41,8 +41,8 @@ A Helm chart for the backend application of RADAR-base Appserver
 | securityContext | object | `{}` | Configure radar-appserver containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8080` | radar-appserver port |
-| disable_tls | bool | `false` | Disable TLS (reconfigures Ingress and sets URLs to use HTTP) |
-| advertised_protocol | string | `"https"` |  |
+| disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
+| advertised_protocol | string | `"https"` | The protocol in advertised URIs (https, http) |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and session configuration |
 | ingress.path | string | `"/appserver/?(.*)"` | Path within the url structure |

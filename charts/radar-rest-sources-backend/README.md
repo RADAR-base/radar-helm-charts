@@ -43,7 +43,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8080` | radar-rest-sources-backend port |
 | disable_tls | bool | `false` | Disable TLS (reconfigures Ingress) |
-| advertised_protocol | string | `"https"` |  |
+| advertised_protocol | string | `"https"` | The protocol in advertised URIs (https, http) |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and session configuration |
 | ingress.path | string | `"/rest-sources/backend"` | Path within the url structure |
