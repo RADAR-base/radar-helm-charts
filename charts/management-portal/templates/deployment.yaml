@@ -1,6 +1,5 @@
-{{ $https := ternary "http" "https" (or .Values.disable_tls (not .Values.ingress.tls)) }}
-{{ $idpLoginUrl  := .Values.identity_server.login_url | default (printf "%s://%s/kratos-ui" $https .Values.server_name) }}
-{{ $idpServerUrl := .Values.identity_server.server_url | default (printf "%s://%s/kratos"   $https .Values.server_name) }}
+{{ $idpLoginUrl  := .Values.identity_server.login_url | default (printf "%s://%s/kratos-ui" .Values.advertised_protocol .Values.server_name) }}
+{{ $idpServerUrl := .Values.identity_server.server_url | default (printf "%s://%s/kratos"   .Values.advertised_protocol .Values.server_name) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -73,9 +72,9 @@ spec:
           - name: MANAGEMENTPORTAL_MAIL_FROM
             value: {{ .Values.smtp.from }}
           - name: MANAGEMENTPORTAL_COMMON_BASEURL
-            value: {{ printf "%s://%s" $https .Values.server_name }}
+            value: {{ printf "%s://%s" .Values.advertised_protocol .Values.server_name }}
           - name: MANAGEMENTPORTAL_COMMON_MANAGEMENT_PORTAL_BASE_URL
-            value: {{ printf "%s://%s/managementportal" $https .Values.server_name }}
+            value: {{ printf "%s://%s/managementportal" .Values.advertised_protocol .Values.server_name }}
           - name: MANAGEMENTPORTAL_FRONTEND_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
