@@ -6491,6 +6491,33 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 0.1.4
+    created: "2024-10-22T08:04:55.071116465Z"
+    description: RADAR-base home page.
+    digest: bccf91ee3995f4041ad2cf0a89d8c2663d324198ddacbbeb687aaaacb9dcef1f
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-home
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-home
+    - https://github.com/RADAR-base/radar-home
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-home-0.3.3/radar-home-0.3.3.tgz
+    version: 0.3.3
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.1.4
     created: "2024-10-18T09:27:07.398830047Z"
     description: RADAR-base home page.
     digest: 7d17abe71d7d937fac61fd2d296b68fb155685da478fe77fd5b7fd5b24ac1b0c
@@ -13296,4 +13323,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-21T14:18:19.95124256Z"
+generated: "2024-10-22T08:04:55.071881138Z"
