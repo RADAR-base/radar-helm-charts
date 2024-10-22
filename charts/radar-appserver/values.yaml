@@ -240,8 +240,8 @@ smtp:
 upload:
   # -- if set to true, file upload endpoint will be enabled
   enabled: false
-  # -- Maximum file size for upload
-  max_file_size: "20MB"
+  # -- Maximum file size for upload. Can be any number followed by MB or GB.
+  max_file_size: 20MB
   # Settings for file storage
   storage:
     # -- Type of storage to use for file upload (s3)
