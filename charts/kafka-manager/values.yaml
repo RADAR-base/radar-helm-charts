@@ -147,7 +147,7 @@ image:
 # -- Docker registry secret names as an array
 imagePullSecrets: []
 
-# -- Disable TLS (reconfigures Ingress and sets URLs to use HTTP)
+# -- Reconfigure Ingress to not force TLS
 disable_tls: false
 
 ingress:

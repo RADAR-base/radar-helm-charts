@@ -1,4 +1,3 @@
-{{ $https := ternary "http" "https" (or .Values.disable_tls (not .Values.ingress.tls)) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,7 +48,7 @@ spec:
           - name: BASE_HREF
             value: /rest-sources/authorizer/
           - name: BACKEND_BASE_URL
-            value: {{ printf "%s://%s/rest-sources/backend" $https .Values.serverName }}
+            value: {{ printf "%s://%s/rest-sources/backend" .Values.advertised_protocol .Values.serverName }}
           - name: VALIDATE
             value: "true"
           - name: AUTH_GRANT_TYPE
@@ -59,9 +58,9 @@ spec:
           - name: AUTH_CLIENT_SECRET
             value: ""
           - name: AUTH_CALLBACK_URL
-            value: {{ printf "%s://%s/rest-sources/authorizer/login" $https .Values.serverName }}
+            value: {{ printf "%s://%s/rest-sources/authorizer/login" .Values.advertised_protocol .Values.serverName }}
           - name: AUTH_URI
-            value: {{ .Values.authUrl | default (printf "%s://%s/managementportal/oauth" $https .Values.serverName) }}
+            value: {{ .Values.authUrl | default (printf "%s://%s/managementportal/oauth" .Values.advertised_protocol .Values.serverName) }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}

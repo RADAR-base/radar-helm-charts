@@ -1,5 +1,4 @@
 {{- $restSourceClients := trim (include "radar-rest-sources-backend.enabledMapElementsAsList" .Values.restSourceClients) -}}
-{{ $https := ternary "http" "https" (or .Values.disable_tls (not .Values.ingress.tls)) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -11,7 +10,7 @@ data:
     service:
       # Interval time in minutes for syncing projects and subjects.
       baseUri: http://0.0.0.0:8080/rest-sources/backend/
-      advertisedBaseUri: {{ printf "%s://%s/rest-sources/backend" $https .Values.serverName }}
+      advertisedBaseUri: {{ printf "%s://%s/rest-sources/backend" .Values.advertised_protocol .Values.serverName }}
       enableCors: true
       syncParticipantsIntervalMin: 2
       {{- if .Values.authorizer -}}

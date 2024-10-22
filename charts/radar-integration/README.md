@@ -3,7 +3,7 @@
 # radar-integration
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-integration)](https://artifacthub.io/packages/helm/radar-base/radar-integration)
 
-![Version: 0.7.1](https://img.shields.io/badge/Version-0.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.5](https://img.shields.io/badge/AppVersion-1.0.5-informational?style=flat-square)
+![Version: 0.7.2](https://img.shields.io/badge/Version-0.7.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.5](https://img.shields.io/badge/AppVersion-1.0.5-informational?style=flat-square)
 
 A Helm chart for RADAR-Base REDCap survey integration application.
 
@@ -41,7 +41,7 @@ A Helm chart for RADAR-Base REDCap survey integration application.
 | securityContext | object | `{}` | Configure radar-integration containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8080` | radar-integration port |
-| disable_tls | bool | `false` | Disable TLS (reconfigures Ingress and sets URLs to use HTTP) |
+| disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and deny access to sensitive URLs |
 | ingress.path | string | `"/redcapint/?(.*)"` | Path within the url structure |

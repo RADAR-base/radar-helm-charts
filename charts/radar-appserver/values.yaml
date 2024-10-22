@@ -41,8 +41,10 @@ service:
   # -- radar-appserver port
   port: 8080
 
-# -- Disable TLS (reconfigures Ingress and sets URLs to use HTTP)
+# -- Reconfigure Ingress to not force TLS
 disable_tls: false
+# -- The protocol in advertised URIs (https, http)
+advertised_protocol: https
 
 ingress:
   # -- Enable ingress controller resource

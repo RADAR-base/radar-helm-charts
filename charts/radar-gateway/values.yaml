@@ -41,7 +41,7 @@ service:
   # -- radar-gateway port
   port: 8080
 
-# -- Disable TLS (reconfigures Ingress and sets URLs to use HTTP)
+# -- Reconfigure Ingress to not force TLS
 disable_tls: false
 
 ingress:

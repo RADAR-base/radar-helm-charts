@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "2.1.5"
 description: A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 name: management-portal
-version: 1.2.6
+version: 1.3.0
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/management-portal

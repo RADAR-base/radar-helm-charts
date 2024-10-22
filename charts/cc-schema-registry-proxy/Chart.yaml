@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "1.0"
 description: A Helm chart for Confluent Cloud schema registry proxy. This proxy service is used when RADAR-base platform is used with Confluent Cloud based schema registry. It forwards requests to schema registry with an additonal basic authentication header with Confluent Cloud schema registry credentials. This service will be enabled if `cc.enabled = true`.
 name: cc-schema-registry-proxy
-version: 0.3.2
+version: 0.3.3
 type: application
 home: "https://radar-base.org"
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
