@@ -2796,6 +2796,29 @@ entries:
   graylog:
   - apiVersion: v2
     appVersion: 4.3.8
+    created: "2024-10-22T12:51:33.807002925Z"
+    description: Graylog is the centralized log management solution built to open
+      standards for capturing, storing, and enabling real-time analysis of terabytes
+      of machine data.
+    digest: 576f5d0d633fb3b515aa7ac7561c437b963123efd1878480bf503961f75b627c
+    home: https://www.graylog.org
+    icon: https://global-uploads.webflow.com/5a218ef7897bf400019e2f16/5a218ef7897bf400019e2f60_logo-graylog.png
+    keywords:
+    - graylog
+    - logs
+    - syslog
+    - gelf
+    maintainers:
+    - email: goonohc@gmail.com
+      name: KongZ
+    name: graylog
+    sources:
+    - https://github.com/KongZ/charts
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/graylog-2.2.2/graylog-2.2.2.tgz
+    version: 2.2.2
+  - apiVersion: v2
+    appVersion: 4.3.8
     created: "2024-09-10T13:50:05.908590643Z"
     description: Graylog is the centralized log management solution built to open
       standards for capturing, storing, and enabling real-time analysis of terabytes
@@ -13783,4 +13806,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-22T11:32:04.527960186Z"
+generated: "2024-10-22T12:51:33.807767307Z"
