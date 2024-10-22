@@ -18,6 +18,7 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+    nginx.ingress.kubernetes.io/proxy-body-size: {{ .Values.upload.max_file_size | lower | trimAll "b" }}
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
 {{- if and .Values.ingress.tls (not .Values.disable_tls) }}
