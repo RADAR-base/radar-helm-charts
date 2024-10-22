@@ -16,4 +16,4 @@ maintainers:
 name: graylog
 sources:
 - https://github.com/KongZ/charts
-version: 2.2.1
+version: 2.2.2
