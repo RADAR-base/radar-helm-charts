@@ -55,7 +55,9 @@ graylog:
   ##
   image:
     repository: "graylog/graylog"
-    tag: "4.2.3-1"
+    # -- docker image tag (immutable tags are recommended)
+    # Overrides the image tag whose default is the chart appVersion.
+    tag:
     pullPolicy: "IfNotPresent"
 
   ## Graylog default Java option
