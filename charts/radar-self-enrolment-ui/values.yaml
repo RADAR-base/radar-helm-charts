@@ -20,7 +20,7 @@ fullnameOverride: ""
 
 ## -- Application config
 config:
-  csrfCookieName: ""
+  csrfCookieName: "radar_csrf"
   secrets: {}
 
 ## -- Service configuration
@@ -51,23 +51,20 @@ secret:
   # -- switch to false to prevent checksum annotations being maintained and propogated to the pods
   hashSumEnabled: true
 
-## -- Ingress configration
 ingress:
-  enabled: false
-  className: ""
+  enabled: true
+  className: "nginx"
   annotations:
-    {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
-    - host: chart-example.local
+    - host: localhost
       paths:
-        - path: /
+        - path: "/kratos-ui/?(.*)"
           pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+    - secretName: radar-base-tls
+      hosts:
+        - localhost
 
 ## -- Container level security context
 securityContext:
@@ -112,7 +109,9 @@ deployment:
   # -- Array of extra envs to be passed to the deployment. Kubernetes format is expected
   # - name: FOO
   #   value: BAR
-  extraEnv: []
+  extraEnv:
+    - name: HYDRA_ADMIN_URL
+      value: http://hydra-admin
   # -- If you want to mount external volume
   # For example, mount a secret containing Certificate root CA to verify database
   # TLS connection.
@@ -166,20 +165,61 @@ deployment:
 
 affinity: {}
 
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: kratos-admin
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: hydra
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
+# -- Set this to ORY Kratos's Admin URL
+kratosAdminUrl: "kratos-admin"
+
 # -- Set this to ORY Kratos's public URL
-kratosPublicUrl: http://kratos:4433
+kratosPublicUrl: "https://localhost/kratos"
 
-# -- Set this to ORY Hydra's Admin URL
-hydraAdminUrl: http://hydra:4445
-
-# -- Set this to ORY Hydra's public URL
-hydraPublicUrl: http://hydra:4444
+# -- Set this to ORY Kratos's public URL accessible from the outside world.
+kratosBrowserUrl: "https://localhost/kratos"
 
 # -- The basePath
-basePath: ""
+basePath: "/kratos-ui"
 
 # -- The jwksUrl
-jwksUrl: http://hydra:4445/admin/keys/hydra.jwt.access-token
+jwksUrl: ""
 
 projectName: SecureApp
 
@@ -194,7 +234,7 @@ customLivenessProbe: {}
 
 livenessProbe:
   # -- Enable livenessProbe
-  enabled: true
+  enabled: false
   # -- Initial delay seconds for livenessProbe
   initialDelaySeconds: 3
   # -- Period seconds for livenessProbe
@@ -211,7 +251,7 @@ customReadinessProbe: {}
 
 readinessProbe:
   # -- Enable readinessProbe
-  enabled: true
+  enabled: false
   # -- Initial delay seconds for readinessProbe
   initialDelaySeconds: 5
   # -- Period seconds for readinessProbe
