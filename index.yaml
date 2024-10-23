@@ -2302,6 +2302,29 @@ entries:
   data-dashboard-backend:
   - apiVersion: v2
     appVersion: 0.2.2
+    created: "2024-10-23T13:34:00.4613066Z"
+    description: API for data in the data dashboard
+    digest: 8256b0908655206046ab17cdfff5ec583d77c3d3154b4d9ef979c26be4b28f3a
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: data-dashboard-backend
+    sources:
+    - https://github.com/thehyve/radar-data-dashboard-backend
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/data-dashboard-backend-0.3.6/data-dashboard-backend-0.3.6.tgz
+    version: 0.3.6
+  - apiVersion: v2
+    appVersion: 0.2.2
     created: "2024-10-22T09:39:22.654683804Z"
     description: API for data in the data dashboard
     digest: ea7bad9e315ace7bdb31063022da81a05c550a68a69e54a68e6222773f6b5834
@@ -11595,6 +11618,16 @@ entries:
   radar-self-enrolment-ui:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2024-10-23T13:34:00.588137256Z"
+    description: A Helm chart for ORY Kratos's example ui for Kubernetes
+    digest: 845934fd04907fbb935b339f9db47203b3cb9dd8a3fc27a672bbfac756a3dc53
+    name: radar-self-enrolment-ui
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-self-enrolment-ui-0.0.3/radar-self-enrolment-ui-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2024-10-06T15:01:30.668889373Z"
     description: A Helm chart for ORY Kratos's example ui for Kubernetes
     digest: 9eb96d1dda0a2215b986ba4e18a2466ade62735074e0e5f4e1e1640d44b966dc
@@ -13833,4 +13866,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-22T15:49:59.466707698Z"
+generated: "2024-10-23T13:34:00.58897488Z"
