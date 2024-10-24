@@ -43,6 +43,8 @@ service:
 
 # -- Reconfigure Ingress to not force TLS
 disable_tls: false
+# -- The protocol in advertised URIs (https, http)
+advertised_protocol: https
 
 ingress:
   # -- Enable ingress controller resource
@@ -231,4 +233,6 @@ cc:
 
 # -- List of public key endpoints for token verification
 public_key_endpoints: []
-  # - https://localhost/managementportal/oauth/token_key
+
+# -- Resolvable server name, needed to find the advertised URL and callback URL
+serverName: localhost
