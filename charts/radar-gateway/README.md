@@ -3,7 +3,7 @@
 # radar-gateway
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-gateway)](https://artifacthub.io/packages/helm/radar-base/radar-gateway)
 
-![Version: 1.2.4](https://img.shields.io/badge/Version-1.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.2](https://img.shields.io/badge/AppVersion-0.7.2-informational?style=flat-square)
+![Version: 1.2.5](https://img.shields.io/badge/Version-1.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.2](https://img.shields.io/badge/AppVersion-0.7.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -48,7 +48,7 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-tls-radar-gateway"` | Name of the secret that contains TLS certificates |
+| ingress.tls.secretName | string | `"radar-base-tls"` | Name of the secret that contains TLS certificates |
 | resources.requests | object | `{"cpu":"100m","memory":"400Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |

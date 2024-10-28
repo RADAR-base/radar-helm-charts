@@ -2,7 +2,7 @@
 
 # data-dashboard-backend
 
-![Version: 0.3.6](https://img.shields.io/badge/Version-0.3.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.2](https://img.shields.io/badge/AppVersion-0.2.2-informational?style=flat-square)
+![Version: 0.3.7](https://img.shields.io/badge/Version-0.3.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.2](https://img.shields.io/badge/AppVersion-0.2.2-informational?style=flat-square)
 
 API for data in the data dashboard
 
@@ -47,7 +47,7 @@ API for data in the data dashboard
 | ingress.path | string | `"/api"` | Path within the url structure |
 | ingress.pathType | string | `"ImplementationSpecific"` |  |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-data-dashboard-tls"` |  |
+| ingress.tls.secretName | string | `"radar-base-tls"` |  |
 | resources | object | `{}` |  |
 | autoscaling.enabled | bool | `false` | Enable horizontal autoscaling |
 | autoscaling.minReplicas | int | `1` |  |
