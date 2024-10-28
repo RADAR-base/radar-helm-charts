@@ -11,10 +11,12 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    {{- if .Values.serviceMonitor.enabled }}
     - name: metrics
       port: 5556
       protocol: TCP
       targetPort: metrics
+    {{- end }}
   selector:
     app.kubernetes.io/name: {{ include "radar-push-endpoint.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
