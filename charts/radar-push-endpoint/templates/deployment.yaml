@@ -41,6 +41,7 @@ spec:
                     - {{ .Release.Name }}
               topologyKey: "kubernetes.io/hostname"
       containers:
+      {{- if .Values.serviceMonitor.enabled }}
         - image: sscaling/jmx-prometheus-exporter
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -59,6 +60,7 @@ spec:
           volumeMounts:
           - mountPath: /etc/radar-push-endpoint/
             name: gateway-jmx-configmap
+      {{- end }}
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
