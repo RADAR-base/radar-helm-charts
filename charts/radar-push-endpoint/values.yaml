@@ -257,8 +257,8 @@ garmin:
   userRepositoryClientSecret: "secret"
   # -- The token URL for authentication (Usually the management portal token url). Make sure to avoid trailing slash (/) in the url.
   userRepositoryTokenUrl: "http://management-portal:8080/managementportal/oauth/token"
-  # -- Whether to enable Garmin backfill requests
   backfill:
+    # -- Whether to enable Garmin backfill requests
     enabled: true
 
 redis:
