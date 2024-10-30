@@ -41,8 +41,10 @@ service:
   # -- radar-upload-connect-frontend port
   port: 80
 
-# -- Disable TLS (reconfigures Ingress and sets URLs to use HTTP)
+# -- Reconfigure Ingress to not force TLS
 disable_tls: false
+# -- The protocol in advertised URIs (https, http)
+advertised_protocol: https
 
 ingress:
   # -- Enable ingress controller resource
@@ -63,7 +65,7 @@ ingress:
     - localhost
   tls:
     # -- Name of the secret containing TLS certificates
-    secretName: radar-base-tls-radar-upload-connect-frontend
+    secretName: radar-base-tls
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious

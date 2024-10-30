@@ -203,6 +203,9 @@ kafka_wait:
 radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
 # -- Number of connector tasks to be used in connector.properties
 connector_num_tasks: "5"
+
+# -- Fitbit API URL.
+fitbit_api_url: https://api.fitbit.com
 # -- Fitbit API client id.
 fitbit_api_client: ""
 # -- Fitbit API client secret.

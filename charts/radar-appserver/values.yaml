@@ -41,8 +41,10 @@ service:
   # -- radar-appserver port
   port: 8080
 
-# -- Disable TLS (reconfigures Ingress and sets URLs to use HTTP)
+# -- Reconfigure Ingress to not force TLS
 disable_tls: false
+# -- The protocol in advertised URIs (https, http)
+advertised_protocol: https
 
 ingress:
   # -- Enable ingress controller resource
@@ -63,7 +65,7 @@ ingress:
     - localhost
   tls:
     # -- TLS Secret Name
-    secretName: radar-base-tls-appserver
+    secretName: radar-base-tls
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -238,8 +240,8 @@ smtp:
 upload:
   # -- if set to true, file upload endpoint will be enabled
   enabled: false
-  # -- Maximum file size for upload
-  max_file_size: "20MB"
+  # -- Maximum file size for upload. Can be any number followed by MB or GB.
+  max_file_size: 20MB
   # Settings for file storage
   storage:
     # -- Type of storage to use for file upload (s3)

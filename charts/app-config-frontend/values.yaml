@@ -44,6 +44,11 @@ service:
   # -- Appconfig frontend port
   port: 8080
 
+# -- Reconfigure Ingress to not force TLS
+disable_tls: false
+# -- The protocol in advertised URIs (https, http)
+advertised_protocol: https
+
 ingress:
   # -- Enable ingress controller resource
   enabled: true
@@ -62,7 +67,7 @@ ingress:
     - localhost
   tls:
     # -- TLS Secret Name
-    secretName: radar-base-tls-appconfig-frontend
+    secretName: radar-base-tls
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
