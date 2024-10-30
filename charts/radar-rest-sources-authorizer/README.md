@@ -3,7 +3,7 @@
 # radar-rest-sources-authorizer
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-authorizer)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-authorizer)
 
-![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.4](https://img.shields.io/badge/AppVersion-4.4.4-informational?style=flat-square)
+![Version: 2.1.1](https://img.shields.io/badge/Version-2.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.4](https://img.shields.io/badge/AppVersion-4.4.4-informational?style=flat-square)
 
 A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer which is a portal to authorize the Fitbit connector to read data from Fitbit accounts.
 
@@ -50,7 +50,7 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-tls-radar-rest-sources-authorizer"` | TLS Secret Name |
+| ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |

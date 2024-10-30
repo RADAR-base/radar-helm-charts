@@ -71,7 +71,7 @@ ingress:
     - localhost
   tls:
     # -- Name of the secret that contains TLS certificates
-    secretName: radar-base-tls-radar-gateway
+    secretName: radar-base-tls
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious

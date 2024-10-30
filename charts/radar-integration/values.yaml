@@ -64,7 +64,7 @@ ingress:
   tls:
     # -- Name of the secret that contains TLS certificates
     # -- TLS Secret Name
-    secretName: radar-base-tls-radar-integration
+    secretName: radar-base-tls
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
