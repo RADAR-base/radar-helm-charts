@@ -43,6 +43,8 @@ service:
 
 # -- Reconfigure Ingress to not force TLS
 disable_tls: false
+# -- The protocol in advertised URIs (https, http)
+advertised_protocol: https
 
 ingress:
   # -- Enable ingress controller resource
@@ -229,6 +231,12 @@ cc:
   # -- Confluent Cloud schema registry API secret
   schemaRegistryApiSecret: srApiSecret
 
+# -- Enables config of public key endpoints for token verification
+# This config option is implemented to fix a compatibility issue with radar-gateway.
+# It can be removed when the publicKeyUrls config option is merged to master.
+public_key_endpoints_enabled: false
 # -- List of public key endpoints for token verification
 public_key_endpoints: []
-  # - https://localhost/managementportal/oauth/token_key
+
+# -- Resolvable server name, needed to find the advertised URL and callback URL
+serverName: localhost
