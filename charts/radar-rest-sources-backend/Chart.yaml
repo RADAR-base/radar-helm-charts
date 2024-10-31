@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "4.4.4"
+appVersion: "4.4.6"
 description: A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 name: radar-rest-sources-backend
-version: 1.2.1
+version: 1.2.2
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-rest-sources-backend
