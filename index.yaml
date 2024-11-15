@@ -6245,6 +6245,35 @@ entries:
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: 0.7.6
+    created: "2024-11-15T11:23:58.187062345Z"
+    description: A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming
+      participant data. It performs authentication, authorization, content validation
+      and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
+    digest: 5dec3a267a98046856e4867b355f791bbf2a42aae9a96f11a75d693b740b85cf
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-gateway
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-gateway
+    - https://github.com/RADAR-base/RADAR-Gateway
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-gateway-1.2.8/radar-gateway-1.2.8.tgz
+    version: 1.2.8
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 0.7.5
     created: "2024-11-15T10:53:13.036972952Z"
     description: A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming
@@ -14587,4 +14616,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-11-15T10:53:13.037800711Z"
+generated: "2024-11-15T11:23:58.187938388Z"
