@@ -1,0 +1,55 @@
+# Expecations that will be passed as 'expectation  json' to mockserver.
+expectations: []
+
+mockserver:
+  replicaCount: 1
+
+  releasenameOverride: ""
+
+  app:
+    logLevel: "INFO"
+    serverPort: "1080"
+    mountedConfigMapName: "mockserver-config"
+    mountedLibsConfigMapName: "mockserver-config"
+    propertiesFileName: "mockserver.properties"
+    readOnlyRootFilesystem: false
+    serviceAccountName: default
+    runAsUser: 65534
+
+  image:
+    repository: mockserver
+    snapshot: false
+    pullPolicy: IfNotPresent
+
+  service:
+    annotations: {}
+    clusterIP: ""
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    type: NodePort
+    port: 1080
+    nodePort: ""
+    test:
+      image: radial/busyboxplus:curl
+
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts:
+      - host: mockserver.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+
+  podAnnotations: {}
+
+  resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}

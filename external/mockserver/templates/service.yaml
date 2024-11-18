@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "release.name" . }}
+{{- if .Values.service.annotations }}
+  annotations:
+{{ toYaml .Values.service.annotations | indent 4 }}
+{{- end }}
+  labels:
+    app: {{ template "chart.name" . }}
+    release: {{ .Release.Name }}
+    chart: {{ template "chart.name_version" . }}
+spec:
+  type: {{ .Values.service.type }}
+{{- if .Values.service.clusterIP }}
+  clusterIP: {{ .Values.service.clusterIP | quote }}
+{{- end }}
+{{- if .Values.service.externalIPs }}
+  externalIPs:
+{{ toYaml .Values.service.externalIPs | indent 4 }}
+{{- end }}
+{{- if .Values.service.loadBalancerIP }}
+  loadBalancerIP: "{{ .Values.service.loadBalancerIP }}"
+{{- end }}
+{{- if .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+{{ toYaml .Values.service.loadBalancerSourceRanges | indent 4 }}
+{{- end }}
+  ports:
+    - name: serviceport
+      protocol: TCP
+      targetPort: serviceport
+      port: {{ .Values.service.port }}
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePort))) }}
+      nodePort: {{ .Values.service.nodePort }}
+      {{- end }}
+  selector:
+    app: {{ template "chart.name" . }}
+    release: {{ .Release.Name }}
