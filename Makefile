@@ -89,6 +89,13 @@ update-minio:
 	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-mockserver:
+	@echo "Updating mockserver"
+	@helm repo add mockserver https://www.mock-server.com
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm pull -d external --untar mockserver/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-mongodb:
 	@echo "Updating mongodb"
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
