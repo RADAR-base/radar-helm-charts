@@ -8639,6 +8639,32 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-jdbc-connector-0.1.1/radar-jdbc-connector-0.1.1.tgz
     version: 0.1.1
+  radar-mockserver:
+  - apiVersion: v2
+    appVersion: 5.15.0
+    created: "2024-11-19T17:37:06.802969229Z"
+    dependencies:
+    - name: mockserver
+      repository: file://../../external/mockserver
+      version: 5.15.0
+    description: Chart to deploy MockServer to Kubernetes. MockServer enables easy
+      mocking of any system you integrate with via HTTP or HTTPS with clients written
+      in Java, JavaScript and Ruby.  MockServer also includes a proxy that introspects
+      all proxied traffic including encrypted SSL traffic and supports Port Forwarding,
+      Web Proxying (i.e. HTTP proxy), HTTPS Tunneling Proxying (using HTTP CONNECT)
+      and SOCKS Proxying (i.e. dynamic port forwarding).
+    digest: 1de14738a4c3f29f98bbdfccf5fcf0a5dc035fc05833721ae9fd2aef65185b03
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    - email: nivethika@thehyve.nl
+      name: Nivethika Mahasivam
+      url: https://www.thehyve.nl/experts/nivethika-mahasivam
+    name: radar-mockserver
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-mockserver-0.1.0/radar-mockserver-0.1.0.tgz
+    version: 0.1.0
   radar-oura-connector:
   - annotations:
       artifacthub.io/license: Apache-2.0
@@ -14616,4 +14642,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-11-15T11:23:58.187938388Z"
+generated: "2024-11-19T17:37:06.803706575Z"
