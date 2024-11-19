@@ -4600,6 +4600,40 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/minio-8.0.10/minio-8.0.10.tgz
     version: 8.0.10
+  mockserver:
+  - apiVersion: v1
+    appVersion: 5.15.0
+    created: "2024-11-19T17:37:10.470278949Z"
+    description: Chart to deploy MockServer to Kubernetes.  MockServer enables easy
+      mocking of any system you integrate with via HTTP or HTTPS with clients written
+      in Java, JavaScript and Ruby.  MockServer also includes a proxy that introspects
+      all proxied traffic including encrypted SSL traffic and supports Port Forwarding,
+      Web Proxying (i.e. HTTP proxy), HTTPS Tunneling Proxying (using HTTP CONNECT)
+      and SOCKS Proxying (i.e. dynamic port forwarding).
+    digest: 50cc600b05b4c296511f2586e162ae9b1ce0e768de47981a36b2d644235ec349
+    home: http://mock-server.com
+    icon: http://mock-server.com/apple-touch-icon.png
+    keywords:
+    - mocking
+    - mock-server
+    - http-mock
+    - http
+    - test
+    - test-server
+    - proxy
+    - http-proxy
+    - socks-proxy
+    - https-proxy
+    maintainers:
+    - email: jamesdbloom+mockserver@gmail.com
+      name: James D Bloom
+    name: mockserver
+    sources:
+    - https://github.com/mock-server/mockserver
+    - https://hub.docker.com/r/mockserver/mockserver
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/mockserver-5.15.0/mockserver-5.15.0.tgz
+    version: 5.15.0
   mongodb:
   - annotations:
       category: Database
@@ -14642,4 +14676,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-11-19T17:37:06.803706575Z"
+generated: "2024-11-19T17:37:10.470995029Z"
