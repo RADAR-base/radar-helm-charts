@@ -31,7 +31,7 @@ jobs:
         run: |
           CHANGES=$(git diff --stat charts)
           if [ -n "${CHANGES}" ]; then
-            printf "README is not up to date with helm-docs. Following mismatches are detected:\n$CHANGES\n"
+            printf "README is not up to date with helm-docs. Following mismatches are detected:\n$(git diff charts)\n"
             exit 1
           fi
   
