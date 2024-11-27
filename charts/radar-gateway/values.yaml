@@ -218,6 +218,8 @@ serializationProperties: {}
 serverProperties:
   # -- Maximum request size, also after decompression.
   maxRequestSize: 25165824
+  # -- Maximum response time in seconds.
+  requestTimeout: 30
 
 cc:
   # -- set to true, if requests should be forwarded to Confluent Cloud based brokers.
