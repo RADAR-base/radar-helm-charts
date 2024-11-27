@@ -3,7 +3,7 @@
 # radar-gateway
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-gateway)](https://artifacthub.io/packages/helm/radar-base/radar-gateway)
 
-![Version: 1.2.8](https://img.shields.io/badge/Version-1.2.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.6](https://img.shields.io/badge/AppVersion-0.7.6-informational?style=flat-square)
+![Version: 1.2.9](https://img.shields.io/badge/Version-1.2.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.7](https://img.shields.io/badge/AppVersion-0.7.7-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -82,8 +82,9 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | adminProperties | object | `{}` | Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs. |
 | producerProperties | object | `{"compression.type":"lz4"}` | Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs. |
 | serializationProperties | object | `{}` | Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig]. |
-| serverProperties | object | `{"maxRequestSize":25165824}` | Additional gateway server properties |
+| serverProperties | object | `{"maxRequestSize":25165824,"requestTimeout":30}` | Additional gateway server properties |
 | serverProperties.maxRequestSize | int | `25165824` | Maximum request size, also after decompression. |
+| serverProperties.requestTimeout | int | `30` | Maximum response time in seconds. |
 | cc.enabled | bool | `false` | set to true, if requests should be forwarded to Confluent Cloud based brokers. |
 | cc.apiKey | string | `"ccApikey"` | Confluent Cloud cluster API key |
 | cc.apiSecret | string | `"ccApiSecret"` | Confluent Cloud cluster API secret |
