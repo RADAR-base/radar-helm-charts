@@ -10,7 +10,7 @@ data:
     connector.class=org.radarbase.connect.rest.fitbit.FitbitSourceConnector
     tasks.max={{ .Values.connector_num_tasks }}
     rest.source.base.url={{ .Values.fitbit_api_url }}
-    rest.source.poll.interval.ms=5000
+    rest.source.poll.interval.ms={{ .Values.rest_source_poll_interval_ms | int }}
     rest.source.request.generator.class=org.radarbase.connect.rest.fitbit.request.FitbitRequestGenerator
     fitbit.api.client={{ .Values.fitbit_api_client }}
     fitbit.api.secret={{ .Values.fitbit_api_secret }}
@@ -20,6 +20,9 @@ data:
     fitbit.user.repository.client.id={{ .Values.oauthClientId }}
     fitbit.user.repository.client.secret={{ .Values.oauthClientSecret }}
     fitbit.user.repository.oauth2.token.url={{ .Values.managementportal_url }}/oauth/token
+    fitbit.user.poll.interval={{ .Values.fitbit_user_poll_interval | int }}
+    application.loop.interval.ms={{ .Values.application_loop_interval_ms | int }}
+    user.cache.refresh.interval.ms={{ .Values.user_cache_refresh_interval_ms | int}}
   {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
   kafka-wait.properties: |
     {{ .Values.kafka_wait.properties | indent 4 }}

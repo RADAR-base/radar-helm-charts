@@ -44,6 +44,7 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8083` | radar-fitbit-connector port |
 | resources.requests | object | `{"cpu":"100m","memory":"1Gi"}` | CPU/Memory resource requests |
+| heapOptions | string | `"-Xms256m -Xmx768m"` |  |
 | persistence.enabled | bool | `true` | Enable persistence using PVC |
 | persistence.accessMode | string | `"ReadWriteOnce"` | PVC Access Mode for radar-fitbit-connector volume |
 | persistence.size | string | `"5Gi"` | PVC Storage Request for radar-fitbit-connector volume |
@@ -83,3 +84,7 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | oauthClientSecret | string | `"secret"` | OAuth2 client secret from Management Portal |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of Management Portal. This will be used to create URLs to access Management Portal |
 | includeIntradayData | bool | `true` | Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties. |
+| rest_source_poll_interval_ms | int | `60000` | How often to poll the source URL. Only use to speed up processing times during e2e testing. |
+| fitbit_user_poll_interval | int | `5000` | Polling interval per Fitbit user per request route in seconds. Only use to speed up processing times during e2e testing. |
+| application_loop_interval_ms | int | `300000` | How often to perform the main application loop (only controls how often to poll for new user registrations). Only use to speed up processing times during e2e testing. |
+| user_cache_refresh_interval_ms | int | `3600000` | How often to invalidate the cache and poll for new user registrations. Only use to speed up processing times during e2e testing. |
