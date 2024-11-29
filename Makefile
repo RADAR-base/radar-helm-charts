@@ -124,3 +124,10 @@ update-velero:
 	@helm repo add $(patsubst update-%,%,$@) https://vmware-tanzu.github.io/helm-charts
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
+
+update-nifi:
+	@echo "Updating NiFi"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://artifacthub.io/packages/helm/cetic/nifi
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
