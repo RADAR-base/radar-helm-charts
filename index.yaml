@@ -4759,6 +4759,45 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/mongodb-11.1.10/mongodb-11.1.10.tgz
     version: 11.1.10
+  nifi:
+  - apiVersion: v2
+    appVersion: 1.23.2
+    created: "2024-12-10T09:36:08.21776806Z"
+    dependencies:
+    - condition: zookeeper.enabled
+      name: zookeeper
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.2.7
+    - alias: registry
+      condition: registry.enabled
+      name: nifi-registry
+      repository: https://dysnix.github.io/charts/
+      version: 1.0.0
+    - condition: ca.enabled
+      name: ca
+      repository: ""
+      version: 1.0.1
+    - condition: openldap.enabled
+      name: openldap
+      repository: https://charts.helm.sh/stable
+      version: ~1.2.4
+    description: Apache NiFi is a software project from the Apache Software Foundation
+      designed to automate the flow of data between software systems.
+    digest: dab6067638ba14be731daeecbc65e9a2f30830d2c76a8d9d722505fe61af9434
+    home: https://nifi.apache.org/
+    icon: https://svn.apache.org/repos/asf/nifi/site/trunk/images/niFi-logo-horizontal-scaled.png
+    keywords:
+    - nifi
+    - data
+    - process
+    maintainers:
+    - email: heet.sankesara@kcl.ac.uk
+      name: Heet
+      url: https://github.com/Hsankesara
+    name: nifi
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/nifi-1.2.1/nifi-1.2.1.tgz
+    version: 1.2.1
   ory-commons:
   - apiVersion: v2
     appVersion: 0.0.0
@@ -14705,4 +14744,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-11-27T11:13:24.645869144Z"
+generated: "2024-12-10T09:36:08.218898218Z"
