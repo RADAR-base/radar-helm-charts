@@ -3,7 +3,7 @@
 # radar-output
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-output)](https://artifacthub.io/packages/helm/radar-base/radar-output)
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.2](https://img.shields.io/badge/AppVersion-3.0.2-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.2](https://img.shields.io/badge/AppVersion-3.0.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base output restructure service. This application reads data from intermediate storage and restructure the data into project-> subject-id-> data topic -> data split per hour. This service offers few options to choose the source and target of the pipeline.
 
@@ -15,7 +15,6 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | ---- | ------ | --- |
 | Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -68,6 +67,8 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | source.azure.responseTimeout | string | `nil` | Azure HTTP response timeout in seconds |
 | source.azure.writeTimeout | string | `nil` | Azure HTTP write timeout in seconds |
 | source.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
+| source.index.fullSyncInterval | int | `3600` | Interval in seconds to synchronize the index with the storage (in seconds). This values should be only changed in specific scenarios (e.g. e2e testing). |
+| source.index.emptyDirectorySyncInterval | int | `900` | Interval in seconds to also include empty directories during sync with the storage (in seconds). This values should be only changed in specific scenarios (e.g. e2e testing). |
 | target.type | string | `"s3"` | Type of the output storage of the RADAR-base pipeline (e.g., s3 or azure) |
 | target.s3.endpoint | string | `"http://minio:9000"` | s3 endpoint of the output storage |
 | target.s3.accessToken | string | `"access_key"` | s3 access-key of the output storage |

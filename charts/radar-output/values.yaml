@@ -149,6 +149,13 @@ source:
     writeTimeout:
     # -- Azure HTTP read timeout in seconds
     readTimeout:
+  index:
+    # -- Interval in seconds to synchronize the index with the storage (in seconds).
+    # This values should be only changed in specific scenarios (e.g. e2e testing).
+    fullSyncInterval: 3600
+    # -- Interval in seconds to also include empty directories during sync with the storage (in seconds).
+    # This values should be only changed in specific scenarios (e.g. e2e testing).
+    emptyDirectorySyncInterval: 900
 
 target:
   # -- Type of the output storage of the RADAR-base pipeline (e.g., s3 or azure)
