@@ -9368,6 +9368,29 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-output-0.1.1/radar-output-0.1.1.tgz
     version: 0.1.1
+  radar-postgresql:
+  - apiVersion: v2
+    appVersion: 11.16.0
+    created: "2024-12-18T13:51:57.244206537Z"
+    dependencies:
+    - name: postgresql
+      repository: file://../../external/postgresql
+      version: 12.1.9
+    description: PostgreSQL (Postgres) is an open source object-relational database
+      known for reliability and data integrity. ACID-compliant, it supports foreign
+      keys, joins, views, triggers and stored procedures.
+    digest: 3f4fe9c4172a065bc0c94bd0adaadbb47bf8b134fa54d506105d36b3b5735c00
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-postgresql
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-postgresql-0.1.0/radar-postgresql-0.1.0.tgz
+    version: 0.1.0
   radar-push-endpoint:
   - annotations:
       artifacthub.io/license: Apache-2.0
@@ -12428,6 +12451,30 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-self-enrolment-ui-0.0.1/radar-self-enrolment-ui-0.0.1.tgz
     version: 0.0.1
+  radar-timescaledb:
+  - apiVersion: v2
+    appVersion: latest-pg12-bitnami
+    created: "2024-12-18T13:51:57.375233045Z"
+    dependencies:
+    - name: postgresql
+      repository: file://../../external/postgresql
+      version: 12.1.9
+    description: TimescaleDB is an open-source time-series database optimized for
+      fast ingest and complex queries, built as an extension to PostgreSQL. It leverages
+      PostgreSQL's reliability and ecosystem while adding time-series specific optimizations
+      and features, such as automatic partitioning and compression.
+    digest: 5776fdd2ce65986e50da9ca125c125170646a6a66db765a7b1ca2405eb7001a7
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-timescaledb
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-timescaledb-0.1.0/radar-timescaledb-0.1.0.tgz
+    version: 0.1.0
   radar-upload-connect-backend:
   - annotations:
       artifacthub.io/license: Apache-2.0
@@ -14775,4 +14822,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-18T09:12:28.458659351Z"
+generated: "2024-12-18T13:51:57.375878396Z"
