@@ -71,3 +71,10 @@ API for data in the data dashboard
 | jdbc.dialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` | Hibernate dialect to use for JDBC Connection |
 | jdbc.properties."hibernate.globally_quoted_identifiers" | bool | `true` | Must be _true_ for compatibility with table created by jdbc-connector |
 | jdbc.properties."hibernate.physical_naming_strategy" | string | `"org.radarbase.datadashboard.api.domain.model.CamelCaseToUppercaseColumnNamingStrategy"` | Must be _CamelCaseToUppercaseColumnNamingStrategy_ for compatibility with table created by jdbc-connector |
+| sentry.dsn | string | `nil` | DSN (Data Source Name) of the sentry server |
+| sentry.level | string | `"ERROR"` | Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR) |
+| sentry.service.name | string | `nil` | Name of the sentry service |
+| sentry.service.release | string | `nil` | App version of the sentry service |
+| sentry.service.environment | string | `"production"` | Environment of the sentry service |
+| sentry.stacktrace.enabled | bool | `true` | Set to true, if stack trace should be enabled |
+| sentry.stacktrace.packages | string | `""` | Comma-separated list of package prefixes to be included in the stacktrace |

@@ -295,3 +295,22 @@ restSourceClients:
     clientSecret: Oura-clientsecret
     # -- List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication
     scope: daily session heartrate workout tag personal email spo2 ring_configuration
+
+# Sentry monitoring configuration
+sentry:
+  # -- DSN (Data Source Name) of the sentry server
+  dsn:
+  # -- Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR)
+  level: ERROR
+  service:
+    # -- Name of the sentry service
+    name:
+    # -- App version of the sentry service
+    release:
+    # -- Environment of the sentry service
+    environment: production
+  stacktrace:
+    # -- Set to true, if stack trace should be enabled
+    enabled: true
+    # -- Comma-separated list of package prefixes to be included in the stacktrace
+    packages: ""
