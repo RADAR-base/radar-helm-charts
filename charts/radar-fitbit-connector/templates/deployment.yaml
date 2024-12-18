@@ -85,7 +85,7 @@ spec:
           - name: CONNECTOR_PROPERTY_FILE_PREFIX
             value: "source-fitbit/source-fitbit"
           - name: KAFKA_HEAP_OPTS
-            value: "-Xms256m -Xmx768m"
+            value: {{ .Values.heapOptions }}
           - name: KAFKA_BROKERS
             value: "{{ .Values.kafka_num_brokers }}"
           - name: CONNECT_LOG4J_LOGGERS
