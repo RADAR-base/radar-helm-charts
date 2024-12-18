@@ -1,0 +1,18 @@
+apiVersion: v2
+name: radar-postgresql
+version: 0.1.0
+appVersion: 11.16.0
+description: PostgreSQL (Postgres) is an open source object-relational database known
+  for reliability and data integrity. ACID-compliant, it supports foreign keys, joins,
+  views, triggers and stored procedures.
+maintainers:
+  - email: keyvan@thehyve.nl
+    name: Keyvan Hedayati
+    url: https://www.thehyve.nl
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
+dependencies:
+  - name: postgresql
+    version: 12.1.9
+    repository: file://../../external/postgresql

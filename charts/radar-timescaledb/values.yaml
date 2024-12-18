@@ -1,0 +1,49 @@
+postgresql:
+  # Check https://hub.docker.com/r/timescale/timescaledb/tags
+  # The suffix MUST be bitnami.
+  # On first install, choose the latest major postgresql version. This cannot be modified afterwards.
+  image:
+    repository: timescale/timescaledb
+    tag: latest-pg12-bitnami
+    pullPolicy: Always
+  global:
+    postgresql:
+      auth:
+        postgresPassword: ""
+  auth:
+    postgresPassword: ""
+    username: ""
+    password: ""
+    database: ""
+  replication:
+    applicationName: radar
+  primary:
+    extraEnvVars: []
+    podAnnotations:
+      backup.velero.io/backup-volumes: data
+      post.hook.backup.velero.io/command: '["/bin/fsfreeze", "--unfreeze", "/bitnami/postgresql"]'
+      post.hook.backup.velero.io/container: fsfreeze
+      pre.hook.backup.velero.io/command: '["/bin/fsfreeze", "--freeze", "/bitnami/postgresql"]'
+      pre.hook.backup.velero.io/container: fsfreeze
+    sidecars:
+      - name: fsfreeze
+        image: busybox
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - mountPath: "/bitnami/postgresql"
+            name: data
+            readOnly: false
+        command:
+          - "/bin/sh"
+          - "-c"
+          - "sleep infinity"
+    persistence:
+      enabled: true
+      existingClaim: ""
+      mountPath: /bitnami/postgresql
+      size: 8Gi
+  volumePermissions:
+    enabled: true
+  metrics:
+    enabled: true
