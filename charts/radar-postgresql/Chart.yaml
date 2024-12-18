@@ -6,6 +6,9 @@ description: PostgreSQL (Postgres) is an open source object-relational database 
   for reliability and data integrity. ACID-compliant, it supports foreign keys, joins,
   views, triggers and stored procedures.
 maintainers:
+  - email: keyvan@thehyve.nl
+    name: Keyvan Hedayati
+    url: https://www.thehyve.nl
   - email: pim@thehyve.nl
     name: Pim van Nierop
     url: https://www.thehyve.nl/experts/pim-van-nierop

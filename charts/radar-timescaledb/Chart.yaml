@@ -6,6 +6,9 @@ description: TimescaleDB is an open-source time-series database optimized for fa
   an extension to PostgreSQL. It leverages PostgreSQL's reliability and ecosystem while adding time-series specific
   optimizations and features, such as automatic partitioning and compression.
 maintainers:
+  - email: keyvan@thehyve.nl
+    name: Keyvan Hedayati
+    url: https://www.thehyve.nl
   - email: pim@thehyve.nl
     name: Pim van Nierop
     url: https://www.thehyve.nl/experts/pim-van-nierop

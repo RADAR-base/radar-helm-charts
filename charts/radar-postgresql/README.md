@@ -10,6 +10,7 @@ PostgreSQL (Postgres) is an open source object-relational database known for rel
 
 | Name | Email | Url |
 | ---- | ------ | --- |
+| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
 
 ## Requirements
