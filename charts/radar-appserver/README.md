@@ -103,3 +103,10 @@ A Helm chart for the backend application of RADAR-base Appserver
 | upload.storage.secret_key | string | `"secret"` | Secret key of the S3 storage |
 | upload.storage.path.prefix | string | `"output"` | Prefix for the path in the storage; will become <bucket>/<prefix>/<project>/<subject>/<topic> |
 | upload.storage.path.collection_per_day | bool | `false` | if set to true, a new folder will be created for each day |
+| sentry.dsn | string | `nil` | DSN (Data Source Name) of the sentry server |
+| sentry.level | string | `"ERROR"` | Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR) |
+| sentry.service.name | string | `nil` | Name of the sentry service |
+| sentry.service.release | string | `nil` | App version of the sentry service |
+| sentry.service.environment | string | `"production"` | Environment of the sentry service |
+| sentry.stacktrace.enabled | bool | `true` | Set to true, if stack trace should be enabled |
+| sentry.stacktrace.packages | string | `""` | Comma-separated list of package prefixes to be included in the stacktrace |
