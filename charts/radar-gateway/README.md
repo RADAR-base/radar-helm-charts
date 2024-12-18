@@ -101,3 +101,10 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | public_key_endpoints_enabled | bool | `false` | Enables config of public key endpoints for token verification This config option is implemented to fix a compatibility issue with radar-gateway. It can be removed when the publicKeyUrls config option is merged to master. |
 | public_key_endpoints | list | `[]` | List of public key endpoints for token verification |
 | serverName | string | `"localhost"` | Resolvable server name, needed to find the advertised URL and callback URL |
+| sentry.dsn | string | `nil` | DSN (Data Source Name) of the sentry server |
+| sentry.level | string | `"ERROR"` | Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR) |
+| sentry.service.name | string | `nil` | Name of the sentry service |
+| sentry.service.release | string | `nil` | App version of the sentry service |
+| sentry.service.environment | string | `"production"` | Environment of the sentry service |
+| sentry.stacktrace.enabled | bool | `true` | Set to true, if stack trace should be enabled |
+| sentry.stacktrace.packages | string | `""` | Comma-separated list of package prefixes to be included in the stacktrace |

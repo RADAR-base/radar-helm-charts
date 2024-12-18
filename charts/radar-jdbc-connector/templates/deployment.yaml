@@ -93,6 +93,27 @@ spec:
             value: "{{ $name }}/connector"
           - name: KAFKA_HEAP_OPTS
             value: "{{ .Values.heapOpts }}"
+          {{- if .Values.sentry.dsn }}
+          - name: SENTRY_DSN
+            value: {{ .Values.sentry.dsn }}
+          - name: SENTRY_LOG_LEVEL
+            value: {{ .Values.sentry.level }}
+            {{- if .Values.sentry.stacktrace.enabled }}
+          - name: SENTRY_ATTACH_STACKTRACE
+            value: {{ .Values.sentry.stacktrace.enabled | quote }}
+          - name: SENTRY_STACKTRACE_APP_PACKAGES
+            value: {{ .Values.sentry.stacktrace.packages}}
+            {{- end }}
+          - name: SENTRY_NAME
+            value: {{ .Values.sentry.service.name }}
+          - name: SENTRY_RELEASE
+            value: {{ .Values.sentry.service.release }}
+          - name: SENTRY_ENVIRONMENT
+            value: {{ .Values.sentry.service.environment }}
+          {{- else }}
+          - name: SENTRY_ENABLED
+            value: "false"
+          {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
