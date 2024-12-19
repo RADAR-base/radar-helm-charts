@@ -43,6 +43,9 @@ data:
         {{- if .azure.readTimeout }}
         readTimeout: {{ .azure.readTimeout | int }}
         {{- end }}
+      index:
+        fullSyncInterval: {{ .index.fullSyncInterval | int }}
+        emptyDirectorySyncInterval: {{ .index.emptyDirectorySyncInterval | int }}
     {{- end }}
 
     {{- with .Values.target }}
