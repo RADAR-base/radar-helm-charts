@@ -5770,6 +5770,34 @@ entries:
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: 0.6.0
+    created: "2024-12-19T13:57:53.01094215Z"
+    description: A Helm chart for RADAR-base fitbit connector. This application collects
+      data from participants via the Fitbit Web API.
+    digest: 9b6f074e64736acd39f2ef49c2364723c54ca17d3041bf305cef69b04f242cad
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-fitbit-connector
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-fitbit-connector
+    - https://github.com/RADAR-base/RADAR-REST-Connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-fitbit-connector-0.6.0/radar-fitbit-connector-0.6.0.tgz
+    version: 0.6.0
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 0.5.4
     created: "2024-12-18T09:12:28.457153804Z"
     description: A Helm chart for RADAR-base fitbit connector. This application collects
@@ -8799,6 +8827,37 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-mockserver-0.1.0/radar-mockserver-0.1.0.tgz
     version: 0.1.0
   radar-oura-connector:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.6.0
+    created: "2024-12-19T13:57:53.203889727Z"
+    description: A Helm chart for RADAR-base oura connector. This application collects
+      data from participants via the Oura Web API.
+    digest: 4b4c499d7e635f8b2ef51f13c44eb88cce514321125b8bd50ed64b918ce90716
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    name: radar-oura-connector
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-oura-connector
+    - https://github.com/RADAR-base/RADAR-REST-Connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-oura-connector-0.1.0/radar-oura-connector-0.1.0.tgz
+    version: 0.1.0
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
@@ -14852,4 +14911,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-19T05:24:15.610619402Z"
+generated: "2024-12-19T13:57:53.204786254Z"
