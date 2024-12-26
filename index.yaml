@@ -2258,6 +2258,33 @@ entries:
       category: Infrastructure
       licenses: Apache-2.0
     apiVersion: v2
+    appVersion: 2.27.0
+    created: "2024-12-26T12:29:29.779201775Z"
+    description: A Library Helm Chart for grouping common logic between bitnami charts.
+      This chart is not deployable by itself.
+    digest: 7851ce8a49ee5b07b9495663792e33e9865982e97348d437a70f565ad28da6c9
+    home: https://bitnami.com
+    icon: https://bitnami.com/downloads/logos/bitnami-mark.png
+    keywords:
+    - common
+    - helper
+    - template
+    - function
+    - bitnami
+    maintainers:
+    - name: Broadcom, Inc. All Rights Reserved.
+      url: https://github.com/bitnami/charts
+    name: common
+    sources:
+    - https://github.com/bitnami/charts/tree/main/bitnami/common
+    type: library
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/common-2.27.0/common-2.27.0.tgz
+    version: 2.27.0
+  - annotations:
+      category: Infrastructure
+      licenses: Apache-2.0
+    apiVersion: v2
     appVersion: 2.20.5
     created: "2024-07-25T07:48:34.706209576Z"
     description: A Library Helm Chart for grouping common logic between bitnami charts.
@@ -14911,4 +14938,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-19T13:57:53.204786254Z"
+generated: "2024-12-26T12:29:29.780504148Z"
