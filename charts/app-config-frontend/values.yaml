@@ -25,10 +25,6 @@ image:
   #
   pullSecrets: []
 
-
-# -- Docker registry secret names as an array
-imagePullSecrets: []
-
 # -- String to partially override app-config-frontend.fullname template with a string (will prepend the release name)
 nameOverride: ""
 # -- String to fully override app-config-frontend.fullname template with a string

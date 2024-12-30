@@ -44,7 +44,6 @@ A Helm chart for the frontend application of RADAR-base application config (app-
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName |
-| imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override app-config-frontend.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override app-config-frontend.fullname template with a string |
 | podAnnotations | object | `{}` | Annotations for Appconfig frontend pods |
