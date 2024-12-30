@@ -6,6 +6,8 @@
 nameOverride: letsencrypt-prod
 # -- Full name of the cluster issuer
 fullnameOverride: letsencrypt-prod
+# -- String to fully override common.names.namespace
+namespaceOverride: "cert-manager"
 
 # -- Email address of cluster maintainer
 maintainerEmail: me@example.com

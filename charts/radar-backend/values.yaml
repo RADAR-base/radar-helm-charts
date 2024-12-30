@@ -5,13 +5,24 @@
 replicaCount: 2
 
 image:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
   repository: radarbase/radar-backend
-  # -- Overrides the image tag whose default is the chart appVersion.
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
   tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
   pullPolicy: IfNotPresent
-
-# -- Docker registry secret names as an array
-imagePullSecrets: []
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
 
 # -- String to partially override radar-backend.fullname template with a string (will prepend the release name)
 nameOverride: ""

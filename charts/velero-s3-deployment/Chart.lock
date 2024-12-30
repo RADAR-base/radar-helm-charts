@@ -2,5 +2,8 @@ dependencies:
 - name: velero
   repository: https://radar-base.github.io/radar-helm-charts
   version: 2.30.1
-digest: sha256:bf58d2a2d0568aed86c7b0c878c92eb83edbde43fd3fa424834b4be9cd67273c
-generated: "2022-07-13T14:58:09.160726+02:00"
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  version: 2.27.0
+digest: sha256:3b90dc9dbdd49066c67cf36ea25e1372191bebbee99f99e2bb1f5edd461e093e
+generated: "2024-12-30T10:34:56.873555377+01:00"

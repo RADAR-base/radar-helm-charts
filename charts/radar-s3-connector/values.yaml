@@ -6,16 +6,24 @@
 replicaCount: 1
 
 image:
-  # -- radar-s3-connector image repository
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
   repository: radarbase/kafka-connect-transform-s3
-  # -- radar-s3-connector image tag (immutable tags are recommended)
+  # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:
-  # -- radar-s3-connector image pull policy
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
   pullPolicy: IfNotPresent
-
-# -- Docker registry secret names as an array
-imagePullSecrets: []
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
 
 # -- String to partially override radar-s3-connector.fullname template with a string (will prepend the release name)
 nameOverride: ""
