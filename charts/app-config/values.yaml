@@ -216,4 +216,4 @@ sentry:
     # -- Set to true, if stack trace should be enabled
     enabled: true
     # -- Comma-separated list of package prefixes to be included in the stacktrace
-    packages: ""
+    packages: "org.radarbase.appconfig,org.radarbase.lang,comparisons"
