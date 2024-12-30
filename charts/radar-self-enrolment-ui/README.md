@@ -51,14 +51,13 @@ A Helm chart for RADAR-base Self Enrolment UI
 | secret.nameOverride | string | `""` | Provide custom name of existing secret, or custom name of secret to be created |
 | secret.secretAnnotations | object | `{"helm.sh/hook":"pre-install, pre-upgrade","helm.sh/hook-delete-policy":"before-hook-creation","helm.sh/hook-weight":"0","helm.sh/resource-policy":"keep"}` | Annotations to be added to secret. Annotations are added only when secret is being created. Existing secret will not be modified. |
 | secret.hashSumEnabled | bool | `true` | switch to false to prevent checksum annotations being maintained and propogated to the pods |
-| ingress.enabled | bool | `true` |  |
-| ingress.className | string | `"nginx"` |  |
-| ingress.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-prod"` |  |
-| ingress.hosts[0].host | string | `"localhost"` |  |
-| ingress.hosts[0].paths[0].path | string | `"/kratos-ui/?(.*)"` |  |
-| ingress.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` |  |
-| ingress.tls[0].secretName | string | `"radar-base-tls"` |  |
-| ingress.tls[0].hosts[0] | string | `"localhost"` |  |
+| ingress.enabled | bool | `true` | Enable ingress controller resource |
+| ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
+| ingress.path | string | `"/kratos-ui"` | Path within the url structure |
+| ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
+| ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
+| ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
+| ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.readOnlyRootFilesystem | bool | `false` |  |
 | securityContext.runAsNonRoot | bool | `true` |  |
