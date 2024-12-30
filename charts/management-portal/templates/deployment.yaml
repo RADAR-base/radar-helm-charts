@@ -3,9 +3,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "management-portal.fullname" . }}
-  labels:
-{{ include "management-portal.labels" . | indent 4 }}
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -23,10 +26,7 @@ spec:
         app.kubernetes.io/name: {{ include "management-portal.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "management-portal.imagePullSecrets" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       affinity:
@@ -49,8 +49,8 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ template "management-portal.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           env:
           - name: SPRING_PROFILES_ACTIVE
             value: "prod,swagger"

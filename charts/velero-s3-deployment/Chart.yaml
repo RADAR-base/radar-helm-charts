@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "1.0"
+appVersion: "RELEASE.2024-11-21T17-21-54Z"
 description: A Helm chart for Velero S3 deployment, this chart holds resources used by Velero with a deployment to mirror the local object storage to a remote object storage.
 name: velero-s3-deployment
-version: 0.3.2
+version: 0.4.0
 sources: ["https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/velero-s3-deployment"]
 deprecated: false
 type: application
@@ -11,6 +11,11 @@ dependencies:
 - name: velero
   version: 2.30.1
   repository: https://radar-base.github.io/radar-helm-charts
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  tags:
+  - bitnami-common
+  version: 2.x.x
 maintainers:
   - email: keyvan@thehyve.nl
     name: Keyvan Hedayati

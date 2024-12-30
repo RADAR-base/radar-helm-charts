@@ -3,7 +3,7 @@
 # app-config-frontend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/app-config-frontend)](https://artifacthub.io/packages/helm/radar-base/app-config-frontend)
 
-![Version: 2.1.1](https://img.shields.io/badge/Version-2.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.2](https://img.shields.io/badge/AppVersion-0.5.2-informational?style=flat-square)
+![Version: 2.2.0](https://img.shields.io/badge/Version-2.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.2](https://img.shields.io/badge/AppVersion-0.5.2-informational?style=flat-square)
 
 A Helm chart for the frontend application of RADAR-base application config (app-config).
 
@@ -23,18 +23,27 @@ A Helm chart for the frontend application of RADAR-base application config (app-
 * <https://github.com/RADAR-base/radar-app-config>
 
 ## Prerequisites
-* Kubernetes 1.22+
-* Kubectl 1.22+
+* Kubernetes 1.28+
+* Kubectl 1.28+
 * Helm 3.1.0+
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of Appconfig frontend replicas to deploy |
-| image.repository | string | `"radarbase/radar-app-config-frontend"` | Appconfig frontend image repository |
-| image.tag | string | `nil` | Appconfig frontend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
-| image.pullPolicy | string | `"IfNotPresent"` | Appconfig frontend image pull policy |
+| image.registry | string | `"docker.io"` | Image registry |
+| image.repository | string | `"radarbase/radar-app-config-frontend"` | Image repository |
+| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override app-config-frontend.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override app-config-frontend.fullname template with a string |

@@ -1,9 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "velero-s3-deployment.fullname" . }}-object-storage-backup
-  labels:
-{{ include "velero-s3-deployment.labels" . | indent 4 }}
+  name: {{ template "common.names.fullname" . }}-object-storage-backup
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.objectStorageBackupReplicaCount }}
   selector:
@@ -16,17 +19,15 @@ spec:
         app.kubernetes.io/name: {{ include "velero-s3-deployment.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "velero-s3-deployment.imagePullSecrets" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: intermediate
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.mc_image.repository }}:{{ .Values.mc_image.tag }}"
+          image: {{ template "velero-s3-deployment.image" . }}
+          imagePullPolicy: {{ .Values.mc_image.pullPolicy | quote }}
           env:
           - name: MC_HOST_local
             value: "http://{{ .Values.local.accessKey }}:{{ .Values.local.secretKey }}@{{ .Values.local.address }}"
@@ -43,7 +44,8 @@ spec:
         - name: output
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.mc_image.repository }}:{{ .Values.mc_image.tag | default .Chart.AppVersion }}"
+          image: {{ template "velero-s3-deployment.image" . }}
+          imagePullPolicy: {{ .Values.mc_image.pullPolicy | quote }}
           env:
           - name: MC_HOST_local
             value: "http://{{ .Values.local.accessKey }}:{{ .Values.local.secretKey }}@{{ .Values.local.address }}"
