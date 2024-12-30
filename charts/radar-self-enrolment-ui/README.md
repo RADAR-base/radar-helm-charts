@@ -2,9 +2,29 @@
 
 # radar-self-enrolment-ui
 
-![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: dev](https://img.shields.io/badge/AppVersion-dev-informational?style=flat-square)
 
-A Helm chart for ORY Kratos's example ui for Kubernetes
+A Helm chart for RADAR-base Self Enrolment UI
+
+**Homepage:** <https://radar-base.org>
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
+| Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
+| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
+
+## Source Code
+
+* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-self-enrolment-ui>
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
 
@@ -12,12 +32,14 @@ A Helm chart for ORY Kratos's example ui for Kubernetes
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of replicas in deployment |
 | revisionHistoryLimit | int | `5` | Number of revisions kept in history |
-| image.repository | string | `"ghcr.io/radar-base/radar-self-enrolment-ui"` |  |
-| image.tag | string | `"dev"` | Image version |
-| image.pullPolicy | string | `"IfNotPresent"` |  |
-| imagePullSecrets | list | `[]` |  |
-| nameOverride | string | `""` |  |
-| fullnameOverride | string | `""` |  |
+| image.registry | string | `"ghcr.io"` | Image registry |
+| image.repository | string | `"radar-base/radar-self-enrolment-ui"` | Image repository |
+| image.tag | string | `"dev"` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName |
+| nameOverride | string | `""` | String to partially override radar-self-enrolment-ui.fullname template with a string (will prepend the release name) |
+| fullnameOverride | string | `""` | String to fully override radar-self-enrolment-ui.fullname template with a string |
 | config.csrfCookieName | string | `"radar_csrf"` |  |
 | config.secrets | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |
