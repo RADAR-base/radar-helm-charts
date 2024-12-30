@@ -66,19 +66,24 @@ secret:
   hashSumEnabled: true
 
 ingress:
+  # -- Enable ingress controller resource
   enabled: true
-  className: "nginx"
+  # -- Annotations that define default ingress class, certificate issuer
+  # @default -- check values.yaml
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+  # -- Path within the url structure
+  path: /kratos-ui
+  # -- Ingress Path type
+  pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
+  # -- Hosts to accept requests from
   hosts:
-    - host: localhost
-      paths:
-        - path: "/kratos-ui/?(.*)"
-          pathType: ImplementationSpecific
+    - localhost
   tls:
-    - secretName: radar-base-tls
-      hosts:
-        - localhost
+    # -- TLS Secret Name
+    secretName: radar-base-tls
 
 ## -- Container level security context
 securityContext:
