@@ -2392,6 +2392,26 @@ entries:
   data-dashboard-backend:
   - apiVersion: v2
     appVersion: 0.2.2
+    created: "2025-01-03T08:40:00.079795713Z"
+    description: API for data in the data dashboard
+    digest: 88fa9f3a1df69e3be89422caf8538944400ad341d438ba6f4398e53e072247d2
+    home: https://radar-base.org
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: data-dashboard-backend
+    sources:
+    - https://github.com/thehyve/radar-data-dashboard-backend
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/data-dashboard-backend-0.3.8/data-dashboard-backend-0.3.8.tgz
+    version: 0.3.8
+  - apiVersion: v2
+    appVersion: 0.2.2
     created: "2024-10-30T07:27:40.77981162Z"
     description: API for data in the data dashboard
     digest: da0916d6ee50dee5afcdf2932f993b2af58d1a03c61d463f5237c908b334e493
@@ -14938,4 +14958,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-26T12:29:29.780504148Z"
+generated: "2025-01-03T08:40:00.080586575Z"
