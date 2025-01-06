@@ -69,6 +69,18 @@ spec:
             value:  {{ include "data-dashboard-backend.sentryRelease" . }}
           - name: SENTRY_ENVIRONMENT
             value: {{ .Values.sentry.service.environment }}
+          - name: SENTRY_OPEN_TELEMETRY_ENABLED
+            value: {{ .Values.sentry.openTelemetry.enabled | quote }}
+          - name: SENTRY_AUTO_INIT
+            value: {{ if .Values.sentry.openTelemetry.enabled }}"true"{{ else }}"false"{{ end }}
+            {{- if not .Values.sentry.openTelemetry.metricsEnabled }}
+          - name: OTEL_TRACES_EXPORTER
+            value: "none"
+            {{- end }}
+            {{- if not .Values.sentry.openTelemetry.tracesEnabled }}
+          - name: OTEL_METRICS_EXPORTER
+            value: "none"
+            {{- end }}
           {{- else }}
           - name: SENTRY_ENABLED
             value: "false"

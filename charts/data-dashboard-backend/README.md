@@ -78,3 +78,6 @@ API for data in the data dashboard
 | sentry.service.environment | string | `"production"` | The environment name for this installation. |
 | sentry.stacktrace.enabled | bool | `true` | Set to true, if stack trace should be enabled |
 | sentry.stacktrace.packages | string | `"org.radarbase.datadashboard,org.radarbase.upload"` | Comma-separated list of package prefixes to be included in the stacktrace |
+| sentry.openTelemetry.enabled | bool | `false` | Enable OpenTelemetry Sentry agent |
+| sentry.openTelemetry.tracesEnabled | bool | `true` | Enable traces exporting to Sentry |
+| sentry.openTelemetry.metricsEnabled | bool | `true` | Enable metrics exporting to Sentry |
