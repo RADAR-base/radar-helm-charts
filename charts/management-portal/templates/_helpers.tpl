@@ -86,3 +86,17 @@ Return true if a secret object should be created
     {{- true -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Service name to be used by Sentry
+*/}}
+{{- define "management-portal.sentryName" -}}
+{{- printf "%s" (include "management-portal.fullname" .) -}}
+{{- end -}}
+
+{{/*
+App release to be used by Sentry
+*/}}
+{{- define "management-portal.sentryRelease" -}}
+{{- printf "%s" .Chart.AppVersion -}}
+{{- end -}}

@@ -94,3 +94,17 @@ Return true if a secret object should be created
 {{- end -}}
 {{- end -}}
 {{ end -}}
+
+{{/*
+Service name to be used by Sentry
+*/}}
+{{- define "radar-rest-sources-backend.sentryName" -}}
+{{- printf "%s" (include "radar-rest-sources-backend.fullname" .) -}}
+{{- end -}}
+
+{{/*
+App release to be used by Sentry
+*/}}
+{{- define "radar-rest-sources-backend.sentryRelease" -}}
+{{- printf "%s" .Chart.AppVersion -}}
+{{- end -}}

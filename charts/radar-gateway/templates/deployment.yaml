@@ -81,9 +81,9 @@ spec:
             value: {{ .Values.sentry.stacktrace.packages}}
             {{- end }}
           - name: SENTRY_NAME
-            value: {{ .Values.sentry.service.name }}
+            value:  {{ include "radar-gateway.sentryName" . }}
           - name: SENTRY_RELEASE
-            value: {{ .Values.sentry.service.release }}
+            value:  {{ include "radar-gateway.sentryRelease" . }}
           - name: SENTRY_ENVIRONMENT
             value: {{ .Values.sentry.service.environment }}
           {{- else }}

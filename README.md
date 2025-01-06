@@ -18,11 +18,11 @@ This documentation assumes familiarity with all referenced Kubernetes concepts, 
 
 The following tools should be installed in your local machine to install the RADAR-Kubernetes on your Kubernetes cluster.
 
-| Component                                          | Description                                                             |
-| -------------------------------------------------- | ----------------------------------------------------------------------- |
-| [helm 3](https://github.com/helm/helm#install)     | Helm Charts are used to package Kubernetes resources for each component |
-| kubernetes                                         | The charts support Kubernetes versions 1.19 up to 1.22.                 |
-| [helm-docs](https://github.com/norwoodj/helm-docs) | README generator for each chart.                                        |
+| Component                                                                  | Description                                                             |
+|----------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| [helm 3](https://github.com/helm/helm#install)                             | Helm Charts are used to package Kubernetes resources for each component |
+| kubernetes                                                                 | The charts support Kubernetes versions 1.19 up to 1.22.                 |
+| [helm-docs v1.8.1.](https://github.com/norwoodj/helm-docs/releases/v1.8.1) | README generator for each chart.                                        |
 
 Installation of these charts is best managed via [RADAR-Kubernetes](https://github.com/RADAR-base/RADAR-Kubernetes).
 

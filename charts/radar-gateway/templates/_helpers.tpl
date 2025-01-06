@@ -64,3 +64,17 @@ Create chart name and version as used by the chart label.
 {{- define "radar-gateway.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Service name to be used by Sentry
+*/}}
+{{- define "radar-gateway.sentryName" -}}
+{{- printf "%s" (include "radar-gateway.fullname" .) -}}
+{{- end -}}
+
+{{/*
+App release to be used by Sentry
+*/}}
+{{- define "radar-gateway.sentryRelease" -}}
+{{- printf "%s" .Chart.AppVersion -}}
+{{- end -}}

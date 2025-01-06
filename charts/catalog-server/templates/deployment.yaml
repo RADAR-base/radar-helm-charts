@@ -94,9 +94,9 @@ spec:
           value: {{ .Values.sentry.stacktrace.packages}}
           {{- end }}
         - name: SENTRY_NAME
-          value: {{ .Values.sentry.service.name }}
+          value: {{ include "catalog-server.sentryName" . }}
         - name: SENTRY_RELEASE
-          value: {{ .Values.sentry.service.release }}
+          value: {{ include "catalog-server.sentryRelease" . }}
         - name: SENTRY_ENVIRONMENT
           value: {{ .Values.sentry.service.environment }}
         {{- else }}
@@ -135,9 +135,9 @@ spec:
             value: {{ .Values.sentry.stacktrace.packages}}
             {{- end }}
           - name: SENTRY_NAME
-            value: {{ .Values.sentry.service.name }}
+            value: {{ include "catalog-server.sentryName" . }}
           - name: SENTRY_RELEASE
-            value: {{ .Values.sentry.service.release }}
+            value: {{ include "catalog-server.sentryRelease" . }}
           - name: SENTRY_ENVIRONMENT
             value: {{ .Values.sentry.service.environment }}
           {{- else }}

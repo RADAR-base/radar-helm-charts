@@ -226,9 +226,9 @@ sentry:
   # -- Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR)
   level: ERROR
   service:
-    # -- Name of the sentry service
+    # -- Name of the service to be displayed in the sentry dashboard
     name:
-    # -- App version of the sentry service
+    # -- App version to be displayed in the sentry dashboard
     release:
     # -- Environment of the sentry service
     environment: production

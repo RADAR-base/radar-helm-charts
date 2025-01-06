@@ -85,3 +85,17 @@ Selector labels
 app.kubernetes.io/name: {{ include "data-dashboard-backend.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Service name to be used by Sentry
+*/}}
+{{- define "data-dashboard-backend.sentryName" -}}
+{{- printf "%s" (include "data-dashboard-backend.fullname" .) -}}
+{{- end -}}
+
+{{/*
+App release to be used by Sentry
+*/}}
+{{- define "data-dashboard-backend.sentryRelease" -}}
+{{- printf "%s" .Chart.AppVersion -}}
+{{- end -}}

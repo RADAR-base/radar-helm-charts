@@ -94,8 +94,8 @@ A Helm chart for RADAR-base upload kafka connector. This is used for reading upl
 | producer.batchSize | int | `200000` | Batch size in bytes to batch records together into fewer requests when multiple records are being sent to the same partition. |
 | sentry.dsn | string | `nil` | DSN (Data Source Name) of the sentry server |
 | sentry.level | string | `"ERROR"` | Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR) |
-| sentry.service.name | string | `nil` | Name of the sentry service |
-| sentry.service.release | string | `nil` | App version of the sentry service |
+| sentry.service.name | string | `nil` | Name of the service to be displayed in the sentry dashboard |
+| sentry.service.release | string | `nil` | App version to be displayed in the sentry dashboard |
 | sentry.service.environment | string | `"production"` | Environment of the sentry service |
 | sentry.stacktrace.enabled | bool | `true` | Set to true, if stack trace should be enabled |
-| sentry.stacktrace.packages | string | `""` | Comma-separated list of package prefixes to be included in the stacktrace |
+| sentry.stacktrace.packages | string | `"org.radarbase.upload,org.radarbase.connect.upload"` | Comma-separated list of package prefixes to be included in the stacktrace |

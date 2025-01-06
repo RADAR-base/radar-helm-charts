@@ -86,3 +86,17 @@ Selector labels
 app.kubernetes.io/name: {{ include "radar-output.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Service name to be used by Sentry
+*/}}
+{{- define "radar-output.sentryName" -}}
+{{- printf "%s" (include "radar-output.fullname" .) -}}
+{{- end -}}
+
+{{/*
+App release to be used by Sentry
+*/}}
+{{- define "radar-output.sentryRelease" -}}
+{{- printf "%s" .Chart.AppVersion -}}
+{{- end -}}
