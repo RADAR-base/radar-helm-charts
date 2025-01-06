@@ -111,9 +111,9 @@ spec:
             value: {{ .Values.sentry.stacktrace.packages}}
             {{- end }}
           - name: SENTRY_NAME
-            value: {{ .Values.sentry.service.name }}
+            value:  {{ include "radar-fitbit-connector.sentryName" . }}
           - name: SENTRY_RELEASE
-            value: {{ .Values.sentry.service.release }}
+            value:  {{ include "radar-fitbit-connector.sentryRelease" . }}
           - name: SENTRY_ENVIRONMENT
             value: {{ .Values.sentry.service.environment }}
           {{- else }}

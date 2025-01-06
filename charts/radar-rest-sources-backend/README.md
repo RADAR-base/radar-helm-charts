@@ -111,8 +111,8 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.oura.scope | string | `"daily session heartrate workout tag personal email spo2 ring_configuration"` | List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication |
 | sentry.dsn | string | `nil` | DSN (Data Source Name) of the sentry server |
 | sentry.level | string | `"ERROR"` | Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR) |
-| sentry.service.name | string | `nil` | Name of the sentry service |
-| sentry.service.release | string | `nil` | App version of the sentry service |
+| sentry.service.name | string | `nil` | Name of the service to be displayed in the sentry dashboard |
+| sentry.service.release | string | `nil` | App version to be displayed in the sentry dashboard |
 | sentry.service.environment | string | `"production"` | Environment of the sentry service |
 | sentry.stacktrace.enabled | bool | `true` | Set to true, if stack trace should be enabled |
-| sentry.stacktrace.packages | string | `""` | Comma-separated list of package prefixes to be included in the stacktrace |
+| sentry.stacktrace.packages | string | `"org.radarbase.authorizer"` | Comma-separated list of package prefixes to be included in the stacktrace |

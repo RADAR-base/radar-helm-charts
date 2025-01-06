@@ -54,3 +54,24 @@ Create chart name and version as used by the chart label.
 {{- define "catalog-server.saslJaasConfig" -}}
 {{- printf "org.apache.kafka.common.security.plain.PlainLoginModule required username='%s' password='%s';" .apiKey .apiSecret | b64enc | quote -}}
 {{- end -}}
+
+{{/*
+Service name to be used by Sentry
+*/}}
+{{- define "catalog-server.sentryName" -}}
+{{- if .Values.sentry.service.name }}
+{{- printf "%s" .Values.sentry.service.name -}}
+{{- else -}}
+{{- printf "%s" (include "catalog-server.fullname" .) -}}{{- end -}}
+{{- end }}
+
+{{/*
+App release to be used by Sentry
+*/}}
+{{- define "catalog-server.sentryRelease" -}}
+{{- if .Values.sentry.service.release }}
+{{- printf "%s" .Values.sentry.service.release -}}
+{{- else -}}
+{{- printf "%s" .Chart.AppVersion -}}
+{{- end -}}
+{{- end }}

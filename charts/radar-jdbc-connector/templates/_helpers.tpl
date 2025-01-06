@@ -62,3 +62,24 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- fail "Mode must be 'source' for JDBC source connector or 'sink' for JDBC sink connector."}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Service name to be used by Sentry
+*/}}
+{{- define "radar-jdbc-connector.sentryName" -}}
+{{- if .Values.sentry.service.name }}
+{{- printf "%s" .Values.sentry.service.name -}}
+{{- else -}}
+{{- printf "%s" (include "radar-jdbc-connector.fullname" .) -}}{{- end -}}
+{{- end }}
+
+{{/*
+App release to be used by Sentry
+*/}}
+{{- define "radar-jdbc-connector.sentryRelease" -}}
+{{- if .Values.sentry.service.release }}
+{{- printf "%s" .Values.sentry.service.release -}}
+{{- else -}}
+{{- printf "%s" .Chart.AppVersion -}}
+{{- end -}}
+{{- end }}

@@ -175,14 +175,21 @@ sentry:
   # -- Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR)
   level: ERROR
   service:
-    # -- Name of the sentry service
+    # -- Name of the service to be displayed in the sentry dashboard
     name:
-    # -- App version of the sentry service
+    # -- App version to be displayed in the sentry dashboard
     release:
-    # -- Environment of the sentry service
+    # -- The environment name for this installation.
     environment: production
   stacktrace:
     # -- Set to true, if stack trace should be enabled
     enabled: true
     # -- Comma-separated list of package prefixes to be included in the stacktrace
     packages: "org.radarbase.datadashboard,org.radarbase.upload"
+  openTelemetry:
+    # -- Enable OpenTelemetry Sentry agent
+    enabled: false
+    # -- Enable traces exporting to Sentry
+    tracesEnabled: true
+    # -- Enable metrics exporting to Sentry
+    metricsEnabled: true
