@@ -13,7 +13,6 @@ API for data in the data dashboard
 | Name | Email | Url |
 | ---- | ------ | --- |
 | Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
 
 ## Source Code
@@ -52,7 +51,7 @@ API for data in the data dashboard
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.ingressClassName | string | `"nginx"` | Ingress class name |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
-| ingress.path | string | `"/api"` | Path within the url structure |
+| ingress.path | string | `"/dashboard-data"` | Path within the url structure |
 | ingress.pathType | string | `"ImplementationSpecific"` |  |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` |  |
@@ -71,7 +70,6 @@ API for data in the data dashboard
 | managementPortal.clientId | string | `"radar_data_dashboard_backend"` | ManagementPortal OAuth 2.0 client ID, having grant type client_credentials |
 | managementPortal.clientSecret | string | `"secret"` | ManagementPortal OAuth 2.0 client secret |
 | jwtResourceName | string | `"res_DataDashboardAPI"` | JWT Resource name to use for this service in ManagementPortal |
-| path | string | `"/api"` | Base path to use in application |
 | jdbc.driver | string | `"org.postgresql.Driver"` | JDBC Driver to connect to the database. |
 | jdbc.url | string | `"jdbc:postgresql://postgresql:5432/data-dashboard"` | JDBC Connection url of the database. |
 | jdbc.user | string | `"postgres"` | Username of the database |

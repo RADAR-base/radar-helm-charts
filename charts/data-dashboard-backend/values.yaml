@@ -62,7 +62,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   # -- Path within the url structure
-  path: /api
+  path: /dashboard-data
   pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
@@ -156,9 +156,6 @@ managementPortal:
   clientSecret: secret
 # -- JWT Resource name to use for this service in ManagementPortal
 jwtResourceName: res_DataDashboardAPI
-
-# -- Base path to use in application
-path: /api
 
 jdbc:
   # -- JDBC Driver to connect to the database.
