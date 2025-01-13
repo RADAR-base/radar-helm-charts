@@ -6,16 +6,30 @@
 replicaCount: 1
 # -- Number of revisions kept in history
 revisionHistoryLimit: 5
-## -- Deployment image settings
-image:
-  # Portal image
-  repository: ghcr.io/radar-base/radar-self-enrolment-ui
-  # -- Image version
-  tag: dev
-  pullPolicy: IfNotPresent
 
-imagePullSecrets: []
+image:
+  # -- Image registry
+  registry: ghcr.io
+  # -- Image repository
+  repository: radar-base/radar-self-enrolment-ui
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: dev
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
+
+# -- String to partially override radar-self-enrolment-ui.fullname template with a string (will prepend the release name)
 nameOverride: ""
+# -- String to fully override radar-self-enrolment-ui.fullname template with a string
 fullnameOverride: ""
 
 ## -- Application config
@@ -52,19 +66,24 @@ secret:
   hashSumEnabled: true
 
 ingress:
+  # -- Enable ingress controller resource
   enabled: true
-  className: "nginx"
+  # -- Annotations that define default ingress class, certificate issuer
+  # @default -- check values.yaml
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+  # -- Path within the url structure
+  path: /kratos-ui
+  # -- Ingress Path type
+  pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
+  # -- Hosts to accept requests from
   hosts:
-    - host: localhost
-      paths:
-        - path: "/kratos-ui/?(.*)"
-          pathType: ImplementationSpecific
+    - localhost
   tls:
-    - secretName: radar-base-tls
-      hosts:
-        - localhost
+    # -- TLS Secret Name
+    secretName: radar-base-tls
 
 ## -- Container level security context
 securityContext:

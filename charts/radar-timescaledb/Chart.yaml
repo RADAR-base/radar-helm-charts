@@ -1,6 +1,6 @@
 apiVersion: v2
 name: radar-timescaledb
-version: 0.1.0
+version: 0.1.1
 appVersion: latest-pg12-bitnami
 description: TimescaleDB is an open-source time-series database optimized for fast ingest and complex queries, built as
   an extension to PostgreSQL. It leverages PostgreSQL's reliability and ecosystem while adding time-series specific

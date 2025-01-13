@@ -3,7 +3,7 @@
 # radar-upload-source-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-source-connector)](https://artifacthub.io/packages/helm/radar-base/radar-upload-source-connector)
 
-![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload kafka connector. This is used for reading uploaded data from backend and sending them to Kafka cluster for later processing.
 
@@ -23,18 +23,27 @@ A Helm chart for RADAR-base upload kafka connector. This is used for reading upl
 * <https://github.com/RADAR-base/radar-upload-source-connector>
 
 ## Prerequisites
-* Kubernetes 1.22+
-* Kubectl 1.22+
+* Kubernetes 1.28+
+* Kubectl 1.28+
 * Helm 3.1.0+
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-upload-source-connector replicas to deploy |
-| image.repository | string | `"radarbase/radar-connect-upload-source"` | radar-upload-source-connector image repository |
-| image.tag | string | `nil` | radar-upload-source-connector image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
-| imagePullSecrets | list | `[]` | Docker registry secret names as an array |
+| image.registry | string | `"docker.io"` | Image registry |
+| image.repository | string | `"radarbase/radar-connect-upload-source"` | Image repository |
+| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName |
 | nameOverride | string | `""` | String to partially override radar-upload-source-connector.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-upload-source-connector.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure radar-upload-source-connector pods' Security Context |

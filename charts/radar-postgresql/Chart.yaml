@@ -1,6 +1,6 @@
 apiVersion: v2
 name: radar-postgresql
-version: 0.1.0
+version: 0.1.1
 appVersion: 11.16.0
 description: PostgreSQL (Postgres) is an open source object-relational database known
   for reliability and data integrity. ACID-compliant, it supports foreign keys, joins,

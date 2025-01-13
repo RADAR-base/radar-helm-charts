@@ -3,7 +3,7 @@
 # radar-upload-connect-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connect-backend)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connect-backend)
 
-![Version: 0.5.3](https://img.shields.io/badge/Version-0.5.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector backend application. This application is an upload system that stores uploaded data and its metadata in PostgreSQL for later processing.
 
@@ -23,19 +23,27 @@ A Helm chart for RADAR-base upload connector backend application. This applicati
 * <https://github.com/RADAR-base/radar-upload-source-connector>
 
 ## Prerequisites
-* Kubernetes 1.22+
-* Kubectl 1.22+
+* Kubernetes 1.28+
+* Kubectl 1.28+
 * Helm 3.1.0+
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-upload-connect-backend replicas to deploy |
-| image.repository | string | `"radarbase/radar-upload-connect-backend"` | radar-upload-connect-backend image repository |
-| image.tag | string | `nil` | radar-upload-connect-backend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
-| image.pullPolicy | string | `"IfNotPresent"` | radar-upload-connect-backend image pull policy |
-| imagePullSecrets | list | `[]` | Docker registry secret names as an array |
+| image.registry | string | `"docker.io"` | Image registry |
+| image.repository | string | `"radarbase/radar-upload-connect-backend"` | Image repository |
+| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName |
 | nameOverride | string | `""` | String to partially override radar-upload-connect-backend.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-upload-connect-backend.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure radar-upload-connect-backend pods' Security Context |

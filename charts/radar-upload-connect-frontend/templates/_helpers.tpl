@@ -7,6 +7,20 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
+Return the proper image name
+*/}}
+{{- define "radar-upload-connect-frontend.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global "chart" .Chart ) }}
+{{- end -}}
+
+{{/*
+Return the proper Docker Image Registry Secret Names
+*/}}
+{{- define "radar-upload-connect-frontend.imagePullSecrets" -}}
+{{- include "common.images.pullSecrets" (dict "images" (list .Values.image) "global" .Values.global) -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
