@@ -141,9 +141,9 @@ spec:
             value: {{ .Values.sentry.stacktrace.packages}}
             {{- end }}
           - name: SENTRY_NAME
-            value:  {{ include "radar-output.sentryName" . }}
+            value:  {{ .Values.sentry.service.name | default (include "radar-output.fullname" .) }}
           - name: SENTRY_RELEASE
-            value:  {{ include "radar-output.sentryRelease" . }}
+            value:  {{ .Values.sentry.service.release | default (printf "%s-%s" .Chart.Version .Chart.AppVersion) }}
           - name: SENTRY_ENVIRONMENT
             value: {{ .Values.sentry.service.environment }}
           {{- else }}

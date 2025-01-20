@@ -110,9 +110,9 @@ spec:
             value: {{ .Values.sentry.stacktrace.packages}}
             {{- end }}
           - name: SENTRY_NAME
-            value:  {{ include "radar-oura-connector.sentryName" . }}
+            value:  {{ .Values.sentry.service.name | default (include "radar-oura-connector.fullname" .) }}
           - name: SENTRY_RELEASE
-            value:  {{ include "radar-oura-connector.sentryRelease" . }}
+            value:  {{ .Values.sentry.service.release | default (printf "%s-%s" .Chart.Version .Chart.AppVersion) }}
           - name: SENTRY_ENVIRONMENT
             value: {{ .Values.sentry.service.environment }}
           {{- else }}

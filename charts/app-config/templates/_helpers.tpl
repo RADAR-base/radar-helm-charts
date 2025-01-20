@@ -98,17 +98,3 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
-
-{{/*
-Service name to be used by Sentry
-*/}}
-{{- define "app-config.sentryName" -}}
-{{- printf "%s" (include "app-config.fullname" .) -}}
-{{- end -}}
-
-{{/*
-App release to be used by Sentry
-*/}}
-{{- define "app-config.sentryRelease" -}}
-{{- printf "%s" .Chart.AppVersion -}}
-{{- end -}}
