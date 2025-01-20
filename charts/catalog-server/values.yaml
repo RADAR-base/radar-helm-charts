@@ -257,3 +257,22 @@ cc:
   schemaRegistryApiKey: srApiKey
   # -- API secret of the Confluent Cloud based schema registry
   schemaRegistryApiSecret: srApiSecret
+
+# Sentry monitoring configuration
+sentry:
+  # -- DSN (Data Source Name) of the sentry server
+  dsn:
+  # -- Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR)
+  level: ERROR
+  service:
+    # -- Name of the service to be displayed in the sentry dashboard
+    name:
+    # -- App version to be displayed in the sentry dashboard
+    release:
+    # -- Environment of the sentry service
+    environment: production
+  stacktrace:
+    # -- Set to true, if stack trace should be enabled
+    enabled: true
+    # -- Comma-separated list of package prefixes to be included in the stacktrace
+    packages: "org.radarbase.schema,org.radarbase.stream"

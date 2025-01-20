@@ -224,3 +224,22 @@ oauthClientSecret: secret
 managementportal_url: http://management-portal:8080/managementportal
 # -- Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties.
 includeIntradayData: true
+
+# Sentry monitoring configuration
+sentry:
+  # -- DSN (Data Source Name) of the sentry server
+  dsn:
+  # -- Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR)
+  level: ERROR
+  service:
+    # -- Name of the service to be displayed in the sentry dashboard
+    name:
+    # -- App version to be displayed in the sentry dashboard
+    release:
+    # -- Environment of the sentry service
+    environment: production
+  stacktrace:
+    # -- Set to true, if stack trace should be enabled
+    enabled: true
+    # -- Comma-separated list of package prefixes to be included in the stacktrace
+    packages: "org.radarbase.oura,org.radarbase.connect"
