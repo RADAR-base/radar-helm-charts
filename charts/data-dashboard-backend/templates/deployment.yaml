@@ -74,14 +74,14 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: {{ .Values.path }}/health
+              path: {{ .Values.ingress.path }}/health
               port: http
               httpHeaders:
                 - name: Accept
                   value: application/json
           readinessProbe:
             httpGet:
-              path: {{ .Values.path }}/health
+              path: {{ .Values.ingress.path }}/health
               port: http
               httpHeaders:
                 - name: Accept
