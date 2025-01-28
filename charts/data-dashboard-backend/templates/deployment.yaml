@@ -53,6 +53,8 @@ spec:
           args:
             - "/etc/data-dashboard-backend/dashboard.yml"
           env:
+          - name: JAVA_OPTS
+            value: {{ .Values.javaOpts | quote }}
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
@@ -80,11 +82,30 @@ spec:
             value: {{ .Values.sentry.stacktrace.packages}}
             {{- end }}
           - name: SENTRY_NAME
-            value:  {{ .Values.sentry.service.name | default (include "data-dashboard-backend.fullname" .) }}
+            value: {{ .Values.sentry.service.name | default (include "data-dashboard-backend.fullname" .) }}
           - name: SENTRY_RELEASE
-            value:  {{ .Values.sentry.service.release | default (printf "%s-%s" .Chart.Version .Chart.AppVersion) }}
+            value: {{ .Values.sentry.service.release | default (printf "%s-%s" .Chart.Version .Chart.AppVersion) }}
           - name: SENTRY_ENVIRONMENT
             value: {{ .Values.sentry.service.environment }}
+          {{- if .Values.openTelemetry.agent.enabled }}
+          - name: JAVA_OPTS
+            value: {{ printf "%s -javaagent:sentry-opentelemetry-agent.jar" .Values.javaOpts | trimPrefix " " | quote }}
+{{/*      OR CONFIGURABLE JAR NAME WITH VERSION BASED ON .Values.openTelemetry.agent.agentJar IF NO NAME OVERWRITING                 */}}
+{{/*          - name: JAVA_OPTS*/}}
+{{/*            value: {{ printf "%s -javaagent:%s" .Values.javaOpts .Values.openTelemetry.agent.agentJar | trimPrefix " " | quote }}*/}}
+          {{- if eq .Values.openTelemetry.exporter.metricsExporterEnabled false}}
+          - name: OTEL_METRICS_EXPORTER
+            value: none
+          {{- end }}
+          {{- if eq .Values.openTelemetry.exporter.tracesExporterEnabled false}}
+          - name: OTEL_TRACES_EXPORTER
+            value: none
+          {{- end }}
+          {{- if eq .Values.openTelemetry.exporter.logsExporterEnabled false}}
+          - name: OTEL_LOGS_EXPORTER
+            value: none
+          {{- end }}
+          {{- end }}
           {{- else }}
           - name: SENTRY_ENABLED
             value: "false"

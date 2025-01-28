@@ -146,7 +146,6 @@ existingSecret: ""
 # -- Standard JAVA_OPTS that should be passed to this service
 javaOpts: "-Xmx550m"
 
-
 managementPortal:
   # -- ManagementPortal URL
   url: http://management-portal:8080/managementportal
@@ -192,3 +191,18 @@ sentry:
     enabled: true
     # -- Comma-separated list of package prefixes to be included in the stacktrace
     packages: "org.radarbase.datadashboard,org.radarbase.upload"
+
+# OpenTelemetry monitoring configuration
+openTelemetry:
+  agent:
+    # -- Enable OpenTelemetry agent (currently only Sentry agent is supported)
+    enabled: false
+    # -- OpenTelemetry Sentry agent jar file name
+    agentJar: sentry-opentelemetry-agent-0.7.2.jar
+  exporter:
+    # -- Enable OpenTelemetry metrics exporter
+    metricsExporterEnabled: false
+    # -- Enable OpenTelemetry traces exporter
+    tracesExporterEnabled: true
+    # -- Enable OpenTelemetry logs exporter
+    logsExporterEnabled: true
