@@ -67,15 +67,13 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           command: ["radar-gateway", "/etc/radar-gateway/gateway.yml"]
           env:
-          - name: JAVA_OPTS
-            value: "-XX:GCTimeRatio=19 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=30 --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.management/javax.management.openmbean=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.management/javax.management=ALL-UNNAMED -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
           {{- if .Values.sentry.dsn }}
           - name: SENTRY_DSN
             value: {{ .Values.sentry.dsn }}
           - name: SENTRY_LOG_LEVEL
             value: {{ .Values.sentry.level }}
             {{- if .Values.sentry.stacktrace.enabled }}
-          - name: SENTRY_ATTACH_STACKTRACE
+          - name: SENTRY_ATTACHSTACKTRACE
             value: {{ .Values.sentry.stacktrace.enabled | quote }}
           - name: SENTRY_STACKTRACE_APP_PACKAGES
             value: {{ .Values.sentry.stacktrace.packages}}
@@ -86,9 +84,31 @@ spec:
             value: {{ .Values.sentry.service.release | default (printf "%s-%s" .Chart.Version .Chart.AppVersion) }}
           - name: SENTRY_ENVIRONMENT
             value: {{ .Values.sentry.service.environment }}
+          {{- if .Values.openTelemetry.agent.enabled }}
+          - name: JAVA_OPTS
+            value: {{ printf "%s -javaagent:/usr/lib/%s" .Values.javaOpts .Values.openTelemetry.agent.agentJar | trimPrefix " " | quote }}
+          - name: SENTRY_TRACES_SAMPLE_RATE
+            value: {{ .Values.openTelemetry.exporter.tracesSampleRate | quote }}
+          {{- if eq .Values.openTelemetry.exporter.metricsExporterEnabled false }}
+          - name: OTEL_METRICS_EXPORTER
+            value: none
+          {{- end }}
+          {{- if eq .Values.openTelemetry.exporter.tracesExporterEnabled false}}
+          - name: OTEL_TRACES_EXPORTER
+            value: none
+          {{- end }}
+          {{- if eq .Values.openTelemetry.exporter.logsExporterEnabled false }}
+          - name: OTEL_LOGS_EXPORTER
+            value: none
+          {{- end }}
+          {{- end }}
           {{- else }}
           - name: SENTRY_ENABLED
             value: "false"
+          {{- end }}
+          {{- if or (not .Values.sentry.dsn) (and .Values.sentry.dsn (eq .Values.openTelemetry.agent.enabled false)) }}
+          - name: JAVA_OPTS
+            value: {{ .Values.javaOpts | quote }}
           {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}

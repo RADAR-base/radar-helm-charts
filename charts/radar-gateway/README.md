@@ -3,7 +3,7 @@
 # radar-gateway
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-gateway)](https://artifacthub.io/packages/helm/radar-base/radar-gateway)
 
-![Version: 1.4.4](https://img.shields.io/badge/Version-1.4.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
+![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -68,6 +68,7 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
+| javaOpts | string | `"-XX:GCTimeRatio=19 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=30 --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.management/javax.management.openmbean=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.management/javax.management=ALL-UNNAMED -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"` | Standard JAVA_OPTS that should be passed to this service |
 | extraEnvVars | list | `[]` | Extra environment variables |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
@@ -114,3 +115,9 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | sentry.service.environment | string | `"production"` | Environment of the sentry service |
 | sentry.stacktrace.enabled | bool | `true` | Set to true, if stack trace should be enabled |
 | sentry.stacktrace.packages | string | `"org.radarbase.gateway,org.apache.avro"` | Comma-separated list of package prefixes to be included in the stacktrace |
+| openTelemetry.agent.enabled | bool | `false` | Enable OpenTelemetry agent (currently only Sentry agent is supported) |
+| openTelemetry.agent.agentJar | string | `"sentry-opentelemetry-agent-8.1.0.jar"` | OpenTelemetry Sentry agent jar file name, depends on version of 'io.sentry:sentry-opentelemetry-agent' |
+| openTelemetry.exporter.tracesSampleRate | float | `1` | Sample rate for traces (0.0 to 1.0) |
+| openTelemetry.exporter.metricsExporterEnabled | bool | `false` | Enable OpenTelemetry metrics exporter other than Sentry |
+| openTelemetry.exporter.tracesExporterEnabled | bool | `false` | Enable OpenTelemetry traces exporter other than Sentry |
+| openTelemetry.exporter.logsExporterEnabled | bool | `true` | Enable OpenTelemetry logs exporter other than Sentry |
