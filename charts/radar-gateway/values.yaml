@@ -25,6 +25,26 @@ image:
   #
   pullSecrets: []
 
+image_exporter:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
+  repository: sscaling/jmx-prometheus-exporter
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: "48e3bd31f132"
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
+
 # -- String to partially override radar-gateway.fullname template with a string (will prepend the release name)
 nameOverride: ""
 # -- String to fully override radar-gateway.fullname template with a string

@@ -43,10 +43,10 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       containers:
       {{- if .Values.serviceMonitor.enabled }}
-        - image: sscaling/jmx-prometheus-exporter
+        - image: {{ template "radar-gateway.image-exporter" . }}
+          imagePullPolicy: {{ .Values.image_exporter.pullPolicy | quote }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          imagePullPolicy: IfNotPresent
           name: prometheus-jmx-exporter
           env:
             - name: "CONFIG_YML"

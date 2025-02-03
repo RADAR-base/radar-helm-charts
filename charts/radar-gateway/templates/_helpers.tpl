@@ -14,6 +14,13 @@ Return the proper image name
 {{- end -}}
 
 {{/*
+Return the proper exporter image name
+*/}}
+{{- define "radar-gateway.image-exporter" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.image_exporter "global" .Values.global "chart" .Chart ) }}
+{{- end -}}
+
+{{/*
 Return the proper Docker Image Registry Secret Names
 */}}
 {{- define "radar-gateway.imagePullSecrets" -}}
