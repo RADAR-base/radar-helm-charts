@@ -3,7 +3,7 @@
 # radar-gateway
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-gateway)](https://artifacthub.io/packages/helm/radar-base/radar-gateway)
 
-![Version: 1.4.1](https://img.shields.io/badge/Version-1.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
+![Version: 1.4.3](https://img.shields.io/badge/Version-1.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -42,13 +42,13 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | image_exporter.registry | string | `"docker.io"` | Image registry |
 | image_exporter.repository | string | `"sscaling/jmx-prometheus-exporter"` | Image repository |
 | image_exporter.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image_exporter.digest | string | `"48e3bd31f132"` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image_exporter.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| image_exporter.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName |
+| image_exporter.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | nameOverride | string | `""` | String to partially override radar-gateway.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-gateway.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure radar-gateway pods' Security Context |
@@ -95,7 +95,7 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | checkSourceId | bool | `true` | set to true, if sources in access token should be validated |
 | adminProperties | object | `{}` | Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs. |
 | producerProperties | object | `{"compression.type":"lz4"}` | Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs. |
-| serializationProperties | object | `{}` | Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig]. |
+| serializationProperties | object | `{}` | Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSetDeConfig]. |
 | serverProperties | object | `{"maxRequestSize":25165824,"requestTimeout":30}` | Additional gateway server properties |
 | serverProperties.maxRequestSize | int | `25165824` | Maximum request size, also after decompression. |
 | serverProperties.requestTimeout | int | `30` | Maximum response time in seconds. |

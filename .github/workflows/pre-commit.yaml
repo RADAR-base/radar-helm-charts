@@ -1,0 +1,25 @@
+name: Pre-commit hooks
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions: read-all
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@v0.11.0
+        with:
+          enable-cache: 'true'
+
+      - name: Run pre-commit on all files
+        env:
+          SKIP: "no-commit-to-branch"
+        run: devbox run -- pre-commit run --verbose --all-files --show-diff-on-failure

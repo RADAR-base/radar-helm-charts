@@ -3,7 +3,7 @@
 # radar-jdbc-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-jdbc-connector)](https://artifacthub.io/packages/helm/radar-base/radar-jdbc-connector)
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.5](https://img.shields.io/badge/AppVersion-10.5.5-informational?style=flat-square)
+![Version: 0.6.1](https://img.shields.io/badge/Version-0.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.5](https://img.shields.io/badge/AppVersion-10.5.5-informational?style=flat-square)
 
 A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
 
@@ -44,7 +44,7 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | nameOverride | string | `""` | String to partially override radar-jdbc-connector.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-jdbc-connector.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure radar-jdbc-connector pods' Security Context |
@@ -55,7 +55,7 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
-| extraEnvVars | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"PLAINTEXT"}]` | Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration) |
+| extraEnvVars | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"PLAINTEXT"}]` | Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specific [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration) |
 | extraEnvVars[0] | object | `{"name":"CONNECT_SECURITY_PROTOCOL","value":"PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
@@ -82,7 +82,7 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | heapOpts | string | `"-Xms1500m"` | Java heap options |
 | source.name | string | `"radar-jdbc-source"` | Name of the connector Kafka producer group |
 | source.schema | string | `"public"` | Database schema (if any) |
-| source.tableWhitelist | string | `""` | Comma-separted list of tables to read |
+| source.tableWhitelist | string | `""` | Comma-separated list of tables to read |
 | source.topicPrefix | string | `""` | Prefix to prepend to table names to generate the name of the Kafka topic to publish data to. |
 | source.mode | string | `"incrementing"` | How to detect new values in a table. |
 | source.incrementingColumnName | string | `""` | When using mode incrementing, which column to use as incrementing. If empty, autodetection will be used. |

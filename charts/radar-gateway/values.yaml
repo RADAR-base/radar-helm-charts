@@ -239,7 +239,7 @@ adminProperties: {}
 # -- Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs.
 producerProperties:
   compression.type: lz4
-# -- Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig].
+# -- Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSetDeConfig].
 serializationProperties: {}
 
 # -- Additional gateway server properties
