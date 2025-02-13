@@ -1,0 +1,93 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+- repo: https://github.com/crate-ci/typos
+  rev: v1.28.4
+  hooks:
+  - id: typos
+    exclude: external/
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.2.4
+  hooks:
+  - id: codespell
+    args: [-L, "showIn"]
+    exclude: external/
+- repo: https://github.com/thlorenz/doctoc
+  rev: v2.2.0
+  hooks:
+  - id: doctoc
+    files: ^README.md$
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v5.0.0
+  hooks:
+  - id: trailing-whitespace
+    exclude: external/
+  - id: end-of-file-fixer
+    exclude: external/
+  - id: mixed-line-ending
+    exclude: external/
+  - id: check-yaml
+    exclude: "charts|external"
+  - id: check-added-large-files
+    exclude: external/
+  - id: check-executables-have-shebangs
+    exclude: external/
+  - id: check-shebang-scripts-are-executable
+    exclude: external/
+  - id: check-merge-conflict
+  - id: no-commit-to-branch
+- repo: https://github.com/rhysd/actionlint
+  rev: v1.7.5
+  hooks:
+  - id: actionlint-system
+- repo: local
+  hooks:
+  - id: helm-docs
+    name: Generate docs for the Helm chart
+    language: system
+    entry: helm-docs -s file --template-files=charts/_templates.gotmpl --template-files=DOCS.md.gotmpl --template-files=README.md.gotmpl
+    pass_filenames: false
+    files: 'charts/'
+  - id: helm-lint
+    name: Lint the Helm chart
+    language: system
+    entry: find charts -maxdepth 1 -type d ! -name charts -exec helm lint --quiet {} \;
+    pass_filenames: false
+    files: 'charts/'
+  - id: ct-lint
+    name: Validate the Helm charts
+    language: system
+    entry: ct lint --debug false --skip-helm-dependencies --config .github/ct-lint.yaml
+    pass_filenames: false
+    files: 'charts/'
+  - id: check-bash-syntax # https://github.com/Lucas-C/pre-commit-hooks?tab=readme-ov-file#bash-syntax-validation
+    name: Check Shell scripts syntax correctness
+    language: system
+    entry: bash -n
+    files: \.sh$
+  - id: gitleaks
+    name: Run Gitleaks
+    language: system
+    entry: gitleaks dir --verbose
+    exclude: external/
+    require_serial: true
+  - id: trivy
+    name: Run Trivy
+    language: system
+    entry: trivy filesystem --config .trivy.yaml charts
+    exclude: external/
+    require_serial: true
+    pass_filenames: false
+  # - id: checkov
+  #   name: Run Checkov
+  #   language: system
+  #   entry: checkov -d charts --skip-framework secrets
+  #   exclude: external/
+  #   require_serial: true
+- repo: https://github.com/commitizen-tools/commitizen
+  rev: v4.1.0
+  hooks:
+  - id: commitizen
+  - id: commitizen-branch
+    stages: [pre-push]
+    args: [--rev-range, 212b99ff174eaaa16895299d64317ab40bce200d..HEAD]

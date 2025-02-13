@@ -72,4 +72,3 @@ data:
             uri: {{ .Values.redis.url }}
             # Key prefix for locks
             lockPrefix: radar-push-garmin/lock/
-

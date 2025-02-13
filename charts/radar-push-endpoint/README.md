@@ -3,7 +3,7 @@
 # radar-push-endpoint
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-push-endpoint)](https://artifacthub.io/packages/helm/radar-base/radar-push-endpoint)
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.2](https://img.shields.io/badge/AppVersion-0.3.2-informational?style=flat-square)
+![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.2](https://img.shields.io/badge/AppVersion-0.3.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming data from Push or Subscription based WEB APIs. It performs authentication, authorization and content validation. For more details of the configurations, see https://github.com/RADAR-base/RADAR-PushEndpoint.
 
@@ -42,7 +42,7 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | nameOverride | string | `""` | String to partially override radar-push-endpoint.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-push-endpoint.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure radar-push-endpoint pods' Security Context |
@@ -87,7 +87,7 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | checkSourceId | bool | `true` | set to true, if sources in access token should be validated |
 | adminProperties | object | `{}` | Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs. |
 | producerProperties | object | `{"compression.type":"lz4"}` | Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs. |
-| serializationProperties | object | `{}` | Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig]. |
+| serializationProperties | object | `{}` | Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSetDeConfig]. |
 | cc.enabled | bool | `false` | set to true, if requests should be forwarded to Confluent Cloud based brokers. |
 | cc.apiKey | string | `"ccApikey"` | Confluent Cloud cluster API key |
 | cc.apiSecret | string | `"ccApiSecret"` | Confluent Cloud cluster API secret |

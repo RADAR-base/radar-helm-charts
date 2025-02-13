@@ -3,7 +3,7 @@
 # radar-upload-connect-frontend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connect-frontend)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connect-frontend)
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
+![Version: 0.6.1](https://img.shields.io/badge/Version-0.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector frontend application that provides a UI for uploading files and sending them to the upload-backend.
 
@@ -43,7 +43,7 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | nameOverride | string | `""` | String to partially override radar-upload-connect-frontend.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-upload-connect-frontend.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure radar-upload-connect-frontend pods' Security Context |

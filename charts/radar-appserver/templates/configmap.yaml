@@ -23,4 +23,3 @@ data:
         {{- range .Values.public_key_endpoints }}
         - {{ . | quote }}
         {{ end -}}
-

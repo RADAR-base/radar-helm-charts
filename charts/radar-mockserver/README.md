@@ -3,7 +3,7 @@
 # radar-mockserver
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-mockserver)](https://artifacthub.io/packages/helm/radar-base/radar-mockserver)
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![AppVersion: 5.15.0](https://img.shields.io/badge/AppVersion-5.15.0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![AppVersion: 5.15.0](https://img.shields.io/badge/AppVersion-5.15.0-informational?style=flat-square)
 
 Chart to deploy MockServer to Kubernetes. MockServer enables easy mocking of any system you integrate with via HTTP or HTTPS with clients written in Java, JavaScript and Ruby.  MockServer also includes a proxy that introspects all proxied traffic including encrypted SSL traffic and supports Port Forwarding, Web Proxying (i.e. HTTP proxy), HTTPS Tunneling Proxying (using HTTP CONNECT) and SOCKS Proxying (i.e. dynamic port forwarding).
 

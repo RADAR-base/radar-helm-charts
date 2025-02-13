@@ -1,4 +1,4 @@
-# Expecations that will be passed as 'expectation  json' to mockserver.
+# Expectations that will be passed as 'expectation  json' to mockserver.
 expectations: []
 
 mockserver:

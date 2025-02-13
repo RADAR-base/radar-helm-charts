@@ -3,7 +3,7 @@
 # velero-s3-deployment
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/velero-s3-deployment)](https://artifacthub.io/packages/helm/radar-base/velero-s3-deployment)
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2024-11-21T17-21-54Z](https://img.shields.io/badge/AppVersion-RELEASE.2024--11--21T17--21--54Z-informational?style=flat-square)
+![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2024-11-21T17-21-54Z](https://img.shields.io/badge/AppVersion-RELEASE.2024--11--21T17--21--54Z-informational?style=flat-square)
 
 A Helm chart for Velero S3 deployment, this chart holds resources used by Velero with a deployment to mirror the local object storage to a remote object storage.
 
@@ -44,7 +44,7 @@ A Helm chart for Velero S3 deployment, this chart holds resources used by Velero
 | mc_image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | mc_image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | mc_image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| mc_image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName |
+| mc_image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | podSecurityContext | object | `{}` | Configure object storage backup pod pods' Security Context |
 | securityContext | object | `{}` | Configure object storage backup pod containers' Security Context |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |

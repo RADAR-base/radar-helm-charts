@@ -222,7 +222,7 @@ global:
       # seccomp.security.alpha.kubernetes.io/defaultProfileName: 'docker/default'
       # apparmor.security.beta.kubernetes.io/defaultProfileName: 'runtime/default'
 
-  ## Global image registry to use if it needs to be overriden for some specific use cases (e.g local registries, custom images, ...)
+  ## Global image registry to use if it needs to be overridden for some specific use cases (e.g local registries, custom images, ...)
   ##
   imageRegistry: ""
 

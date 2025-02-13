@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.6/.schema/devbox.schema.json",
+  "packages": [
+    "kubectl@latest",
+    "chart-testing@latest",
+    "pre-commit@latest",
+    "trivy@latest",
+    "checkov@3.2.336",
+    "kubernetes-helm@latest",
+    "actionlint@latest",
+    "typos@latest",
+    "codespell@latest",
+    "doctoc@latest",
+    "helm-docs@latest",
+    "commitizen@latest",
+    "gitleaks@latest",
+  ],
+  "shell": {
+    "init_hook": [
+      "echo 'Welcome to devbox!' > /dev/null",
+      "pre-commit install",
+      "pre-commit install --hook-type commit-msg --hook-type pre-push",
+    ],
+    "scripts": {
+      "check": [
+        "pre-commit run --verbose --all-files",
+      ],
+    },
+  },
+}
