@@ -71,12 +71,13 @@ repos:
     entry: gitleaks dir --verbose
     exclude: external/
     require_serial: true
-  # - id: trivy
-  #   name: Run Trivy
-  #   language: system
-  #   entry: trivy filesystem --license-full --scanners vuln,misconfig,license charts
-  #   exclude: external/
-  #   require_serial: true
+  - id: trivy
+    name: Run Trivy
+    language: system
+    entry: trivy filesystem --config .trivy.yaml charts
+    exclude: external/
+    require_serial: true
+    pass_filenames: false
   # - id: checkov
   #   name: Run Checkov
   #   language: system
