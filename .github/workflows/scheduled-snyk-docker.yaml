@@ -29,7 +29,9 @@ jobs:
         name: Generate image matrix of current master branch
         env:
           # Any image that matches any of these patterns will be ignored for scanning.
-          EXCLUDE_PATTERNS: mockserver bats busybox
+          # FIXME: the elasticsearch image gives sarif related errors, so it is excluded for now.
+          #        we need a better way to handle this.
+          EXCLUDE_PATTERNS: mockserver bats busybox elasticsearch
         working-directory: .github/bin
         run: ./external_docker_image_matrix
 
