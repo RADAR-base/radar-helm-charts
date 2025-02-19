@@ -86,11 +86,11 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 | clientId | string | `"radar_appconfig"` | OAuth2 client id |
 | clientSecret | string | `"secret"` | OAuth2 client secret |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
-| jdbc.url | string | `"jdbc:postgresql://radar-cloudnative-postgresql-cluster-rw:5432/appconfig"` | JDBC Connection url of the database. |
+| jdbc.url | string | `nil` | JDBC Connection url of the database. |
 | jdbc.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-appconfig"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'url' value). |
-| jdbc.user | string | `"radarbase"` | Username of the database |
+| jdbc.user | string | `nil` | Username of the database |
 | jdbc.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-appconfig"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
-| jdbc.password | string | `"password"` | Password of the user |
+| jdbc.password | string | `nil` | Password of the user |
 | jdbc.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-appconfig"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
 | jdbc.parameters | string | `nil` | Additional JDBC connection parameters e.g. sslmode=verify-full Ignored when using 'urlSecret'. |
 | jdbc.driver | string | `"org.postgresql.Driver"` | JDBC Driver to connect to the database. |

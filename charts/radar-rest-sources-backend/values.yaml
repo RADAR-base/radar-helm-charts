@@ -187,7 +187,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: '{{ .Values.postgres.host | trunc 63 | trimSuffix "-" }}'
+          app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -223,24 +223,24 @@ authorizer:
 # Configuration of the Postgres data base to store data from Rest sources authorizer backend
 postgres:
   # -- host name of the postgres db
-  host: postgresql
+  host:
   # -- port of the postgres db
-  port: 5432
+  port:
   # -- database name
-  database: restsourceauthorizer
+  database:
   # -- Kubernetes secret containing the database JDBC Connection url
   # --(disables use of 'host', 'port' and 'database' values).
   urlSecret:
     name: radar-cloudnative-postgresql-restsourceauthorizer
     key: jdbc-uri
   # -- postgres user
-  user: radarbase
+  user:
   # --Kubernetes secret containing the database user (disables use of 'user' value).
   userSecret:
     name: radar-cloudnative-postgresql-restsourceauthorizer
     key: username
   # -- password of the postgres user
-  password: password
+  password:
   # -- Kubernetes secret containing the database password (disables use of 'password' value).
   passwordSecret:
     name: radar-cloudnative-postgresql-restsourceauthorizer

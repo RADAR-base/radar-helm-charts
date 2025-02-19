@@ -82,13 +82,13 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | authorizer.tokenExpiryTimeInMinutes | int | `15` | Within how many minutes an online authorization attempt should be finalized. Steps: logging in to Fitbit, returning to the authorizer. |
 | authorizer.persistentTokenExpiryInMin | int | `7200` | Within how many minutes an authorization attempt by a participant should be finalized. Steps: passing token to participant, them logging in to Fitbit, and returning to the authorizer. |
-| postgres.host | string | `"postgresql"` | host name of the postgres db |
-| postgres.port | int | `5432` | port of the postgres db |
-| postgres.database | string | `"restsourceauthorizer"` | database name |
+| postgres.host | string | `nil` | host name of the postgres db |
+| postgres.port | string | `nil` | port of the postgres db |
+| postgres.database | string | `nil` | database name |
 | postgres.urlSecret | disables use of 'host', 'port' and 'database' values | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-restsourceauthorizer"}` | . |
-| postgres.user | string | `"radarbase"` | postgres user |
+| postgres.user | string | `nil` | postgres user |
 | postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-restsourceauthorizer"}` | Kubernetes secret containing the database user (disables use of 'user' value). |
-| postgres.password | string | `"password"` | password of the postgres user |
+| postgres.password | string | `nil` | password of the postgres user |
 | postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-restsourceauthorizer"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
 | postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |

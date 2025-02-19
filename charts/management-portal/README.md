@@ -81,13 +81,13 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | keystore | string | `""` | base 64 encoded binary p12 keystore containing a ECDSA certificate with alias `radarbase-managementportal-ec` and a RSA certificate with alias `selfsigned`. |
-| postgres.host | string | `"radar-cloudnative-postgresql-cluster-rw"` | host name of the postgres db |
-| postgres.port | int | `5432` | post of the postgres db |
-| postgres.database | string | `"managementportal"` | database name |
+| postgres.host | string | `nil` | host name of the postgres db |
+| postgres.port | string | `nil` | post of the postgres db |
+| postgres.database | string | `nil` | database name |
 | postgres.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'host', 'port' and 'database' values). |
-| postgres.user | string | `"radarbase"` | postgres user |
+| postgres.user | string | `nil` | database user |
 | postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
-| postgres.password | string | `"password"` | password of the postgres user |
+| postgres.password | string | `nil` | password of the database user |
 | postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
 | postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true if the connecting to postgres using SSL |

@@ -167,7 +167,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/instance: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql" | trunc 63 | trimSuffix "-" }}'
+          app.kubernetes.io/instance: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
