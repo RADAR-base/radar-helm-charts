@@ -27,6 +27,9 @@ jobs:
 
       - id: set-matrix
         name: Generate image matrix of current master branch
+        env:
+          # Any image that matches any of these patterns will be ignored for scanning.
+          EXCLUDE_PATTERNS: mockserver bats busybox
         working-directory: .github/bin
         run: ./external_docker_image_matrix
 

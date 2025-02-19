@@ -29,6 +29,15 @@ cat images.tmp1 | grep ".*\/.*\/.*" > images.tmp2
 cat images.tmp1 | grep -v ".*\/.*\/.*" | sed "s/^/docker.io\//g" > images.tmp3
 cat images.tmp2 images.tmp3 | sort | uniq > images.txt
 
+# Exclude images refs that match any of the patterns passed in with the EXCLUDE_PATTERNS environment variable.
+if [ -n "$EXCLUDE_PATTERNS" ]; then
+  for pattern in $EXCLUDE_PATTERNS
+  do
+    grep -v $pattern images.txt > images.tmp
+    mv images.tmp images.txt
+  done
+fi
+
 # Generate the JSON array
 echo "{ \"include\": [" > $output_file
 while IFS= read -r line; do
