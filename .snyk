@@ -1,6 +1,33 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.25.0
+version: v1.25.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
+  SNYK-UBUNTU2004-OPENSSL-2426343:
+    - '*':
+        reason: >-
+          We will not update the elasticsearch version because other other
+          activities take priority (by Keyvan).
+        expires: 2025-06-01T00:00:00.000Z
+        created: 2025-02-19T13:31:54.411Z
+  SNYK-UBUNTU2004-OPENSSL-3314788:
+    - '*':
+        reason: >-
+          We will not update the elasticsearch version because other other
+          activities take priority (by Keyvan).
+        expires: 2025-06-01T00:00:00.000Z
+        created: 2025-02-19T13:31:57.376Z
+  SNYK-UBUNTU2004-NGHTTP2-5954795:
+    - '*':
+        reason: >-
+          We will not update the elasticsearch version because other other
+          activities take priority (by Keyvan).
+        expires: 2025-06-01T00:00:00.000Z
+        created: 2025-02-19T13:32:00.023Z
+  SNYK-UBUNTU2004-CYRUSSASL2-2408941:
+    - '*':
+        reason: >-
+          We will not update the elasticsearch version because other other
+          activities take priority (by Keyvan).
+        expires: 2025-06-01T00:00:00.000Z
+        created: 2025-02-19T13:32:02.710Z
 patch: {}
-exclude:
