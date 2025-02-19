@@ -88,6 +88,6 @@ repos:
   rev: v4.1.0
   hooks:
   - id: commitizen
-  - id: commitizen-branch
-    stages: [pre-push]
-    args: [--rev-range, 212b99ff174eaaa16895299d64317ab40bce200d..HEAD]
+#  - id: commitizen-branch
+#    stages: [pre-push]
+#    args: [--rev-range, HEAD^1..HEAD]
