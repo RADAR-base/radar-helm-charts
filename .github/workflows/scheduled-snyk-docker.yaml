@@ -28,7 +28,7 @@ jobs:
       - id: set-matrix
         name: Generate image matrix of current master branch
         working-directory: .github/bin
-        run: external_docker_image_matrix
+        run: ./external_docker_image_matrix
 
       - name: Commit and push if docker-images-matrix.json changed
         run: |
