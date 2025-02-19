@@ -30,12 +30,12 @@ cat images.tmp1 | grep -v ".*\/.*\/.*" | sed "s/^/docker.io\//g" > images.tmp3
 cat images.tmp2 images.tmp3 | sort | uniq > images.txt
 
 # Generate the JSON array
-echo "[" > $output_file
+echo "{ \"include\": [" > $output_file
 while IFS= read -r line; do
   echo "  {\"DOCKER_IMAGE\": \"$line\"}," >> $output_file
 done < images.txt
 sed -i '$ s/,$//' $output_file
-echo "]" >> $output_file
+echo "] }" >> $output_file
 
 cleanup
 
