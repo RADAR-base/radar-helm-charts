@@ -3,7 +3,7 @@
 # radar-upload-connect-frontend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connect-frontend)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connect-frontend)
 
-![Version: 0.6.1](https://img.shields.io/badge/Version-0.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
+![Version: 0.6.2](https://img.shields.io/badge/Version-0.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector frontend application that provides a UI for uploading files and sending them to the upload-backend.
 
@@ -47,9 +47,9 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 | nameOverride | string | `""` | String to partially override radar-upload-connect-frontend.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-upload-connect-frontend.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure radar-upload-connect-frontend pods' Security Context |
-| securityContext | object | `{}` | Configure radar-upload-connect-frontend containers' Security Context |
+| securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000,"seccompProfile":{"type":"RuntimeDefault"}}` | Configure radar-upload-connect-frontend containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
-| service.port | int | `80` | radar-upload-connect-frontend port |
+| service.port | int | `8080` | radar-upload-connect-frontend port |
 | disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
 | advertised_protocol | string | `"https"` | The protocol in advertised URIs (https, http) |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |

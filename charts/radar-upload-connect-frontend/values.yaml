@@ -35,19 +35,23 @@ podSecurityContext: {}
   # fsGroup: 2000
 
 # -- Configure radar-upload-connect-frontend containers' Security Context
-securityContext: {}
+securityContext:
   # capabilities:
   #   drop:
   #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+  runAsUser: 1000
+  runAsGroup: 1000
 
 service:
   # -- Kubernetes Service type
   type: ClusterIP
   # -- radar-upload-connect-frontend port
-  port: 80
+  port: 8080
 
 # -- Reconfigure Ingress to not force TLS
 disable_tls: false
