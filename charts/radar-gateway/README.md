@@ -3,7 +3,7 @@
 # radar-gateway
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-gateway)](https://artifacthub.io/packages/helm/radar-base/radar-gateway)
 
-![Version: 1.4.3](https://img.shields.io/badge/Version-1.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
+![Version: 1.4.4](https://img.shields.io/badge/Version-1.4.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -46,7 +46,7 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | image_exporter.registry | string | `"docker.io"` | Image registry |
 | image_exporter.repository | string | `"sscaling/jmx-prometheus-exporter"` | Image repository |
 | image_exporter.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
-| image_exporter.digest | string | `"48e3bd31f132"` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| image_exporter.digest | string | `"sha256:48e3bd31f132146751e449429a3e8a260b141f2acd587878fc50b3eda4466c5d"` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image_exporter.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image_exporter.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | nameOverride | string | `""` | String to partially override radar-gateway.fullname template with a string (will prepend the release name) |

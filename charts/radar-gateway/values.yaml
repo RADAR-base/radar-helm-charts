@@ -34,7 +34,7 @@ image_exporter:
   # Overrides the image tag whose default is the chart appVersion.
   tag:
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
-  digest: "48e3bd31f132"
+  digest: "sha256:48e3bd31f132146751e449429a3e8a260b141f2acd587878fc50b3eda4466c5d"
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- Optionally specify an array of imagePullSecrets.
