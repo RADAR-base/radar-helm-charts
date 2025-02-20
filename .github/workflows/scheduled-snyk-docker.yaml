@@ -29,9 +29,21 @@ jobs:
         name: Generate image matrix of current master branch
         env:
           # Any image that matches any of these patterns will be ignored for scanning.
-          # FIXME: the elasticsearch image gives sarif related errors, so it is excluded for now.
+          # Reasons:
+          # - bats: init container
+          # - busybox: init container
+          # - alpine: init container
+          # - linuxserver/yq: init container
+          EXCLUDE_IMAGE_PATTERNS:  bats busybox docker.io/alpine linuxserver/yq
+          # Any chart name (dir name) in here will be ignored for scanning.
+          # Reasons:
+          # - elasticsearch:
+          #   FIXME: the elasticsearch image gives sarif related errors, so it is excluded for now.
           #        we need a better way to handle this.
-          EXCLUDE_PATTERNS: mockserver bats busybox elasticsearch
+          # - mockserver: only used during testing
+          # - postgresql: external chart used by internal chart radar-postgresql
+          # - trivy: only used for security scanning, not used during runtime
+          EXCLUDE_CHARTS: mockserver postgresql elasticsearch radar-mockserver trivy
         working-directory: .github/bin
         run: ./external_docker_image_matrix
 

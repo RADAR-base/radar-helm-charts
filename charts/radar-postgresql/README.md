@@ -3,7 +3,7 @@
 # radar-postgresql
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-postgresql)](https://artifacthub.io/packages/helm/radar-base/radar-postgresql)
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![AppVersion: 11.16.0](https://img.shields.io/badge/AppVersion-11.16.0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![AppVersion: 11.16.0](https://img.shields.io/badge/AppVersion-11.16.0-informational?style=flat-square)
 
 PostgreSQL (Postgres) is an open source object-relational database known for reliability and data integrity. ACID-compliant, it supports foreign keys, joins, views, triggers and stored procedures.
 
@@ -35,7 +35,7 @@ PostgreSQL (Postgres) is an open source object-relational database known for rel
 | postgresql.auth.postgresPassword | string | `""` |  |
 | postgresql.auth.username | string | `""` |  |
 | postgresql.auth.password | string | `""` |  |
-| postgresql.auth.database | string | `""` |  |
+| postgresql.auth.database | string | `"managementportal"` |  |
 | postgresql.replication.applicationName | string | `"radar"` |  |
 | postgresql.primary.initdb.scripts."multi-db-init.sh" | string | `"#!/bin/bash\nset -e\nset -u\nexport PGPASSWORD=\"$POSTGRESQL_PASSWORD\"\n\nfunction create_user_and_database() {\n  export PGPASSWORD=\"$POSTGRESQL_PASSWORD\"\n  local database=$1\n  local database_exist=$(psql -U postgres -tAc \"SELECT 1 FROM pg_database WHERE datname='$database';\")\n  if [[ \"$database_exist\" == 1 ]]; then\n    echo \"Database $database already exists\"\n  else\n    echo \"Database $database does not exist\"\n    echo \"  Creating database '$database' for user postgres\"\n    psql -U postgres -v ON_ERROR_STOP=1  <<-EOSQL\n    CREATE DATABASE \"$database\";\n    GRANT ALL PRIVILEGES ON DATABASE $database TO postgres;\nEOSQL\n  fi\n}\n\nif [ -n \"$POSTGRES_MULTIPLE_DATABASES\" ]; then\n  echo \"Multiple database creation requested: $POSTGRES_MULTIPLE_DATABASES\"\n  for db in $(echo $POSTGRES_MULTIPLE_DATABASES | tr ',' ' '); do\n    create_user_and_database $db\n  done\n  echo \"Databases created\"\nfi\n"` |  |
 | postgresql.primary.extraEnvVars | list | `[]` |  |
