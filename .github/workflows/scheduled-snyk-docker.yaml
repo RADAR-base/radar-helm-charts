@@ -31,10 +31,10 @@ jobs:
           # Any image that matches any of these patterns will be ignored for scanning.
           EXCLUDE_IMAGE_PATTERNS:  bats busybox
           # Any chart name (dir name) in here will be ignored for scanning.
-          # FIXME: the elasticsearch image gives sarif related errors, so it is excluded for now.
-          #        we need a better way to handle this.
           # Reasons:
-          # - elasticsearch: see FIXME above
+          # - elasticsearch:
+          #   FIXME: the elasticsearch image gives sarif related errors, so it is excluded for now.
+          #        we need a better way to handle this.
           # - mockserver: only used during testing
           # - postgresql: external chart used by internal chart radar-postgresql
           EXCLUDE_CHARTS: mockserver postgresql elasticsearch radar-mockserver
