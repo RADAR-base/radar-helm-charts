@@ -10819,6 +10819,28 @@ entries:
   radar-postgresql:
   - apiVersion: v2
     appVersion: 11.16.0
+    created: "2025-02-20T13:40:51.607288265Z"
+    dependencies:
+    - name: postgresql
+      repository: file://../../external/postgresql
+      version: 12.1.9
+    description: PostgreSQL (Postgres) is an open source object-relational database
+      known for reliability and data integrity. ACID-compliant, it supports foreign
+      keys, joins, views, triggers and stored procedures.
+    digest: 25a30b2dfc906930ad759dfa9929f0eaa5b9dcd14e58b90428ddc6b001fd9846
+    maintainers:
+    - email: keyvan@thehyve.nl
+      name: Keyvan Hedayati
+      url: https://www.thehyve.nl
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-postgresql
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-postgresql-0.1.2/radar-postgresql-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 11.16.0
     created: "2025-01-13T12:58:35.930447109Z"
     dependencies:
     - name: postgresql
@@ -17077,4 +17099,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-02-19T15:49:34.738169111Z"
+generated: "2025-02-20T13:40:51.608440491Z"
