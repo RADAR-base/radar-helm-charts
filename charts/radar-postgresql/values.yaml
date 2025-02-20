@@ -10,7 +10,7 @@ postgresql:
     postgresPassword: ""
     username: ""
     password: ""
-    database: ""
+    database: managementportal
   replication:
     applicationName: radar
   primary:
