@@ -42,7 +42,8 @@ jobs:
           #        we need a better way to handle this.
           # - mockserver: only used during testing
           # - postgresql: external chart used by internal chart radar-postgresql
-          EXCLUDE_CHARTS: mockserver postgresql elasticsearch radar-mockserver
+          # - trivy: only used for security scanning, not used during runtime
+          EXCLUDE_CHARTS: mockserver postgresql elasticsearch radar-mockserver trivy
         working-directory: .github/bin
         run: ./external_docker_image_matrix
 
