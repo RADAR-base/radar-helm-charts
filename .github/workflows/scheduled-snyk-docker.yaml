@@ -29,7 +29,12 @@ jobs:
         name: Generate image matrix of current master branch
         env:
           # Any image that matches any of these patterns will be ignored for scanning.
-          EXCLUDE_IMAGE_PATTERNS:  bats busybox
+          # Reasons:
+          # - bats: init container
+          # - busybox: init container
+          # - alpine: init container
+          # - linuxserver/yq: init container
+          EXCLUDE_IMAGE_PATTERNS:  bats busybox docker.io/alpine linuxserver/yq
           # Any chart name (dir name) in here will be ignored for scanning.
           # Reasons:
           # - elasticsearch:
