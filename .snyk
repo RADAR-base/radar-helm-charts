@@ -30,4 +30,846 @@ ignore:
           activities take priority (by Keyvan).
         expires: 2025-06-01T00:00:00.000Z
         created: 2025-02-19T13:32:02.710Z
+  SNYK-DEBIAN11-GLIBC-1296898:
+    - '*':
+        reason: >-
+          cr.fluentbit.io/fluent/fluent-bit:1.8.15: Ignored external images for
+          the March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:19:17.536Z
+  SNYK-DEBIAN11-GLIBC-1911968:
+    - '*':
+        reason: >-
+          cr.fluentbit.io/fluent/fluent-bit:1.8.15: Ignored external images for
+          the March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:19:19.998Z
+  SNYK-DEBIAN11-GLIBC-2340908:
+    - '*':
+        reason: >-
+          cr.fluentbit.io/fluent/fluent-bit:1.8.15: Ignored external images for
+          the March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:19:23.073Z
+  SNYK-DEBIAN11-GLIBC-2340919:
+    - '*':
+        reason: >-
+          docker.io/velero/velero:v1.9.0: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:17.308Z
+  SNYK-DEBIAN11-GLIBC-2340922:
+    - '*':
+        reason: >-
+          cr.fluentbit.io/fluent/fluent-bit:1.8.15: Ignored external images for
+          the March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:19:28.287Z
+  SNYK-DEBIAN11-GLIBC-5927133:
+    - '*':
+        reason: >-
+          docker.io/velero/velero:v1.9.0: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:19.969Z
+  SNYK-DEBIAN11-OPENSSL-2807596:
+    - '*':
+        reason: >-
+          cr.fluentbit.io/fluent/fluent-bit:1.8.15: Ignored external images for
+          the March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:19:34.559Z
+  SNYK-DEBIAN11-OPENSSL-2933518:
+    - '*':
+        reason: >-
+          docker.io/velero/velero:v1.9.0: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:22.837Z
+  SNYK-DEBIAN11-OPENSSL-3314584:
+    - '*':
+        reason: >-
+          docker.io/velero/velero:v1.9.0: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:25.502Z
+  SNYK-DEBIAN11-OPENSSL-3314604:
+    - '*':
+        reason: >-
+          docker.io/velero/velero:v1.9.0: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:28.497Z
+  SNYK-DEBIAN11-OPENSSL-3314615:
+    - '*':
+        reason: >-
+          docker.io/velero/velero:v1.9.0: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:30.913Z
+  SNYK-DEBIAN11-OPENSSL-3368735:
+    - '*':
+        reason: >-
+          docker.io/velero/velero:v1.9.0: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:33.195Z
+  SNYK-ALPINE316-BUSYBOX-2953070:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:19:51.234Z
+  SNYK-ALPINE316-CURL-3063711:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:19:53.690Z
+  SNYK-ALPINE316-CURL-3063712:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:19:56.655Z
+  SNYK-ALPINE316-CURL-3063713:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:19:59.038Z
+  SNYK-ALPINE316-CURL-3179541:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:01.572Z
+  SNYK-ALPINE316-CURL-3320719:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:04.240Z
+  SNYK-ALPINE316-CURL-5422114:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:06.741Z
+  SNYK-ALPINE316-CURL-5422123:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:09.770Z
+  SNYK-ALPINE316-CURL-5561317:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:12.534Z
+  SNYK-ALPINE316-CURL-5915639:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:15.279Z
+  SNYK-ALPINE316-CURL-5958908:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:18.267Z
+  SNYK-ALPINE316-EXPAT-3028183:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:20.825Z
+  SNYK-ALPINE316-EXPAT-3062883:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:23.491Z
+  SNYK-ALPINE316-EXPAT-6241145:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:26.168Z
+  SNYK-ALPINE316-GIT-3053988:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:28.920Z
+  SNYK-ALPINE316-GIT-3232755:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:32.706Z
+  SNYK-ALPINE316-GIT-3232756:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:35.678Z
+  SNYK-ALPINE316-GIT-3319834:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:38.393Z
+  SNYK-ALPINE316-GIT-5461981:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:41.113Z
+  SNYK-ALPINE316-GIT-5461984:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:43.801Z
+  SNYK-ALPINE316-NGHTTP2-5788363:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:46.737Z
+  SNYK-ALPINE316-NGHTTP2-6043732:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:49.604Z
+  SNYK-ALPINE316-OPENSSL-3314624:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:52.353Z
+  SNYK-ALPINE316-OPENSSL-3314641:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:54.724Z
+  SNYK-ALPINE316-OPENSSL-3314643:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:20:57.901Z
+  SNYK-ALPINE316-OPENSSL-3368756:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:21:00.564Z
+  SNYK-ALPINE316-PCRE2-5811561:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:21:03.017Z
+  SNYK-ALPINE316-ZLIB-2976176:
+    - '*':
+        reason: >-
+          docker.io/aquasec/trivy:0.30.4: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:21:05.994Z
+  SNYK-DEBIAN11-CURL-3065656:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:24.138Z
+  SNYK-DEBIAN11-CURL-3066040:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:26.606Z
+  SNYK-DEBIAN11-CURL-3179181:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:29.061Z
+  SNYK-DEBIAN11-CURL-3320493:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:31.616Z
+  SNYK-DEBIAN11-CURL-3366762:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:34.280Z
+  SNYK-DEBIAN11-CURL-3366772:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:37.468Z
+  SNYK-DEBIAN11-CURL-5955037:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:40.236Z
+  SNYK-DEBIAN11-DB53-2825168:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:42.697Z
+  SNYK-DEBIAN11-E2FSPROGS-2628459:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:45.544Z
+  SNYK-DEBIAN11-GNUTLS28-3318299:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:53.635Z
+  SNYK-DEBIAN11-GNUTLS28-6159417:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:56.295Z
+  SNYK-DEBIAN11-GNUTLS28-6159419:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:24:58.960Z
+  SNYK-DEBIAN11-KRB5-7411316:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:04.208Z
+  SNYK-DEBIAN11-KRB5-7411320:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:07.050Z
+  SNYK-DEBIAN11-LIBSSH2-5861756:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:09.711Z
+  SNYK-DEBIAN11-NCURSES-2767191:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:26.381Z
+  SNYK-DEBIAN11-NCURSES-5421197:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:29.680Z
+  SNYK-DEBIAN11-NGHTTP2-5953384:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:32.034Z
+  SNYK-DEBIAN11-PERL-1925976:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:51.701Z
+  SNYK-DEBIAN11-PERL-5489191:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:54.157Z
+  SNYK-DEBIAN11-PERL-6085272:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:56.738Z
+  SNYK-DEBIAN11-SYSTEMD-6277510:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:06.034Z
+  SNYK-DEBIAN11-ZLIB-6008961:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:11.764Z
+  SNYK-DEBIAN11-EXPAT-6227598:
+    - '*':
+        reason: >-
+          docker.io/bitnami/kubectl:1.26.14-debian-11-r6: Ignored external
+          images for the March 2025 release. Upgrade requires extensive upgrade
+          of the platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:22:37.437Z
+  SNYK-DEBIAN11-EXPAT-7855504:
+    - '*':
+        reason: >-
+          docker.io/bitnami/kubectl:1.26.14-debian-11-r6: Ignored external
+          images for the March 2025 release. Upgrade requires extensive upgrade
+          of the platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:22:40.224Z
+  SNYK-DEBIAN11-EXPAT-7855505:
+    - '*':
+        reason: >-
+          docker.io/bitnami/kubectl:1.26.14-debian-11-r6: Ignored external
+          images for the March 2025 release. Upgrade requires extensive upgrade
+          of the platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:22:42.556Z
+  SNYK-DEBIAN11-EXPAT-7855508:
+    - '*':
+        reason: >-
+          docker.io/bitnami/kubectl:1.26.14-debian-11-r6: Ignored external
+          images for the March 2025 release. Upgrade requires extensive upgrade
+          of the platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:22:45.281Z
+  SNYK-DEBIAN11-GIT-537128:
+    - '*':
+        reason: >-
+          docker.io/bitnami/kubectl:1.26.14-debian-11-r6: Ignored external
+          images for the March 2025 release. Upgrade requires extensive upgrade
+          of the platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:22:48.190Z
+  SNYK-DEBIAN11-GIT-5461943:
+    - '*':
+        reason: >-
+          docker.io/bitnami/kubectl:1.26.14-debian-11-r6: Ignored external
+          images for the March 2025 release. Upgrade requires extensive upgrade
+          of the platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:22:50.957Z
+  SNYK-DEBIAN11-GIT-5461949:
+    - '*':
+        reason: >-
+          docker.io/bitnami/kubectl:1.26.14-debian-11-r6: Ignored external
+          images for the March 2025 release. Upgrade requires extensive upgrade
+          of the platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:22:53.516Z
+  SNYK-DEBIAN11-GIT-6846200:
+    - '*':
+        reason: >-
+          docker.io/bitnami/kubectl:1.26.14-debian-11-r6: Ignored external
+          images for the March 2025 release. Upgrade requires extensive upgrade
+          of the platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:22:56.071Z
+  SNYK-DEBIAN12-ZLIB-6008963:
+    - '*':
+        reason: >-
+          docker.io/bitnami/redis:7.2.4-debian-12-r13: Ignored external images
+          for the March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:16.935Z
+  SNYK-DEBIAN11-KRB5-3120880:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:01.621Z
+  SNYK-DEBIAN11-LIBTASN16-3061097:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:12.474Z
+  SNYK-DEBIAN11-LIBXML2-3059797:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:14.882Z
+  SNYK-DEBIAN11-LIBXML2-3059801:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:17.419Z
+  SNYK-DEBIAN11-LIBXML2-5747746:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:20.881Z
+  SNYK-DEBIAN11-LIBXSLT-2964230:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:23.639Z
+  SNYK-DEBIAN11-PCRE2-2808697:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:46.269Z
+  SNYK-DEBIAN11-PCRE2-2808704:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:48.727Z
+  SNYK-DEBIAN11-SQLITE3-1569419:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:25:59.582Z
+  SNYK-DEBIAN11-SQLITE3-6139925:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:02.761Z
+  SNYK-DEBIAN11-ZLIB-2976151:
+    - '*':
+        reason: >-
+          docker.io/bitnami/postgresql:11.16.0: Ignored external images for the
+          March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:08.902Z
+  SNYK-DEBIAN12-SYSTEMD-6277507:
+    - '*':
+        reason: >-
+          docker.io/bitnami/redis:7.2.4-debian-12-r13: Ignored external images
+          for the March 2025 release. Upgrade requires extensive upgrade of the
+          platform. Will be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:14.329Z
+  SNYK-UBUNTU2204-CURL-5960738:
+    - '*':
+        reason: >-
+          docker.io/graylog/graylog:4.3.8: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:20.271Z
+  SNYK-UBUNTU2204-GLIBC-5927362:
+    - '*':
+        reason: >-
+          docker.io/graylog/graylog:4.3.8: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:23.343Z
+  SNYK-UBUNTU2204-NGHTTP2-5954819:
+    - '*':
+        reason: >-
+          docker.io/graylog/graylog:4.3.8: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:26.309Z
+  SNYK-UBUNTU2204-OPENSSL-3092568:
+    - '*':
+        reason: >-
+          docker.io/graylog/graylog:4.3.8: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:29.166Z
+  SNYK-UBUNTU2204-OPENSSL-3092591:
+    - '*':
+        reason: >-
+          docker.io/graylog/graylog:4.3.8: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:31.638Z
+  SNYK-UBUNTU2204-OPENSSL-3314792:
+    - '*':
+        reason: >-
+          docker.io/graylog/graylog:4.3.8: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:34.403Z
+  SNYK-ALPINE318-CURL-5914628:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:37.168Z
+  SNYK-ALPINE318-CURL-5958913:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:39.785Z
+  SNYK-ALPINE318-CURL-7569015:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:42.686Z
+  SNYK-ALPINE318-EXPAT-6241039:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:45.564Z
+  SNYK-ALPINE318-EXPAT-7908292:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:48.750Z
+  SNYK-ALPINE318-EXPAT-7908293:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:51.607Z
+  SNYK-ALPINE318-EXPAT-7908294:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:55.392Z
+  SNYK-ALPINE318-NGHTTP2-5954768:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:26:58.038Z
+  SNYK-ALPINE318-OPENSSL-6032386:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:00.576Z
+  SNYK-ALPINE318-PYTHON3-7931272:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:03.280Z
+  SNYK-ALPINE318-PYTHON3-7931280:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:05.941Z
+  SNYK-ALPINE318-PYTHON3-8491040:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:08.503Z
+  SNYK-ALPINE318-SQLITE-6179217:
+    - '*':
+        reason: >-
+          docker.io/linuxserver/yq:3.2.2: Ignored external images for the March
+          2025 release. Upgrade requires extensive upgrade of the platform. Will
+          be revisited in Oct 2025 release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:11.247Z
+  SNYK-ALPINE38-LIBSSH2-474567:
+    - '*':
+        reason: >-
+          docker.io/sscaling/jmx-prometheus-exporter@sha256:48e3bd31f132146751e449429a3e8a260b141f2acd587878fc50b3eda4466c5d:
+          Ignored external images for the March 2025 release. Upgrade requires
+          extensive upgrade of the platform. Will be revisited in Oct 2025
+          release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:14.443Z
+  SNYK-ALPINE319-CURL-7567383:
+    - '*':
+        reason: >-
+          registry.k8s.io/ingress-nginx/controller:v1.10.1@sha256:e24f39d3eed6bcc239a56f20098878845f62baa34b9f2be2fd2c38ce9fb0f29e:
+          Ignored external images for the March 2025 release. Upgrade requires
+          extensive upgrade of the platform. Will be revisited in Oct 2025
+          release.
+        expires: 2025-05-20T00:00:00.000Z
+        created: 2025-02-20T13:27:35.945Z
 patch: {}
