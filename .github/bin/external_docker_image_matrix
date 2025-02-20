@@ -17,6 +17,9 @@ for location in charts external
 do
   for chart in `ls -1 ../$location`
   do
+    # skip when the chart is present in the EXCLUDE_CHARTS environment variable
+    echo $EXCLUDE_CHARTS | grep -qw $chart && continue
+    echo Analyzing chart $chart ...
     helm template ../$location/$chart 2> /dev/null | grep -oP "(?<=image: ).*" | tr -d \" >> $location.tmp
   done
 done
@@ -29,9 +32,9 @@ cat images.tmp1 | grep ".*\/.*\/.*" > images.tmp2
 cat images.tmp1 | grep -v ".*\/.*\/.*" | sed "s/^/docker.io\//g" > images.tmp3
 cat images.tmp2 images.tmp3 | sort | uniq > images.txt
 
-# Exclude images refs that match any of the patterns passed in with the EXCLUDE_PATTERNS environment variable.
-if [ -n "$EXCLUDE_PATTERNS" ]; then
-  for pattern in $EXCLUDE_PATTERNS
+# Exclude images refs that match any of the patterns passed in with the EXCLUDE_IMAGE_PATTERNS environment variable.
+if [ -n "$EXCLUDE_IMAGE_PATTERNS" ]; then
+  for pattern in $EXCLUDE_IMAGE_PATTERNS
   do
     grep -v $pattern images.txt > images.tmp
     mv images.tmp images.txt
