@@ -47,12 +47,13 @@ jobs:
         working-directory: .github/bin
         run: ./external_docker_image_matrix
 
-      - name: Commit and push if docker-images-matrix.json changed
+      - name: Commit and push if docker_images_external.json changed
         run: |
           git diff
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Action"
-          git commit -am "Update image references in docker-images-matrix.json" || exit 0
+          git add .github/workflows/docker_images_external.json
+          git commit -am "Update docker image references in docker_images_external.json" || exit 0
           git push
 
   security:
