@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-  docker-images:
+  collect-docker-images:
     runs-on: ubuntu-latest
     env:
       OUTPUT_FILE: workflows/docker-images-matrix.json
@@ -56,15 +56,14 @@ jobs:
           git commit -am "Update docker image references in docker_images_external.json" || exit 0
           git push
 
-  security:
-    needs: docker-images
+  scan:
+    needs: collect-docker-images
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.docker-images.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.collect-docker-images.outputs.matrix) }}
     steps:
       - name: Run Snyk to check for vulnerabilities
-        continue-on-error: true # To make sure that SARIF upload gets called
         uses: snyk/actions/docker@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -75,11 +74,13 @@ jobs:
             --severity-threshold=high
             --policy-path=.snyk
             --org=radar-base
-            --sarif-file-output=snyk.sarif
+            --json-file-output=snyk.json
 
-      # Detected vulnerabilities will appear on Github in Security->Code_scanning_alerts tab
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
+      # Detected vulnerabilities will appear on Github as Issues
+      - name: Report new vulnerabilities
+        uses: thehyve/report-vulnerability@master
+        if: success() || failure()
         with:
-          category: ${{ matrix.DOCKER_IMAGE }}
-          sarif_file: snyk.sarif
+          report-file: snyk.json
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
