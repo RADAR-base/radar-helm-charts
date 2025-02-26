@@ -64,6 +64,7 @@ jobs:
       matrix: ${{ fromJson(needs.collect-docker-images.outputs.matrix) }}
     steps:
       - name: Run Snyk to check for vulnerabilities
+        continue-on-error: true
         uses: snyk/actions/docker@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -82,5 +83,8 @@ jobs:
         if: success() || failure()
         with:
           report-file: snyk.json
+          timestamp: ${{ github.run_id }}
+          # Long labels trigger an error on Github.
+          category: ${{ matrix.DOCKER_IMAGE_SHORT }}
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
