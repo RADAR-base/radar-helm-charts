@@ -10,10 +10,25 @@ cleanup() {
   rm -f images.*
 }
 
+shorten_image_ref() {
+  ref=$1
+  # Get the sha256 hash from the image reference.
+  digest=$(echo $ref | grep -oP "(?<=sha256:).*")
+  # Keep the first 5 chars of the digest
+  digest=${digest:0:5}
+  # remove the repository from the image reference
+  short_name=$(echo $ref | sed -r 's/^[^\/]+\///')
+  # remove the digest from the image reference
+  short_name=$(echo $short_name | sed -r "s/(@sha256.*)//g")
+  # add the shortened digest when defined
+  [ -n "$digest" ] && short_name="$short_name:sha-$digest"
+  echo $short_name
+}
+
 cleanup
 
 # Collect images from internal and external charts.
-for location in charts external
+for location in charts
 do
   for chart in `ls -1 ../$location`
   do
@@ -24,12 +39,9 @@ do
   done
 done
 
-# Combine the images from the charts and external directories and remove radar-base images.
-cat charts.tmp external.tmp | sort | uniq | grep -vP "radar.*base" > images.tmp1
-
 # Add a docker.io prefix to images without a registry.
-cat images.tmp1 | grep ".*\/.*\/.*" > images.tmp2
-cat images.tmp1 | grep -v ".*\/.*\/.*" | sed "s/^/docker.io\//g" > images.tmp3
+cat charts.tmp | grep ".*\/.*\/.*" > images.tmp2
+cat charts.tmp | grep -v ".*\/.*\/.*" | sed "s/^/docker.io\//g" > images.tmp3
 cat images.tmp2 images.tmp3 | sort | uniq > images.txt
 
 # Exclude images refs that match any of the patterns passed in with the EXCLUDE_IMAGE_PATTERNS environment variable.
@@ -44,7 +56,8 @@ fi
 # Generate the JSON array
 echo "{ \"include\": [" > $output_file
 while IFS= read -r line; do
-  echo "  {\"DOCKER_IMAGE\": \"$line\"}," >> $output_file
+  short_name=`shorten_image_ref $line`
+  echo "  {\"DOCKER_IMAGE\": \"$line\", \"DOCKER_IMAGE_SHORT\": \"$short_name\"}," >> $output_file
 done < images.txt
 sed -i '$ s/,$//' $output_file
 echo "] }" >> $output_file
