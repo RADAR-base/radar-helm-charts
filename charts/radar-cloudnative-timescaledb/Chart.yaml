@@ -1,7 +1,7 @@
 apiVersion: v2
-name: radar-cloudnative-cluster
+name: radar-cloudnative-timescaledb
 version: 0.2.1
-description: CloudNativePG database cluster helm chart for RADAR-base
+description: CloudNativePG timescaledb cluster helm chart for RADAR-base
 maintainers:
   - email: pim@thehyve.nl
     name: Pim van Nierop

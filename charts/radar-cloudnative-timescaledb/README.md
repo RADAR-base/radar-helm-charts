@@ -1,10 +1,10 @@
 
 
-# radar-cloudnative-cluster
+# radar-cloudnative-timescaledb
 
 ![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square)
 
-CloudNativePG database cluster helm chart for RADAR-base
+CloudNativePG timescaledb cluster helm chart for RADAR-base
 
 ## Maintainers
 
