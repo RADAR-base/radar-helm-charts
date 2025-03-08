@@ -1,0 +1,6 @@
+dependencies:
+- name: cloudnative-pg
+  repository: file://../../external/cloudnative-pg/cloudnative-pg
+  version: 0.23.2
+digest: sha256:65d906cb64d1ea8905f47f7bb28857d08e4ad1b15c1d1a9ec2e172b0e7015a94
+generated: "2025-03-08T06:39:28.729553511+01:00"
