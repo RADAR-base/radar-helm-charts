@@ -1,0 +1,16 @@
+cluster:
+  type: postgresql
+
+  version:
+    postgresql: "16"
+
+  cluster:
+    instances: 1
+
+    imagePullPolicy: Always
+
+    storage:
+      size: 10Gi
+
+    monitoring:
+      enabled: false

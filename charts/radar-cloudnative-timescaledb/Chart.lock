@@ -1,0 +1,6 @@
+dependencies:
+- name: cluster
+  repository: file://../../external/cloudnative-pg/cluster
+  version: 0.2.1
+digest: sha256:648b937bed6ca122489b6a41e081e7729f978db0f80b336d2a09299f322e6500
+generated: "2025-03-08T07:00:52.120803895+01:00"

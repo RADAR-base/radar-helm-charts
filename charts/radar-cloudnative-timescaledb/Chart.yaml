@@ -1,0 +1,12 @@
+apiVersion: v2
+name: radar-cloudnative-cluster
+version: 0.2.1
+description: CloudNativePG database cluster helm chart for RADAR-base
+maintainers:
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
+dependencies:
+  - name: cluster
+    version: 0.2.1
+    repository: file://../../external/cloudnative-pg/cluster
