@@ -1,0 +1,13 @@
+apiVersion: v2
+name: radar-cloudnative-pg
+version: 0.23.2
+appVersion: 1.25.1
+description: CloudNativePG Operator helm chart for RADAR-base
+maintainers:
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
+dependencies:
+  - name: cloudnative-pg
+    version: 0.23.2
+    repository: file://../../external/cloudnative-pg/cloudnative-pg
