@@ -3,7 +3,7 @@
 # management-portal
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 1.4.2](https://img.shields.io/badge/Version-1.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.8](https://img.shields.io/badge/AppVersion-2.1.8-informational?style=flat-square)
+![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.8](https://img.shields.io/badge/AppVersion-2.1.8-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -81,12 +81,15 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | keystore | string | `""` | base 64 encoded binary p12 keystore containing a ECDSA certificate with alias `radarbase-managementportal-ec` and a RSA certificate with alias `selfsigned`. |
-| postgres.host | string | `"postgresql"` | host name of the postgres db |
+| postgres.host | string | `"cn-postgresql-rw"` | host name of the postgres db |
 | postgres.port | int | `5432` | post of the postgres db |
 | postgres.database | string | `"managementportal"` | database name |
-| postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
-| postgres.user | string | `"postgres"` | postgres user |
+| postgres.urlSecret | disables use of 'host', 'port' and 'database' values | `{"key":"jdbc-uri","name":"cn-postgresql-managementportal"}` | . |
+| postgres.user | string | `"radarbase"` | postgres user |
+| postgres.userSecret | object | `{"key":"username","name":"cn-postgresql-managementportal"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
 | postgres.password | string | `"password"` | password of the postgres user |
+| postgres.passwordSecret | object | `{"key":"password","name":"cn-postgresql-managementportal"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
 | postgres.ssl.enabled | bool | `false` | set to true if the connecting to postgres using SSL |
 | postgres.ssl.keystore | string | `""` | base64 encoded certificate needed to connect to the PostgreSQL With helmfile, this can be set in a production.yaml.gotmpl file by setting   keystore: {{ readFile "certificate.pem" | b64enc | quote }} or with SOPS   keystore: {{ exec "sops" (list "-d" "certificate.pem") | b64enc | quote }} |
 | server_name | string | `"localhost"` | domain name of the server |
