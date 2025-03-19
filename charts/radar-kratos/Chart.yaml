@@ -1,0 +1,16 @@
+apiVersion: v2
+appVersion: "v1.1.0"
+description: A ORY Kratos Helm chart for RADAR-base. ORY Kratos is a cloud native Identity and User Management system.
+name: radar-kratos
+icon: https://raw.githubusercontent.com/ory/docs/master/docs/static/img/logo-kratos.svg
+version: 0.1.0
+type: application
+dependencies:
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  tags:
+  - bitnami-common
+  version: 2.x.x
+- name: kratos
+  version: 0.43.1
+  repository: file://../../external/kratos
