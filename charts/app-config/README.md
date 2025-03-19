@@ -3,7 +3,7 @@
 # app-config
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/app-config)](https://artifacthub.io/packages/helm/radar-base/app-config)
 
-![Version: 1.4.1](https://img.shields.io/badge/Version-1.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.2](https://img.shields.io/badge/AppVersion-0.5.2-informational?style=flat-square)
+![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.2](https://img.shields.io/badge/AppVersion-0.5.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base application config (app-config) backend service which is used as mobile app configuration engine with per-project and per-user configuration.
 
@@ -86,8 +86,12 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 | clientId | string | `"radar_appconfig"` | OAuth2 client id |
 | clientSecret | string | `"secret"` | OAuth2 client secret |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
-| jdbc.driver | string | `"org.postgresql.Driver"` | JDBC Driver to connect to the database. |
-| jdbc.url | string | `"jdbc:postgresql://postgresql:5432/appconfig"` | JDBC Connection url of the database. |
-| jdbc.user | string | `"postgres"` | Username of the database |
+| jdbc.url | string | `"jdbc:postgresql://cn-postgresql-rw:5432/appconfig"` | JDBC Connection url of the database. |
+| jdbc.urlSecret | disables use of 'url' value | `{"key":"jdbc-uri","name":"cn-postgresql-appconfig"}` | . |
+| jdbc.user | string | `"radarbase"` | Username of the database |
+| jdbc.userSecret | disables use of 'user' value | `{"key":"username","name":"cn-postgresql-appconfig"}` | . |
 | jdbc.password | string | `"password"` | Password of the user |
-| jdbc.dialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` | JDBC dialect to use for JDBC Connection |
+| jdbc.passwordSecret | disables use of 'password' value | `{"key":"password","name":"cn-postgresql-appconfig"}` | . |
+| jdbc.parameters | string | `nil` | Additional JDBC connection parameters e.g. sslmode=verify-full |
+| jdbc.driver | string | `"org.postgresql.Driver"` | JDBC Driver to connect to the database. |
+| jdbc.dialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` |  |
