@@ -49,6 +49,16 @@ spec:
           image: {{ template "radar-jdbc-connector.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           env:
+          - name: CONNECT_JDBC_CONNECTION_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "radar-jdbc-connector.secretName" (dict "type" "user" "values" .Values "release" .Release.Name) }}
+                key: {{ include "radar-jdbc-connector.secretKey" (dict "type" "user" "values" .Values "release" .Release.Name) }}
+          - name: CONNECT_JDBC_CONNECTION_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "radar-jdbc-connector.secretName" (dict "type" "password" "values" .Values "release" .Release.Name) }}
+                key: {{ include "radar-jdbc-connector.secretKey" (dict "type" "password" "values" .Values "release" .Release.Name) }}
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka }}"
           - name: CONNECT_REST_PORT
