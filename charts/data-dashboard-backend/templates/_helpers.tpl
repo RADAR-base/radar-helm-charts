@@ -45,24 +45,13 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
-Get the password secret.
-*/}}
-{{- define "data-dashboard-backend.secretName" -}}
-{{- if .Values.existingSecret }}
-    {{- printf "%s" .Values.existingSecret -}}
-{{- else -}}
-    {{- printf "%s" (include "data-dashboard-backend.fullname" .) -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Return true if a secret object should be created
 */}}
 {{- define "data-dashboard-backend.createSecret" -}}
-{{- if .Values.existingSecret }}
-{{- else if .Values.existingSecret -}}
-{{- else -}}
+{{- if not (and .Values.jdbc.urlSecret .Values.jdbc.userSecret .Values.jdbc.passwordSecret) -}}
     {{- true -}}
+{{- else -}}
+    {{- false -}}
 {{- end -}}
 {{- end -}}
 

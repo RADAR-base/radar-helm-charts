@@ -1,0 +1,9 @@
+dependencies:
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  version: 2.27.0
+- name: grafana
+  repository: file://../../external/grafana
+  version: 8.3.7
+digest: sha256:cb0eaf8988dc212b73930138eee704cdc356a20a6531765a0f9680327e7a0709
+generated: "2025-03-19T06:34:07.067612427+01:00"

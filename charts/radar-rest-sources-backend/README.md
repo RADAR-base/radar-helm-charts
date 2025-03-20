@@ -3,7 +3,7 @@
 # radar-rest-sources-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-backend)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-backend)
 
-![Version: 1.3.1](https://img.shields.io/badge/Version-1.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.7](https://img.shields.io/badge/AppVersion-4.4.7-informational?style=flat-square)
+![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.7](https://img.shields.io/badge/AppVersion-4.4.7-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -83,11 +83,14 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | authorizer.tokenExpiryTimeInMinutes | int | `15` | Within how many minutes an online authorization attempt should be finalized. Steps: logging in to Fitbit, returning to the authorizer. |
 | authorizer.persistentTokenExpiryInMin | int | `7200` | Within how many minutes an authorization attempt by a participant should be finalized. Steps: passing token to participant, them logging in to Fitbit, and returning to the authorizer. |
 | postgres.host | string | `"postgresql"` | host name of the postgres db |
-| postgres.port | int | `5432` | post of the postgres db |
+| postgres.port | int | `5432` | port of the postgres db |
 | postgres.database | string | `"restsourceauthorizer"` | database name |
-| postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
-| postgres.user | string | `"postgres"` | postgres user |
+| postgres.urlSecret | disables use of 'host', 'port' and 'database' values | `{"key":"jdbc-uri","name":"cn-postgresql-restsourceauthorizer"}` | . |
+| postgres.user | string | `"radarbase"` | postgres user |
+| postgres.userSecret | object | `{"key":"username","name":"cn-postgresql-restsourceauthorizer"}` | Kubernetes secret containing the database user (disables use of 'user' value). |
 | postgres.password | string | `"password"` | password of the postgres user |
+| postgres.passwordSecret | object | `{"key":"password","name":"cn-postgresql-restsourceauthorizer"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
 | redis.uri | string | `"redis://redis-master:6379"` | URI of the redis database |

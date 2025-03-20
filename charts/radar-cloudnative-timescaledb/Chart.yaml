@@ -1,0 +1,17 @@
+apiVersion: v2
+name: radar-cloudnative-timescaledb
+version: 0.1.0
+description: CloudNativePG timescaledb cluster helm chart for RADAR-base
+maintainers:
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
+dependencies:
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  tags:
+  - bitnami-common
+  version: 2.x.x
+- name: cluster
+  version: 0.2.1
+  repository: file://../../external/cloudnativepg-cluster

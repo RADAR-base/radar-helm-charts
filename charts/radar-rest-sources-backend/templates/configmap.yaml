@@ -30,9 +30,6 @@ data:
 
     database:
       driver: org.postgresql.Driver
-      url: jdbc:postgresql://{{ .Values.postgres.host }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}{{ .Values.postgres.connection_parameters }}
-      user: {{ .Values.postgres.user }}
-      password: {{ .Values.postgres.password }}
       dialect: org.hibernate.dialect.PostgreSQLDialect
 
     restSourceClients:

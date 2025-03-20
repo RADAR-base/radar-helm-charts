@@ -47,7 +47,23 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ template "radar-rest-sources-backend.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- $secretName := include "radar-rest-sources-backend.fullname" . }}
           env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.urlSecret.name | default $secretName }}
+                key: {{ .Values.postgres.urlSecret.key | default "databaseUrl" }}
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.userSecret.name | default $secretName }}
+                key: {{ .Values.postgres.userSecret.key | default "databaseUser" }}
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.passwordSecret.name | default $secretName }}
+                key: {{ .Values.postgres.passwordSecret.key | default "databasePassword" }}
           - name: REST_SOURCE_AUTHORIZER_SOURCE_CLIENTS_FILE_PATH
             value: /etc/radar-rest-sources-backend/authorizer.yml
           - name: REST_SOURCE_AUTHORIZER_VALIDATOR
