@@ -9,7 +9,7 @@ maintainers:
 dependencies:
 - name: cluster
   version: 0.2.1
-  repository: file://../../external/cloudnative-pg/cluster
+  repository: file://../../external/cloudnativepg-cluster
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts
   tags:

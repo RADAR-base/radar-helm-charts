@@ -14,4 +14,4 @@ dependencies:
   version: 2.x.x
 - name: cluster
   version: 0.2.1
-  repository: file://../../external/cloudnative-pg/cluster
+  repository: file://../../external/cloudnativepg-cluster

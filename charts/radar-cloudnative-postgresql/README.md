@@ -16,7 +16,7 @@ CloudNativePG postgresql helm chart for RADAR-base
 
 | Repository | Name | Version |
 |------------|------|---------|
-| file://../../external/cloudnative-pg/cluster | cluster | 0.2.1 |
+| file://../../external/cloudnativepg-cluster | cluster | 0.2.1 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
