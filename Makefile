@@ -113,6 +113,13 @@ update-redis:
 	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-strimzi-kafka-operator
+	@echo "Updating strimzi kafka operator"
+	@helm repo add strimzi https://strimzi.io/charts/
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm pull -d external --untar strimzi/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-trivy:
 	@echo "Updating trivy"
 	@rm -rf external/$(patsubst update-%,%,$@)
