@@ -1,0 +1,9 @@
+dependencies:
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  version: 2.27.0
+- name: strimzi-registry-operator
+  repository: file://../../external/strimzi-registry-operator
+  version: 2.1.0
+digest: sha256:74a4a94537a0c8f7da4a543a99db7c801e0b355dadcff4b4736e0491cab2d6aa
+generated: "2025-03-21T14:10:12.556682559+01:00"

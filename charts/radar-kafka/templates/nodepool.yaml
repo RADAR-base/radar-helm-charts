@@ -1,3 +1,4 @@
+{{- $replicas := ternary 1 .Values.replicas .Values.dev_deployment }}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaNodePool
 metadata:
@@ -6,7 +7,7 @@ metadata:
   labels:
     strimzi.io/cluster: {{ template "common.names.fullname" . }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ $replicas }}
   roles:
     - controller
     - broker

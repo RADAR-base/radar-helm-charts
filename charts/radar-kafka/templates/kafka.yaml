@@ -12,6 +12,8 @@ spec:
   kafka:
     version: {{ .Chart.AppVersion }}
     metadataVersion: {{ .Values.metadataVersion }}
+    authorization:
+      type: simple
     config:
       offsets.topic.replication.factor: {{ $replicationFactor }}
       transaction.state.log.replication.factor: {{ $replicationFactor }}
@@ -27,6 +29,6 @@ spec:
         port: 9093
         type: internal
         tls: true
-    entityOperator:
-      topicOperator: { }
-      userOperator: { }
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}

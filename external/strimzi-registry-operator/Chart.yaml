@@ -1,0 +1,10 @@
+apiVersion: v2
+name: strimzi-registry-operator
+version: 2.1.0
+description: Operator to create and manage a Confluent Schema Registry in a Strimzi-managed Kafka cluster.
+home: https://github.com/lsst-sqre/strimzi-registry-operator
+type: application
+maintainers:
+  - name: swnelson
+  - name: jonathansick
+appVersion: 0.6.0

@@ -1,0 +1,12 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  # Must be named 'registry-schemas'
+  name: registry-schemas
+  labels:
+    strimzi.io/cluster: {{ index .Values "strimzi-registry-operator" "clusterName" }}
+spec:
+  partitions: {{ .Values.topic.partitions }}
+  replicas: {{ .Values.topic.replicationFactor }}
+  config:
+    {{- toYaml .Values.topic.config | nindent 4 }}
