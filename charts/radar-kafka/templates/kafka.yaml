@@ -1,0 +1,32 @@
+{{- $replicationFactor := ternary 1 .Values.replicas .Values.dev_deployment -}}
+{{- $insyncReplicas := ternary 1 .Values.insyncReplicas .Values.dev_deployment -}}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  annotations:
+    strimzi.io/node-pools: enabled
+    strimzi.io/kraft: enabled
+spec:
+  kafka:
+    version: {{ .Chart.AppVersion }}
+    metadataVersion: {{ .Values.metadataVersion }}
+    config:
+      offsets.topic.replication.factor: {{ $replicationFactor }}
+      transaction.state.log.replication.factor: {{ $replicationFactor }}
+      transaction.state.log.min.isr: {{ $insyncReplicas }}
+      default.replication.factor: {{ $replicationFactor }}
+      min.insync.replicas: {{ $insyncReplicas }}
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+    entityOperator:
+      topicOperator: { }
+      userOperator: { }

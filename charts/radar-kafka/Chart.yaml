@@ -1,0 +1,27 @@
+apiVersion: v2
+appVersion: 3.9.0
+description: "Apache Kafka for RADAR-base using the Strimzi Operator"
+name: radar-kafka
+version: 0.0.1
+icon: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/documentation/logo/strimzi_logo.png
+keywords:
+  - kafka
+  - queue
+  - stream
+  - event
+  - messaging
+  - datastore
+  - topic
+home: "https://radar-base.org"
+sources:
+  - https://github.com/strimzi/strimzi-kafka-operator
+maintainers:
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
+dependencies:
+  - name: common
+    repository: https://radar-base.github.io/radar-helm-charts
+    tags:
+      - bitnami-common
+    version: 2.x.x

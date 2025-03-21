@@ -1,0 +1,12 @@
+fullnameOverride: radar-kafka
+
+# -- Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode)
+dev_deployment: false
+
+replicas: 3
+# -- Metadata API version. Keep in sync with appVersion
+metadataVersion: 3.9-IV0
+replicationFactor: 3
+insyncReplicas: 2
+storage:
+  size: 10Gi
