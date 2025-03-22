@@ -3,10 +3,33 @@ fullnameOverride: radar-kafka
 # -- Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode)
 dev_deployment: false
 
-replicas: 3
-# -- Metadata API version. Keep in sync with appVersion
-metadataVersion: 3.9-IV0
-replicationFactor: 3
-insyncReplicas: 2
-storage:
-  size: 10Gi
+kafka:
+  replicas: 3
+  # -- Metadata API version. Keep in sync with appVersion
+  metadataVersion: 3.9-IV0
+  replicationFactor: 3
+  insyncReplicas: 2
+  storage:
+    size: 10Gi
+
+schema-registry:
+  topic:
+    partitions: 1
+    replicationFactor: 3
+    # http://kafka.apache.org/documentation/#topicconfigs
+    config:
+      cleanup.policy: compact
+  registry:
+    name: confluent-schema-registry
+    spec:
+      strimziVersion: v1beta2
+      listener: tls
+      securityProtocol: SSL
+
+strimzi-registry-operator:
+  # -- Keep in sync with 'fullnameOverride'
+  clusterName: radar-kafka
+  # -- Keep in sync with namespace defined in helmfile
+  clusterNamespace: kafka
+  # -- Keep in sync with namespace defined in helmfile
+  operatorNamespace: kafka

@@ -1,6 +1,0 @@
-apiVersion: roundtable.lsst.codes/v1beta1
-kind: StrimziSchemaRegistry
-metadata:
-  name: {{ .Values.registry.name }}
-spec:
-  {{- toYaml .Values.registry.spec | nindent 2 }}

@@ -1,4 +1,5 @@
-{{- $replicas := ternary 1 .Values.replicas .Values.dev_deployment }}
+{{ $context := .Values.kafka }}
+{{- $replicas := ternary 1 $context.replicas .Values.dev_deployment }}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaNodePool
 metadata:
@@ -20,7 +21,7 @@ spec:
         kraftMetadata: shared
         {{- else }}
         type: persistent-claim
-        size: {{ .Values.storage.size }}
+        size: {{ $context.storage.size }}
         deleteClaim: false
         kraftMetadata: shared
         {{- end }}

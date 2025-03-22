@@ -1,0 +1,14 @@
+{{ $context := index .Values "schema-registry" "topic" }}
+{{- $replicationFactor := ternary 1 $context.replicationFactor .Values.dev_deployment -}}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  # Must be named 'registry-schemas'
+  name: registry-schemas
+  labels:
+    strimzi.io/cluster: {{ template "common.names.fullname" . }}
+spec:
+  partitions: {{ $context.partitions }}
+  replicas: {{ $replicationFactor }}
+  config:
+    {{- toYaml $context.config | nindent 4 }}
