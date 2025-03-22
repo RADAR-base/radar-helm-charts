@@ -33,7 +33,7 @@ Operator to create and manage a Confluent Schema Registry for RADAR-base in a St
 | topic.replicationFactor | int | `3` |  |
 | topic.config."cleanup.policy" | string | `"compact"` |  |
 | registry.name | string | `"confluent-schema-registry"` |  |
-| registry.spec | object | `{"listener":"tls","securityProtocol":"PLAINTEXT","strimziVersion":"v1beta2"}` | Keep in sync with the version in the strimzi-registry-operator chart. |
+| registry.spec | object | `{"listener":"tls","securityProtocol":"SSL","strimziVersion":"v1beta2"}` | Keep in sync with the version in the strimzi-registry-operator chart. |
 | strimzi-registry-operator.clusterName | string | `"radar-kafka"` |  |
 | strimzi-registry-operator.clusterNamespace | string | `"kafka"` |  |
 | strimzi-registry-operator.operatorNamespace | string | `"kafka"` |  |

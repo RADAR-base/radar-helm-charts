@@ -11,7 +11,7 @@ registry:
   spec:
     strimziVersion: v1beta2
     listener: tls
-    securityProtocol: PLAINTEXT
+    securityProtocol: SSL
 
 strimzi-registry-operator:
   clusterName: radar-kafka

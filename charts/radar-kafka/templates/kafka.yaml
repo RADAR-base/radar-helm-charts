@@ -29,6 +29,8 @@ spec:
         port: 9093
         type: internal
         tls: true
+        authentication:
+          type: tls
   entityOperator:
     topicOperator: {}
     userOperator: {}
