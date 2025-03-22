@@ -29,6 +29,7 @@ Operator to create and manage a Confluent Schema Registry for RADAR-base in a St
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| dev_deployment | bool | `false` | Deploy with minimal replicationFactor |
 | topic.partitions | int | `1` |  |
 | topic.replicationFactor | int | `3` |  |
 | topic.config."cleanup.policy" | string | `"compact"` |  |

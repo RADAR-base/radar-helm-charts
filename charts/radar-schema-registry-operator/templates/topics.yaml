@@ -1,3 +1,4 @@
+{{- $replicationFactor := ternary 1 .Values.topic.replicationFactor .Values.dev_deployment -}}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
@@ -7,6 +8,6 @@ metadata:
     strimzi.io/cluster: {{ index .Values "strimzi-registry-operator" "clusterName" }}
 spec:
   partitions: {{ .Values.topic.partitions }}
-  replicas: {{ .Values.topic.replicationFactor }}
+  replicas: {{ $replicationFactor }}
   config:
     {{- toYaml .Values.topic.config | nindent 4 }}
