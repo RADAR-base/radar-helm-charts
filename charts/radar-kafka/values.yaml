@@ -26,6 +26,11 @@ schema-registry:
       listener: tls
       securityProtocol: SSL
 
+strimzi-kafka-operator:
+  resources:
+    limits:
+      memory: 512Mi
+
 strimzi-registry-operator:
   # -- Keep in sync with 'fullnameOverride'
   clusterName: radar-kafka

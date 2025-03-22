@@ -2,8 +2,11 @@ dependencies:
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts
   version: 2.27.0
+- name: strimzi-kafka-operator
+  repository: file://../../external/strimzi-kafka-operator
+  version: 0.1.1
 - name: strimzi-registry-operator
   repository: file://../../external/strimzi-registry-operator
   version: 2.1.0
-digest: sha256:74a4a94537a0c8f7da4a543a99db7c801e0b355dadcff4b4736e0491cab2d6aa
-generated: "2025-03-22T07:42:43.920248642+01:00"
+digest: sha256:1cd1fe3eb623ae210f7d2f947a7fe68d7f86d53057f16212a66475444fd4d372
+generated: "2025-03-22T08:10:08.130739314+01:00"

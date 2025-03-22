@@ -22,6 +22,7 @@ Apache Kafka for RADAR-base using the Strimzi Operator
 
 | Repository | Name | Version |
 |------------|------|---------|
+| file://../../external/strimzi-kafka-operator | strimzi-kafka-operator | 0.1.1 |
 | file://../../external/strimzi-registry-operator | strimzi-registry-operator | 2.1.0 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
@@ -43,6 +44,7 @@ Apache Kafka for RADAR-base using the Strimzi Operator
 | schema-registry.registry.spec.strimziVersion | string | `"v1beta2"` |  |
 | schema-registry.registry.spec.listener | string | `"tls"` |  |
 | schema-registry.registry.spec.securityProtocol | string | `"SSL"` |  |
+| strimzi-kafka-operator.resources.limits.memory | string | `"512Mi"` |  |
 | strimzi-registry-operator.clusterName | string | `"radar-kafka"` | Keep in sync with 'fullnameOverride' |
 | strimzi-registry-operator.clusterNamespace | string | `"kafka"` | Keep in sync with namespace defined in helmfile |
 | strimzi-registry-operator.operatorNamespace | string | `"kafka"` | Keep in sync with namespace defined in helmfile |

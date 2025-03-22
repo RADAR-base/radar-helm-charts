@@ -25,6 +25,9 @@ dependencies:
     tags:
       - bitnami-common
     version: 2.x.x
+  - name: strimzi-kafka-operator
+    version: 0.1.1
+    repository: file://../../external/strimzi-kafka-operator
   - name: strimzi-registry-operator
     version: 2.1.0
     repository: file://../../external/strimzi-registry-operator
