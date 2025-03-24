@@ -36,10 +36,4 @@ home: https://cloudnative-pg.io
 maintainers:
   - name: phisco
     email: p.scorsolini@gmail.com
-dependencies:
-  - name: cluster
-    alias: monitoring
-    condition: monitoring.grafanaDashboard.create
-    version: "0.2.1"
-    # We updated to the dependency to point to the version stored in this repository
-    repository: file://../cluster
+

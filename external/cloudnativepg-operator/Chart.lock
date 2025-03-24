@@ -1,6 +1,0 @@
-dependencies:
-- name: cluster
-  repository: file://../cluster
-  version: 0.2.1
-digest: sha256:8da516d7cda6cb64388825e141e91f660aa0eacce56ee40b47e9e75eadd7deb3
-generated: "2025-03-10T19:14:32.743786467+01:00"
