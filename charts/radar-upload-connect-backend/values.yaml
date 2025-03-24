@@ -201,19 +201,19 @@ postgres:
   # -- Kubernetes secret containing the database JDBC Connection url
   # -- (disables use of 'host', 'port' and 'database' values).
   urlSecret:
-    name: cn-postgresql-uploadconnector
+    name: radar-cloudnative-postgresql-uploadconnector
     key: jdbc-uri
   # -- Database username
   user: radarbase
   # -- Kubernetes secret containing the database username (disables use of 'user' value).
   userSecret:
-    name: cn-postgresql-uploadconnector
+    name: radar-cloudnative-postgresql-uploadconnector
     key: username
   # -- Database password
   password: password
   # -- Kubernetes secret containing the database password
   passwordSecret:
-    name: cn-postgresql-uploadconnector
+    name: radar-cloudnative-postgresql-uploadconnector
     key: password
 
   # -- Additional JDBC connection parameters e.g. sslmode=verify-full

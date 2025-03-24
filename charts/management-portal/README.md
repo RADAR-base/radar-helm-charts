@@ -81,14 +81,14 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | keystore | string | `""` | base 64 encoded binary p12 keystore containing a ECDSA certificate with alias `radarbase-managementportal-ec` and a RSA certificate with alias `selfsigned`. |
-| postgres.host | string | `"cn-postgresql-rw"` | host name of the postgres db |
+| postgres.host | string | `"radar-cloudnative-postgresql-cluster-rw"` | host name of the postgres db |
 | postgres.port | int | `5432` | post of the postgres db |
 | postgres.database | string | `"managementportal"` | database name |
-| postgres.urlSecret | disables use of 'host', 'port' and 'database' values | `{"key":"jdbc-uri","name":"cn-postgresql-managementportal"}` | . |
+| postgres.urlSecret | disables use of 'host', 'port' and 'database' values | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-managementportal"}` | . |
 | postgres.user | string | `"radarbase"` | postgres user |
-| postgres.userSecret | object | `{"key":"username","name":"cn-postgresql-managementportal"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
+| postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
 | postgres.password | string | `"password"` | password of the postgres user |
-| postgres.passwordSecret | object | `{"key":"password","name":"cn-postgresql-managementportal"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
 | postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
 | postgres.ssl.enabled | bool | `false` | set to true if the connecting to postgres using SSL |
 | postgres.ssl.keystore | string | `""` | base64 encoded certificate needed to connect to the PostgreSQL With helmfile, this can be set in a production.yaml.gotmpl file by setting   keystore: {{ readFile "certificate.pem" | b64enc | quote }} or with SOPS   keystore: {{ exec "sops" (list "-d" "certificate.pem") | b64enc | quote }} |

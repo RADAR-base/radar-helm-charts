@@ -55,7 +55,7 @@ A ORY Hydra Helm chart for RADAR-base. ORY Hydra is a cloud native Identity and 
 | hydra.hydra.config.serve.public.cors.enabled | bool | `true` |  |
 | hydra.hydra.config.serve.admin.cors.enabled | bool | `true` |  |
 | hydra.deployment.extraEnv[0].name | string | `"DSN"` |  |
-| hydra.deployment.extraEnv[0].valueFrom.secretKeyRef.name | string | `"cn-postgresql-hydra"` |  |
+| hydra.deployment.extraEnv[0].valueFrom.secretKeyRef.name | string | `"radar-cloudnative-postgresql-hydra"` |  |
 | hydra.deployment.extraEnv[0].valueFrom.secretKeyRef.key | string | `"uri"` |  |
 
 ----------------------------------------------

@@ -197,25 +197,25 @@ managementportal_url: http://management-portal:8080/managementportal
 
 jdbc:
   # -- JDBC Connection url of the database.
-  url: jdbc:postgresql://cn-postgresql-rw:5432/appconfig
+  url: jdbc:postgresql://radar-cloudnative-postgresql-cluster-rw:5432/appconfig
   # -- Kubernetes secret containing the database JDBC Connection url
   # -- (disables use of 'url' value).
   urlSecret:
-    name: cn-postgresql-appconfig
+    name: radar-cloudnative-postgresql-appconfig
     key: jdbc-uri
   # -- Username of the database
   user: radarbase
   # -- Kubernetes secret containing the database username
   # -- (disables use of 'user' value).
   userSecret:
-    name: cn-postgresql-appconfig
+    name: radar-cloudnative-postgresql-appconfig
     key: username
   # -- Password of the user
   password: password
   # -- Kubernetes secret containing the database password
   # -- (disables use of 'password' value).
   passwordSecret:
-    name: cn-postgresql-appconfig
+    name: radar-cloudnative-postgresql-appconfig
     key: password
 
   # -- Additional JDBC connection parameters e.g. sslmode=verify-full

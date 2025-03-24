@@ -66,11 +66,11 @@ hydra:
           cors:
             enabled: true
 
-  # Register cn-postgresql-app secret to be used by Kratos.
+  # Register radar-cloudnative-postgresql-app secret to be used by Kratos.
   deployment:
     extraEnv:
     - name: DSN
       valueFrom:
         secretKeyRef:
-          name: cn-postgresql-hydra
+          name: radar-cloudnative-postgresql-hydra
           key: uri

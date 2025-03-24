@@ -23,8 +23,6 @@ cluster:
 
   mode: standalone
 
-  nameOverride: postgresql
-
   # To import from existing on-cluster database, set 'mode' to 'recovery'.
   recovery:
     method: import
@@ -62,7 +60,7 @@ cluster:
       database: managementportal
       owner: managementportal
       secret:
-        name: cn-postgresql-managementportal
+        name: radar-cloudnative-postgresql-managementportal
       postInitSQL:
         - CREATE USER restsourceauthorizer
         - CREATE USER appconfig
@@ -85,46 +83,46 @@ cluster:
         login: true
         superuser: false
         passwordSecret:
-          name: cn-postgresql-managementportal
+          name: radar-cloudnative-postgresql-managementportal
       - name: restsourceauthorizer
         ensure: present
         comment: User for the restsourceauthorizer database
         login: true
         superuser: false
         passwordSecret:
-          name: cn-postgresql-restsourceauthorizer
+          name: radar-cloudnative-postgresql-restsourceauthorizer
       - name: appconfig
         ensure: present
         comment: User for the appconfig database
         login: true
         superuser: false
         passwordSecret:
-          name: cn-postgresql-appconfig
+          name: radar-cloudnative-postgresql-appconfig
       - name: kratos
         ensure: present
         comment: User for the kratos database
         login: true
         superuser: false
         passwordSecret:
-          name: cn-postgresql-kratos
+          name: radar-cloudnative-postgresql-kratos
       - name: hydra
         ensure: present
         comment: User for the hydra database
         login: true
         superuser: false
         passwordSecret:
-          name: cn-postgresql-hydra
+          name: radar-cloudnative-postgresql-hydra
       - name: appserver
         ensure: present
         comment: User for the appserver database
         login: true
         superuser: false
         passwordSecret:
-          name: cn-postgresql-appserver
+          name: radar-cloudnative-postgresql-appserver
       - name: uploadconnector
         ensure: present
         comment: User for the uploadconnector database
         login: true
         superuser: false
         passwordSecret:
-          name: cn-postgresql-uploadconnector
+          name: radar-cloudnative-postgresql-uploadconnector

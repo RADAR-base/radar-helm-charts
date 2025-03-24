@@ -234,21 +234,21 @@ kratos:
       - name: DSN
         valueFrom:
           secretKeyRef:
-            name: cn-postgresql-kratos
+            name: radar-cloudnative-postgresql-kratos
             key: uri
   statefulSet:
     extraEnv:
       - name: DSN
         valueFrom:
           secretKeyRef:
-            name: cn-postgresql-kratos
+            name: radar-cloudnative-postgresql-kratos
             key: uri
   job:
     extraEnv:
       - name: DSN
         valueFrom:
           secretKeyRef:
-            name: cn-postgresql-kratos
+            name: radar-cloudnative-postgresql-kratos
             key: uri
   cronjob:
     cleanup:
@@ -256,5 +256,5 @@ kratos:
         - name: DSN
           valueFrom:
             secretKeyRef:
-              name: cn-postgresql-kratos
+              name: radar-cloudnative-postgresql-kratos
               key: uri

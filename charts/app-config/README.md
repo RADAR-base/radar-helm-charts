@@ -86,12 +86,12 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 | clientId | string | `"radar_appconfig"` | OAuth2 client id |
 | clientSecret | string | `"secret"` | OAuth2 client secret |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
-| jdbc.url | string | `"jdbc:postgresql://cn-postgresql-rw:5432/appconfig"` | JDBC Connection url of the database. |
-| jdbc.urlSecret | disables use of 'url' value | `{"key":"jdbc-uri","name":"cn-postgresql-appconfig"}` | . |
+| jdbc.url | string | `"jdbc:postgresql://radar-cloudnative-postgresql-cluster-rw:5432/appconfig"` | JDBC Connection url of the database. |
+| jdbc.urlSecret | disables use of 'url' value | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-appconfig"}` | . |
 | jdbc.user | string | `"radarbase"` | Username of the database |
-| jdbc.userSecret | disables use of 'user' value | `{"key":"username","name":"cn-postgresql-appconfig"}` | . |
+| jdbc.userSecret | disables use of 'user' value | `{"key":"username","name":"radar-cloudnative-postgresql-appconfig"}` | . |
 | jdbc.password | string | `"password"` | Password of the user |
-| jdbc.passwordSecret | disables use of 'password' value | `{"key":"password","name":"cn-postgresql-appconfig"}` | . |
+| jdbc.passwordSecret | disables use of 'password' value | `{"key":"password","name":"radar-cloudnative-postgresql-appconfig"}` | . |
 | jdbc.parameters | string | `nil` | Additional JDBC connection parameters e.g. sslmode=verify-full |
 | jdbc.driver | string | `"org.postgresql.Driver"` | JDBC Driver to connect to the database. |
 | jdbc.dialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` |  |

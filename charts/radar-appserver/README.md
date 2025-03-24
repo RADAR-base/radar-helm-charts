@@ -81,11 +81,11 @@ A Helm chart for the backend application of RADAR-base Appserver
 | postgres.host | string | `"hostname"` | host name of the postgres db |
 | postgres.port | int | `5432` | port of the postgres db |
 | postgres.database | string | `"appserver"` | database name |
-| postgres.urlSecret | disables use of 'host', 'port' and 'database' values | `{"key":"jdbc-uri","name":"cn-postgresql-appserver"}` | . |
+| postgres.urlSecret | disables use of 'host', 'port' and 'database' values | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-appserver"}` | . |
 | postgres.user | string | `"radarbase"` | postgres user |
-| postgres.userSecret | object | `{"key":"username","name":"cn-postgresql-appserver"}` | Kubernetes secret containing the database user (disables use of 'user' value). |
+| postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database user (disables use of 'user' value). |
 | postgres.password | string | `"radarbase"` | password of the postgres user |
-| postgres.passwordSecret | object | `{"key":"password","name":"cn-postgresql-appserver"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
 | postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |

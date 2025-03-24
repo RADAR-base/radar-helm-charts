@@ -91,16 +91,16 @@ A ORY Kratos Helm chart for RADAR-base. ORY Kratos is a cloud native Identity an
 | kratos.kratos.config.log.format | string | `"text"` |  |
 | kratos.kratos.config.log.leak_sensitive_values | bool | `true` |  |
 | kratos.deployment.extraEnv[0].name | string | `"DSN"` |  |
-| kratos.deployment.extraEnv[0].valueFrom.secretKeyRef.name | string | `"cn-postgresql-kratos"` |  |
+| kratos.deployment.extraEnv[0].valueFrom.secretKeyRef.name | string | `"radar-cloudnative-postgresql-kratos"` |  |
 | kratos.deployment.extraEnv[0].valueFrom.secretKeyRef.key | string | `"uri"` |  |
 | kratos.statefulSet.extraEnv[0].name | string | `"DSN"` |  |
-| kratos.statefulSet.extraEnv[0].valueFrom.secretKeyRef.name | string | `"cn-postgresql-kratos"` |  |
+| kratos.statefulSet.extraEnv[0].valueFrom.secretKeyRef.name | string | `"radar-cloudnative-postgresql-kratos"` |  |
 | kratos.statefulSet.extraEnv[0].valueFrom.secretKeyRef.key | string | `"uri"` |  |
 | kratos.job.extraEnv[0].name | string | `"DSN"` |  |
-| kratos.job.extraEnv[0].valueFrom.secretKeyRef.name | string | `"cn-postgresql-kratos"` |  |
+| kratos.job.extraEnv[0].valueFrom.secretKeyRef.name | string | `"radar-cloudnative-postgresql-kratos"` |  |
 | kratos.job.extraEnv[0].valueFrom.secretKeyRef.key | string | `"uri"` |  |
 | kratos.cronjob.cleanup.extraEnv[0].name | string | `"DSN"` |  |
-| kratos.cronjob.cleanup.extraEnv[0].valueFrom.secretKeyRef.name | string | `"cn-postgresql-kratos"` |  |
+| kratos.cronjob.cleanup.extraEnv[0].valueFrom.secretKeyRef.name | string | `"radar-cloudnative-postgresql-kratos"` |  |
 | kratos.cronjob.cleanup.extraEnv[0].valueFrom.secretKeyRef.key | string | `"uri"` |  |
 
 ----------------------------------------------
