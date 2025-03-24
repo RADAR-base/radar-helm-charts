@@ -1,9 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "radar-gateway.fullname" . }}
-  labels:
-{{ include "radar-gateway.labels" . | indent 4 }}
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -19,10 +22,7 @@ spec:
         app.kubernetes.io/name: {{ include "radar-gateway.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "radar-gateway.imagePullSecrets" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       affinity:
@@ -43,10 +43,10 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       containers:
       {{- if .Values.serviceMonitor.enabled }}
-        - image: sscaling/jmx-prometheus-exporter
+        - image: {{ template "radar-gateway.image-exporter" . }}
+          imagePullPolicy: {{ .Values.image_exporter.pullPolicy | quote }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          imagePullPolicy: IfNotPresent
           name: prometheus-jmx-exporter
           env:
             - name: "CONFIG_YML"
@@ -63,12 +63,49 @@ spec:
             name: gateway-jmx-configmap
       {{- end }}
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ template "radar-gateway.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           command: ["radar-gateway", "/etc/radar-gateway/gateway.yml"]
           env:
           - name: JAVA_OPTS
-            value: "-XX:GCTimeRatio=19 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=30 --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.management/javax.management.openmbean=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.management/javax.management=ALL-UNNAMED -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
+            value: {{ include "radar-gateway.javaOpts" . }}
+          {{- if .Values.sentry.dsn }}
+          - name: SENTRY_DSN
+            value: {{ .Values.sentry.dsn }}
+          - name: SENTRY_LOG_LEVEL
+            value: {{ .Values.sentry.level }}
+            {{- if .Values.sentry.stacktrace.enabled }}
+          - name: SENTRY_ATTACHSTACKTRACE
+            value: {{ .Values.sentry.stacktrace.enabled | quote }}
+          - name: SENTRY_STACKTRACE_APP_PACKAGES
+            value: {{ .Values.sentry.stacktrace.packages}}
+            {{- end }}
+          - name: SENTRY_NAME
+            value: {{ .Values.sentry.service.name | default (include "radar-gateway.fullname" .) }}
+          - name: SENTRY_RELEASE
+            value: {{ .Values.sentry.service.release | default (printf "%s-%s" .Chart.Version .Chart.AppVersion) }}
+          - name: SENTRY_ENVIRONMENT
+            value: {{ .Values.sentry.service.environment }}
+            {{- if .Values.openTelemetry.agent.enabled }}
+          - name: SENTRY_TRACES_SAMPLE_RATE
+            value: {{ .Values.openTelemetry.exporter.tracesSampleRate | quote }}
+              {{- if not .Values.openTelemetry.exporter.metricsExporterEnabled }}
+          - name: OTEL_METRICS_EXPORTER
+            value: none
+              {{- end }}
+              {{- if not .Values.openTelemetry.exporter.tracesExporterEnabled }}
+          - name: OTEL_TRACES_EXPORTER
+            value: none
+              {{- end }}
+              {{- if not .Values.openTelemetry.exporter.logsExporterEnabled }}
+          - name: OTEL_LOGS_EXPORTER
+            value: none
+              {{- end }}
+            {{- end }}
+          {{- else }}
+          - name: SENTRY_ENABLED
+            value: "false"
+          {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}

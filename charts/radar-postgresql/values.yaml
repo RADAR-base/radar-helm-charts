@@ -1,0 +1,76 @@
+postgresql:
+  image:
+    repository: bitnami/postgresql
+    tag: 11.16.0
+  global:
+    postgresql:
+      auth:
+        postgresPassword: ""
+  auth:
+    postgresPassword: ""
+    username: ""
+    password: ""
+    database: managementportal
+  replication:
+    applicationName: radar
+  primary:
+    initdb:
+      scripts:
+        multi-db-init.sh: |
+           #!/bin/bash
+           set -e
+           set -u
+           export PGPASSWORD="$POSTGRESQL_PASSWORD"
+
+           function create_user_and_database() {
+             export PGPASSWORD="$POSTGRESQL_PASSWORD"
+             local database=$1
+             local database_exist=$(psql -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$database';")
+             if [[ "$database_exist" == 1 ]]; then
+               echo "Database $database already exists"
+             else
+               echo "Database $database does not exist"
+               echo "  Creating database '$database' for user postgres"
+               psql -U postgres -v ON_ERROR_STOP=1  <<-EOSQL
+               CREATE DATABASE "$database";
+               GRANT ALL PRIVILEGES ON DATABASE $database TO postgres;
+           EOSQL
+             fi
+           }
+
+           if [ -n "$POSTGRES_MULTIPLE_DATABASES" ]; then
+             echo "Multiple database creation requested: $POSTGRES_MULTIPLE_DATABASES"
+             for db in $(echo $POSTGRES_MULTIPLE_DATABASES | tr ',' ' '); do
+               create_user_and_database $db
+             done
+             echo "Databases created"
+           fi
+    extraEnvVars: []
+    podAnnotations:
+      backup.velero.io/backup-volumes: data
+      post.hook.backup.velero.io/command: '["/bin/fsfreeze", "--unfreeze", "/bitnami/postgresql"]'
+      post.hook.backup.velero.io/container: fsfreeze
+      pre.hook.backup.velero.io/command: '["/bin/fsfreeze", "--freeze", "/bitnami/postgresql"]'
+      pre.hook.backup.velero.io/container: fsfreeze
+    sidecars:
+      - name: fsfreeze
+        image: busybox
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - mountPath: "/bitnami/postgresql"
+            name: data
+            readOnly: false
+        command:
+          - "/bin/sh"
+          - "-c"
+          - "sleep infinity"
+    persistence:
+      enabled: true
+      existingClaim: ""
+      mountPath: /bitnami/postgresql
+      size: 8Gi
+  volumePermissions:
+    enabled: true
+  metrics:
+    enabled: true

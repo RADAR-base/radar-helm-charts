@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # Must be 'mockserver-config' for automount in mockserver. Do not change.
+  name: mockserver-config
+  namespace: mockserver
+  labels:
+    app: mockserver
+data:
+  mockserver.properties: |
+    mockserver.maxSocketTimeout=120000
+    mockserver.sslCertificateDomainName=localhost
+    mockserver.sslSubjectAlternativeNameIps=127.0.0.1
+    mockserver.enableCORSForAPI=true
+    mockserver.enableCORSForAllResponses=true
+    mockserver.initializationJsonPath=/config/initializerJson.json
+  initializerJson.json: {{ .Values.expectations | toJson | quote}}

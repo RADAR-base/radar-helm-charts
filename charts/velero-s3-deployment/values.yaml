@@ -6,16 +6,24 @@
 objectStorageBackupReplicaCount: 1
 
 mc_image:
-  # -- Object storage backup pod image repository
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
   repository: minio/mc
-  # -- Object storage backup pod image tag (immutable tags are recommended)
+  # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: RELEASE.2022-07-06T14-54-36Z
-  # -- Object storage backup pod image pull policy
+  tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
   pullPolicy: IfNotPresent
-
-# -- Docker registry secret names as an array
-imagePullSecrets: []
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
 
 # -- Configure object storage backup pod pods' Security Context
 podSecurityContext: {}

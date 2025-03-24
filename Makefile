@@ -2,10 +2,6 @@ EXTERNAL_CHARTS = $(shell grep -P "^update-\S+:$$" Makefile | cut -d: -f1)
 EXTERNAL_CHARTS_ACTUAL = $(shell find external -mindepth 1 -maxdepth 1 -type d | sed 's/external\//update-/')
 MISSING_UPDATE_TARGETS = $(shell echo $(EXTERNAL_CHARTS_ACTUAL) $(EXTERNAL_CHARTS) | sed 's/ /\n/g' | sort | uniq -u)
 
-generate-docs:
-	@echo "Generate chart docs"
-	@helm-docs -s file --template-files=charts/_templates.gotmpl --template-files=DOCS.md.gotmpl --template-files=README.md.gotmpl
-
 list-missing-update-targets:
 	@echo $(MISSING_UPDATE_TARGETS) | sed 's/ /\n/g'
 
@@ -89,6 +85,13 @@ update-minio:
 	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-mockserver:
+	@echo "Updating mockserver"
+	@helm repo add mockserver https://www.mock-server.com
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm pull -d external --untar mockserver/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-mongodb:
 	@echo "Updating mongodb"
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -122,5 +125,12 @@ update-velero:
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
 	@rm -rf external/$(patsubst update-%,%,$@)
 	@helm repo add $(patsubst update-%,%,$@) https://vmware-tanzu.github.io/helm-charts
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
+
+update-nifi:
+	@echo "Updating NiFi"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://cetic.github.io/helm-charts
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""

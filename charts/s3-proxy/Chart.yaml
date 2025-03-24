@@ -5,7 +5,7 @@ sources: ["https://github.com/gaul/s3proxy"]
 type: application
 home: "https://radar-base.org"
 name: s3-proxy
-version: 0.4.2
+version: 0.5.1
 maintainers:
   - email: keyvan@thehyve.nl
     name: Keyvan Hedayati
@@ -16,3 +16,9 @@ maintainers:
   - email: nivethika@thehyve.nl
     name: Nivethika Mahasivam
     url: https://www.thehyve.nl/experts/nivethika-mahasivam
+dependencies:
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  tags:
+  - bitnami-common
+  version: 2.x.x
