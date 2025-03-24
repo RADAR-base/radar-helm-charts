@@ -126,6 +126,9 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# -- Standard JAVA_OPTS that should be passed to this service
+javaOpts: "-XX:GCTimeRatio=19 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=30 --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.management/javax.management.openmbean=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.management/javax.management=ALL-UNNAMED -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
+
 # -- Extra environment variables
 extraEnvVars: []
 #  - name: BEARER_AUTH
@@ -289,3 +292,20 @@ sentry:
     enabled: true
     # -- Comma-separated list of package prefixes to be included in the stacktrace
     packages: "org.radarbase.gateway,org.apache.avro"
+
+# OpenTelemetry monitoring configuration
+openTelemetry:
+  agent:
+    # -- Enable OpenTelemetry agent (currently only Sentry agent is supported)
+    enabled: false
+    # -- OpenTelemetry Sentry agent jar file name, depends on version of 'io.sentry:sentry-opentelemetry-agent'
+    agentJar: sentry-opentelemetry-agent-8.1.0.jar
+  exporter:
+    # -- Sample rate for traces (0.0 to 1.0)
+    tracesSampleRate: 1.0
+    # -- Enable OpenTelemetry metrics exporter other than Sentry
+    metricsExporterEnabled: false
+    # -- Enable OpenTelemetry traces exporter other than Sentry
+    tracesExporterEnabled: false
+    # -- Enable OpenTelemetry logs exporter other than Sentry
+    logsExporterEnabled: true
