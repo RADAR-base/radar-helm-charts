@@ -49,7 +49,7 @@ spec:
           - name: RSA_BACKEND_URL
             value: {{ .Values.restSourceBackendUrl | quote }}
           - name: BASE_PATH
-            value: {{ .Values.basePath | quote }}
+            value: /{{ .Values.basePath | quote }}
           - name: SECURITY_MODE
             value: {{ .Values.securityMode | quote }}
           - name: ARMT_CLIENT_ID

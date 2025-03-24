@@ -2,7 +2,7 @@
 
 # radar-self-enrolment-ui
 
-![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.2](https://img.shields.io/badge/AppVersion-0.0.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base Self Enrolment UI
 
@@ -53,7 +53,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | secret.hashSumEnabled | bool | `true` | switch to false to prevent checksum annotations being maintained and propagated to the pods |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
-| ingress.path | string | `"/kratos-ui"` | Path within the url structure |
+| ingress.path | string | `"/kratos-ui(/|$)(.*)"` | Path within the url structure |
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
@@ -87,7 +87,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | deployment.terminationGracePeriodSeconds | int | `60` |  |
 | affinity | object | `{}` |  |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
-| kratosAdminUrl | string | `"http://kratos-admin:80/admin"` | Set this to ORY Kratos's Admin URL |
+| kratosAdminUrl | string | `"http://kratos-admin/admin"` | Set this to ORY Kratos's Admin URL |
 | kratosPublicUrl | string | `"http://kratos-public:80"` | Set this to ORY Kratos's public URL |
 | kratosBrowserUrl | string | `"https://localhost/kratos"` | Set this to ORY Kratos's public URL accessible from the outside world. |
 | hydraAdminUrl | string | `"http://hydra-admin:4445/admin"` | Set this to ORY Hydra's Admin URL |
@@ -99,7 +99,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | sepClientId | string | `"SEP"` | Client ID for SEP authentication |
 | sepClientSecret | string | `""` | Client secret for SEP authentication |
 | githubAuthToken | string | `""` | GitHub authentication token for API access (leave empty if not used) |
-| basePath | string | `"/kratos-ui"` | The basePath |
+| basePath | string | `"kratos-ui"` | The basePath |
 | test.busybox | object | `{"repository":"busybox","tag":1}` | use a busybox image from another repository |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `false` | Enable livenessProbe |
