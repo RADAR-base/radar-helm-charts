@@ -67,6 +67,8 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           command: ["radar-gateway", "/etc/radar-gateway/gateway.yml"]
           env:
+          - name: JAVA_OPTS
+            value: {{ include "radar-gateway.javaOpts" . }}
           {{- if .Values.sentry.dsn }}
           - name: SENTRY_DSN
             value: {{ .Values.sentry.dsn }}
@@ -84,31 +86,25 @@ spec:
             value: {{ .Values.sentry.service.release | default (printf "%s-%s" .Chart.Version .Chart.AppVersion) }}
           - name: SENTRY_ENVIRONMENT
             value: {{ .Values.sentry.service.environment }}
-          {{- if .Values.openTelemetry.agent.enabled }}
-          - name: JAVA_OPTS
-            value: {{ printf "%s -javaagent:/usr/lib/%s" .Values.javaOpts .Values.openTelemetry.agent.agentJar | trimPrefix " " | quote }}
+            {{- if .Values.openTelemetry.agent.enabled }}
           - name: SENTRY_TRACES_SAMPLE_RATE
             value: {{ .Values.openTelemetry.exporter.tracesSampleRate | quote }}
-          {{- if eq .Values.openTelemetry.exporter.metricsExporterEnabled false }}
+              {{- if not .Values.openTelemetry.exporter.metricsExporterEnabled }}
           - name: OTEL_METRICS_EXPORTER
             value: none
-          {{- end }}
-          {{- if eq .Values.openTelemetry.exporter.tracesExporterEnabled false}}
+              {{- end }}
+              {{- if not .Values.openTelemetry.exporter.tracesExporterEnabled }}
           - name: OTEL_TRACES_EXPORTER
             value: none
-          {{- end }}
-          {{- if eq .Values.openTelemetry.exporter.logsExporterEnabled false }}
+              {{- end }}
+              {{- if not .Values.openTelemetry.exporter.logsExporterEnabled }}
           - name: OTEL_LOGS_EXPORTER
             value: none
-          {{- end }}
-          {{- end }}
+              {{- end }}
+            {{- end }}
           {{- else }}
           - name: SENTRY_ENABLED
             value: "false"
-          {{- end }}
-          {{- if or (not .Values.sentry.dsn) (and .Values.sentry.dsn (eq .Values.openTelemetry.agent.enabled false)) }}
-          - name: JAVA_OPTS
-            value: {{ .Values.javaOpts | quote }}
           {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
