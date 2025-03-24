@@ -77,7 +77,7 @@ Create JavaOpts string
 */}}
 {{- define "radar-gateway.javaOpts" -}}
 {{- if and .Values.sentry.dsn .Values.openTelemetry.agent.enabled }}
-{{ printf "%s -javaagent:/usr/lib/%s" .Values.javaOpts .Values.openTelemetry.agent.agentJar }}
+{{- printf "%s -javaagent:/usr/lib/%s" .Values.javaOpts .Values.openTelemetry.agent.agentJar -}}
 {{- else -}}
 {{- .Values.javaOpts -}}
 {{- end -}}
