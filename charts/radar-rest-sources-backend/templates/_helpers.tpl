@@ -95,7 +95,7 @@ Get the key for the secret object.
 Return true if a secret object should be created
 */}}
 {{- define "radar-rest-sources-backend.createSecret" -}}
-{{- if not (and .Values.postgres.urlSecret .Values.postgres.userSecret .Values.postgres.passwordSecret) -}}
+{{- if not (and .Values.postgres.urlSecret.name .Values.postgres.userSecret.name .Values.postgres.passwordSecret.name) -}}
     {{- true -}}
 {{- else -}}
     {{- false -}}
