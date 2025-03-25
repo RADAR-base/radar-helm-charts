@@ -219,6 +219,7 @@ jdbc:
     key: password
 
   # -- Additional JDBC connection parameters e.g. sslmode=verify-full
+  # Ignored when using 'urlSecret'.
   parameters:
   # -- JDBC Driver to connect to the database.
   driver: org.postgresql.Driver

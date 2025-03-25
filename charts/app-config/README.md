@@ -92,6 +92,6 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 | jdbc.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-appconfig"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
 | jdbc.password | string | `"password"` | Password of the user |
 | jdbc.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-appconfig"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
-| jdbc.parameters | string | `nil` | Additional JDBC connection parameters e.g. sslmode=verify-full |
+| jdbc.parameters | string | `nil` | Additional JDBC connection parameters e.g. sslmode=verify-full Ignored when using 'urlSecret'. |
 | jdbc.driver | string | `"org.postgresql.Driver"` | JDBC Driver to connect to the database. |
 | jdbc.dialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` |  |

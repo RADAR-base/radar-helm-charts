@@ -89,6 +89,6 @@ A Helm chart for RADAR-base upload connector backend application. This applicati
 | postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-uploadconnector"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
 | postgres.password | string | `nil` | Database password |
 | postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-uploadconnector"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
-| postgres.parameters | string | `nil` | Additional JDBC connection parameters e.g. sslmode=verify-full |
+| postgres.parameters | string | `nil` | Additional JDBC connection parameters e.g. sslmode=verify-full  Ignored when using 'urlSecret'. |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | serverName | string | `"localhost"` | Server name or domain name |

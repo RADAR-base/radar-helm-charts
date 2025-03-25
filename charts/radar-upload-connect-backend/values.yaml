@@ -217,6 +217,7 @@ postgres:
     key: password
 
   # -- Additional JDBC connection parameters e.g. sslmode=verify-full
+  #  Ignored when using 'urlSecret'.
   parameters:
 
 # -- URL of the Management Portal
