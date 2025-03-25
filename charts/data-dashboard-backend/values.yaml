@@ -158,21 +158,21 @@ jdbc:
   # -- JDBC Connection url of the database.
   url:
   # -- Kubernetes secret containing the database JDBC Connection url
-  # -- (disables use of 'url' value).
+  # (disables use of 'url' value).
   urlSecret:
     name: radar-jdbc-connector-data-dashboard-timescaledb-app
     key: jdbc-uri
   # -- Username of the database
   user:
   # -- Kubernetes secret containing the database JDBC Connection url
-  # -- (disables use of 'url' value).
+  # (disables use of 'url' value).
   userSecret:
     name: radar-jdbc-connector-data-dashboard-timescaledb-app
     key: username
   # -- Password of the database
   password:
   # -- Kubernetes secret containing the database password
-  # -- (disables use of 'password' value).
+  # (disables use of 'password' value).
   passwordSecret:
     name: radar-jdbc-connector-data-dashboard-timescaledb-app
     key: password

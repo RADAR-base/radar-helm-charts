@@ -70,11 +70,11 @@ API for data in the data dashboard
 | managementPortal.clientSecret | string | `"secret"` | ManagementPortal OAuth 2.0 client secret |
 | jwtResourceName | string | `"res_DataDashboardAPI"` | JWT Resource name to use for this service in ManagementPortal |
 | jdbc.url | string | `nil` | JDBC Connection url of the database. |
-| jdbc.urlSecret | disables use of 'url' value | `{"key":"jdbc-uri","name":"radar-jdbc-connector-data-dashboard-timescaledb-app"}` | . |
+| jdbc.urlSecret | object | `{"key":"jdbc-uri","name":"radar-jdbc-connector-data-dashboard-timescaledb-app"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'url' value). |
 | jdbc.user | string | `nil` | Username of the database |
-| jdbc.userSecret | disables use of 'url' value | `{"key":"username","name":"radar-jdbc-connector-data-dashboard-timescaledb-app"}` | . |
+| jdbc.userSecret | object | `{"key":"username","name":"radar-jdbc-connector-data-dashboard-timescaledb-app"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'url' value). |
 | jdbc.password | string | `nil` | Password of the database |
-| jdbc.passwordSecret | disables use of 'password' value | `{"key":"password","name":"radar-jdbc-connector-data-dashboard-timescaledb-app"}` | . |
+| jdbc.passwordSecret | object | `{"key":"password","name":"radar-jdbc-connector-data-dashboard-timescaledb-app"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
 | jdbc.driver | string | `"org.postgresql.Driver"` | JDBC Driver to connect to the database. |
 | jdbc.dialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` | Hibernate dialect to use for JDBC Connection |
 | jdbc.properties."hibernate.globally_quoted_identifiers" | bool | `true` | Must be _true_ for compatibility with table created by jdbc-connector |

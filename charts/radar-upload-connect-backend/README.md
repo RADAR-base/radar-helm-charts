@@ -84,7 +84,7 @@ A Helm chart for RADAR-base upload connector backend application. This applicati
 | postgres.host | string | `nil` | Host name of the database to store uploaded data and metadata |
 | postgres.database | string | `nil` | Database name |
 | postgres.port | string | `nil` |  |
-| postgres.urlSecret | disables use of 'host', 'port' and 'database' values | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-uploadconnector"}` | . |
+| postgres.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-uploadconnector"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'host', 'port' and 'database' values). |
 | postgres.user | string | `nil` | Database username |
 | postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-uploadconnector"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
 | postgres.password | string | `nil` | Database password |

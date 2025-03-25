@@ -199,21 +199,21 @@ jdbc:
   # -- JDBC Connection url of the database.
   url: jdbc:postgresql://radar-cloudnative-postgresql-cluster-rw:5432/appconfig
   # -- Kubernetes secret containing the database JDBC Connection url
-  # -- (disables use of 'url' value).
+  # (disables use of 'url' value).
   urlSecret:
     name: radar-cloudnative-postgresql-appconfig
     key: jdbc-uri
   # -- Username of the database
   user: radarbase
   # -- Kubernetes secret containing the database username
-  # -- (disables use of 'user' value).
+  # (disables use of 'user' value).
   userSecret:
     name: radar-cloudnative-postgresql-appconfig
     key: username
   # -- Password of the user
   password: password
   # -- Kubernetes secret containing the database password
-  # -- (disables use of 'password' value).
+  # (disables use of 'password' value).
   passwordSecret:
     name: radar-cloudnative-postgresql-appconfig
     key: password

@@ -84,7 +84,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | postgres.host | string | `"radar-cloudnative-postgresql-cluster-rw"` | host name of the postgres db |
 | postgres.port | int | `5432` | post of the postgres db |
 | postgres.database | string | `"managementportal"` | database name |
-| postgres.urlSecret | disables use of 'host', 'port' and 'database' values | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-managementportal"}` | . |
+| postgres.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'host', 'port' and 'database' values). |
 | postgres.user | string | `"radarbase"` | postgres user |
 | postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
 | postgres.password | string | `"password"` | password of the postgres user |

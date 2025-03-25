@@ -257,7 +257,7 @@ postgres:
   # -- database name
   database: managementportal
   # -- Kubernetes secret containing the database JDBC Connection url
-  # -- (disables use of 'host', 'port' and 'database' values).
+  # (disables use of 'host', 'port' and 'database' values).
   urlSecret:
     name: radar-cloudnative-postgresql-managementportal
     key: jdbc-uri

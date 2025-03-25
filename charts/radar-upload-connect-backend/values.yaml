@@ -199,7 +199,7 @@ postgres:
   # - Database port
   port:
   # -- Kubernetes secret containing the database JDBC Connection url
-  # -- (disables use of 'host', 'port' and 'database' values).
+  # (disables use of 'host', 'port' and 'database' values).
   urlSecret:
     name: radar-cloudnative-postgresql-uploadconnector
     key: jdbc-uri
