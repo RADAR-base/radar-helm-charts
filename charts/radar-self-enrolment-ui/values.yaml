@@ -259,6 +259,9 @@ sepClientSecret: ""
 # -- GitHub authentication token for API access (leave empty if not used)
 githubAuthToken: ""
 
+# -- Server name or domain name
+serverName: localhost
+
 # -- The basePath
 basePath: "kratos-ui"
 

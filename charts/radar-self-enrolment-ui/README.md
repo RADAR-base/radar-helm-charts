@@ -99,6 +99,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | sepClientId | string | `"SEP"` | Client ID for SEP authentication |
 | sepClientSecret | string | `""` | Client secret for SEP authentication |
 | githubAuthToken | string | `""` | GitHub authentication token for API access (leave empty if not used) |
+| serverName | string | `"localhost"` | Server name or domain name |
 | basePath | string | `"kratos-ui"` | The basePath |
 | test.busybox | object | `{"repository":"busybox","tag":1}` | use a busybox image from another repository |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
