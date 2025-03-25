@@ -1,0 +1,16 @@
+apiVersion: v2
+appVersion: "v2.2.0"
+description: A ORY Hydra Helm chart for RADAR-base. ORY Hydra is a cloud native Identity and User Management system.
+name: kratos
+icon: https://raw.githubusercontent.com/ory/docs/master/docs/static/img/logo-kratos.svg
+version: 0.1.0
+type: application
+dependencies:
+- name: hydra
+  version: 0.48.0
+  repository: https://k8s.ory.sh/helm/charts
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  tags:
+  - bitnami-common
+  version: 2.x.x

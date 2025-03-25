@@ -1,0 +1,25 @@
+apiVersion: v2
+appVersion: 11.2.2-security-01
+description: A Helm chart for Graphana dashboard used by RADAR-base
+name: radar-grafana
+version: 0.1.0
+icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
+deprecated: false
+type: application
+home: "https://radar-base.org"
+maintainers:
+  - email: keyvan@thehyve.nl
+    name: Keyvan Hedayati
+    url: https://www.thehyve.nl
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
+dependencies:
+- name: grafana
+  version: 8.3.7
+  repository: https://grafana.github.io/helm-charts
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  tags:
+  - bitnami-common
+  version: 2.x.x

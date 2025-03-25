@@ -15,6 +15,20 @@ update-cert-manager:
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-cloudnativepg-operator:
+	@echo "Updating cloudnativepg-operator"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://cloudnative-pg.github.io/charts
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/cloudnative-pg
+	@echo ""
+
+update-cloudnativepg-cluster:
+	@echo "Updating cloudnativepg-cluster"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://cloudnative-pg.github.io/charts
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/cluster
+	@echo ""
+
 update-common:
 	@echo "Updating common"
 	@helm repo add bitnami https://charts.bitnami.com/bitnami

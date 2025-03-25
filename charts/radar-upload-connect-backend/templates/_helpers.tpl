@@ -39,6 +39,17 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Return true if a secret object should be created
+*/}}
+{{- define "radar-upload-connect-backend.createSecret" -}}
+{{- if not (and .Values.postgres.urlSecret.name .Values.postgres.userSecret.name .Values.postgres.passwordSecret.name) -}}
+    {{- true -}}
+{{- else -}}
+    {{- false -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Common labels
 */}}
 {{- define "radar-upload-connect-backend.labels" -}}

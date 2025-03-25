@@ -1,0 +1,9 @@
+dependencies:
+- name: hydra
+  repository: https://k8s.ory.sh/helm/charts
+  version: 0.48.0
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  version: 2.27.0
+digest: sha256:a831bbc92a4da99687b5b518dc225fdbebb13a2a3abaeee5a88ae5a634d670ca
+generated: "2025-03-25T13:07:30.623785437+01:00"
