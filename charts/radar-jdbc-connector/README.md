@@ -9,6 +9,15 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 
 **Homepage:** <https://radar-base.org>
 
+## CloudNativePG TimescaleDB
+
+This chart deploys the CloudNativePG TimescaleDB via the _radar-cloudnative-timescaledb_ chart. In turn,
+_radar-cloudnative-timescaledb_ uses the CloudNativePG operator chart to deploy the TimescaleDB database.
+Configuration to the _radar-cloudnative-timescaledb_ chart can be passed via the `radar-cloudnative-timescaledb:` key in
+the values.yaml file.
+
+Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: false` in the `radar-cloudnative-timescaledb:` key.
+
 ## Maintainers
 
 | Name | Email | Url |
@@ -110,8 +119,4 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | jdbc.passwordSecret | object | `{"key":null,"name":null}` | Kubernetes secret name for the password |
 | jdbc.dialect | string | `"TimescaleDBDatabaseDialect"` | JDBC connect dialect that the database uses |
 | radar-cloudnative-timescaledb.enabled | bool | `true` | Use the local cloudnative timescaledb cluster |
-| radar-cloudnative-timescaledb.cluster.nameOverride | string | `"timescaledb"` |  |
-| radar-cloudnative-timescaledb.cluster.mode | string | `"standalone"` |  |
-| radar-cloudnative-timescaledb.cluster.cluster.instances | int | `1` |  |
-| radar-cloudnative-timescaledb.cluster.cluster.initdb.database | string | `"database_name"` |  |
-| radar-cloudnative-timescaledb.cluster.cluster.initdb.owner | string | `"database_name"` |  |
+| radar-cloudnative-timescaledb.cluster | object | check `values.yaml` | CloudNativePG TimescaleDB configuration |

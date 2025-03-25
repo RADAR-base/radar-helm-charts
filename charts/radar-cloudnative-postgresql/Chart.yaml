@@ -8,8 +8,8 @@ maintainers:
     url: https://www.thehyve.nl/experts/pim-van-nierop
 dependencies:
 - name: cluster
+  repository: https://cloudnative-pg.github.io/charts
   version: 0.2.1
-  repository: file://../../external/cloudnativepg-cluster
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts
   tags:

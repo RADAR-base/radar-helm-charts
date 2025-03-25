@@ -14,7 +14,7 @@ postgresql:
     postgresPassword: ""
     username: ""
     password: ""
-    database: ""
+    database: database
   replication:
     applicationName: radar
   primary:

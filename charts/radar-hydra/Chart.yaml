@@ -6,11 +6,11 @@ icon: https://raw.githubusercontent.com/ory/docs/master/docs/static/img/logo-kra
 version: 0.1.0
 type: application
 dependencies:
+- name: hydra
+  version: 0.48.0
+  repository: https://k8s.ory.sh/helm/charts
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts
   tags:
   - bitnami-common
   version: 2.x.x
-- name: hydra
-  version: 0.48.0
-  repository: file://../../external/hydra

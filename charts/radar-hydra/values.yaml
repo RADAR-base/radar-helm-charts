@@ -1,3 +1,5 @@
+# -- Ory Hydra configuration
+# @default -- check `values.yaml`
 hydra:
   ingress:
     admin:

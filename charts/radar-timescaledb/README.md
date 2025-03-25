@@ -37,7 +37,7 @@ TimescaleDB is an open-source time-series database optimized for fast ingest and
 | postgresql.auth.postgresPassword | string | `""` |  |
 | postgresql.auth.username | string | `""` |  |
 | postgresql.auth.password | string | `""` |  |
-| postgresql.auth.database | string | `""` |  |
+| postgresql.auth.database | string | `"database"` |  |
 | postgresql.replication.applicationName | string | `"radar"` |  |
 | postgresql.primary.extraEnvVars | list | `[]` |  |
 | postgresql.primary.podAnnotations."backup.velero.io/backup-volumes" | string | `"data"` |  |

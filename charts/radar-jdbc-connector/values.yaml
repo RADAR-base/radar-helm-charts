@@ -259,6 +259,8 @@ jdbc:
 radar-cloudnative-timescaledb:
   # -- Use the local cloudnative timescaledb cluster
   enabled: true
+  # -- CloudNativePG TimescaleDB configuration
+  # @default -- check `values.yaml`
   cluster:
     nameOverride: timescaledb
     mode: standalone
