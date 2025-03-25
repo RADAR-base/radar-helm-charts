@@ -73,7 +73,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   # -- Path within the url structure
-  path: /kratos-ui
+  path: "/kratos-ui(/|$)(.*)"
   # -- Ingress Path type
   pathType: ImplementationSpecific
   # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
@@ -224,7 +224,7 @@ networkpolicy:
         protocol: TCP
 
 # -- Set this to ORY Kratos's Admin URL
-kratosAdminUrl: "http://kratos-admin:80/admin"
+kratosAdminUrl: "http://kratos-admin/admin"
 
 # -- Set this to ORY Kratos's public URL
 kratosPublicUrl: "http://kratos-public:80"
@@ -260,7 +260,7 @@ sepClientSecret: ""
 githubAuthToken: ""
 
 # -- The basePath
-basePath: "/kratos-ui"
+basePath: "kratos-ui"
 
 test:
   # -- use a busybox image from another repository
