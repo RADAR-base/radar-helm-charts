@@ -1,3 +1,5 @@
+# -- Ory Kratos configuration
+# @default -- check `values.yaml`
 kratos:
   ingress:
     admin:
