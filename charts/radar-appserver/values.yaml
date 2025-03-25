@@ -194,7 +194,7 @@ postgres:
   # -- database name
   database: appserver
   # -- Kubernetes secret containing the database JDBC Connection url
-  # -- (disables use of 'host', 'port' and 'database' values).
+  # (disables use of 'host', 'port' and 'database' values).
   urlSecret:
     name: radar-cloudnative-postgresql-appserver
     key: jdbc-uri
@@ -211,7 +211,8 @@ postgres:
     name: radar-cloudnative-postgresql-appserver
     key: password
 
-  # -- additional JDBC connection parameters e.g. sslmode=verify-full
+  # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
+  # Ignored when using 'urlSecret'.
   connection_parameters: ""
   ssl:
     # -- set to true of the connecting to postgres using SSL

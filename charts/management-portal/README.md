@@ -89,7 +89,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
 | postgres.password | string | `"password"` | password of the postgres user |
 | postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
-| postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
+| postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true if the connecting to postgres using SSL |
 | postgres.ssl.keystore | string | `""` | base64 encoded certificate needed to connect to the PostgreSQL With helmfile, this can be set in a production.yaml.gotmpl file by setting   keystore: {{ readFile "certificate.pem" | b64enc | quote }} or with SOPS   keystore: {{ exec "sops" (list "-d" "certificate.pem") | b64enc | quote }} |
 | server_name | string | `"localhost"` | domain name of the server |

@@ -274,7 +274,8 @@ postgres:
     name: radar-cloudnative-postgresql-managementportal
     key: password
 
-  # -- additional JDBC connection parameters e.g. sslmode=verify-full
+  # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
+  # Ignored when using 'urlSecret'.
   connection_parameters: ""
   ssl:
     # -- set to true if the connecting to postgres using SSL

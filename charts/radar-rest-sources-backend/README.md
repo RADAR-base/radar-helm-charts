@@ -90,7 +90,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-restsourceauthorizer"}` | Kubernetes secret containing the database user (disables use of 'user' value). |
 | postgres.password | string | `"password"` | password of the postgres user |
 | postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-restsourceauthorizer"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
-| postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
+| postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
 | redis.uri | string | `"redis://redis-master:6379"` | URI of the redis database |
