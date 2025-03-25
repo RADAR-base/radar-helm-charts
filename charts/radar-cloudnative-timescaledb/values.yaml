@@ -6,8 +6,6 @@ cluster:
 
   mode: standalone
 
-  nameOverride: timescaledb
-
   # To import from existing on-cluster database, set 'mode' to 'recovery'.
   recovery:
     method: import

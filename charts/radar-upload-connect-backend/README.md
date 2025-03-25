@@ -81,14 +81,14 @@ A Helm chart for RADAR-base upload connector backend application. This applicati
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | client_id | string | `"radar_upload_backend"` | OAuth2 client id of the upload connect backend application |
 | client_secret | string | `"secret"` | OAuth2 client secret of the upload connect backend |
-| postgres.host | string | `"radar-upload-postgresql"` | Host name of the database to store uploaded data and metadata |
-| postgres.database | string | `"uploadconnector"` | Database name |
-| postgres.port | int | `5432` |  |
+| postgres.host | string | `nil` | Host name of the database to store uploaded data and metadata |
+| postgres.database | string | `nil` | Database name |
+| postgres.port | string | `nil` |  |
 | postgres.urlSecret | disables use of 'host', 'port' and 'database' values | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-uploadconnector"}` | . |
-| postgres.user | string | `"radarbase"` | Database username |
+| postgres.user | string | `nil` | Database username |
 | postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-uploadconnector"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
-| postgres.password | string | `"password"` | Database password |
-| postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-uploadconnector"}` | Kubernetes secret containing the database password |
+| postgres.password | string | `nil` | Database password |
+| postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-uploadconnector"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
 | postgres.parameters | string | `nil` | Additional JDBC connection parameters e.g. sslmode=verify-full |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | serverName | string | `"localhost"` | Server name or domain name |

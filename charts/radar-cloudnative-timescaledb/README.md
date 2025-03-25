@@ -26,7 +26,6 @@ CloudNativePG timescaledb cluster helm chart for RADAR-base
 | cluster.type | string | `"timescaledb"` |  |
 | cluster.version.timescaledb | string | `"2.15"` |  |
 | cluster.mode | string | `"standalone"` |  |
-| cluster.nameOverride | string | `"timescaledb"` |  |
 | cluster.recovery.method | string | `"import"` |  |
 | cluster.recovery.import.type | string | `"monolith"` |  |
 | cluster.recovery.import.databases[0] | string | `"database"` |  |
