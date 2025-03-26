@@ -80,8 +80,10 @@ spec:
             value: "/var/lib/kafka-connect-fitbit-source/logs/connect.offsets"
           - name: CONNECT_REST_ADVERTISED_HOST_NAME
             value: {{ include "radar-fitbit-connector.fullname" . }}
+          {{- if .Values.zookeeper }}
           - name: CONNECT_ZOOKEEPER_CONNECT
             value: "{{ .Values.zookeeper }}"
+          {{- end }}
           - name: CONNECTOR_PROPERTY_FILE_PREFIX
             value: "source-fitbit/source-fitbit"
           - name: KAFKA_HEAP_OPTS
@@ -92,6 +94,13 @@ spec:
             value: "org.reflections=ERROR"
           - name: WAIT_FOR_KAFKA
             value: {{ if .Values.kafka_wait.enabled }}"1"{{ else }}"0"{{ end }}
+          {{- if .Values.secret.jaas.name }}
+          - name: KAFKA_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.jaas.name }}
+                key: {{ .Values.secret.jaas.key }}
+          {{- end }}
           {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
           - name: COMMAND_CONFIG_FILE_PATH
             value: /etc/kafka-connect/source-fitbit/kafka-wait.properties
