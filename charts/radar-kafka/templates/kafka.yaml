@@ -32,6 +32,12 @@ spec:
         tls: true
         authentication:
           type: tls
+      - name: scram
+        port: 9094
+        type: internal
+        tls: false
+        authentication:
+          type: scram-sha-512
   entityOperator:
     topicOperator: {}
     userOperator: {}
