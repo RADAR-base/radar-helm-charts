@@ -65,6 +65,13 @@ spec:
           value: "{{ .Values.kafka_num_partitions }}"
         - name: CONFIG_PATH
           value: /etc/radar-schemas-tools/config.yaml
+        {{- if and .Values.secret.jaas.name (not .Values.cc.enabled) }}
+        - name: KAFKA_SASL_JAAS_CONFIG
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.secret.jaas.name }}
+              key: {{ .Values.secret.jaas.key }}
+        {{- end }}
         {{- if .Values.cc.enabled }}
         - name: KAFKA_SASL_JAAS_CONFIG
           valueFrom:
