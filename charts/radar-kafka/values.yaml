@@ -1,5 +1,3 @@
-fullnameOverride: radar-kafka
-
 # -- Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode)
 dev_deployment: false
 
@@ -35,6 +33,4 @@ strimzi-registry-operator:
   # -- Keep in sync with 'fullnameOverride'
   clusterName: radar-kafka
   # -- Keep in sync with namespace defined in helmfile
-  clusterNamespace: kafka
-  # -- Keep in sync with namespace defined in helmfile
-  operatorNamespace: kafka
+  operatorNamespace: default
