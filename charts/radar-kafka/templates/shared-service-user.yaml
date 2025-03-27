@@ -15,7 +15,8 @@ spec:
     type: simple
     acls:
       # Allow CRUD operations on all topics for catalog-server.
-      - resource:
+      - type: allow
+        resource:
           type: topic
           name: '*'
           patternType: literal
@@ -25,4 +26,14 @@ spec:
           - Alter
           - Create
           - Describe
-        type: allow
+      - type: allow
+        resource:
+          type: group
+          name: '*'
+          patternType: literal
+        operations:
+          - Read
+          - Write
+          - Alter
+          - Create
+          - Describe
