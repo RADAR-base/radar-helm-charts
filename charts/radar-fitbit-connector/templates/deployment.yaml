@@ -95,7 +95,7 @@ spec:
           - name: WAIT_FOR_KAFKA
             value: {{ if .Values.kafka_wait.enabled }}"1"{{ else }}"0"{{ end }}
           {{- if .Values.secret.jaas.name }}
-          - name: KAFKA_SASL_JAAS_CONFIG
+          - name: CONNECT_SASL_JAAS_CONFIG
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.secret.jaas.name }}
