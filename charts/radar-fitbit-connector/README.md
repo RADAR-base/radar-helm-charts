@@ -79,7 +79,7 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | zookeeper | string | `nil` | URI of Zookeeper instances of the cluster. Leave unset on default RADAR-base deployment (uses Kraft). |
-| kafka | string | `"SASL_PLAINTEXT://radar-kafka-radar-kafka:9094"` | URI of Kafka brokers of the cluster |
+| kafka | string | `"SASL_PLAINTEXT://radar-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
 | kafka_num_brokers | string | `"3"` | Number of Kafka brokers. This is used to validate the cluster availability at connector init. |
 | schema_registry | string | `"http://confluent-schema-registry:8081"` | URL of the Kafka schema registry |
 | kafka_wait.enabled | bool | `true` | Whether to wait before the specified number of brokers are available. |

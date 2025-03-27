@@ -176,7 +176,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: radar-kafka-radar-kafka
+          app.kubernetes.io/name: radar-kafka-bootstrap
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -192,7 +192,7 @@ kafka_num_replication: 3
 kafka_num_partitions: 3
 # -- URI of Kafka brokers
 # On strimzi operator, this points to the listener that has no tls, and scram-sha-512 authentication.
-kafka: radar-kafka-kafka-bootstrap:9094
+kafka: radar-kafka-bootstrap:9094
 # -- URL of the confluent schema registry
 schema_registry: http://confluent-schema-registry:8081
 

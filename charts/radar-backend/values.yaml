@@ -89,7 +89,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-radar-kafka'
+          app.kubernetes.io/name: 'radar-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -113,7 +113,7 @@ networkpolicy:
 # command: "stream"
 
 zookeeper:
-kafka: radar-kafka-radar-kafka:9094
+kafka: radar-kafka-bootstrap:9094
 rest_proxy: http://cp-kafka-rest:8082
 schema_registry: http://confluent-schema-registry:8081
 kafka_num_brokers: "3"

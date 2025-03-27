@@ -76,7 +76,7 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | kafka_num_brokers | int | `3` | Number of deployed Kafka brokers |
 | kafka_num_replication | int | `3` | Number of Kafka replicates (may not be lower than kafka_num_brokers) |
 | kafka_num_partitions | int | `3` | Number of Kafka data partitions |
-| kafka | string | `"radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers On strimzi operator, this points to the listener that has no tls, and scram-sha-512 authentication. |
+| kafka | string | `"radar-kafka-bootstrap:9094"` | URI of Kafka brokers On strimzi operator, this points to the listener that has no tls, and scram-sha-512 authentication. |
 | schema_registry | string | `"http://confluent-schema-registry:8081"` | URL of the confluent schema registry |
 | kafkaProperties | object | `{"sasl_mechanism":"SCRAM-SHA-512","security_protocol":"SASL_PLAINTEXT"}` | Additional kafka properties such as security config. The template replaces `_` with `.` in keys so property keys can be specified using `_` instead of `.`. For example `security_protocol` is same as `security.protocol` kafka config. |
 | kafkaProperties.security_protocol | string | `"SASL_PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |

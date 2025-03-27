@@ -74,7 +74,7 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
-| kafka | string | `"SASL_PLAINTEXT://radar-kafka-radar-kafka:9094"` | URI of Kafka brokers of the cluster |
+| kafka | string | `"SASL_PLAINTEXT://radar-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
 | kafka_num_brokers | string | `"3"` | Number of Kafka brokers. This is used to validate the cluster availability at connector init. |
 | schema_registry | string | `"http://confluent-schema-registry:8081"` | URL of the Kafka schema registry |
 | maxTasks | int | `2` | Maximum number of worker threads inside a connector pod. |

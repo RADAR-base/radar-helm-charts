@@ -140,7 +140,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-radar-kafka'
+          app.kubernetes.io/name: 'radar-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -175,7 +175,7 @@ networkpolicy:
 # -- Zookeeper URL. Not required when using Kraft mode.
 zookeeper:
 # -- Kafka broker URLs
-kafka: SASL_PLAINTEXT://radar-kafka-radar-kafka:9094
+kafka: SASL_PLAINTEXT://radar-kafka-bootstrap:9094
 # -- Number of brokers in the cluster
 kafka_num_brokers: "3"
 # -- Schema registry URL

@@ -74,7 +74,7 @@ A Helm chart for RADAR-base upload kafka connector. This is used for reading upl
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | zookeeper | string | `nil` | Zookeeper URL. Not required when using Kraft mode. |
-| kafka | string | `"SASL_PLAINTEXT://radar-kafka-radar-kafka:9094"` | Kafka broker URLs |
+| kafka | string | `"SASL_PLAINTEXT://radar-kafka-bootstrap:9094"` | Kafka broker URLs |
 | kafka_num_brokers | string | `"3"` | Number of brokers in the cluster |
 | schema_registry | string | `"http://confluent-schema-registry:8081"` | Schema registry URL |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |

@@ -131,7 +131,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-radar-kafka'
+          app.kubernetes.io/name: 'radar-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -169,7 +169,7 @@ kafka_num_brokers: 3
 
 kafka:
   # -- Kafka broker URLs
-  url: SASL_PLAINTEXT://radar-kafka-radar-kafka:9094
+  url: SASL_PLAINTEXT://radar-kafka-bootstrap:9094
   # -- Security related env vars set in pods. Not applied when `cc.enabled` is true.
   security:
     # -- Env vars set for authentication with Kafka brokers. Not applied when `cc.enabled` is true.

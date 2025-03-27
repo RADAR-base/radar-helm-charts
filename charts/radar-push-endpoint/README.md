@@ -89,7 +89,7 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | schemaRegistry | string | `"http://confluent-schema-registry:8081"` | Schema Registry URL |
 | max_requests | int | `1000` | Not used. To be confirmed |
-| bootstrapServers | string | `"radar-kafka-radar-kafka:9094"` | Kafka broker URLs |
+| bootstrapServers | string | `"radar-kafka-bootstrap:9094"` | Kafka broker URLs |
 | checkSourceId | bool | `true` | set to true, if sources in access token should be validated |
 | adminProperties | object | `{"sasl.mechanism":"SCRAM-SHA-512","security.protocol":"SASL_PLAINTEXT"}` | Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs. |
 | adminProperties."security.protocol" | string | `"SASL_PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |

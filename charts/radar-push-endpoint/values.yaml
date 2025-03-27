@@ -215,7 +215,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-radar-kafka'
+          app.kubernetes.io/name: 'radar-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -252,7 +252,7 @@ schemaRegistry: http://confluent-schema-registry:8081
 # -- Not used. To be confirmed
 max_requests: 1000
 # -- Kafka broker URLs
-bootstrapServers: radar-kafka-radar-kafka:9094
+bootstrapServers: radar-kafka-bootstrap:9094
 # -- set to true, if sources in access token should be validated
 checkSourceId: true
 # -- Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs.
