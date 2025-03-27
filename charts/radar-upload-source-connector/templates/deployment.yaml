@@ -47,6 +47,13 @@ spec:
           env:
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka }}"
+          {{- if .Values.secret.jaas.name }}
+          - name: KAFKA_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.jaas.name }}
+                key: {{ .Values.secret.jaas.key }}
+          {{- end }}
           - name: CONNECT_GROUP_ID
             value: "default"
           - name: CONNECT_CONFIG_STORAGE_TOPIC
@@ -71,8 +78,10 @@ spec:
             value: "/var/lib/kafka-connect-upload-source/logs/connect.offsets"
           - name: CONNECT_REST_ADVERTISED_HOST_NAME
             value: {{ include "radar-upload-source-connector.fullname" . }}
+          {{- if .Values.zookeeper}}
           - name: CONNECT_ZOOKEEPER_CONNECT
             value: "{{ .Values.zookeeper }}"
+          {{- end }}
           - name: CONNECT_VALUE_CONVERTER_CONNECT_META_DATA
             value: "false"
           - name: CONNECT_OFFSET_FLUSH_INTERVAL_MS
