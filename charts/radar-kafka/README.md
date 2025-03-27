@@ -31,6 +31,7 @@ Apache Kafka for RADAR-base using the Strimzi Operator
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | dev_deployment | bool | `false` | Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode) |
+| fullnameOverride | string | `"radar"` |  |
 | kafka.replicas | int | `3` |  |
 | kafka.metadataVersion | string | `"3.9-IV0"` | Metadata API version. Keep in sync with appVersion |
 | kafka.replicationFactor | int | `3` |  |
@@ -44,7 +45,7 @@ Apache Kafka for RADAR-base using the Strimzi Operator
 | schema-registry.registry.spec.listener | string | `"tls"` |  |
 | schema-registry.registry.spec.securityProtocol | string | `"SSL"` |  |
 | strimzi-kafka-operator.resources.limits.memory | string | `"512Mi"` |  |
-| strimzi-registry-operator.clusterName | string | `"radar-kafka"` | Keep in sync with 'fullnameOverride' |
+| strimzi-registry-operator.clusterName | string | `"radar"` | Keep in sync with 'fullnameOverride' |
 | strimzi-registry-operator.operatorNamespace | string | `"default"` | Keep in sync with namespace defined in helmfile |
 
 ----------------------------------------------

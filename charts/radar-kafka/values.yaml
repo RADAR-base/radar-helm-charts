@@ -1,6 +1,8 @@
 # -- Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode)
 dev_deployment: false
 
+fullnameOverride: radar
+
 kafka:
   replicas: 3
   # -- Metadata API version. Keep in sync with appVersion
@@ -31,6 +33,6 @@ strimzi-kafka-operator:
 
 strimzi-registry-operator:
   # -- Keep in sync with 'fullnameOverride'
-  clusterName: radar-kafka
+  clusterName: radar
   # -- Keep in sync with namespace defined in helmfile
   operatorNamespace: default
