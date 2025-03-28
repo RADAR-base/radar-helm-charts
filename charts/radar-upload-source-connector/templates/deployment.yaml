@@ -48,7 +48,12 @@ spec:
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka }}"
           {{- if .Values.secret.jaas.name }}
-          - name: KAFKA_SASL_JAAS_CONFIG
+          - name: CONNECT_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.jaas.name }}
+                key: {{ .Values.secret.jaas.key }}
+          - name: CONNECT_PRODUCER_SASL_JAAS_CONFIG
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.secret.jaas.name }}
