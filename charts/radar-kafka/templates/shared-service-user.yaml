@@ -26,6 +26,8 @@ spec:
           - Alter
           - Create
           - Describe
+          # Needed by ksql server
+          - DescribeConfigs
       - type: allow
         resource:
           type: group
@@ -37,3 +39,11 @@ spec:
           - Alter
           - Create
           - Describe
+      # Needed by ksql server
+      - type: allow
+        resource:
+          type: cluster
+          name: {{ index .Values "strimzi-registry-operator" "clusterName" }}
+          patternType: literal
+        operations:
+          - DescribeConfigs
