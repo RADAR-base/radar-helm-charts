@@ -225,3 +225,10 @@ producer:
   bufferMemory: 2000000
   # -- Batch size in bytes to batch records together into fewer requests when multiple records are being sent to the same partition.
   batchSize: 200000
+
+kafka_wait:
+  # -- Whether to wait before the specified number of brokers are available.
+  enabled: true
+  # -- Kafka connection properties file contents during wait. If empty, all environment variables starting with
+  # `CONNECT_` will be used.
+  properties: ""
