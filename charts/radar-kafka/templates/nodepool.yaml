@@ -7,6 +7,7 @@ metadata:
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
     strimzi.io/cluster: {{ template "common.names.fullname" . }}
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
 spec:
   replicas: {{ $replicas }}
   roles:

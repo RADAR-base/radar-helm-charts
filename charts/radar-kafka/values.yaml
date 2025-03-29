@@ -3,6 +3,15 @@ dev_deployment: false
 
 fullnameOverride: radar
 
+metrics:
+  enabled: true
+  # -- Values for Prometheus JMX Exporter attached to Kafka pods
+  # ref: https://strimzi.io/docs/operators/latest/deploying#proc-metrics-kafka-deploy-options-str
+  kafkaExporter:
+    groupRegex: ".*"
+    topicRegex: ".*"
+    enableSaramaLogging: true
+
 kafka:
   replicas: 3
   # -- Metadata API version. Keep in sync with appVersion
@@ -25,6 +34,7 @@ schema-registry:
       strimziVersion: v1beta2
       listener: tls
       securityProtocol: SSL
+      compatibilityLevel: none
 
 strimzi-kafka-operator:
   resources:

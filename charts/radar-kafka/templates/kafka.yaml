@@ -9,6 +9,7 @@ metadata:
   annotations:
     strimzi.io/node-pools: enabled
     strimzi.io/kraft: enabled
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
 spec:
   kafka:
     version: {{ .Chart.AppVersion }}
@@ -38,6 +39,16 @@ spec:
         tls: false
         authentication:
           type: scram-sha-512
+  {{- if .Values.metrics.enabled }}
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "common.names.fullname" . }}-kafka-metrics
+          key: kafka-metrics-config.yml
+  kafkaExporter:
+    {{- toYaml .Values.metrics.kafkaExporter | nindent 4 }}
+  {{- end }}
   entityOperator:
     topicOperator: {}
     userOperator: {}

@@ -1,5 +1,5 @@
-{{ $context := index .Values "schema-registry" "topic" }}
-{{- $replicationFactor := ternary 1 $context.replicationFactor .Values.dev_deployment -}}
+{{- $context := index .Values "schema-registry" "topic" }}
+{{- $replicationFactor := ternary 1 $context.replicationFactor .Values.dev_deployment }}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:

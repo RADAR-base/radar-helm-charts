@@ -32,6 +32,8 @@ Apache Kafka for RADAR-base using the Strimzi Operator
 |-----|------|---------|-------------|
 | dev_deployment | bool | `false` | Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode) |
 | fullnameOverride | string | `"radar"` |  |
+| metrics.enabled | bool | `true` |  |
+| metrics.kafkaExporter | object | `{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"}` | Values for Prometheus JMX Exporter attached to Kafka pods ref: https://strimzi.io/docs/operators/latest/deploying#proc-metrics-kafka-deploy-options-str |
 | kafka.replicas | int | `3` |  |
 | kafka.metadataVersion | string | `"3.9-IV0"` | Metadata API version. Keep in sync with appVersion |
 | kafka.replicationFactor | int | `3` |  |
@@ -44,6 +46,7 @@ Apache Kafka for RADAR-base using the Strimzi Operator
 | schema-registry.registry.spec.strimziVersion | string | `"v1beta2"` |  |
 | schema-registry.registry.spec.listener | string | `"tls"` |  |
 | schema-registry.registry.spec.securityProtocol | string | `"SSL"` |  |
+| schema-registry.registry.spec.compatibilityLevel | string | `"none"` |  |
 | strimzi-kafka-operator.resources.limits.memory | string | `"512Mi"` |  |
 | strimzi-registry-operator.clusterName | string | `"radar"` | Keep in sync with 'fullnameOverride' |
 | strimzi-registry-operator.operatorNamespace | string | `"default"` | Keep in sync with namespace defined in helmfile |

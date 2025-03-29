@@ -4,7 +4,7 @@ kind: KafkaUser
 metadata:
   name: shared-service-user
   labels:
-    strimzi.io/cluster: {{ index .Values "strimzi-registry-operator" "clusterName" }}
+    strimzi.io/cluster: {{ include "common.names.fullname" . }}
 spec:
   authentication:
     # Sets up this user for username/password authentication. This way we do not need to register and manage certificates.
@@ -43,7 +43,8 @@ spec:
       - type: allow
         resource:
           type: cluster
-          name: {{ index .Values "strimzi-registry-operator" "clusterName" }}
+          name: {{ include "common.names.fullname" . }}
           patternType: literal
         operations:
+          - Describe
           - DescribeConfigs

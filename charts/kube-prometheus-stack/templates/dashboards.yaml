@@ -9,3 +9,7 @@ metadata:
 data:
   nginx.json: {{ .Files.Get "files/nginx.json" | quote }} # Based on https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/nginx.json
   confluent.json: {{ .Files.Get "files/confluent.json" | quote }} # Based on https://raw.githubusercontent.com/confluentinc/cp-helm-charts/master/grafana-dashboard/confluent-open-source-grafana-dashboard.json with some modifications
+  strimzi-kafka.json: {{ .Files.Get "files/strimzi-kafka.json" | quote }} # Based on https://github.com/strimzi/strimzi-kafka-operator/blob/main/examples/metrics/grafana-dashboards/strimzi-kafka.json
+  strimzi-kafka-connect.json: {{ .Files.Get "files/strimzi-kafka-connect.json" | quote }} # Based on https://github.com/strimzi/strimzi-kafka-operator/blob/main/examples/metrics/grafana-dashboards/strimzi-kafka-connect.json
+  strimzi-kraft.json: {{ .Files.Get "files/strimzi-kraft.json" | quote }} # Based on https://github.com/strimzi/strimzi-kafka-operator/blob/main/examples/metrics/grafana-dashboards/strimzi-kraft.json
+  strimzi-operators.json: {{ .Files.Get "files/strimzi-operators.json" | quote }} # Based on https://github.com/strimzi/strimzi-kafka-operator/blob/main/examples/metrics/grafana-dashboards/strimzi-operators.json
