@@ -7,7 +7,7 @@ replicaCount: 1
 ##
 image:
   repository: apache/nifi
-  tag: "1.23.2"
+  tag: "2.3.0"
   pullPolicy: "IfNotPresent"
 
   ## Optionally specify an imagePullSecret.
@@ -90,13 +90,13 @@ properties:
   algorithm: NIFI_PBKDF2_AES_GCM_256
   # use externalSecure for when inbound SSL is provided by nginx-ingress or other external mechanism
   externalSecure: false
-  isNode: false
+  isNode: true
   httpsPort: 8443
   webProxyHost: # <clusterIP>:<NodePort> (If Nifi service is NodePort or LoadBalancer)
   clusterPort: 6007
   zkClientEnsembleTraker: false # https://issues.apache.org/jira/browse/NIFI-10481
-  clusterNodeConnectionTimeout: '5 sec'
-  clusterNodeReadTimeout: '5 sec'
+  clusterNodeConnectionTimeout: '10 sec'
+  clusterNodeReadTimeout: '10 sec'
   zookeeperConnectTimeout: '3 secs'
   zookeeperSessionTimeout: '3 secs'
   archiveMaxRetentionPeriod: "3 days"
@@ -113,6 +113,7 @@ properties:
     nifi.web.http.network.interface.default: eth0
     # listen to loopback interface so "kubectl port-forward ..." works
     nifi.web.http.network.interface.lo: lo
+  clusterStateProvider: zk-provider
 
   ## Include aditional processors
   # customLibPath: "/opt/configuration_resources/custom_lib"
@@ -193,6 +194,10 @@ headless:
 service:
   type: ClusterIP
   httpsPort: 8443
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
   # nodePort: 30236
   annotations: {}
     # loadBalancerIP:
@@ -374,7 +379,7 @@ ca:
   ## If true, enable the nifi-toolkit certificate authority
   enabled: false
   persistence:
-    enabled: true
+    enabled: false
   server: ""
   service:
     port: 9090
@@ -435,7 +440,7 @@ zookeeper:
 # ------------------------------------------------------------------------------
 registry:
   ## If true, install the Nifi registry
-  enabled: false
+  enabled: true
   url: ""
   port: 80
   ## Add values for the nifi-registry here
