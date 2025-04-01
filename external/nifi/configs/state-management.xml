@@ -16,4 +16,8 @@
         <property name="Session Timeout">10 seconds</property>
         <property name="Access Control">Open</property>
     </cluster-provider>
+    <cluster-provider>
+        <id>kubernetes-provider</id>
+        <class>org.apache.nifi.kubernetes.state.provider.KubernetesConfigMapStateProvider</class>
+    </cluster-provider>
 </stateManagement>
