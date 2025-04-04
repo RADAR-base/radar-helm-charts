@@ -66,13 +66,28 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Get the password secret.
+Get the name of the secret object.
 */}}
 {{- define "radar-rest-sources-backend.secretName" -}}
-{{- if .Values.existingSecret }}
-    {{- printf "%s" .Values.existingSecret -}}
-{{- else -}}
-    {{- printf "%s" (include "radar-rest-sources-backend.fullname" .) -}}
+{{- if eq .type "url" -}}
+    {{- .values.postgres.urlSecret.name | default .fullname -}}
+{{- else if eq .type "user" -}}
+    {{- .values.postgres.userSecret.name | default .fullname -}}
+{{- else if eq .type "password" -}}
+    {{- .values.postgres.passwordSecret.name | default .fullname -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the key for the secret object.
+*/}}
+{{- define "radar-rest-sources-backend.secretKey" -}}
+{{- if eq .type "url" -}}
+    {{- .values.postgres.urlSecret.key | default "databaseUrl" -}}
+{{- else if eq .type "user" -}}
+    {{- .values.postgres.userSecret.key | default "databaseUser" -}}
+{{- else if eq .type "password" -}}
+    {{- .values.postgres.passwordSecret.key | default "databasePassword" -}}
 {{- end -}}
 {{- end -}}
 
@@ -80,10 +95,10 @@ Get the password secret.
 Return true if a secret object should be created
 */}}
 {{- define "radar-rest-sources-backend.createSecret" -}}
-{{- if .Values.existingSecret }}
-{{- else if .Values.existingSecret -}}
-{{- else -}}
+{{- if not (and .Values.postgres.urlSecret.name .Values.postgres.userSecret.name .Values.postgres.passwordSecret.name) -}}
     {{- true -}}
+{{- else -}}
+    {{- false -}}
 {{- end -}}
 {{- end -}}
 
