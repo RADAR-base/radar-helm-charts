@@ -1,0 +1,40 @@
+cluster:
+
+  type: timescaledb
+  version:
+    timescaledb: "2.15"
+
+  mode: standalone
+
+  # To import from existing on-cluster database, set 'mode' to 'recovery'.
+  recovery:
+    method: import
+    import:
+      type: monolith
+      databases:
+        - database
+      source:
+        host: timscaledb
+        username: postgres
+        database: postgres
+        sslMode: prefer
+        passwordSecret:
+          create: false
+          name: postgresql
+          key: postgres-password
+
+  cluster:
+    instances: 1
+
+    imagePullPolicy: Always
+
+    storage:
+      size: 10Gi
+
+    monitoring:
+      enabled: true
+
+    # To use initdb, set 'mode' to 'standalone'
+    initdb:
+      database: database
+      owner: database
