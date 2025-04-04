@@ -2,6 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# -- Hostname for the Self-Enrolment Portal service
+server_name: localhost
+
 # -- Number of replicas in deployment
 replicaCount: 1
 # -- Number of revisions kept in history
@@ -65,6 +68,11 @@ secret:
   # -- switch to false to prevent checksum annotations being maintained and propagated to the pods
   hashSumEnabled: true
 
+# -- Reconfigure Ingress to not force TLS
+disable_tls: false
+# -- The protocol in URIs (https, http)
+advertised_protocol: https
+
 ingress:
   # -- Enable ingress controller resource
   enabled: true
@@ -73,14 +81,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   # -- Path within the url structure
-  path: /kratos-ui
+  path: "/kratos-ui(/|$)(.*)"
   # -- Ingress Path type
   pathType: ImplementationSpecific
   # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
   ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:
-    - localhost
+    - '{{ .Values.server_name }}'
   tls:
     # -- TLS Secret Name
     secretName: radar-base-tls
@@ -128,7 +136,9 @@ deployment:
   # -- Array of extra envs to be passed to the deployment. Kubernetes format is expected
   # - name: FOO
   #   value: BAR
-  extraEnv: []
+  extraEnv:
+    - name: HYDRA_ADMIN_URL
+      value: http://hydra-admin
   # -- If you want to mount external volume
   # For example, mount a secret containing Certificate root CA to verify database
   # TLS connection.
@@ -227,13 +237,13 @@ networkpolicy:
 kratosAdminUrl: "http://kratos-admin:80/admin"
 
 # -- Set this to ORY Kratos's public URL
-kratosPublicUrl: "http://kratos-public:80"
+kratosPublicUrl: "https://localhost/kratos"
 
 # -- Set this to ORY Kratos's public URL accessible from the outside world.
 kratosBrowserUrl: "https://localhost/kratos"
 
 # -- Set this to ORY Hydra's Admin URL
-hydraAdminUrl: "http://hydra-admin:4445/admin"
+hydraAdminUrl: "kratos-admin"
 
 # -- Set this to ORY Hydra's public URL
 hydraPublicUrl: "http://hydra-public:4444"
