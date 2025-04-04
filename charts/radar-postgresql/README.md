@@ -2,8 +2,9 @@
 
 # radar-postgresql
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-postgresql)](https://artifacthub.io/packages/helm/radar-base/radar-postgresql)
+> **:exclamation: This Helm Chart is deprecated!**
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![AppVersion: 11.16.0](https://img.shields.io/badge/AppVersion-11.16.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![AppVersion: 11.16.0](https://img.shields.io/badge/AppVersion-11.16.0-informational?style=flat-square)
 
 PostgreSQL (Postgres) is an open source object-relational database known for reliability and data integrity. ACID-compliant, it supports foreign keys, joins, views, triggers and stored procedures.
 
@@ -11,7 +12,6 @@ PostgreSQL (Postgres) is an open source object-relational database known for rel
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
 
 ## Prerequisites

@@ -2,8 +2,9 @@
 
 # radar-timescaledb
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-timescaledb)](https://artifacthub.io/packages/helm/radar-base/radar-timescaledb)
+> **:exclamation: This Helm Chart is deprecated!**
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![AppVersion: latest-pg12-bitnami](https://img.shields.io/badge/AppVersion-latest--pg12--bitnami-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![AppVersion: latest-pg12-bitnami](https://img.shields.io/badge/AppVersion-latest--pg12--bitnami-informational?style=flat-square)
 
 TimescaleDB is an open-source time-series database optimized for fast ingest and complex queries, built as an extension to PostgreSQL. It leverages PostgreSQL's reliability and ecosystem while adding time-series specific optimizations and features, such as automatic partitioning and compression.
 
@@ -11,7 +12,6 @@ TimescaleDB is an open-source time-series database optimized for fast ingest and
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
 
 ## Prerequisites
@@ -36,7 +36,7 @@ TimescaleDB is an open-source time-series database optimized for fast ingest and
 | postgresql.auth.postgresPassword | string | `""` |  |
 | postgresql.auth.username | string | `""` |  |
 | postgresql.auth.password | string | `""` |  |
-| postgresql.auth.database | string | `""` |  |
+| postgresql.auth.database | string | `"database"` |  |
 | postgresql.replication.applicationName | string | `"radar"` |  |
 | postgresql.primary.extraEnvVars | list | `[]` |  |
 | postgresql.primary.podAnnotations."backup.velero.io/backup-volumes" | string | `"data"` |  |
