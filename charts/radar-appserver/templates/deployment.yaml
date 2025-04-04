@@ -47,21 +47,25 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ template "radar-appserver.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- $secretName := include "radar-appserver.fullname" . }}
           env:
           - name: RADAR_IS_CONFIG_LOCATION
             value: /etc/radar-appserver/radar_is.yml
           - name: SPRING_DATASOURCE_URL
-            value: "jdbc:postgresql://{{ .Values.postgres.host }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}{{ .Values.postgres.connection_parameters }}"
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.urlSecret.name | default $secretName }}
+                key: {{ .Values.postgres.urlSecret.key | default "databaseUrl" }}
           - name: SPRING_DATASOURCE_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ template "radar-appserver.secretName" . }}
-                key: databaseUser
+                name: {{ .Values.postgres.userSecret.name | default $secretName }}
+                key: {{ .Values.postgres.userSecret.key | default "databaseUser" }}
           - name: SPRING_DATASOURCE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ template "radar-appserver.secretName" . }}
-                key: databasePassword
+                name: {{ .Values.postgres.passwordSecret.name | default $secretName }}
+                key: {{ .Values.postgres.passwordSecret.key | default "databasePassword" }}
           - name: SECURITY_RADAR_MANAGEMENTPORTAL_URL
             value: "{{ .Values.managementportal_url }}"
           - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -69,17 +73,17 @@ spec:
           - name: RADAR_ADMIN_USER
             valueFrom:
               secretKeyRef:
-                name: {{ template "radar-appserver.secretName" . }}
+                name: {{ $secretName }}
                 key: managementPortalClientId
           - name: RADAR_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ template "radar-appserver.secretName" . }}
+                name: {{ $secretName }}
                 key: managementPortalClientSecret
           - name: SECURITY_GITHUB_CLIENT_TOKEN
             valueFrom:
               secretKeyRef:
-                name: {{ template "radar-appserver.secretName" . }}
+                name: {{ $secretName }}
                 key: githubClientToken
           {{- if .Values.smtp.enabled }}
           - name: RADAR_NOTIFICATION_EMAIL_ENABLED
@@ -98,12 +102,12 @@ spec:
           - name: SPRING_MAIL_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ template "radar-appserver.secretName" . }}
+                name: {{ $secretName }}
                 key: smtpUsername
           - name: SPRING_MAIL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ template "radar-appserver.secretName" . }}
+                name: {{ $secretName }}
                 key: smtpPassword
             {{- end }}
           {{- end }}
@@ -130,12 +134,12 @@ spec:
           - name: RADAR_STORAGE_S3_ACCESSKEY
             valueFrom:
               secretKeyRef:
-                name: {{ template "radar-appserver.secretName" . }}
+                name: {{ $secretName }}
                 key: s3AccessKey
           - name: RADAR_STORAGE_S3_SECRETKEY
             valueFrom:
               secretKeyRef:
-                name: {{ template "radar-appserver.secretName" . }}
+                name: {{ $secretName }}
                 key: s3SecretKey
             {{- end }}
           {{- end }}

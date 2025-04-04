@@ -171,7 +171,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: '{{ .Values.postgres.host | trunc 63 | trimSuffix "-" }}'
+          app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
   - to:
     - namespaceSelector:
         matchLabels:
@@ -188,17 +188,34 @@ networkpolicy:
 # Configuration of the Postgres data base to store data from Appserver
 postgres:
   # -- host name of the postgres db
-  host: radar-appserver-postgresql
-  # -- post of the postgres db
-  port: 5432
+  host:
+  # -- port of the postgres db
+  port:
   # -- database name
-  database: appserver
-  # -- additional JDBC connection parameters e.g. sslmode=verify-full
-  connection_parameters: ""
+  database:
+  # -- Kubernetes secret containing the database JDBC Connection url
+  # (disables use of 'host', 'port' and 'database' values).
+  urlSecret:
+    name: radar-cloudnative-postgresql-appserver
+    key: jdbc-uri
   # -- postgres user
-  user: postgres
+  user:
+  # -- Kubernetes secret containing the database user
+  # (disables use of 'user' value).
+  userSecret:
+    name: radar-cloudnative-postgresql-appserver
+    key: username
   # -- password of the postgres user
-  password: password
+  password:
+  # -- Kubernetes secret containing the database password
+  # (disables use of 'password' value).
+  passwordSecret:
+    name: radar-cloudnative-postgresql-appserver
+    key: password
+
+  # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
+  # Ignored when using 'urlSecret'.
+  connection_parameters: ""
   ssl:
     # -- set to true of the connecting to postgres using SSL
     enabled: false
