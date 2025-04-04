@@ -236,10 +236,36 @@ sink:
 
 jdbc:
   # -- Host of the TimescaleDB database
-  url: jdbc:postgresql://timescaledb-postgresql-headless:5432/grafana-metrics
+  url:
+  # -- Kubernetes secret name for the JDBC connection URL (disables the use of 'url' value)
+  urlSecret:
+    name:
+    key:
   # -- TimescaleDB database username
-  user: grafana
-  # -- TimescaleDB database password
-  password: password
+  user:
+  # -- Kubernetes secret name for the username (disables the use of 'user' value)
+  userSecret:
+    name:
+    key:
+  # -- TimescaleDB database password (using a secret is recommended)
+  password:
+  # -- Kubernetes secret name for the password
+  passwordSecret:
+    name:
+    key:
   # -- JDBC connect dialect that the database uses
   dialect: TimescaleDBDatabaseDialect
+
+radar-cloudnative-timescaledb:
+  # -- Use the local cloudnative timescaledb cluster
+  enabled: true
+  # -- CloudNativePG TimescaleDB configuration
+  # @default -- check `values.yaml`
+  cluster:
+    fullnameOverride: jdbc-connector-timescaledb
+    mode: standalone
+    cluster:
+      instances: 1
+      initdb:
+        database: database_name
+        owner: database_name
