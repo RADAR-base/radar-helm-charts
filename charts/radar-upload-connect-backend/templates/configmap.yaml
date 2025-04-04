@@ -16,9 +16,6 @@ data:
     clientSecret: {{ .Values.client_secret }}
     managementPortalUrl: {{ .Values.managementportal_url }}
     jdbcDriver: org.postgresql.Driver
-    jdbcUrl: jdbc:postgresql://{{ .Values.postgres.host }}:5432/uploadconnector
-    jdbcUser: {{ .Values.postgres.user }}
-    jdbcPassword: {{ .Values.postgres.password }}
     additionalPersistenceConfig:
       "hibernate.dialect": "org.hibernate.dialect.PostgreSQLDialect"
     sourceTypes:

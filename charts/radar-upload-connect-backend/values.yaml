@@ -167,7 +167,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/instance: '{{ .Values.postgres.host | trunc 63 | trimSuffix "-" }}'
+          app.kubernetes.io/instance: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -193,11 +193,35 @@ client_id: radar_upload_backend
 client_secret: secret
 postgres:
   # -- Host name of the database to store uploaded data and metadata
-  host: radar-upload-postgresql
+  host:
+  # -- Database name
+  database:
+  # - Database port
+  port:
+  # -- Kubernetes secret containing the database JDBC Connection url
+  # (disables use of 'host', 'port' and 'database' values).
+  urlSecret:
+    name: radar-cloudnative-postgresql-uploadconnector
+    key: jdbc-uri
   # -- Database username
-  user: postgres
+  user:
+  # -- Kubernetes secret containing the database username
+  # (disables use of 'user' value).
+  userSecret:
+    name: radar-cloudnative-postgresql-uploadconnector
+    key: username
   # -- Database password
-  password: password
+  password:
+  # -- Kubernetes secret containing the database password
+  # (disables use of 'password' value).
+  passwordSecret:
+    name: radar-cloudnative-postgresql-uploadconnector
+    key: password
+
+  # -- Additional JDBC connection parameters e.g. sslmode=verify-full
+  #  Ignored when using 'urlSecret'.
+  parameters:
+
 # -- URL of the Management Portal
 managementportal_url: http://management-portal:8080/managementportal
 # -- Server name or domain name
