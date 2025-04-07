@@ -2612,6 +2612,30 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/cert-manager-letsencrypt-0.1.0/cert-manager-letsencrypt-0.1.0.tgz
     version: 0.1.0
+  cloudnative-pg:
+  - apiVersion: v2
+    appVersion: 1.25.1
+    created: "2025-04-07T08:57:56.638306115Z"
+    description: CloudNativePG Operator Helm Chart
+    digest: c3c91fc641a77ae03ead2e790d30503c4e3897348ec719ce88586b1673e12f27
+    home: https://cloudnative-pg.io
+    icon: https://raw.githubusercontent.com/cloudnative-pg/artwork/main/cloudnativepg-logo.svg
+    keywords:
+    - operator
+    - controller
+    - postgresql
+    - postgres
+    - database
+    maintainers:
+    - email: p.scorsolini@gmail.com
+      name: phisco
+    name: cloudnative-pg
+    sources:
+    - https://github.com/cloudnative-pg/charts
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/cloudnative-pg-0.23.2/cloudnative-pg-0.23.2.tgz
+    version: 0.23.2
   common:
   - annotations:
       category: Infrastructure
@@ -17849,4 +17873,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-04-07T08:57:52.93586608Z"
+generated: "2025-04-07T08:57:56.638994264Z"
