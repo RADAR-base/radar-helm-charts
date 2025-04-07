@@ -50,34 +50,35 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ template "app-config.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- $secretName := include "app-config.fullname" . }}
           env:
           - name: JAVA_OPTS
             value: "{{ .Values.javaOpts }}"
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.jdbc.urlSecret.name | default $secretName }}
+                key: {{ .Values.jdbc.urlSecret.key | default "databaseUrl" }}
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.jdbc.userSecret.name | default $secretName }}
+                key: {{ .Values.jdbc.userSecret.key | default "databaseUser" }}
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.jdbc.passwordSecret.name | default $secretName }}
+                key: {{ .Values.jdbc.passwordSecret.key | default "databasePassword" }}
           - name: MANAGEMENT_PORTAL_CLIENT_ID
             valueFrom:
               secretKeyRef:
-                name: {{ template "app-config.secretName" . }}
+                name: {{ $secretName }}
                 key: managementPortalClientId
           - name: MANAGEMENT_PORTAL_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
-                name: {{ template "app-config.secretName" . }}
+                name: {{ $secretName }}
                 key: managementPortalClientSecret
-          - name: DATABASE_URL
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "app-config.secretName" . }}
-                key: databaseUrl
-          - name: DATABASE_USER
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "app-config.secretName" . }}
-                key: databaseUser
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "app-config.secretName" . }}
-                key: databasePassword
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}

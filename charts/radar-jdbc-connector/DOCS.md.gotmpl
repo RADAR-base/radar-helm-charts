@@ -1,0 +1,10 @@
+{{- define "radar.jdbc-connector" -}}
+## CloudNativePG TimescaleDB
+
+This chart deploys the CloudNativePG TimescaleDB via the _radar-cloudnative-timescaledb_ chart. In turn,
+_radar-cloudnative-timescaledb_ uses the CloudNativePG operator chart to deploy the TimescaleDB database.
+Configuration to the _radar-cloudnative-timescaledb_ chart can be passed via the `radar-cloudnative-timescaledb:` key in
+the values.yaml file.
+
+Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: false` in the `radar-cloudnative-timescaledb:` key.
+{{- end }}

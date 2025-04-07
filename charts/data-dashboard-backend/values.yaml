@@ -141,11 +141,8 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
-existingSecret: ""
-
 # -- Standard JAVA_OPTS that should be passed to this service
 javaOpts: "-Xmx550m"
-
 
 managementPortal:
   # -- ManagementPortal URL
@@ -158,14 +155,30 @@ managementPortal:
 jwtResourceName: res_DataDashboardAPI
 
 jdbc:
+  # -- JDBC Connection url of the database.
+  url:
+  # -- Kubernetes secret containing the database JDBC Connection url
+  # (disables use of 'url' value).
+  urlSecret:
+    name: data-dashboard-timescaledb-app
+    key: jdbc-uri
+  # -- Username of the database
+  user:
+  # -- Kubernetes secret containing the database JDBC Connection url
+  # (disables use of 'url' value).
+  userSecret:
+    name: data-dashboard-timescaledb-app
+    key: username
+  # -- Password of the database
+  password:
+  # -- Kubernetes secret containing the database password
+  # (disables use of 'password' value).
+  passwordSecret:
+    name: data-dashboard-timescaledb-app
+    key: password
+
   # -- JDBC Driver to connect to the database.
   driver: org.postgresql.Driver
-  # -- JDBC Connection url of the database.
-  url: jdbc:postgresql://postgresql:5432/data-dashboard
-  # -- Username of the database
-  user: postgres
-  # -- Password of the user
-  password: secret
   # -- Hibernate dialect to use for JDBC Connection
   dialect: org.hibernate.dialect.PostgreSQLDialect
   properties:

@@ -3,20 +3,27 @@
 # radar-jdbc-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-jdbc-connector)](https://artifacthub.io/packages/helm/radar-base/radar-jdbc-connector)
 
-![Version: 0.6.2](https://img.shields.io/badge/Version-0.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.6](https://img.shields.io/badge/AppVersion-10.5.6-informational?style=flat-square)
+![Version: 0.7.1](https://img.shields.io/badge/Version-0.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.8.0](https://img.shields.io/badge/AppVersion-10.8.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
 
 **Homepage:** <https://radar-base.org>
+
+## CloudNativePG TimescaleDB
+
+This chart deploys the CloudNativePG TimescaleDB via the _radar-cloudnative-timescaledb_ chart. In turn,
+_radar-cloudnative-timescaledb_ uses the CloudNativePG operator chart to deploy the TimescaleDB database.
+Configuration to the _radar-cloudnative-timescaledb_ chart can be passed via the `radar-cloudnative-timescaledb:` key in
+the values.yaml file.
+
+Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: false` in the `radar-cloudnative-timescaledb:` key.
 
 ## Maintainers
 
 | Name | Email | Url |
 | ---- | ------ | --- |
 | Pauline Conde | <pauline.conde@kcl.ac.uk> | <https://www.kcl.ac.uk/people/pauline-conde> |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -32,6 +39,7 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 
 | Repository | Name | Version |
 |------------|------|---------|
+| file://../radar-cloudnative-timescaledb | radar-cloudnative-timescaledb | 0.1.0 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
@@ -102,7 +110,12 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | sink.primaryKeys.fields | list | `["time","userId","projectId"]` | fields to include as primary keys when creating the table |
 | sink.topics | string | `"android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps"` | Comma-separated list of topics the connector will read from and ingest into the database |
 | sink.tableNameFormat | string | `"${topic}"` | How to format a table name based on the inserted topic |
-| jdbc.url | string | `"jdbc:postgresql://timescaledb-postgresql-headless:5432/grafana-metrics"` | Host of the TimescaleDB database |
-| jdbc.user | string | `"grafana"` | TimescaleDB database username |
-| jdbc.password | string | `"password"` | TimescaleDB database password |
+| jdbc.url | string | `nil` | Host of the TimescaleDB database |
+| jdbc.urlSecret | object | `{"key":null,"name":null}` | Kubernetes secret name for the JDBC connection URL (disables the use of 'url' value) |
+| jdbc.user | string | `nil` | TimescaleDB database username |
+| jdbc.userSecret | object | `{"key":null,"name":null}` | Kubernetes secret name for the username (disables the use of 'user' value) |
+| jdbc.password | string | `nil` | TimescaleDB database password (using a secret is recommended) |
+| jdbc.passwordSecret | object | `{"key":null,"name":null}` | Kubernetes secret name for the password |
 | jdbc.dialect | string | `"TimescaleDBDatabaseDialect"` | JDBC connect dialect that the database uses |
+| radar-cloudnative-timescaledb.enabled | bool | `true` | Use the local cloudnative timescaledb cluster |
+| radar-cloudnative-timescaledb.cluster | object | check `values.yaml` | CloudNativePG TimescaleDB configuration |
