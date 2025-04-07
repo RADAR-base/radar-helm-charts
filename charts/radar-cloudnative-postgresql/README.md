@@ -3,7 +3,7 @@
 # radar-cloudnative-postgresql
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-cloudnative-postgresql)](https://artifacthub.io/packages/helm/radar-base/radar-cloudnative-postgresql)
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square)
 
 CloudNativePG Postgresql helm chart for RADAR-base
 
@@ -35,7 +35,7 @@ for additional information on how to configure the operator if needed.
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://cloudnative-pg.github.io/charts | cluster | 0.2.1 |
+| file://../../external/cloudnativepg-cluster | cluster | 0.2.1 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values

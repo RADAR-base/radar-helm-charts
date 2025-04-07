@@ -29,7 +29,6 @@ jobs:
         run: |
           helm repo add radar https://radar-base.github.io/radar-helm-charts
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-          helm repo add cloudnative-pg https://cloudnative-pg.github.io/charts
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
