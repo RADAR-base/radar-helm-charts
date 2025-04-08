@@ -80,6 +80,7 @@ repos:
     exclude: external/
     require_serial: true
     pass_filenames: false
+    stages: [push]
   # - id: checkov
   #   name: Run Checkov
   #   language: system
