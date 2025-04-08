@@ -75,8 +75,25 @@ affinity: {}
 # -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specific [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
 extraEnvVars:
   # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  # Needed by kafka_init script.
   - name: CONNECT_SECURITY_PROTOCOL
-    value: PLAINTEXT
+    value: SASL_PLAINTEXT
+  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  # Needed by kafka_init script.
+  - name: CONNECT_SASL_MECHANISM
+    value: SCRAM-SHA-512
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  - name: CONNECT_CONSUMER_SECURITY_PROTOCOL
+    value: SASL_PLAINTEXT
+  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  - name: CONNECT_CONSUMER_SASL_MECHANISM
+    value: SCRAM-SHA-512
+
+secret:
+  # -- Secret name for the JAAS configuration
+  jaas:
+    name: shared-service-user
+    key: sasl.jaas.config
 
 # -- Custom livenessProbe that overrides the default one
 customLivenessProbe: {}
@@ -141,14 +158,14 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-kafka'
+          app.kubernetes.io/name: 'radar-kafka-bootstrap'
   - to:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-schema-registry'
+          app.kubernetes.io/name: 'confluent-schema-registry'
   - to:
     - namespaceSelector:
         matchLabels:
@@ -170,11 +187,11 @@ networkpolicy:
         protocol: TCP
 
 # -- URI of Kafka brokers of the cluster
-kafka: PLAINTEXT://cp-kafka-headless:9092
+kafka: SASL_PLAINTEXT://radar-kafka-bootstrap:9094
 # -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
 kafka_num_brokers: "3"
 # -- URL of the Kafka schema registry
-schema_registry: http://cp-schema-registry:8081
+schema_registry: http://confluent-schema-registry:8081
 
 # -- Maximum number of worker threads inside a connector pod.
 maxTasks: 2
