@@ -93,6 +93,18 @@ spec:
             value: "3000"
           - name: CONNECT_PLUGIN_PATH
             value: /usr/share/kafka-connect/plugins
+          {{if .Values.secret.jaas.name }}
+          - name: CONNECT_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.jaas.name }}
+                key: {{ .Values.secret.jaas.key }}
+          - name: CONNECT_CONSUMER_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.jaas.name }}
+                key: {{ .Values.secret.jaas.key }}
+          {{- end }}
           - name: CONNECT_LOG4J_ROOT_LOGLEVEL
             value: {{ .Values.logLevel.root | quote }}
           - name: KAFKA_BROKERS
