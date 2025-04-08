@@ -61,9 +61,9 @@ spec:
           - name: SEP_CLIENT_SECRET
             value: {{ .Values.sepClientSecret | quote }}
           - name: NEXT_PUBLIC_ARMT_REDIRECT_URI
-            value: https://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/armt
+            value: {{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/armt
           - name: NEXT_PUBLIC_SEP_REDIRECT_URI
-            value: https://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/sep
+            value: {{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/sep
           - name: GITHUB_AUTH_TOKEN
             value: {{ .Values.githubAuthToken | quote }}
           - name: GATEWAY_URL

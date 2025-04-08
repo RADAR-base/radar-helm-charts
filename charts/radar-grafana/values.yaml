@@ -1,0 +1,132 @@
+# -- Grafana Helm Chart configuration
+# @default -- check 'values.yaml'
+grafana:
+
+  # -- Hostname for the Grafana service
+  server_name: localhost
+  # -- Protocol for the Grafana service (allowed values: http, https)
+  advertised_protocol: https
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    path: /
+    pathType: Prefix
+    hosts:
+      - 'dashboard.{{ .Values.server_name }}'
+    tls:
+      - secretName: radar-base-tls-dashboard
+        hosts:
+          - 'dashboard.{{ .Values.server_name }}'
+
+  image:
+    registry: docker.io
+    repository: grafana/grafana
+
+  downloadDashboardsImage:
+    registry: docker.io
+    repository: curlimages/curl
+
+  downloadDashboards:
+    env:
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/allprojects/home.json
+
+  persistence:
+    type: pvc
+    enabled: true
+    size: 10Gi
+
+  envValueFrom:
+    POSTGRES_USER:
+      secretKeyRef:
+        name: grafana-timescaledb-app
+        key: username
+    POSTGRES_PASSWORD:
+      secretKeyRef:
+        name: grafana-timescaledb-app
+        key: password
+    POSTGRES_DB:
+      secretKeyRef:
+        name: grafana-timescaledb-app
+        key: dbname
+    POSTGRES_HOST:
+      secretKeyRef:
+        name: grafana-timescaledb-app
+        key: host
+
+  env:
+    GF_USERS_DEFAULT_THEME: light
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - id: 1
+          orgId: 1
+          name: PostgreSQL
+          type: postgres
+          typeLogoUrl: public/app/plugins/datasource/postgres/img/postgresql_logo.svg
+          access: proxy
+          url: ${POSTGRES_HOST}
+          secureJsonData:
+            password: ${POSTGRES_PASSWORD}
+          user: ${POSTGRES_USER}
+          database: ${POSTGRES_DB}
+          basicAuth: false
+          isDefault: true
+          jsonData:
+            postgresVersion: 1200
+            timescaledb: true
+            sslmode: disable
+          readOnly: true
+
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'allprojects'
+        orgId: 1
+        folder: 'All Projects'
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/allprojects
+
+  grafana.ini:
+    server:
+      root_url: '{{ .Values.advertised_protocol }}://dashboard.{{ .Values.server_name }}/'
+      domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ .Values.ingress.hosts | first }}{{ else }}''{{ end }}"
+    users:
+      auto_assign_org: true
+      auto_assign_org_role: Editor
+    auth.generic_oauth:
+      name: managementportal
+      enabled: true
+      auth_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/managementportal/oauth/authorize'
+      token_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/managementportal/oauth/token'
+      api_url: http://management-portal:8080/managementportal/api/account'
+      client_id: grafana_dashboard
+      # Fix for https://github.com/grafana/grafana/issues/70203#issuecomment-1798601871
+      oauth_allow_insecure_email_lookup: true
+      # client_secret: ""
+      empty_scopes: true
+
+  sidecar:
+    image:
+      registry: quay.io
+      repository: kiwigrid/k8s-sidecar
+    alerts:
+      reloadURL: "'{{ .Values.advertised_protocol }}://{{ .Values.server_name }}:3000/api/admin/provisioning/alerting/reload"
+    dashboards:
+      reloadURL: "'{{ .Values.advertised_protocol }}://{{ .Values.server_name }}:3000/api/admin/provisioning/dashboards/reload"
+    datasources:
+      reloadURL: "'{{ .Values.advertised_protocol }}://{{ .Values.server_name }}:3000/api/admin/provisioning/datasources/reload"
+    plugins:
+      reloadURL: "'{{ .Values.advertised_protocol }}://{{ .Values.server_name }}:3000/api/admin/provisioning/plugins/reload"
+    notifiers:
+      reloadURL: "'{{ .Values.advertised_protocol }}://{{ .Values.server_name }}:3000/api/admin/provisioning/notifications/reload"
+
+  assertNoLeakedSecrets: false

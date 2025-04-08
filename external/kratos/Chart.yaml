@@ -1,7 +1,12 @@
 apiVersion: v2
-appVersion: "v1.1.0"
+appVersion: v1.3.0
+dependencies:
+- alias: ory
+  name: ory-commons
+  repository: file://../ory-commons
+  version: 0.1.0
 description: A ORY Kratos Helm chart for Kubernetes
-name: kratos
 icon: https://raw.githubusercontent.com/ory/docs/master/docs/static/img/logo-kratos.svg
-version: 0.43.1
+name: kratos
 type: application
+version: 0.52.1

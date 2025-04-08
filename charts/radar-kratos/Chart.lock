@@ -1,0 +1,9 @@
+dependencies:
+- name: kratos
+  repository: file://../../external/kratos
+  version: 0.52.1
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  version: 2.27.0
+digest: sha256:86426d1a22fa3b54d822658b77c7239939b88211d61b3233704d8a97c08dda15
+generated: "2025-04-07T16:53:58.402186214+02:00"
