@@ -30,11 +30,13 @@ data:
     transforms.combineKeyValue.type=org.radarbase.kafka.connect.transforms.CombineKeyValue
     rotate.schedule.interval.ms={{ .Values.rotateInterval | int }}
     timezone=UTC
-    # -- See https://stackoverflow.com/questions/62525026/kafka-connect-exception-replication-factor-3-larger-than-available-brokers-1
-    config.storage.replication.factor={{ .Values.kafka_num_brokers | int }}
-    offset.storage.replication.factor={{ .Values.kafka_num_brokers | int }}
-    status.storage.replication.factor={{ .Values.kafka_num_brokers | int }}
-    topic.creation.default.replication.factor={{ .Values.kafka_num_brokers | int }}
+
+    {{/*-1 means use default configured by the kafka broker*/}}
+    config.storage.replication.factor=-1
+    offset.storage.replication.factor=-1
+    status.storage.replication.factor=-1
+    topic.creation.default.replication.factor=-1
+
     # --
     avro.codec=deflate
     errors.tolerance=all
