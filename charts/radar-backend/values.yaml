@@ -88,19 +88,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-zookeeper'
+          app.kubernetes.io/name: 'radar-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-kafka'
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: 'cp-schema-registry'
+          app.kubernetes.io/name: 'confluent-schema-registry'
   - to:
     - namespaceSelector:
         matchLabels:
@@ -117,10 +111,10 @@ networkpolicy:
 # command: "monitor"
 # command: "stream"
 
-zookeeper: cp-zookeeper-headless:2181
-kafka: cp-kafka-headless:9092
+zookeeper:
+kafka: radar-kafka-bootstrap:9094
 rest_proxy: http://cp-kafka-rest:8082
-schema_registry: http://cp-schema-registry:8081
+schema_registry: http://confluent-schema-registry:8081
 kafka_num_brokers: "3"
 
 smtp:
