@@ -11,13 +11,13 @@ data:
   radar.yml: |
     version: 1.0
     released: 2018-09-13
-
+    {{- if .Values.zookeeper }}
     #============================== Zookeeper ==============================#
     #List of Zookeeper instances
     zookeeper:
         - host: {{ first (splitList ":" .Values.zookeeper) }}
           port: {{ last (splitList ":" .Values.zookeeper) }}
-
+    {{- end }}
     #================================ Kafka ================================#
     #List of Kafka brokers
     broker:
