@@ -6685,6 +6685,31 @@ entries:
     version: 0.1.1
   radar-cloudnative-postgresql:
   - apiVersion: v2
+    created: "2025-04-08T07:36:10.995605197Z"
+    dependencies:
+    - name: cluster
+      repository: file://../../external/cloudnativepg-cluster
+      version: 0.2.1
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: CloudNativePG Postgresql helm chart for RADAR-base
+    digest: 3b4b8159e21a963b34333f0abd29649655b034447327dc4b30326964f2304fa8
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-cloudnative-postgresql
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-cloudnative-postgresql
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-cloudnative-postgresql-0.2.2/radar-cloudnative-postgresql-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
     created: "2025-04-07T08:57:51.736102611Z"
     dependencies:
     - name: cluster
@@ -6710,6 +6735,31 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-cloudnative-postgresql-0.2.1/radar-cloudnative-postgresql-0.2.1.tgz
     version: 0.2.1
   radar-cloudnative-timescaledb:
+  - apiVersion: v2
+    created: "2025-04-08T07:36:11.13745145Z"
+    dependencies:
+    - name: cluster
+      repository: file://../../external/cloudnativepg-cluster
+      version: 0.2.1
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: CloudNativePG TimescaleDB cluster helm chart for RADAR-base
+    digest: d86263c394ad18e2cd2749d5aed96bfb98fd2852a512fefb7d3e548ccb540aae
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-cloudnative-timescaledb
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-cloudnative-timescaledb
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-cloudnative-timescaledb-0.1.1/radar-cloudnative-timescaledb-0.1.1.tgz
+    version: 0.1.1
   - apiVersion: v2
     created: "2025-04-07T08:57:51.923501736Z"
     dependencies:
@@ -17873,4 +17923,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-04-07T08:57:56.638994264Z"
+generated: "2025-04-08T07:36:11.13826152Z"
