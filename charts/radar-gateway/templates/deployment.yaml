@@ -69,6 +69,20 @@ spec:
           env:
           - name: JAVA_OPTS
             value: {{ include "radar-gateway.javaOpts" . }}
+          {{- if and .Values.secret.producer.jaas.name (not .Values.cc.enabled) }}
+          - name: KAFKA_PRODUCER_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.producer.jaas.name }}
+                key: {{ .Values.secret.producer.jaas.key }}
+          {{- end }}
+          {{- if and .Values.secret.admin.jaas.name (not .Values.cc.enabled) }}
+          - name: KAFKA_ADMIN_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.admin.jaas.name }}
+                key: {{ .Values.secret.admin.jaas.key }}
+          {{- end }}
           {{- if .Values.sentry.dsn }}
           - name: SENTRY_DSN
             value: {{ .Values.sentry.dsn }}
