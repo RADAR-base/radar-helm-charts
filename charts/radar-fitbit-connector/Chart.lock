@@ -2,5 +2,8 @@ dependencies:
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts
   version: 2.27.0
-digest: sha256:397fd12e07f1aa1a5280579406a75b169f8262ac4214584ea366460277288546
-generated: "2024-12-27T13:57:19.682455203+01:00"
+- name: strimzi-registry-operator
+  repository: https://lsst-sqre.github.io/charts/
+  version: 2.1.0
+digest: sha256:ab078404d9ede9267ceab7561a240904c7ede1e302767820fd828c86050df76e
+generated: "2025-04-08T13:45:21.289054739+02:00"
