@@ -1,0 +1,103 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: radar-fitbit-connector
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  version: {{ .Chart.AppVersion }}
+  replicas: {{ .Values.replicaCount }}
+  bootstrapServers: {{ .Values.kafka }}
+  image: {{ template "radar-fitbit-connector.image" . }}
+  authentication:
+    type: scram-sha-512
+    username: shared-service-user
+    passwordSecret:
+      secretName: {{ .Values.secret.jaas.name }}
+      password: password
+  config:
+    group.id: "default"
+    offset.storage.topic: "default.offsets"
+    config.storage.topic: "default.config"
+    status.storage.topic: "default.status"
+    config.storage.replication.factor: -1
+    offset.storage.replication.factor: -1
+    status.storage.replication.factor: -1
+    key.converter: "io.confluent.connect.avro.AvroConverter"
+    value.converter: "io.confluent.connect.avro.AvroConverter"
+    key.converter.schema.registry.url: {{ .Values.schema_registry }}
+    value.converter.schema.registry.url: {{ .Values.schema_registry }}
+    internal.key.converter: "org.apache.kafka.connect.json.JsonConverter"
+    internal.value.converter: "org.apache.kafka.connect.json.JsonConverter"
+{{/*    offset.flush.interval.ms: {{ .Values.connect.offsetFlushIntervalMs }}*/}}
+{{/*    offset.storage.file.filename: "/var/lib/kafka-connect-fitbit-source/logs/connect.offsets"*/}}
+{{/*    producer.compression.type: {{ .Values.producer.compressionType }}*/}}
+{{/*    producer.batch.size: {{ .Values.producer.batchSize }}*/}}
+{{/*    producer.buffer.memory: {{ .Values.producer.bufferMemory }}*/}}
+  env:
+    {{- if .Values.secret.jaas.name }}
+    - name: CONNECT_SASL_JAAS_CONFIG
+      valueFrom:
+        secretKeyRef:
+          name: {{ .Values.secret.jaas.name }}
+          key: {{ .Values.secret.jaas.key }}
+    {{- end }}
+    - name: CONNECT_GROUP_ID
+      value: "default"
+    - name: CONNECT_CONFIG_STORAGE_TOPIC
+      value: "default.config"
+    - name: CONNECT_OFFSET_STORAGE_TOPIC
+      value: "default.offsets"
+    - name: CONNECT_STATUS_STORAGE_TOPIC
+      value: "default.status"
+    - name: CONNECT_KEY_CONVERTER
+      value: "io.confluent.connect.avro.AvroConverter"
+    - name: CONNECT_VALUE_CONVERTER
+      value: "io.confluent.connect.avro.AvroConverter"
+    - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL
+      value: "{{ .Values.schema_registry }}"
+    - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL
+      value: "{{ .Values.schema_registry }}"
+    - name: CONNECT_INTERNAL_KEY_CONVERTER
+      value: "org.apache.kafka.connect.json.JsonConverter"
+    - name: CONNECT_INTERNAL_VALUE_CONVERTER
+      value: "org.apache.kafka.connect.json.JsonConverter"
+    - name: CONNECT_REST_ADVERTISED_HOST_NAME
+      value: {{ include "radar-fitbit-connector.fullname" . }}
+    {{- if .Values.zookeeper }}
+    - name: CONNECT_ZOOKEEPER_CONNECT
+      value: "{{ .Values.zookeeper }}"
+    {{- end }}
+    - name: CONNECTOR_PROPERTY_FILE_PREFIX
+      value: "source-fitbit/source-fitbit"
+    - name: KAFKA_HEAP_OPTS
+      value: {{ .Values.heapOptions }}
+    - name: KAFKA_BROKERS
+      value: "{{ .Values.kafka_num_brokers }}"
+    - name: CONNECT_LOG4J_LOGGERS
+      value: "org.reflections=ERROR"
+    - name: WAIT_FOR_KAFKA
+      value: {{ if .Values.kafka_wait.enabled }}"1"{{ else }}"0"{{ end }}
+    {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
+    - name: COMMAND_CONFIG_FILE_PATH
+      value: /etc/kafka-connect/source-fitbit/kafka-wait.properties
+    {{- end }}
+    {{- with .Values.extraEnvVars }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  resources:
+    {{- toYaml .Values.resources | nindent 4 }}
+  {{- with .Values.nodeSelector }}
+  nodeSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.affinity }}
+  affinity:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.tolerations }}
+  tolerations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}

@@ -228,7 +228,7 @@ schema_registry: http://radar-kafka-schema-registry:8081
 
 kafka_wait:
   # -- Whether to wait before the specified number of brokers are available.
-  enabled: true
+  enabled: false
   # -- Kafka connection properties file contents during wait. If empty, all environment variables starting with
   # `CONNECT_` will be used.
   properties: ""

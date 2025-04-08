@@ -1,0 +1,15 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: radar-fitbit-source
+  labels:
+    strimzi.io/cluster: radar-fitbit-connector
+spec:
+  class: org.radarbase.connect.rest.fitbit.FitbitSourceConnector
+  tasksMax: 4
+  config:
+    rest.source.base.url: https://api.fitbit.com
+    rest.source.poll.interval.ms: 5000
+    rest.source.request.generator.class: org.radarbase.connect.rest.fitbit.request.FitbitRequestGenerator
+    fitbit.user.repository.class: org.radarbase.connect.rest.fitbit.user.ServiceUserRepository
+    fitbit.user.repository.url: http://localhost:8080/
