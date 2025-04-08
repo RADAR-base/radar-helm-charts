@@ -1,0 +1,80 @@
+# -- Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode)
+dev_deployment: false
+
+# -- String to partially override radar-gateway.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override radar-gateway.fullname template with a string
+fullnameOverride: radar
+
+# -- Enable metrics to be collected via Prometheus-operator
+metrics:
+  # -- Enable monitoring of metrics
+  enabled: true
+  # -- Values for Prometheus JMX Exporter attached to Kafka pods
+  # ref: https://strimzi.io/docs/operators/latest/deploying#proc-metrics-kafka-deploy-options-str
+  kafkaExporter:
+    groupRegex: ".*"
+    topicRegex: ".*"
+    enableSaramaLogging: true
+
+# -- Values for kafka operator
+# ref: https://strimzi.io/docs/operators/latest/deploying#assembly-operators-str
+# @default -- check `values.yaml`
+strimzi-kafka-operator:
+  resources:
+    limits:
+      memory: 512Mi
+
+# -- Values for schema registry operator
+# ref: https://github.com/lsst-sqre/strimzi-registry-operator
+strimzi-registry-operator:
+  # -- Keep in sync with 'fullnameOverride'
+  clusterName: radar
+  # -- Keep in sync with namespace used by deployment
+  operatorNamespace: default
+
+# -- Values for strimzi-registry-operator
+# ref: https://strimzi.io/docs/operators/latest/deploying#proc-registry-deploy-options-str
+kafka:
+
+  # -- Number of Kafka brokers
+  replicas: 3
+  # -- Number of replicas for Kafka topics
+  replicationFactor: 3
+  # -- Number of in-sync kafka broker replicas
+  insyncReplicas: 2
+  # -- Number of topic data partitions. Rule of thumb: 3 times the number of brokers. Headroom is used for future upscale of brokers.
+  # ref: https://learn.conduktor.io/kafka/kafka-topics-choosing-the-replication-factor-and-partitions-count/
+  partitions: 9
+
+  # -- Metadata API version. Keep in sync with appVersion
+  metadataVersion: 3.9-IV0
+
+  # -- Storage size for Kafka pods
+  storage:
+    size: 10Gi
+
+  # -- Security Context for Kafka pods
+  # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str
+  podSecurityContext: {}
+
+  # -- Security Context for Kafka containers
+  # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str
+  securityContext: {}
+
+# -- Values for schema registry deployed by strimzi-registry-operator
+# ref: https://github.com/lsst-sqre/strimzi-registry-operator
+# @default -- check `values.yaml`
+schema-registry:
+  topic:
+    partitions: 1
+    replicationFactor: 3
+    config:
+      cleanup.policy: compact
+  registry:
+    name: confluent-schema-registry
+    spec:
+      strimziVersion: v1beta2
+      listener: tls
+      securityProtocol: SSL
+      compatibilityLevel: none

@@ -1,0 +1,7 @@
+{{ $context := index .Values "schema-registry" "registry" }}
+apiVersion: roundtable.lsst.codes/v1beta1
+kind: StrimziSchemaRegistry
+metadata:
+  name: {{ $context.name }}
+spec:
+  {{- toYaml $context.spec | nindent 2 }}

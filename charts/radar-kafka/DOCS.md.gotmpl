@@ -1,0 +1,11 @@
+{{ define "radar-kafka.strimzi" }}
+
+# Kafka and Schema registry operators
+
+This chart deploys a Kafka cluster through the Strimzi Kafka operator that is a dependency to this chart. Configuration for the Strimzi operator chart is passed via the `strimzi-kafka-operator` key in the `values.yaml` file.
+Consult the [documentation](https://strimzi.io/documentation/) of the Strimzi Kafka operator for more information on how to configure this service.
+
+In addition, this chart deploys a Confluent Schema Registry connected to the Kafka cluster through the Strimzi Registry operator that is a dependency to this chart. Configuration for this chart is passed via the `strimzi-registry-operator` key in the `values.yaml` file.
+Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operator) of the Stimzi Registry operator for more information on how to configure this service.
+
+{{- end }}
