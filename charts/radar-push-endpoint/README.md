@@ -3,7 +3,7 @@
 # radar-push-endpoint
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-push-endpoint)](https://artifacthub.io/packages/helm/radar-base/radar-push-endpoint)
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.3.2](https://img.shields.io/badge/AppVersion-0.3.2-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming data from Push or Subscription based WEB APIs. It performs authentication, authorization and content validation. For more details of the configurations, see https://github.com/RADAR-base/RADAR-PushEndpoint.
 
@@ -94,13 +94,19 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | hpa.maxReplicas | string | `"5"` | Maximum number of replicas |
 | hpa.targetCPU | string | `"80"` | Target CPU utilization percentage |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
-| schemaRegistry | string | `"http://cp-schema-registry:8081"` | Schema Registry URL |
+| schemaRegistry | string | `"http://radar-schema-registry:8081"` | Schema Registry URL |
 | max_requests | int | `1000` | Not used. To be confirmed |
-| bootstrapServers | string | `"cp-kafka-headless:9092"` | Kafka broker URLs |
+| bootstrapServers | string | `"radar-kafka-bootstrap:9094"` | Kafka broker URLs |
 | checkSourceId | bool | `true` | set to true, if sources in access token should be validated |
-| adminProperties | object | `{}` | Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs. |
-| producerProperties | object | `{"compression.type":"lz4"}` | Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs. |
+| adminProperties | object | `{"sasl.mechanism":"SCRAM-SHA-512","security.protocol":"SASL_PLAINTEXT"}` | Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs. |
+| adminProperties."security.protocol" | string | `"SASL_PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
+| adminProperties."sasl.mechanism" | string | `"SCRAM-SHA-512"` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. |
+| producerProperties | object | `{"compression.type":"lz4","sasl.mechanism":"SCRAM-SHA-512","security.protocol":"SASL_PLAINTEXT"}` | Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs. |
+| producerProperties."security.protocol" | string | `"SASL_PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
+| producerProperties."sasl.mechanism" | string | `"SCRAM-SHA-512"` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. |
 | serializationProperties | object | `{}` | Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSetDeConfig]. |
+| secret.admin.jaas | object | `{"key":"sasl.jaas.config","name":"shared-service-user"}` | Secret for the Kafka SASL JAAS configuration |
+| secret.producer.jaas | object | `{"key":"sasl.jaas.config","name":"shared-service-user"}` | Secret for the Kafka SASL JAAS configuration |
 | cc.enabled | bool | `false` | set to true, if requests should be forwarded to Confluent Cloud based brokers. |
 | cc.apiKey | string | `"ccApikey"` | Confluent Cloud cluster API key |
 | cc.apiSecret | string | `"ccApiSecret"` | Confluent Cloud cluster API secret |
