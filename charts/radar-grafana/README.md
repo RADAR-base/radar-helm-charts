@@ -44,11 +44,3 @@ for additional information on how to configure this service if needed.
 | grafana | object | check 'values.yaml' | Grafana Helm Chart configuration |
 | grafana.server_name | string | `"localhost"` | Hostname for the Grafana service |
 | grafana.advertised_protocol | string | `"https"` | Protocol for the Grafana service (allowed values: http, https) |
-| grafana.global.imageRegistry | string | `nil` | Overrides the Docker registry globally for all images |
-| grafana.image.registry | string | `"docker.io"` | The Docker registry |
-| grafana.image.repository | string | `"grafana/grafana"` | Docker image repository |
-| grafana.testFramework.image.registry | string | `"docker.io"` | The Docker registry |
-| grafana.downloadDashboardsImage.registry | string | `"docker.io"` | The Docker registry |
-| grafana.initChownData.image.registry | string | `"docker.io"` | The Docker registry |
-| grafana.sidecar.image.registry | string | `"quay.io"` | The Docker registry |
-| grafana.imageRenderer.image.registry | string | `"docker.io"` | The Docker registry |
