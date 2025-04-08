@@ -72,11 +72,24 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+secret:
+  # -- Secret for the Kafka SASL JAAS configuration
+  jaas:
+    name: shared-service-user
+    key: sasl.jaas.config
+
 # -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specific [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
 extraEnvVars:
   # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
   - name: CONNECT_SECURITY_PROTOCOL
-    value: PLAINTEXT
+    value: SASL_PLAINTEXT
+  - name: CONNECT_PRODUCER_SECURITY_PROTOCOL
+    value: SASL_PLAINTEXT
+  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  - name: CONNECT_SASL_MECHANISM
+    value: SCRAM-SHA-512
+  - name: CONNECT_PRODUCER_SASL_MECHANISM
+    value: SCRAM-SHA-512
 
 # -- Custom livenessProbe that overrides the default one
 customLivenessProbe: {}
@@ -148,19 +161,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-zookeeper'
+          app.kubernetes.io/name: 'radar-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-kafka'
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: 'cp-schema-registry'
+          app.kubernetes.io/name: 'confluent-schema-registry'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -186,14 +193,14 @@ networkpolicy:
       - port: 53
         protocol: TCP
 
-# -- Zookeeper URL
-zookeeper: cp-zookeeper-headless:2181
+# -- Zookeeper URL. Leave unset using Kafka in Kraft mode.
+zookeeper:
 # -- Kafka broker URLs
-kafka: PLAINTEXT://cp-kafka-headless:9092
+kafka: SASL_PLAINTEXT://radar-kafka-bootstrap:9094
 # -- Number of brokers in the cluster
 kafka_num_brokers: "3"
 # -- Schema registry URL
-schema_registry: http://cp-schema-registry:8081
+schema_registry: http://confluent-schema-registry:8081
 # -- URL of the Management Portal
 managementportal_url: http://management-portal:8080/managementportal
 # -- Host name of the upload connect backend application
@@ -235,3 +242,10 @@ producer:
   bufferMemory: 2000000
   # -- Batch size in bytes to batch records together into fewer requests when multiple records are being sent to the same partition.
   batchSize: 200000
+
+kafka_wait:
+  # -- Whether to wait before the specified number of brokers are available.
+  enabled: true
+  # -- Kafka connection properties file contents during wait. If empty, all environment variables starting with
+  # `CONNECT_` will be used.
+  properties: ""

@@ -47,6 +47,18 @@ spec:
           env:
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka }}"
+          {{- if .Values.secret.jaas.name }}
+          - name: CONNECT_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.jaas.name }}
+                key: {{ .Values.secret.jaas.key }}
+          - name: CONNECT_PRODUCER_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.jaas.name }}
+                key: {{ .Values.secret.jaas.key }}
+          {{- end }}
           - name: CONNECT_GROUP_ID
             value: "default"
           - name: CONNECT_CONFIG_STORAGE_TOPIC
@@ -55,6 +67,14 @@ spec:
             value: "default.offsets"
           - name: CONNECT_STATUS_STORAGE_TOPIC
             value: "default.status"
+            {{/*-1 means use default configured by the kafka broker.
+             Ref: https://docs.confluent.io/platform/7.9/connect/references/allconfigs.html#distributed-worker-configuration*/}}
+          - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+            value: "-1"
+          - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+            value: "-1"
+          - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+            value: "-1"
           - name: CONNECT_KEY_CONVERTER
             value: "io.confluent.connect.avro.AvroConverter"
           - name: CONNECT_VALUE_CONVERTER
@@ -71,8 +91,10 @@ spec:
             value: "/var/lib/kafka-connect-upload-source/logs/connect.offsets"
           - name: CONNECT_REST_ADVERTISED_HOST_NAME
             value: {{ include "radar-upload-source-connector.fullname" . }}
+          {{- if .Values.zookeeper}}
           - name: CONNECT_ZOOKEEPER_CONNECT
             value: "{{ .Values.zookeeper }}"
+          {{- end }}
           - name: CONNECT_VALUE_CONVERTER_CONNECT_META_DATA
             value: "false"
           - name: CONNECT_OFFSET_FLUSH_INTERVAL_MS
@@ -93,6 +115,12 @@ spec:
             value: "org.reflections=ERROR"
           - name: CONNECT_REST_PORT
             value: "8083"
+          - name: WAIT_FOR_KAFKA
+            value: {{ if .Values.kafka_wait.enabled }}"1"{{ else }}"0"{{ end }}
+          {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
+          - name: COMMAND_CONFIG_FILE_PATH
+            value: /etc/kafka-connect/upload/kafka-wait.properties
+          {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
