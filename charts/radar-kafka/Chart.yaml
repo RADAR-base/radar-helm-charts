@@ -1,0 +1,34 @@
+apiVersion: v2
+# Version of Kafka release
+# When upgrading, make sure to also update `kafka.metadataVersion` in values.yaml
+appVersion: 3.9.0
+description: "Apache Kafka for RADAR-base using the Strimzi Operator"
+name: radar-kafka
+version: 0.0.1
+keywords:
+  - kafka
+  - queue
+  - stream
+  - event
+  - messaging
+  - datastore
+  - topic
+home: "https://radar-base.org"
+sources:
+  - https://github.com/RADAR-base/radar-helm-charts
+maintainers:
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
+dependencies:
+  - name: common
+    repository: https://radar-base.github.io/radar-helm-charts
+    tags:
+      - bitnami-common
+    version: 2.x.x
+  - name: strimzi-kafka-operator
+    version: 0.46.0
+    repository: file://../../external/strimzi-kafka-operator
+  - name: strimzi-registry-operator
+    version: 2.1.0
+    repository: file://../../external/strimzi-registry-operator
