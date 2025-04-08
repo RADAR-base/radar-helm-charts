@@ -1,9 +1,9 @@
 dependencies:
 - name: cluster
-  repository: https://cloudnative-pg.github.io/charts
+  repository: file://../../external/cloudnativepg-cluster
   version: 0.2.1
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts
   version: 2.27.0
-digest: sha256:0d36e03e34fa4b5f2fd24434cf731b92f4ceb1e23d277580d4fae042bf73243a
-generated: "2025-03-26T05:20:44.972154105+01:00"
+digest: sha256:43c4e363688ab65bfcf786b37d59b97237f11b038b73dc9ba2de3e914de186a2
+generated: "2025-04-07T16:35:50.342087014+02:00"

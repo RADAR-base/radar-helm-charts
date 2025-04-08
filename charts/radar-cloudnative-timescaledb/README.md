@@ -3,7 +3,7 @@
 # radar-cloudnative-timescaledb
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-cloudnative-timescaledb)](https://artifacthub.io/packages/helm/radar-base/radar-cloudnative-timescaledb)
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square)
 
 CloudNativePG TimescaleDB cluster helm chart for RADAR-base
 
@@ -35,7 +35,7 @@ for additional information on how to configure the operator if needed.
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://cloudnative-pg.github.io/charts | cluster | 0.2.1 |
+| file://../../external/cloudnativepg-cluster | cluster | 0.2.1 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
