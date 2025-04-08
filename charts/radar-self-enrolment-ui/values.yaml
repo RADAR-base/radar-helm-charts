@@ -243,7 +243,7 @@ kratosPublicUrl: "https://localhost/kratos"
 kratosBrowserUrl: "https://localhost/kratos"
 
 # -- Set this to ORY Hydra's Admin URL
-hydraAdminUrl: "kratos-admin"
+hydraAdminUrl: "http://hydra-admin"
 
 # -- Set this to ORY Hydra's public URL
 hydraPublicUrl: "http://hydra-public:4444"

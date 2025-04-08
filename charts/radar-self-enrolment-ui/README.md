@@ -92,7 +92,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | kratosAdminUrl | string | `"http://kratos-admin:80/admin"` | Set this to ORY Kratos's Admin URL |
 | kratosPublicUrl | string | `"https://localhost/kratos"` | Set this to ORY Kratos's public URL |
 | kratosBrowserUrl | string | `"https://localhost/kratos"` | Set this to ORY Kratos's public URL accessible from the outside world. |
-| hydraAdminUrl | string | `"kratos-admin"` | Set this to ORY Hydra's Admin URL |
+| hydraAdminUrl | string | `"http://hydra-admin"` | Set this to ORY Hydra's Admin URL |
 | hydraPublicUrl | string | `"http://hydra-public:4444"` | Set this to ORY Hydra's public URL |
 | restSourceBackendUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend"` | Set this to the REST source backend service URL |
 | gatewayUrl | string | `"http://radar-gateway:8080"` | Set this to the RADAR Gateway service URL |
