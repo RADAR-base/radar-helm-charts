@@ -76,10 +76,7 @@ tolerations: []
 affinity: {}
 
 # -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specific [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
-extraEnvVars:
-  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
-  - name: CONNECT_SECURITY_PROTOCOL
-    value: PLAINTEXT
+extraEnvVars: []
 
 # -- Custom livenessProbe that overrides the default one
 customLivenessProbe: {}
@@ -151,13 +148,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-kafka'
+          app.kubernetes.io/name: 'radar-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-schema-registry'
+          app.kubernetes.io/name: 'confluent-schema-registry'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -189,11 +186,37 @@ kafka_num_brokers: 3
 
 kafka:
   # -- Kafka broker URLs
-  url: PLAINTEXT://cp-kafka-headless:9092
+  url: SASL_PLAINTEXT://radar-kafka-bootstrap:9094
+  # -- Security related env vars set in pods. Not applied when `cc.enabled` is true.
+  security:
+    # -- Env vars set for authentication with Kafka brokers. Not applied when `cc.enabled` is true.
+    env:
+      # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+      - name: CONNECT_SECURITY_PROTOCOL
+        value: SASL_PLAINTEXT
+      # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+      - name: CONNECT_SASL_MECHANISM
+        value: SCRAM-SHA-512
+      # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+      - name: CONNECT_PRODUCER_SECURITY_PROTOCOL
+        value: SASL_PLAINTEXT
+      # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+      - name: CONNECT_PRODUCER_SASL_MECHANISM
+        value: SCRAM-SHA-512
+      # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+      - name: CONNECT_CONSUMER_SECURITY_PROTOCOL
+        value: SASL_PLAINTEXT
+      # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+      - name: CONNECT_CONSUMER_SASL_MECHANISM
+        value: SCRAM-SHA-512
+    # -- Secret for the Kafka SASL JAAS configuration. Not applied when `cc.enabled` is true.
+    jaasSecret:
+      name: shared-service-user
+      key: sasl.jaas.config
 
 schemaRegistry:
   # -- Schema registry URL
-  url: http://cp-schema-registry:8081
+  url: http://confluent-schema-registry:8081
 
 catalogServer:
   # -- Catalog server URL
