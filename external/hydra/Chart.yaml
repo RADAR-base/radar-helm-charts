@@ -9,7 +9,7 @@ dependencies:
   condition: maester.enabled
   name: hydra-maester
   repository: file://../hydra-maester
-  version: 0.52.1
+  version: 0.53.0
 description: A Helm chart for deploying ORY Hydra in Kubernetes
 home: https://www.ory.sh/
 icon: https://raw.githubusercontent.com/ory/docs/master/docs/static/img/logo-hydra.svg
@@ -30,4 +30,4 @@ sources:
 - https://github.com/ory/hydra
 - https://github.com/ory/k8s
 type: application
-version: 0.52.1
+version: 0.53.0

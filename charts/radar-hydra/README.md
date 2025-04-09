@@ -3,7 +3,7 @@
 # hydra
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/hydra)](https://artifacthub.io/packages/helm/radar-base/hydra)
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.2.0](https://img.shields.io/badge/AppVersion-v2.2.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.2.0](https://img.shields.io/badge/AppVersion-v2.2.0-informational?style=flat-square)
 
 A ORY Hydra Helm chart for RADAR-base. ORY Hydra is a cloud native Identity and User Management system.
 
@@ -33,7 +33,7 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 
 | Repository | Name | Version |
 |------------|------|---------|
-| file://../../external/hydra | hydra | 0.52.1 |
+| file://../../external/hydra | hydra | 0.53.0 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
