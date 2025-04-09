@@ -3,7 +3,7 @@
 # radar-cloudnative-postgresql
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-cloudnative-postgresql)](https://artifacthub.io/packages/helm/radar-base/radar-cloudnative-postgresql)
 
-![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square)
+![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square)
 
 CloudNativePG Postgresql helm chart for RADAR-base
 
@@ -42,5 +42,8 @@ for additional information on how to configure the operator if needed.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| secrets | list | check values.yaml | Random database password secrets will be created for these users. |
+| secret | object | `{"enabled":true,"nameOverride":"","secretAnnotations":{"helm.sh/hook":"pre-install, pre-upgrade","helm.sh/hook-delete-policy":"before-hook-creation","helm.sh/hook-weight":"0","helm.sh/resource-policy":"keep"},"users":[{"dbname":"managementportal","user":"managementportal"},{"dbname":"restsourceauthorizer","user":"restsourceauthorizer"},{"dbname":"appconfig","user":"appconfig"},{"dbname":"kratos","user":"kratos"},{"dbname":"hydra","user":"hydra"},{"dbname":"appserver","user":"appserver"},{"dbname":"uploadconnector","user":"uploadconnector"}]}` | Values for creating the database user secretsl |
+| secret.enabled | bool | `true` | Switch to false to prevent creating user secrets. |
+| secret.secretAnnotations | object | `{"helm.sh/hook":"pre-install, pre-upgrade","helm.sh/hook-delete-policy":"before-hook-creation","helm.sh/hook-weight":"0","helm.sh/resource-policy":"keep"}` | Annotations to be added to secret. Annotations are added only when secret is being created. Existing secret will not be modified. |
+| secret.users | list | check values.yaml | Random database password secrets will be created for these users. |
 | cluster | object | check `values.yaml` | CloudNativePG configuration |
