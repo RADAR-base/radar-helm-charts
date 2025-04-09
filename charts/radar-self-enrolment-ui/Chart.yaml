@@ -14,15 +14,12 @@ annotations:
 type: application
 home: "https://radar-base.org"
 maintainers:
-  - email: keyvan@thehyve.nl
-    name: Keyvan Hedayati
-    url: https://www.thehyve.nl
-  - email: pim@thehyve.nl
-    name: Pim van Nierop
-    url: https://www.thehyve.nl/experts/pim-van-nierop
-  - email: nivethika@thehyve.nl
-    name: Nivethika Mahasivam
-    url: https://www.thehyve.nl/experts/nivethika-mahasivam
+  - email: yatharth.ranjan@kcl.ac.uk
+    name: Yatharth Ranjan
+    url: https://www.kcl.ac.uk/people/yatharth-ranjan
+  - email: pauline.conde@kcl.ac.uk
+    name: Pauline Conde
+    url: https://www.kcl.ac.uk/people/pauline-conde
 dependencies:
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts

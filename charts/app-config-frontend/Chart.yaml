@@ -15,7 +15,7 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 2.2.1
+version: 2.2.2
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
@@ -32,15 +32,9 @@ keywords:
 annotations:
   artifacthub.io/license: Apache-2.0
 maintainers:
-  - email: keyvan@thehyve.nl
-    name: Keyvan Hedayati
-    url: https://www.thehyve.nl
   - email: pim@thehyve.nl
     name: Pim van Nierop
     url: https://www.thehyve.nl/experts/pim-van-nierop
-  - email: nivethika@thehyve.nl
-    name: Nivethika Mahasivam
-    url: https://www.thehyve.nl/experts/nivethika-mahasivam
 dependencies:
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts

@@ -3,7 +3,7 @@
 # radar-upload-connect-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connect-backend)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connect-backend)
 
-![Version: 0.6.1](https://img.shields.io/badge/Version-0.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
+![Version: 0.7.1](https://img.shields.io/badge/Version-0.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector backend application. This application is an upload system that stores uploaded data and its metadata in PostgreSQL for later processing.
 
@@ -13,9 +13,7 @@ A Helm chart for RADAR-base upload connector backend application. This applicati
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -81,8 +79,14 @@ A Helm chart for RADAR-base upload connector backend application. This applicati
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | client_id | string | `"radar_upload_backend"` | OAuth2 client id of the upload connect backend application |
 | client_secret | string | `"secret"` | OAuth2 client secret of the upload connect backend |
-| postgres.host | string | `"radar-upload-postgresql"` | Host name of the database to store uploaded data and metadata |
-| postgres.user | string | `"postgres"` | Database username |
-| postgres.password | string | `"password"` | Database password |
+| postgres.host | string | `nil` | Host name of the database to store uploaded data and metadata |
+| postgres.database | string | `nil` | Database name |
+| postgres.port | string | `nil` |  |
+| postgres.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-uploadconnector"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'host', 'port' and 'database' values). |
+| postgres.user | string | `nil` | Database username |
+| postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-uploadconnector"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
+| postgres.password | string | `nil` | Database password |
+| postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-uploadconnector"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| postgres.parameters | string | `nil` | Additional JDBC connection parameters e.g. sslmode=verify-full  Ignored when using 'urlSecret'. |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | serverName | string | `"localhost"` | Server name or domain name |

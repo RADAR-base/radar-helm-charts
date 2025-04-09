@@ -60,6 +60,7 @@ repos:
     entry: ct lint --debug false --skip-helm-dependencies --config .github/ct-lint.yaml
     pass_filenames: false
     files: 'charts/'
+    stages: [push]
   - id: check-bash-syntax # https://github.com/Lucas-C/pre-commit-hooks?tab=readme-ov-file#bash-syntax-validation
     name: Check Shell scripts syntax correctness
     language: system
@@ -71,6 +72,7 @@ repos:
     entry: gitleaks dir --verbose
     exclude: external/
     require_serial: true
+    stages: [push]
   - id: trivy
     name: Run Trivy
     language: system

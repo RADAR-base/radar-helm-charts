@@ -3,7 +3,7 @@
 # radar-upload-source-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-source-connector)](https://artifacthub.io/packages/helm/radar-base/radar-upload-source-connector)
 
-![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.15](https://img.shields.io/badge/AppVersion-0.5.15-informational?style=flat-square)
+![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.15](https://img.shields.io/badge/AppVersion-0.5.15-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload kafka connector. This is used for reading uploaded data from backend and sending them to Kafka cluster for later processing.
 
@@ -13,9 +13,7 @@ A Helm chart for RADAR-base upload kafka connector. This is used for reading upl
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 

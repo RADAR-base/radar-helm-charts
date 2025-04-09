@@ -24,13 +24,13 @@ spec:
   tls:
     - hosts:
       {{- range $hosts }}
-        - {{ . | quote }}
+        - {{ tpl . $ | quote }}
       {{- end }}
       secretName: {{ .Values.ingress.tls.secretName }}
 {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
-    - host: {{ . | quote }}
+    - host: {{ tpl . $ | quote }}
       http:
         paths:
           - path: {{ $path | quote }}

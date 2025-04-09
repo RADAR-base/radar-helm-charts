@@ -2,5 +2,8 @@ dependencies:
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts
   version: 2.27.0
-digest: sha256:397fd12e07f1aa1a5280579406a75b169f8262ac4214584ea366460277288546
-generated: "2024-12-27T17:07:16.718838053+01:00"
+- name: radar-cloudnative-timescaledb
+  repository: file://../radar-cloudnative-timescaledb
+  version: 0.1.0
+digest: sha256:cfd6677807041226dcdd7857fb5bdada385f36be7f821af47a83ce341f71274b
+generated: "2025-04-02T06:34:53.137900455+02:00"

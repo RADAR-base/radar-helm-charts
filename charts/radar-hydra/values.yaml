@@ -1,0 +1,84 @@
+# -- Ory Hydra configuration
+# @default -- check `values.yaml`
+hydra:
+
+  # -- Hostname for the Kratos service
+  server_name: localhost
+  # -- Protocol for the Kratos service (allowed values: http, https)
+  advertised_protocol: https
+
+  ingress:
+    admin:
+      enabled: true
+      className: "nginx"
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/rewrite-target: /admin/$2
+      hosts:
+        - host: '{{ .Values.server_name }}'
+          paths:
+            - path: "/admin/hydra(/|$)(.*)"
+              pathType: ImplementationSpecific
+      tls:
+        - secretName: radar-base-tls
+          hosts:
+            - '{{ .Values.server_name }}'
+    public:
+      enabled: true
+      className: "nginx"
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /$1
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
+        - host: '{{ .Values.server_name }}'
+          paths:
+            - path: "/hydra/?(.*)"
+              pathType: ImplementationSpecific
+      tls:
+        - secretName: radar-base-tls
+          hosts:
+            - '{{ .Values.server_name }}'
+  hydra:
+    automigration:
+      enabled: true
+    config:
+      # Leave empty to use the DSN environmental variable.
+      dsn:
+      urls:
+        self:
+          issuer: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra/'
+        login: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/login'
+        consent: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra-ui/consent'
+
+      log:
+        level: debug
+        format: text
+        leak_sensitive_values: false
+
+      strategies:
+        access_token: jwt
+        jwt:
+          scope_claim: both
+
+      oauth2:
+        allowed_top_level_claims: [scope, roles, authorities, sources, user_name]
+        mirror_top_level_claims: false
+        client_credentials:
+          default_grant_allowed_scope: true
+
+      serve:
+        public:
+          cors:
+            enabled: true
+        admin:
+          cors:
+            enabled: true
+
+  # Register radar-cloudnative-postgresql-app secret to be used by Kratos.
+  deployment:
+    extraEnv:
+    - name: DSN
+      valueFrom:
+        secretKeyRef:
+          name: radar-cloudnative-postgresql-hydra
+          key: uri

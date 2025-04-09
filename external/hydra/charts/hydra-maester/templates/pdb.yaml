@@ -1,0 +1,19 @@
+{{- if .Values.pdb.enabled -}}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "hydra-maester.fullname" . }}
+spec:
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+      app.kubernetes.io/name: {{ include "hydra-maester.fullname" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  {{- with .Values.pdb.spec.maxUnavailable }}
+  maxUnavailable: {{ . }}
+  {{- end }}
+  {{- with .Values.pdb.spec.minAvailable }}
+  minAvailable: {{ . }}
+  {{- end }}
+{{- end -}}
