@@ -3,7 +3,7 @@
 # velero-s3-deployment
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/velero-s3-deployment)](https://artifacthub.io/packages/helm/radar-base/velero-s3-deployment)
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2024-11-21T17-21-54Z](https://img.shields.io/badge/AppVersion-RELEASE.2024--11--21T17--21--54Z-informational?style=flat-square)
+![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2024-11-21T17-21-54Z](https://img.shields.io/badge/AppVersion-RELEASE.2024--11--21T17--21--54Z-informational?style=flat-square)
 
 A Helm chart for Velero S3 deployment, this chart holds resources used by Velero with a deployment to mirror the local object storage to a remote object storage.
 
@@ -13,9 +13,7 @@ A Helm chart for Velero S3 deployment, this chart holds resources used by Velero
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 

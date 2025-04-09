@@ -52,22 +52,23 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           args:
             - "/etc/data-dashboard-backend/dashboard.yml"
+          {{- $secretName := include "data-dashboard-backend.fullname" . }}
           env:
-          - name: DATABASE_URL
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "data-dashboard-backend.secretName" . }}
-                key: databaseUrl
-          - name: DATABASE_USER
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "data-dashboard-backend.secretName" . }}
-                key: databaseUser
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "data-dashboard-backend.secretName" . }}
-                key: databasePassword
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.jdbc.urlSecret.name | default $secretName }}
+                  key: {{ .Values.jdbc.urlSecret.key | default "databaseUrl" }}
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.jdbc.userSecret.name | default $secretName }}
+                  key: {{ .Values.jdbc.userSecret.key | default "databaseUser" }}
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.jdbc.passwordSecret.name | default $secretName }}
+                  key: {{ .Values.jdbc.passwordSecret.key | default "databasePassword" }}
           ports:
             - name: http
               containerPort: 9000

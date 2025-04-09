@@ -1,8 +1,14 @@
 # kratos
 
-![Version: 0.43.1](https://img.shields.io/badge/Version-0.43.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.1.0](https://img.shields.io/badge/AppVersion-v1.1.0-informational?style=flat-square)
+![Version: 0.52.0](https://img.shields.io/badge/Version-0.52.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.3.0](https://img.shields.io/badge/AppVersion-v1.3.0-informational?style=flat-square)
 
 A ORY Kratos Helm chart for Kubernetes
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| file://../ory-commons | ory(ory-commons) | 0.1.0 |
 
 ## Values
 
@@ -10,6 +16,7 @@ A ORY Kratos Helm chart for Kubernetes
 |-----|------|---------|-------------|
 | autoscaling.behavior | object | `{}` | Set custom behavior https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#configurable-scaling-behavior |
 | autoscaling.enabled | bool | `false` |  |
+| autoscaling.extraMetrics | list | `[]` | Add extraContainer container resource metrics https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#container-resource-metrics |
 | autoscaling.maxReplicas | int | `3` |  |
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPU | object | `{}` |  |
@@ -25,7 +32,7 @@ A ORY Kratos Helm chart for Kubernetes
 | cronjob.cleanup.affinity | object | `{}` | Configure node affinity |
 | cronjob.cleanup.annotations | object | `{}` | Set custom cron job level annotations |
 | cronjob.cleanup.customArgs | list | `[]` | Configure the arguments of the entrypoint, overriding the default value |
-| cronjob.cleanup.extraEnv | list | `[]` | Array of extra envs to be passed to the cronjob. This takes precedence over deployment variables. Kubernetes format is expected - name: FOO   value: BAR |
+| cronjob.cleanup.extraEnv | list | `[]` | Array of extra envs to be passed to the cronjob. This takes precedence over deployment variables. Kubernetes format is expected. Value is processed with Helm `tpl` - name: FOO   value: BAR |
 | cronjob.cleanup.labels | object | `{}` | Set custom cron job level labels |
 | cronjob.cleanup.nodeSelector | object | `{}` | Configure node labels for pod assignment |
 | cronjob.cleanup.podMetadata | object | `{"annotations":{},"labels":{}}` | Specify pod metadata, this metadata is added directly to the pod, and not higher objects |
@@ -37,7 +44,7 @@ A ORY Kratos Helm chart for Kubernetes
 | deployment.affinity | object | `{}` | Configure node affinity |
 | deployment.annotations | object | `{}` |  |
 | deployment.automigration | object | `{"extraEnv":[]}` | Parameters for the automigration initContainer |
-| deployment.automigration.extraEnv | list | `[]` | Array of extra envs to be passed to the initContainer. Kubernetes format is expected - name: FOO   value: BAR |
+| deployment.automigration.extraEnv | list | `[]` | Array of extra envs to be passed to the initContainer. Kubernetes format is expected. Value is processed with Helm `tpl` - name: FOO   value: BAR |
 | deployment.automountServiceAccountToken | bool | `false` |  |
 | deployment.customLivenessProbe | object | `{}` | Configure a custom livenessProbe. This overwrites the default object |
 | deployment.customReadinessProbe | object | `{}` | Configure a custom readinessProbe. This overwrites the default object |
@@ -45,13 +52,12 @@ A ORY Kratos Helm chart for Kubernetes
 | deployment.dnsConfig | object | `{}` | Configure pod dnsConfig. |
 | deployment.extraArgs | list | `[]` | Array of extra arguments to be passed down to the deployment. Kubernetes args format is expected - --foo - --sqa-opt-out |
 | deployment.extraContainers | string | `""` | If you want to add extra sidecar containers. |
-| deployment.extraEnv | list | `[]` | Array of extra envs to be passed to the deployment. Kubernetes format is expected - name: FOO   value: BAR |
+| deployment.extraEnv | list | `[]` | Array of extra envs to be passed to the deployment. Kubernetes format is expected. Value is processed with Helm `tpl` - name: FOO   value: BAR |
 | deployment.extraInitContainers | string | `""` | If you want to add extra init containers. These are processed before the migration init container. |
 | deployment.extraVolumeMounts | list | `[]` |  |
 | deployment.extraVolumes | list | `[]` | If you want to mount external volume For example, mount a secret containing Certificate root CA to verify database TLS connection. |
 | deployment.labels | object | `{}` |  |
 | deployment.lifecycle | object | `{}` |  |
-| deployment.livenessProbe | object | `{"failureThreshold":5,"initialDelaySeconds":5,"periodSeconds":10}` | Configure the livenessProbe parameters |
 | deployment.nodeSelector | object | `{}` | Node labels for pod assignment. |
 | deployment.podMetadata | object | `{"annotations":{},"labels":{}}` | Specify pod metadata, this metadata is added directly to the pod, and not higher objects |
 | deployment.podMetadata.annotations | object | `{}` | Extra pod level annotations |
@@ -70,14 +76,14 @@ A ORY Kratos Helm chart for Kubernetes
 | deployment.serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | deployment.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | deployment.serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| deployment.startupProbe | object | `{"failureThreshold":60,"periodSeconds":1,"successThreshold":1,"timeoutSeconds":1}` | Configure the startupProbe parameters |
+| deployment.startupProbe | object | `{"failureThreshold":5,"initialDelaySeconds":1,"periodSeconds":1,"successThreshold":1,"timeoutSeconds":2}` | Configure the startupProbe parameters |
 | deployment.terminationGracePeriodSeconds | int | `60` |  |
 | deployment.tolerations | list | `[]` | Configure node tolerations. |
 | deployment.topologySpreadConstraints | list | `[]` | Configure pod topologySpreadConstraints. |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"oryd/kratos"` | ORY KRATOS image |
-| image.tag | string | `"v1.1.0"` | ORY KRATOS VERSION Alternative format: image: oryd/kratos:v0.6.3-alpha.1 |
+| image.tag | string | `"v1.3.1"` | ORY KRATOS VERSION Alternative format: image: oryd/kratos:v0.6.3-alpha.1 |
 | imagePullSecrets | list | `[]` |  |
 | ingress.admin.annotations | object | `{}` |  |
 | ingress.admin.className | string | `""` |  |
@@ -96,7 +102,7 @@ A ORY Kratos Helm chart for Kubernetes
 | job.annotations | object | `{"helm.sh/hook":"pre-install, pre-upgrade","helm.sh/hook-delete-policy":"before-hook-creation,hook-succeeded","helm.sh/hook-weight":"1"}` | If you do want to specify annotations, uncomment the following lines, adjust them as necessary, and remove the curly braces after 'annotations:'. |
 | job.automountServiceAccountToken | bool | `false` | Set automounting of the SA token |
 | job.extraContainers | string | `""` | If you want to add extra sidecar containers. |
-| job.extraEnv | list | `[]` | Array of extra envs to be passed to the job. This takes precedence over deployment variables. Kubernetes format is expected - name: FOO   value: BAR |
+| job.extraEnv | list | `[]` | Array of extra envs to be passed to the job. This takes precedence over deployment variables. Kubernetes format is expected. Value is processed with Helm `tpl` - name: FOO   value: BAR |
 | job.extraInitContainers | string | `""` | If you want to add extra init containers. |
 | job.lifecycle | string | `""` | If you want to add lifecycle hooks. |
 | job.nodeSelector | object | `{}` | Node labels for pod assignment. |
@@ -177,7 +183,7 @@ A ORY Kratos Helm chart for Kubernetes
 | statefulSet.dnsConfig | object | `{}` | Configure pod dnsConfig. |
 | statefulSet.extraArgs | list | `[]` | Array of extra arguments to be passed down to the StatefulSet. Kubernetes args format is expected |
 | statefulSet.extraContainers | string | `""` | If you want to add extra sidecar containers. |
-| statefulSet.extraEnv | list | `[]` |  |
+| statefulSet.extraEnv | list | `[]` | Array of extra envs to be passed to the StatefulSet. This takes precedence over deployment variables. Kubernetes format is expected. Value is processed with Helm `tpl` - name: FOO   value: BAR |
 | statefulSet.extraInitContainers | string | `""` | If you want to add extra init containers. These are processed before the migration init container. |
 | statefulSet.extraVolumeMounts | list | `[]` |  |
 | statefulSet.extraVolumes | list | `[]` | If you want to mount external volume For example, mount a secret containing Certificate root CA to verify database TLS connection. |
@@ -205,7 +211,7 @@ A ORY Kratos Helm chart for Kubernetes
 | test.busybox | object | `{"repository":"busybox","tag":1}` | use a busybox image from another repository |
 | watcher.automountServiceAccountToken | bool | `true` |  |
 | watcher.enabled | bool | `false` |  |
-| watcher.image | string | `"oryd/k8s-toolbox:0.0.5"` |  |
+| watcher.image | string | `"oryd/k8s-toolbox:v0.0.7"` |  |
 | watcher.mountFile | string | `""` | Path to mounted file, which wil be monitored for changes. eg: /etc/secrets/my-secret/foo |
 | watcher.podMetadata | object | `{"annotations":{},"labels":{}}` | Specify pod metadata, this metadata is added directly to the pod, and not higher objects |
 | watcher.podMetadata.annotations | object | `{}` | Extra pod level annotations |
@@ -215,4 +221,4 @@ A ORY Kratos Helm chart for Kubernetes
 | watcher.watchLabelKey | string | `"ory.sh/watcher"` | Label key used for managing applications |
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.13.1](https://github.com/norwoodj/helm-docs/releases/v1.13.1)
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)

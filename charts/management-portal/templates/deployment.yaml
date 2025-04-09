@@ -51,18 +51,25 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ template "management-portal.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- $secretName := include "management-portal.fullname" . }}
           env:
           - name: SPRING_PROFILES_ACTIVE
             value: "prod,swagger"
           - name: SPRING_DATASOURCE_URL
-            value: "jdbc:postgresql://{{ .Values.postgres.host }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}{{ .Values.postgres.connection_parameters }}"
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.urlSecret.name | default $secretName }}
+                key: {{ .Values.postgres.urlSecret.key | default "databaseUrl" }}
           - name: SPRING_DATASOURCE_USERNAME
-            value: {{ .Values.postgres.user }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.userSecret.name | default $secretName }}
+                key: {{ .Values.postgres.userSecret.key | default "databaseUser" }}
           - name: SPRING_DATASOURCE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ template "management-portal.secretName" . }}
-                key: postgresql_password
+                name: {{ .Values.postgres.passwordSecret.name | default $secretName }}
+                key: {{ .Values.postgres.passwordSecret.key | default "databasePassword" }}
           - name: SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT
             value: "15000"
           - name: SPRING_DATASOURCE_HIKARI_VALIDATION_TIMEOUT
@@ -78,7 +85,7 @@ spec:
           - name: MANAGEMENTPORTAL_FRONTEND_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
-                name: {{ template "management-portal.secretName" . }}
+                name: {{ $secretName }}
                 key: managementportal_frontend_client_secret
           - name: MANAGEMENTPORTAL_OAUTH_CLIENTS_FILE
             value: /secrets/oauth_client_details.csv
@@ -105,7 +112,7 @@ spec:
           - name: MANAGEMENTPORTAL_COMMON_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ template "management-portal.secretName" . }}
+                name: {{ $secretName }}
                 key: managementportal_common_admin_password
           - name: MANAGEMENTPORTAL_COMMON_PRIVACY_POLICY_URL
             value: {{ .Values.managementportal.common_privacy_policy_url }}
@@ -124,12 +131,12 @@ spec:
           - name: SPRING_MAIL_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ template "management-portal.secretName" . }}
+                name: {{ $secretName }}
                 key: smtpUsername
           - name: SPRING_MAIL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ template "management-portal.secretName" . }}
+                name: {{ $secretName }}
                 key: smtpPassword
           {{ end }}
           - name: SPRING_MAIL_FROM

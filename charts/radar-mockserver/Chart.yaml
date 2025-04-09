@@ -1,15 +1,12 @@
 apiVersion: v2
 name: radar-mockserver
-version: "0.1.2"
+version: 0.1.3
 appVersion: "5.15.0"
 description: Chart to deploy MockServer to Kubernetes. MockServer enables easy mocking of any system you integrate with via HTTP or HTTPS with clients written in Java, JavaScript and Ruby.  MockServer also includes a proxy that introspects all proxied traffic including encrypted SSL traffic and supports Port Forwarding, Web Proxying (i.e. HTTP proxy), HTTPS Tunneling Proxying (using HTTP CONNECT) and SOCKS Proxying (i.e. dynamic port forwarding).
 maintainers:
   - email: pim@thehyve.nl
     name: Pim van Nierop
     url: https://www.thehyve.nl/experts/pim-van-nierop
-  - email: nivethika@thehyve.nl
-    name: Nivethika Mahasivam
-    url: https://www.thehyve.nl/experts/nivethika-mahasivam
 dependencies:
   - name: mockserver
     version: 5.15.0

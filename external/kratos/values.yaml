@@ -15,7 +15,7 @@ image:
   repository: oryd/kratos
   # -- ORY KRATOS VERSION
   # Alternative format: image: oryd/kratos:v0.6.3-alpha.1
-  tag: v1.1.0
+  tag: v1.3.1
   pullPolicy: IfNotPresent
   # imagePullPolicy: Always
 
@@ -182,7 +182,7 @@ kratos:
   #         However, this email address is not on our database of registered users and therefore the attempt has failed. If this was you, check if you signed up using a different address. If this was not you, please ignore this email.
   #       plainBody: |-
   #         Hi, you (or someone else) entered this email address when trying to recover access to an account.
-  #   verification:
+  #   verification_code:
   #     valid:
   #       subject: Please verify your email address
   #       body: |-
@@ -211,11 +211,6 @@ kratos:
 ## -- Configuration options for the k8s deployment
 deployment:
   lifecycle: {}
-  # -- Configure the livenessProbe parameters
-  livenessProbe:
-    initialDelaySeconds: 5
-    periodSeconds: 10
-    failureThreshold: 5
   # -- Configure the readinessProbe parameters
   readinessProbe:
     initialDelaySeconds: 5
@@ -223,10 +218,11 @@ deployment:
     failureThreshold: 5
   # -- Configure the startupProbe parameters
   startupProbe:
-    failureThreshold: 60
+    failureThreshold: 5
     successThreshold: 1
     periodSeconds: 1
-    timeoutSeconds: 1
+    timeoutSeconds: 2
+    initialDelaySeconds: 1
 
   # -- Configure a custom livenessProbe. This overwrites the default object
   customLivenessProbe: {}
@@ -240,7 +236,8 @@ deployment:
   # - --sqa-opt-out
   extraArgs: []
 
-  # -- Array of extra envs to be passed to the deployment. Kubernetes format is expected
+  # -- Array of extra envs to be passed to the deployment. Kubernetes format is expected. Value is processed with Helm
+  # `tpl`
   # - name: FOO
   #   value: BAR
   extraEnv: []
@@ -364,7 +361,8 @@ deployment:
 
   # -- Parameters for the automigration initContainer
   automigration:
-    # -- Array of extra envs to be passed to the initContainer. Kubernetes format is expected
+    # -- Array of extra envs to be passed to the initContainer. Kubernetes format is expected. Value is processed with
+    # Helm `tpl`
     # - name: FOO
     #   value: BAR
     extraEnv: []
@@ -400,6 +398,10 @@ statefulSet:
   # - --foo
   # - --sqa-opt-out
 
+  # -- Array of extra envs to be passed to the StatefulSet. This takes precedence over deployment variables. Kubernetes
+  # format is expected. Value is processed with Helm `tpl`
+  # - name: FOO
+  #   value: BAR
   extraEnv: []
   # -- If you want to mount external volume
   # For example, mount a secret containing Certificate root CA to verify database
@@ -529,6 +531,9 @@ autoscaling:
   # -- Set custom behavior
   # https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#configurable-scaling-behavior
   behavior: {}
+  # -- Add extraContainer container resource metrics
+  # https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#container-resource-metrics
+  extraMetrics: []
 
 ## -- Values for initialization job
 job:
@@ -553,7 +558,8 @@ job:
   #  - name: ...
   #    image: ...
 
-  # -- Array of extra envs to be passed to the job. This takes precedence over deployment variables. Kubernetes format is expected
+  # -- Array of extra envs to be passed to the job. This takes precedence over deployment variables. Kubernetes format
+  # is expected. Value is processed with Helm `tpl`
   # - name: FOO
   #   value: BAR
   extraEnv: []
@@ -616,7 +622,7 @@ courier:
 ## -- Configuration of the watcher sidecar
 watcher:
   enabled: false
-  image: oryd/k8s-toolbox:0.0.5
+  image: oryd/k8s-toolbox:v0.0.7
   # -- Path to mounted file, which wil be monitored for changes. eg: /etc/secrets/my-secret/foo
   mountFile: ""
   # -- Specify pod metadata, this metadata is added directly to the pod, and not higher objects
@@ -655,7 +661,8 @@ cronjob:
     # -- Configure the arguments of the entrypoint, overriding the default value
     customArgs: []
 
-    # -- Array of extra envs to be passed to the cronjob. This takes precedence over deployment variables. Kubernetes format is expected
+    # -- Array of extra envs to be passed to the cronjob. This takes precedence over deployment variables. Kubernetes
+    # format is expected. Value is processed with Helm `tpl`
     # - name: FOO
     #   value: BAR
     extraEnv: []

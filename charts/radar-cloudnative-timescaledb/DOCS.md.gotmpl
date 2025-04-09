@@ -1,0 +1,8 @@
+{{ define "cnpg.cloudnative-pg" -}}
+## CloudNativePG Operator
+
+This chart uses  CloudNativePG Operator](https://cloudnative-pg.io/) to deploy a TimescaleDB database. The deployment of this operator is managed by the
+`cloudnativepg-operator` chart dependency. Configuration to the operator is passed via the `cluster:` key in the values.yaml file.
+Consult the [documentation](https://artifacthub.io/packages/helm/cloudnative-pg/cloudnative-pg) of the CloudNativePG Operator
+for additional information on how to configure the operator if needed.
+{{- end }}

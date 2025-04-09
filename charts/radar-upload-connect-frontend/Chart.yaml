@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "0.5.14"
 description: A Helm chart for RADAR-base upload connector frontend application that provides a UI for uploading files and sending them to the upload-backend.
 name: radar-upload-connect-frontend
-version: 0.6.1
+version: 0.6.2
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-upload-connect-frontend
@@ -16,15 +16,9 @@ deprecated: false
 type: application
 home: "https://radar-base.org"
 maintainers:
-  - email: keyvan@thehyve.nl
-    name: Keyvan Hedayati
-    url: https://www.thehyve.nl
   - email: pim@thehyve.nl
     name: Pim van Nierop
     url: https://www.thehyve.nl/experts/pim-van-nierop
-  - email: nivethika@thehyve.nl
-    name: Nivethika Mahasivam
-    url: https://www.thehyve.nl/experts/nivethika-mahasivam
 dependencies:
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts

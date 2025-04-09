@@ -2,7 +2,7 @@
 
 # radar-self-enrolment-ui
 
-![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base Self Enrolment UI
 
@@ -12,9 +12,8 @@ A Helm chart for RADAR-base Self Enrolment UI
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
-| Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
+| Yatharth Ranjan | <yatharth.ranjan@kcl.ac.uk> | <https://www.kcl.ac.uk/people/yatharth-ranjan> |
+| Pauline Conde | <pauline.conde@kcl.ac.uk> | <https://www.kcl.ac.uk/people/pauline-conde> |
 
 ## Source Code
 
@@ -30,6 +29,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| server_name | string | `"localhost"` | Hostname for the Self-Enrolment Portal service |
 | replicaCount | int | `1` | Number of replicas in deployment |
 | revisionHistoryLimit | int | `5` | Number of revisions kept in history |
 | image.registry | string | `"ghcr.io"` | Image registry |
@@ -51,12 +51,14 @@ A Helm chart for RADAR-base Self Enrolment UI
 | secret.nameOverride | string | `""` | Provide custom name of existing secret, or custom name of secret to be created |
 | secret.secretAnnotations | object | `{"helm.sh/hook":"pre-install, pre-upgrade","helm.sh/hook-delete-policy":"before-hook-creation","helm.sh/hook-weight":"0","helm.sh/resource-policy":"keep"}` | Annotations to be added to secret. Annotations are added only when secret is being created. Existing secret will not be modified. |
 | secret.hashSumEnabled | bool | `true` | switch to false to prevent checksum annotations being maintained and propagated to the pods |
+| disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
+| advertised_protocol | string | `"https"` | The protocol in URIs (https, http) |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
-| ingress.path | string | `"/kratos-ui"` | Path within the url structure |
+| ingress.path | string | `"/kratos-ui(/|$)(.*)"` | Path within the url structure |
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
-| ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
+| ingress.hosts | list | `["{{ .Values.server_name }}"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.readOnlyRootFilesystem | bool | `false` |  |
@@ -74,7 +76,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | podSecurityContext.runAsGroup | int | `10000` |  |
 | podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | deployment.resources | object | `{}` |  |
-| deployment.extraEnv | list | `[]` | Array of extra envs to be passed to the deployment. Kubernetes format is expected - name: FOO   value: BAR |
+| deployment.extraEnv | list | `[{"name":"HYDRA_ADMIN_URL","value":"http://hydra-admin"}]` | Array of extra envs to be passed to the deployment. Kubernetes format is expected - name: FOO   value: BAR |
 | deployment.extraVolumes | list | `[]` | If you want to mount external volume For example, mount a secret containing Certificate root CA to verify database TLS connection. |
 | deployment.extraVolumeMounts | list | `[]` |  |
 | deployment.nodeSelector | object | `{}` | Node labels for pod assignment. |
@@ -88,9 +90,9 @@ A Helm chart for RADAR-base Self Enrolment UI
 | affinity | object | `{}` |  |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | kratosAdminUrl | string | `"http://kratos-admin:80/admin"` | Set this to ORY Kratos's Admin URL |
-| kratosPublicUrl | string | `"http://kratos-public:80"` | Set this to ORY Kratos's public URL |
+| kratosPublicUrl | string | `"https://localhost/kratos"` | Set this to ORY Kratos's public URL |
 | kratosBrowserUrl | string | `"https://localhost/kratos"` | Set this to ORY Kratos's public URL accessible from the outside world. |
-| hydraAdminUrl | string | `"http://hydra-admin:4445/admin"` | Set this to ORY Hydra's Admin URL |
+| hydraAdminUrl | string | `"http://hydra-admin"` | Set this to ORY Hydra's Admin URL |
 | hydraPublicUrl | string | `"http://hydra-public:4444"` | Set this to ORY Hydra's public URL |
 | restSourceBackendUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend"` | Set this to the REST source backend service URL |
 | gatewayUrl | string | `"http://radar-gateway:8080"` | Set this to the RADAR Gateway service URL |
