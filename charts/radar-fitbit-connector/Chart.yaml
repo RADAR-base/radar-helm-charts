@@ -25,6 +25,3 @@ dependencies:
   tags:
   - bitnami-common
   version: 2.x.x
-- name: strimzi-registry-operator
-  version: 2.1.0
-  repository: https://lsst-sqre.github.io/charts/
