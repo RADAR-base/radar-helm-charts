@@ -6,7 +6,7 @@ home: https://radar-base.org
 icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-hydra
-version: 0.2.0
+version: 0.2.1
 maintainers:
   - email: pim@thehyve.nl
     name: Pim van Nierop
