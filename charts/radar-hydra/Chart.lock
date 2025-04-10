@@ -1,9 +1,9 @@
 dependencies:
 - name: hydra
   repository: file://../../external/hydra
-  version: 0.52.1
+  version: 0.53.0
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts
   version: 2.27.0
-digest: sha256:6f359bbce85df64f0df5e2a68724718df8f71096c9ab3b5587ea01fc9554341c
-generated: "2025-04-07T16:54:14.260416581+02:00"
+digest: sha256:530d8ba32d1e5dc4c97b1c15d8f962688a6dad5a4dd0f0cfaf6f7466a54082df
+generated: "2025-04-10T15:49:32.04843126+02:00"
