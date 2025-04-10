@@ -39,7 +39,6 @@ spec:
     pod:
       metadata:
         annotations:
-          checksum/configmap-properties: {{ include (print $.Template.BasePath "/configmap-properties.yaml") . | sha256sum }}
           checksum/configmap-users: {{ include (print $.Template.BasePath "/configmap-users.yaml") . | sha256sum }}
           backup.velero.io/backup-volumes: logs
         labels:
@@ -65,9 +64,6 @@ spec:
                         - {{ .Release.Name }}
                 topologyKey: "kubernetes.io/hostname"
       volumes:
-        - name: config-properties
-          configMap:
-            name: {{ include "radar-fitbit-connector.fullname" . }}-properties
         - name: config-users
           configMap:
             name: {{ include "radar-fitbit-connector.fullname" . }}-users
@@ -120,12 +116,10 @@ spec:
         {{- end }}
 {{/* TODO container not starting with volume mounts */}}
 {{/*      volumeMounts:*/}}
-{{/*        - name: config-properties*/}}
-{{/*          mountPath: /etc/kafka-connect/source-fitbit*/}}
 {{/*        - name: config-users*/}}
-{{/*          mountPath: /var/lib/kafka-connect-fitbit-source/users*/}}
+{{/*          mountPath: /opt/kafka/plugins/kafka-connect-fitbit-source/users*/}}
 {{/*        - name: logs*/}}
-{{/*          mountPath: /var/lib/kafka-connect-fitbit-source/logs*/}}
+{{/*          mountPath: /opt/kafka/plugins/kafka-connect-fitbit-source/logs*/}}
 {{/*    {{- if .Values.persistence.fsUserOverride }}*/}}
 {{/* TODO is this needed? Init container cannot be specified in the previous format (no matching specs) */}}
 {{/*    initContainer:*/}}
