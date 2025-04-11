@@ -136,9 +136,7 @@ deployment:
   # -- Array of extra envs to be passed to the deployment. Kubernetes format is expected
   # - name: FOO
   #   value: BAR
-  extraEnv:
-    - name: HYDRA_ADMIN_URL
-      value: http://hydra-admin
+  extraEnv: []
   # -- If you want to mount external volume
   # For example, mount a secret containing Certificate root CA to verify database
   # TLS connection.
@@ -234,7 +232,7 @@ networkpolicy:
         protocol: TCP
 
 # -- Set this to ORY Kratos's Admin URL
-kratosAdminUrl: "http://kratos-admin:80/admin"
+kratosAdminUrl: "http://kratos-admin/admin"
 
 # -- Set this to ORY Kratos's public URL
 kratosPublicUrl: "https://localhost/kratos"
@@ -243,7 +241,7 @@ kratosPublicUrl: "https://localhost/kratos"
 kratosBrowserUrl: "https://localhost/kratos"
 
 # -- Set this to ORY Hydra's Admin URL
-hydraAdminUrl: "http://hydra-admin"
+hydraAdminUrl: "http://hydra-admin:4445/admin"
 
 # -- Set this to ORY Hydra's public URL
 hydraPublicUrl: "http://hydra-public:4444"
@@ -269,8 +267,11 @@ sepClientSecret: ""
 # -- GitHub authentication token for API access (leave empty if not used)
 githubAuthToken: ""
 
+# -- Server name or domain name
+serverName: localhost
+
 # -- The basePath
-basePath: "/kratos-ui"
+basePath: "kratos-ui"
 
 test:
   # -- use a busybox image from another repository
