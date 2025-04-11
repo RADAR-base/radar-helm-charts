@@ -80,3 +80,4 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 | clientId | string | `"radar_rest_sources_authorizer"` | OAuth2 client id of the application registered in Management Portal. It is assumed that this is a public client with empty client secret. |
 | serverName | string | `"localhost"` | Domain name of the server |
 | authUrl | string | `nil` | Authorization URL of the IDP (overrides the default value derived from the serverName) |
+| authPath | string | `"/auth"` | Authorization path appended to the authUrl of the IDP (/auth for Hydra, /authorize for MP) |
