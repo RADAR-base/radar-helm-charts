@@ -170,3 +170,5 @@ clientId: radar_rest_sources_authorizer
 serverName: localhost
 # -- Authorization URL of the IDP (overrides the default value derived from the serverName)
 authUrl:
+# -- Authorization path appended to the authUrl of the IDP (/auth for Hydra, /authorize for MP)
+authPath: /auth

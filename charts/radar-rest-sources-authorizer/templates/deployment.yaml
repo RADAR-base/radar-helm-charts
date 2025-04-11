@@ -59,6 +59,8 @@ spec:
             value: ""
           - name: AUTH_CALLBACK_URL
             value: {{ printf "%s://%s/rest-sources/authorizer/login" .Values.advertised_protocol .Values.serverName }}
+          - name: AUTH_PATH
+            value: {{ .Values.authPath }}
           - name: AUTH_URI
             value: {{ .Values.authUrl | default (printf "%s://%s/managementportal/oauth" .Values.advertised_protocol .Values.serverName) }}
           {{- with .Values.extraEnvVars }}
