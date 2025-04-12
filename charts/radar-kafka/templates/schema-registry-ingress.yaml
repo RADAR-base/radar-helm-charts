@@ -1,0 +1,51 @@
+{{- if index .Values "schema-registry" "ingress" "enabled" -}}
+{{- $pathType := index .Values "schema-registry" "ingress" "pathType" }}
+{{- $registryName := include "radar-kafka.subchart.fullname" (dict "values" (index .Values "schema-registry") "context" .) }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "radar-kafka.subchart.fullname" (dict "values" (index .Values "schema-registry") "context" .)}}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- with index .Values "schema-registry" "ingress" }}
+  annotations:
+    {{- toYaml .annotations | nindent 4 }}
+spec:
+  ingressClassName: {{ .ingressClassName | quote }}
+{{- if and .tls (not $.Values.disable_tls) }}
+  tls:
+  {{- range .tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ tpl . $ | quote }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- range .hosts }}
+    - host: {{ tpl .host $ | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+          - path: {{ . }}
+            {{- if and $pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ $pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $registryName }}
+                port:
+                  name: schema-registry
+              {{- else }}
+              serviceName: {{ $registryName }}
+              servicePort: schema-registry
+              {{- end }}
+        {{- end }}
+  {{- end }}
+  {{- end }}
+{{- end }}

@@ -1,3 +1,7 @@
+# -- domain name of the server
+server_name: localhost
+disable_tls: false
+
 # -- Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode)
 dev_deployment: false
 
@@ -66,13 +70,36 @@ kafka:
 # ref: https://github.com/lsst-sqre/strimzi-registry-operator
 # @default -- check `values.yaml`
 schema-registry:
+  nameOverride: schema-registry
+  fullnameOverride: ""
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/enable-cors: "true"
+      nginx.ingress.kubernetes.io/rewrite-target: /$1
+      nginx.ingress.kubernetes.io/configuration-snippet: |
+        limit_except GET {
+          deny all;
+        }
+    hosts:
+      - host: '{{ $.Values.server_name }}'
+        paths: ["/schema/?(.*)"]
+    pathType: ImplementationSpecific
+    tls:
+      - secretName: radar-base-tls
+        hosts:
+          - '{{ $.Values.server_name }}'
+
   topic:
     partitions: 1
     replicationFactor: 3
     config:
       cleanup.policy: compact
+
   registry:
-    name: confluent-schema-registry
+    nameOverride: schema-registry
     spec:
       strimziVersion: v1beta2
       listener: tls
