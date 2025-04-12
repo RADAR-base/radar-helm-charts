@@ -96,7 +96,7 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | hpa.maxReplicas | string | `"5"` | Maximum number of replicas |
 | hpa.targetCPU | string | `"80"` | Target CPU utilization percentage |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the management portal application |
-| schemaRegistry | string | `"http://confluent-schema-registry:8081"` | Schema Registry URL |
+| schemaRegistry | string | `"http://radar-schema-registry:8081"` | Schema Registry URL |
 | max_requests | int | `1000` | Not used. To be confirmed |
 | bootstrapServers | string | `"radar-kafka-bootstrap:9094"` | Kafka broker URLs |
 | checkSourceId | bool | `true` | set to true, if sources in access token should be validated |

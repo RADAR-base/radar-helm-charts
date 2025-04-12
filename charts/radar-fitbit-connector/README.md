@@ -87,7 +87,7 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | zookeeper | string | `nil` | URI of Zookeeper instances of the cluster. Leave unset on default RADAR-base deployment (uses Kraft). |
 | kafka | string | `"SASL_PLAINTEXT://radar-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
 | kafka_num_brokers | string | `"3"` | Number of Kafka brokers. This is used to validate the cluster availability at connector init. |
-| schema_registry | string | `"http://confluent-schema-registry:8081"` | URL of the Kafka schema registry |
+| schema_registry | string | `"http://radar-schema-registry:8081"` | URL of the Kafka schema registry |
 | kafka_wait.enabled | bool | `true` | Whether to wait before the specified number of brokers are available. |
 | kafka_wait.properties | string | `""` | Kafka connection properties file contents during wait. If empty, all environment variables starting with `CONNECT_` will be used. |
 | radar_rest_sources_backend_url | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | Base URL of the rest-sources-authorizer-backend service |

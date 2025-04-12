@@ -44,6 +44,8 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| server_name | string | `"localhost"` | domain name of the server |
+| disable_tls | bool | `false` |  |
 | dev_deployment | bool | `false` | Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode) |
 | nameOverride | string | `""` | String to partially override radar-gateway.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `"radar"` | String to fully override radar-gateway.fullname template with a string |

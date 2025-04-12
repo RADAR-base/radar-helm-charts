@@ -154,7 +154,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'confluent-schema-registry'
+          app.kubernetes.io/name: 'radar-schema-registry'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -216,7 +216,7 @@ kafka:
 
 schemaRegistry:
   # -- Schema registry URL
-  url: http://confluent-schema-registry:8081
+  url: http://radar-schema-registry:8081
 
 catalogServer:
   # -- Catalog server URL
