@@ -88,11 +88,11 @@ livenessProbe:
   # -- Enable livenessProbe
   enabled: true
   # -- Initial delay seconds for livenessProbe
-  initialDelaySeconds: 40
+  initialDelaySeconds: 5
   # -- Period seconds for livenessProbe
-  periodSeconds: 60
+  periodSeconds: 30
   # -- Timeout seconds for livenessProbe
-  timeoutSeconds: 10
+  timeoutSeconds: 5
   # -- Success threshold for livenessProbe
   successThreshold: 1
   # -- Failure threshold for livenessProbe
@@ -105,15 +105,32 @@ readinessProbe:
   # -- Enable readinessProbe
   enabled: true
   # -- Initial delay seconds for readinessProbe
-  initialDelaySeconds: 40
+  initialDelaySeconds: 5
   # -- Period seconds for readinessProbe
-  periodSeconds: 60
+  periodSeconds: 30
   # -- Timeout seconds for readinessProbe
-  timeoutSeconds: 10
+  timeoutSeconds: 5
   # -- Success threshold for readinessProbe
   successThreshold: 1
   # -- Failure threshold for readinessProbe
   failureThreshold: 3
+
+# -- Custom startupProbe that overrides the default one
+customStartupProbe: {}
+
+startupProbe:
+  # -- Enable startupProbe
+  enabled: true
+  # -- Initial delay seconds for startupProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for startupProbe
+  periodSeconds: 10
+  # -- Timeout seconds for startupProbe
+  timeoutSeconds: 10
+  # -- Success threshold for startupProbe
+  successThreshold: 1
+  # -- Failure threshold for startupProbe
+  failureThreshold: 30
 
 # -- Network policy defines who can access this application and who this applications has access to
 # @default -- check `values.yaml`
