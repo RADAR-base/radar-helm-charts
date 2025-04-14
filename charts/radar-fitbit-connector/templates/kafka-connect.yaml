@@ -35,6 +35,18 @@ spec:
     value.converter.schema.registry.url: {{ .Values.schema_registry }}
     internal.key.converter: "org.apache.kafka.connect.json.JsonConverter"
     internal.value.converter: "org.apache.kafka.connect.json.JsonConverter"
+    # CONNECTOR properties
+    name: radar-fitbit-source
+    fitbit.api.client: {{ .Values.fitbit_api_client }}
+    fitbit.api.secret: {{ .Values.fitbit_api_secret }}
+    fitbit.api.intraday: {{ .Values.includeIntradayData }}
+    fitbit.user.repository.class: org.radarbase.connect.rest.fitbit.user.ServiceUserRepository
+    fitbit.user.repository.url: {{ .Values.radar_rest_sources_backend_url }}
+    fitbit.user.repository.client.id: {{ .Values.oauthClientId }}
+    fitbit.user.repository.client.secret: {{ .Values.oauthClientSecret }}
+    fitbit.user.repository.oauth2.token.url: {{ .Values.managementportal_url }}/oauth/token
+    fitbit.user.poll.interval: {{ .Values.fitbit_user_poll_interval | int }}
+    fitbit.user.dir: /mnt/users
   template:
     pod:
       metadata:
@@ -83,22 +95,22 @@ spec:
               name: {{ .Values.secret.jaas.name }}
               key: {{ .Values.secret.jaas.key }}
         {{- end }}
-        - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL
-          value: "{{ .Values.schema_registry }}"
-        - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL
-          value: "{{ .Values.schema_registry }}"
-        - name: CONNECT_INTERNAL_KEY_CONVERTER
-          value: "org.apache.kafka.connect.json.JsonConverter"
-        - name: CONNECT_INTERNAL_VALUE_CONVERTER
-          value: "org.apache.kafka.connect.json.JsonConverter"
+        - name: CONNECT_APPLICATION_LOOP_INTERVAL_MS
+          value: {{ .Values.application_loop_interval_ms | quote }}
+        - name: CONNECT_USER_CACHE_REFRESH_INTERVAL_MS
+          value: {{ .Values.user_cache_refresh_interval_ms | quote }}
+        - name: CONNECT_REST_SOURCE_BASE_URL
+          value: {{ .Values.fitbit_api_url }}
+        - name: CONNECT_REST_SOURCE_POLL_INTERVAL_MS
+          value: {{ .Values.rest_source_poll_interval_ms | quote }}
+        - name: CONNECT_REST_SOURCE_REQUEST_GENERATOR_CLASS
+          value: org.radarbase.connect.rest.fitbit.request.FitbitRequestGenerator
         - name: CONNECT_REST_ADVERTISED_HOST_NAME
           value: {{ include "radar-fitbit-connector.fullname" . }}
         {{- if .Values.zookeeper }}
         - name: CONNECT_ZOOKEEPER_CONNECT
           value: "{{ .Values.zookeeper }}"
         {{- end }}
-        - name: CONNECTOR_PROPERTY_FILE_PREFIX
-          value: "source-fitbit/source-fitbit"
         - name: KAFKA_HEAP_OPTS
           value: {{ .Values.heapOptions }}
         - name: KAFKA_BROKERS
@@ -114,12 +126,12 @@ spec:
         {{- with .Values.extraEnvVars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-{{/* TODO container not starting with volume mounts */}}
-{{/*      volumeMounts:*/}}
-{{/*        - name: config-users*/}}
-{{/*          mountPath: /opt/kafka/plugins/kafka-connect-fitbit-source/users*/}}
-{{/*        - name: logs*/}}
-{{/*          mountPath: /opt/kafka/plugins/kafka-connect-fitbit-source/logs*/}}
+      volumeMounts:
+        - name: config-users
+          mountPath: /mnt/users
+{{/* TODO is logs mount needed or was it there only to store the offset file (CONNECT_OFFSET_STORAGE_FILE_FILENAME: "/var/lib/kafka-connect-fitbit-source/logs/connect.offsets) */}}
+        - name: logs
+          mountPath: /mnt/logs
 {{/*    {{- if .Values.persistence.fsUserOverride }}*/}}
 {{/* TODO is this needed? Init container cannot be specified in the previous format (no matching specs) */}}
 {{/*    initContainer:*/}}

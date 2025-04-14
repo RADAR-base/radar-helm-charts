@@ -9,6 +9,8 @@ metadata:
   labels:
     strimzi.io/cluster: {{ template "common.names.fullname" . }}
 spec:
+{{/*  TODO when changing partitions on this getting: "The schema topic registry-schemas should have only 1 partition but has 3" */}}
+{{/*  According to https://stackoverflow.com/a/74777178 schema topic should not have more than 1 partition */}}
   partitions: {{ $context.partitions }}
   replicas: {{ $topicReplicationFactor }}
   config:
