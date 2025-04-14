@@ -43,3 +43,14 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 | hydra | object | check `values.yaml` | Ory Hydra configuration |
 | hydra.server_name | string | `"localhost"` | Hostname for the Kratos service |
 | hydra.advertised_protocol | string | `"https"` | Protocol for the Kratos service (allowed values: http, https) |
+| oauth_clients[0].name | string | `"managementportal"` |  |
+| oauth_clients[0].redirectUris[0] | string | `"{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/managementportal/api/redirect/login"` |  |
+| oauth_clients[0].grantTypes[0] | string | `"authorization_code"` |  |
+| oauth_clients[0].grantTypes[1] | string | `"refresh_token"` |  |
+| oauth_clients[0].responseTypes[0] | string | `"code"` |  |
+| oauth_clients[0].responseTypes[1] | string | `"id_token"` |  |
+| oauth_clients[0].scope | string | `"SOURCEDATA.CREATE SOURCETYPE.UPDATE SOURCETYPE.DELETE AUTHORITY.UPDATE MEASUREMENT.DELETE PROJECT.READ AUDIT.CREATE USER.DELETE AUTHORITY.DELETE SUBJECT.DELETE MEASUREMENT.UPDATE SOURCEDATA.UPDATE SUBJECT.READ USER.UPDATE SOURCETYPE.CREATE AUTHORITY.READ USER.CREATE SOURCE.CREATE SOURCE.READ SUBJECT.CREATE ROLE.UPDATE ROLE.READ MEASUREMENT.READ PROJECT.UPDATE PROJECT.DELETE ROLE.DELETE SOURCE.DELETE SOURCETYPE.READ ROLE.CREATE SOURCEDATA.DELETE SUBJECT.UPDATE SOURCE.UPDATE PROJECT.CREATE AUDIT.READ MEASUREMENT.CREATE AUDIT.DELETE AUDIT.UPDATE AUTHORITY.CREATE USER.READ SOURCEDATA.READ ORGANIZATION.READ ORGANIZATION.CREATE ORGANIZATION.UPDATE"` |  |
+| oauth_clients[0].audience[0] | string | `"res_ManagementPortal"` |  |
+| oauth_clients[0].allowed_cors_origins[0] | string | `"http://localhost:3000"` |  |
+| oauth_clients[0].skip_consent | bool | `true` |  |
+| oauth_clients[0].skip_logout_consent | bool | `false` |  |
