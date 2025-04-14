@@ -3,7 +3,7 @@
 # radar-grafana
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-grafana)](https://artifacthub.io/packages/helm/radar-base/radar-grafana)
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 11.2.2-security-01](https://img.shields.io/badge/AppVersion-11.2.2--security--01-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 11.2.2-security-01](https://img.shields.io/badge/AppVersion-11.2.2--security--01-informational?style=flat-square)
 
 A Helm chart for Grafana dashboard used by RADAR-base
 
@@ -34,7 +34,7 @@ for additional information on how to configure this service if needed.
 
 | Repository | Name | Version |
 |------------|------|---------|
-| file://../../external/grafana | grafana | 8.3.7 |
+| file://../../external/grafana | grafana | 8.11.3 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
