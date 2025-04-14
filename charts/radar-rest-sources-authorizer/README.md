@@ -3,7 +3,7 @@
 # radar-rest-sources-authorizer
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-authorizer)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-authorizer)
 
-![Version: 2.2.2](https://img.shields.io/badge/Version-2.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.7](https://img.shields.io/badge/AppVersion-4.4.7-informational?style=flat-square)
+![Version: 2.2.3](https://img.shields.io/badge/Version-2.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.8](https://img.shields.io/badge/AppVersion-4.4.8-informational?style=flat-square)
 
 A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer which is a portal to authorize the Fitbit connector to read data from Fitbit accounts.
 
@@ -80,3 +80,4 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 | clientId | string | `"radar_rest_sources_authorizer"` | OAuth2 client id of the application registered in Management Portal. It is assumed that this is a public client with empty client secret. |
 | serverName | string | `"localhost"` | Domain name of the server |
 | authUrl | string | `nil` | Authorization URL of the IDP (overrides the default value derived from the serverName) |
+| authPath | string | `"/auth"` | Authorization path appended to the authUrl of the IDP (/auth for Hydra, /authorize for MP) |

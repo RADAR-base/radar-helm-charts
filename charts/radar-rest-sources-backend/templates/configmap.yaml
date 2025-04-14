@@ -23,10 +23,17 @@ data:
     auth:
       # Management Portal URL
       managementPortalUrl: {{ .Values.managementportal_url }}
+      # OAuth2 Auth URL for MP Client
+      authUrl: {{ .Values.auth_url }}
       # OAuth2 Client id of rest sources authorizer backend
       clientId: radar_rest_sources_auth_backend
       # OAuth2 Client Secret of rest sources authorizer backend client
       clientSecret: {{ .Values.client_secret }}
+      # List of public key endpoints for token verification
+      jwksUrls:
+        {{- range .Values.public_key_endpoints }}
+        - {{ . | quote }}
+        {{ end -}}
 
     database:
       driver: org.postgresql.Driver
