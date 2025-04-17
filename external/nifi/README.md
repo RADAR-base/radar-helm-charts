@@ -1,7 +1,7 @@
 # Helm Chart for Apache NiFi
 ## Introduction
 
-This [Helm](https://helm.sh/) chart installs [Apache NiFi](https://nifi.apache.org/) 1.23.2 in a [Kubernetes](https://kubernetes.io/) cluster.
+This [Helm](https://helm.sh/) chart installs [Apache NiFi](https://nifi.apache.org/) 2.3.0 in a [Kubernetes](https://kubernetes.io/) cluster.
 
 ## Prerequisites
 
@@ -14,7 +14,7 @@ This [Helm](https://helm.sh/) chart installs [Apache NiFi](https://nifi.apache.o
 ### Add Helm repository
 
 ```bash
-helm repo add cetic https://cetic.github.io/helm-charts
+helm repo add radar https://radar-base.github.io/radar-helm-charts
 helm repo update
 ```
 
@@ -67,7 +67,7 @@ If you plan to use Grafana for the visualization of the metrics data [the follow
 Install the nifi helm chart with a release name `my-release`:
 
 ```bash
-helm install my-release cetic/nifi
+helm install my-release radar/nifi
 ```
 
 ### Install from local clone
@@ -139,6 +139,7 @@ The following table lists the configurable parameters of the nifi chart and the 
 | `properties.safetyValve`                                                    | Map of explicit 'property: value' pairs that overwrite other configuration                                         | `nil`                           |
 | `properties.customLibPath`                                                  | Path of the custom libraries folder                                                                                | `nil`                           |
 | `properties.webProxyHost`                               | Proxy to access to Nifi through the cluster ip address    | `Port:30236`
+| `properties.clusterStateProvider`                               | Choosing the cluster provider to manage state. Supports `kubernetes-provider` and `zk-provider`    | `kubernetes-provider`
 | **[Authentication](/doc/USERMANAGEMENT.md)**                                                |
 | **Single-user authentication**                                                | Automatically disabled if Client Certificate, OIDC, or LDAP enabled
 | `auth.     admin`                                                           | Default admin identity. It will overwrite the LDAP Bind DN for this purpose, when both is filled                   | ` CN=admin, OU=NIFI`            |
@@ -162,6 +163,8 @@ The following table lists the configurable parameters of the nifi chart and the 
 | `auth.oidc.claimIdentifyingUser`                                            | oidc claimIdentifyingUser                                                                                          | `email`                         |
 | `auth.oidc.preferredJwsAlgorithm`                                            | The preferred algorithm for validating identity tokens. If this value is blank, it will default to RS256 which is required to be supported by the OpenID Connect Provider according to the specification. If this value is HS256, HS384, or HS512, NiFi will attempt to validate HMAC protected tokens using the specified client secret. If this value is none, NiFi will attempt to validate unsecured/plain tokens.                                                                                           | `nil`                         |
 | `auth.oidc.admin`                                                           | Default OIDC admin identity                                                                                        | `nifi@example.com`              |
+| `auth.oidc.tokenRefreshWindow`                                                           |     The Token Refresh Window specifies the amount of time before the NiFi authorization session expires when the application will attempt to renew access using a cached Refresh Token.                                                                                | `60 secs`              |
+| `auth.oidc.claimGroups`                                                           |      Name of the ID token claim that contains an array of group names of which the user is a member.        |`admin`
 | Note that OIDC authentication to a multi-NiFi-node cluster requires Ingress sticky sessions | See [background](https://community.cloudera.com/t5/Support-Questions/OIDC-With-Azure-AD/m-p/232324#M194163)      | Also [how](https://kubernetes.github.io/ingress-nginx/examples/affinity/cookie/) |
 | **postStart**                                                               |
 | `postStart`                                                                 | Include additional libraries in the Nifi containers by using the postStart handler                                 | `nil`                           |
@@ -289,9 +292,6 @@ kubectl get pod
 NAME                  READY   STATUS    RESTARTS   AGE
 myrelease-nifi-0             3/4     Failed   1          56m
 myrelease-nifi-registry-0    1/1     Running   0          56m
-myrelease-nifi-zookeeper-0   1/1     Running   0          56m
-myrelease-nifi-zookeeper-1   1/1     Running   0          56m
-myrelease-nifi-zookeeper-2   1/1     Running   0          56m
 ```
 
 Inspect the pod, check the "Events" section at the end for anything suspicious.
@@ -312,11 +312,11 @@ Initially inspired from https://github.com/YolandaMDavis/apache-nifi.
 
 TLS work/inspiration from https://github.com/sushilkm/nifi-chart.git.
 
+Helm chart inspired from https://github.com/cetic/helm-nifi/
+
 ## Contributing
 
-Feel free to contribute by making a [pull request](https://github.com/cetic/helm-nifi/pull/new/master).
-
-Please read the official [Helm Contribution Guide](https://github.com/helm/charts/blob/master/CONTRIBUTING.md) from Helm for more information on how you can contribute to this Chart.
+Feel free to contribute by making a [pull request](https://github.com/RADAR-base/radar-helm-charts/pull/new/master).
 
 ## License
 
