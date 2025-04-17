@@ -40,7 +40,7 @@ sts:
       security.alpha.kubernetes.io/sysctls: net.ipv4.ip_local_port_range=10000 65000
       #prometheus.io/scrape: "true"
   serviceAccount:
-    create: false
+    create: true
     #name: nifi
     annotations: {}
   hostAliases: []
@@ -113,7 +113,7 @@ properties:
     nifi.web.http.network.interface.default: eth0
     # listen to loopback interface so "kubectl port-forward ..." works
     nifi.web.http.network.interface.lo: lo
-  clusterStateProvider: zk-provider
+  clusterStateProvider: kubernetes-provider
 
   ## Include aditional processors
   # customLibPath: "/opt/configuration_resources/custom_lib"
@@ -159,6 +159,8 @@ auth:
     clientSecret: #<client_secret_in_oidc_provider>
     claimIdentifyingUser: email
     admin: nifi@example.com
+    tokenRefreshWindow: 60 secs
+    claimGroups: admin
     preferredJwsAlgorithm:
     ## Request additional scopes, for example profile
     additionalScopes:
@@ -429,7 +431,7 @@ certManager:
 zookeeper:
   ## If true, install the Zookeeper chart
   ## ref: https://github.com/bitnami/charts/blob/master/bitnami/zookeeper/values.yaml
-  enabled: true
+  enabled: false
   ## If the Zookeeper Chart is disabled a URL and port are required to connect
   url: ""
   port: 2181

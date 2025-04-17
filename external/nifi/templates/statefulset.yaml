@@ -87,7 +87,7 @@ spec:
 {{ toYaml .Values.securityContext | indent 8 }}
 {{- end }}
       initContainers:
-{{- if .Values.properties.isNode }}
+{{- if and .Values.properties.isNode  (.Values.properties.clusterStateProvider | eq "zk-provider") }}
       - name: zookeeper
         imagePullPolicy: {{ .Values.sidecar.imagePullPolicy | default "Always" | quote }}
         image: "{{ .Values.sidecar.image }}:{{ .Values.sidecar.tag }}"
