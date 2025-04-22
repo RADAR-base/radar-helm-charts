@@ -21,7 +21,7 @@ data:
     oura.user.repository.url={{ .Values.radar_rest_sources_backend_url }}
     oura.user.repository.client.id={{ .Values.oauthClientId }}
     oura.user.repository.client.secret={{ .Values.oauthClientSecret }}
-    oura.user.repository.oauth2.token.url={{ .Values.managementportal_url }}/oauth/token
+    oura.user.repository.oauth2.token.url={{ .Values.auth_url }}
   {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
   kafka-wait.properties: |
     {{ .Values.kafka_wait.properties | indent 4 }}
