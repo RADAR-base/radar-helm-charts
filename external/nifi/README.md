@@ -140,6 +140,17 @@ The following table lists the configurable parameters of the nifi chart and the 
 | `properties.customLibPath`                                                  | Path of the custom libraries folder                                                                                | `nil`                           |
 | `properties.webProxyHost`                               | Proxy to access to Nifi through the cluster ip address    | `Port:30236`
 | `properties.clusterStateProvider`                               | Choosing the cluster provider to manage state. Supports `kubernetes-provider` and `zk-provider`    | `kubernetes-provider`
+| `properties.clusterHeartbeatInterval`                               | The interval at which nodes should emit heartbeats to the Cluster Coordinator.  | `5 sec`
+| `properties.clusterHeartbeatMissableMax`                               | Maximum number of heartbeats a Cluster Coordinator can miss for a node in the cluster before the Cluster Coordinator updates the node status to Disconnected.   | `10`
+| `properties.QueueBackpressureCount`                               | When drawing a new connection between two components, this is the default value for that connection’s back pressure object threshold.   | `10000`
+| `properties.QueueBackpressureSize`                               | When drawing a new connection between two components, this is the default value for that connection’s back pressure data size threshold.    | `1 GB`
+| `properties.provenanceBufferSize`                               | The Provenance Repository buffer size.     | `100000`
+| `properties.questdbPersistNodeDays`                               | Choosing the cluster provider to manage state. Supports `kubernetes-provider` and `zk-provider`    | `kubernetes-provider`
+| `properties.clusterStateProvider`                               | The number of days the node status data (such as Repository disk space free, garbage collection information, etc.) will be kept.    | `14`
+| `properties.questdbPersistComponentDays`                               | The number of days the component status data (i.e., stats for each Processor, Connection, etc.) will be kept.  | `3`
+| `properties.webMaxRequestsPerSecond`                               | The maximum number of requests from a connection per second. Requests in excess of this are first delayed, then throttled.    | `30000`
+| `properties.webMaxAccessTokenRequestsPerSecond`                               | The maximum number of requests for login Access Tokens from a connection per second. Requests in excess of this are rejected with HTTP 429. | `25`
+| `properties.analyticsPredictEnabled`                               | This indicates whether prediction should be enabled for the cluster. | `false`
 | **[Authentication](/doc/USERMANAGEMENT.md)**                                                |
 | **Single-user authentication**                                                | Automatically disabled if Client Certificate, OIDC, or LDAP enabled
 | `auth.     admin`                                                           | Default admin identity. It will overwrite the LDAP Bind DN for this purpose, when both is filled                   | ` CN=admin, OU=NIFI`            |
