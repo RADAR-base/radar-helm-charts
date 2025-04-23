@@ -97,6 +97,8 @@ properties:
   zkClientEnsembleTraker: false # https://issues.apache.org/jira/browse/NIFI-10481
   clusterNodeConnectionTimeout: '10 sec'
   clusterNodeReadTimeout: '10 sec'
+  clusterHeartbeatInterval: '5 sec'
+  clusterHeartbeatMissableMax: 10
   zookeeperConnectTimeout: '3 secs'
   zookeeperSessionTimeout: '3 secs'
   archiveMaxRetentionPeriod: "3 days"
@@ -105,6 +107,14 @@ properties:
   provenanceMaxStorageTime: "10 days"
   flowArchiveMaxTime: "30 days"
   flowArchiveMaxStorage: "500 MB"
+  QueueBackpressureCount: 1000
+  QueueBackpressureSize: "1 GB"
+  provenanceBufferSize: 100000
+  questdbPersistNodeDays: 14
+  questdbPersistComponentDays: 3
+  webMaxRequestsPerSecond: 30000
+  webMaxAccessTokenRequestsPerSecond: 25
+  analyticsPredictEnabled: false
   siteToSite:
     port: 10000
   # use properties.safetyValve to pass explicit 'key: value' pairs that overwrite other configuration
