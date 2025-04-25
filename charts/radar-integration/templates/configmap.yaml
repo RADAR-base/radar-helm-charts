@@ -25,10 +25,12 @@ data:
           enrolment_event: {{ .redcap_info.enrolment_event }} #Unique identifier for the enrolment event
           integration_form: {{ .redcap_info.integration_form }} #Name of integration REDCap form
           token: {{ .redcap_info.token }} #REDCap API Token used to identify the REDCap user against the REDCap instance
+          {{- if .redcap_info.attributes }}
           attributes:
             {{- range .redcap_info.attributes }}
             - field_name: {{ . }}
             {{- end }}
+          {{- end }}
         mp_info:
           # Management Portal project identifier
           project_name: {{ .mp_info.project_name }} #
