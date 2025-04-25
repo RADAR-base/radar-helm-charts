@@ -91,3 +91,4 @@ A Helm chart for RADAR-base oura connector. This application collects data from 
 | auth_url | string | `"http://management-portal:8080/managementportal/oauth/token"` | OAuth2 Auth URL for connector client to get access tokens |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of Management Portal. This will be used to create URLs to access Management Portal |
 | includeIntradayData | bool | `true` | Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties. |
+| user_repository_class | string | `"OuraServiceUserRepositoryLegacy"` | Class name of the user repository. This should be the same as the one used in the connector. |

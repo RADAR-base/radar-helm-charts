@@ -17,7 +17,7 @@ data:
     oura.api.client={{ .Values.oura_api_client }}
     oura.api.secret={{ .Values.oura_api_secret }}
     oura.api.intraday={{ .Values.includeIntradayData }}
-    oura.user.repository.class=org.radarbase.connect.rest.oura.user.OuraServiceUserRepository
+    oura.user.repository.class=org.radarbase.connect.rest.oura.user.{{ .Values.user_repository_class }}
     oura.user.repository.url={{ .Values.radar_rest_sources_backend_url }}
     oura.user.repository.client.id={{ .Values.oauthClientId }}
     oura.user.repository.client.secret={{ .Values.oauthClientSecret }}

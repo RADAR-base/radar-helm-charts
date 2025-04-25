@@ -91,6 +91,7 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | auth_url | string | `"http://management-portal:8080/managementportal/oauth/token"` | OAuth2 Auth URL for connector client to get access tokens |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of Management Portal. This will be used to create URLs to access Management Portal |
 | includeIntradayData | bool | `true` | Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties. |
+| user_repository_class | string | `"ServiceUserRepositoryLegacy"` | Class of the user repository to use. This should be a class that implements the UserRepository interface. |
 | rest_source_poll_interval_ms | int | `60000` | How often to poll the source URL. Only use to speed up processing times during e2e testing. |
 | fitbit_user_poll_interval | int | `5000` | Polling interval per Fitbit user per request route in seconds. Only use to speed up processing times during e2e testing. |
 | application_loop_interval_ms | int | `300000` | How often to perform the main application loop (only controls how often to poll for new user registrations). Only use to speed up processing times during e2e testing. |
