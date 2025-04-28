@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: 0.6.1
+appVersion: 0.6.2
 description: A Helm chart for RADAR-base oura connector. This application collects data from participants via the Oura Web API.
 name: radar-oura-connector
 version: 0.2.4
