@@ -3,7 +3,7 @@
 # radar-oura-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-oura-connector)](https://artifacthub.io/packages/helm/radar-base/radar-oura-connector)
 
-![Version: 0.2.3](https://img.shields.io/badge/Version-0.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.1](https://img.shields.io/badge/AppVersion-0.6.1-informational?style=flat-square)
+![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.2](https://img.shields.io/badge/AppVersion-0.6.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base oura connector. This application collects data from participants via the Oura Web API.
 
@@ -88,5 +88,7 @@ A Helm chart for RADAR-base oura connector. This application collects data from 
 | oura_api_secret | string | `""` | Oura API client secret. |
 | oauthClientId | string | `"radar_oura_connector"` | OAuth2 client id from Management Portal |
 | oauthClientSecret | string | `"secret"` | OAuth2 client secret from Management Portal |
+| auth_url | string | `"http://management-portal:8080/managementportal/oauth/token"` | OAuth2 Auth URL for connector client to get access tokens |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of Management Portal. This will be used to create URLs to access Management Portal |
 | includeIntradayData | bool | `true` | Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties. |
+| user_repository_class | string | `"OuraServiceUserRepositoryLegacy"` | Class name of the user repository. This should be the same as the one used in the connector. |

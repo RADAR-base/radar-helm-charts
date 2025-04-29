@@ -220,7 +220,12 @@ oura_api_secret: ""
 oauthClientId: radar_oura_connector
 # -- OAuth2 client secret from Management Portal
 oauthClientSecret: secret
+# -- OAuth2 Auth URL for connector client to get access tokens
+auth_url: http://management-portal:8080/managementportal/oauth/token
 # -- URL of Management Portal. This will be used to create URLs to access Management Portal
 managementportal_url: http://management-portal:8080/managementportal
 # -- Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties.
 includeIntradayData: true
+
+# -- Class name of the user repository. This should be the same as the one used in the connector.
+user_repository_class: OuraServiceUserRepositoryLegacy

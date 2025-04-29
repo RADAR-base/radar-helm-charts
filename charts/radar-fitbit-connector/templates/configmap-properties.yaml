@@ -18,11 +18,11 @@ data:
     fitbit.api.client={{ .Values.fitbit_api_client }}
     fitbit.api.secret={{ .Values.fitbit_api_secret }}
     fitbit.api.intraday={{ .Values.includeIntradayData }}
-    fitbit.user.repository.class=org.radarbase.connect.rest.fitbit.user.ServiceUserRepository
+    fitbit.user.repository.class=org.radarbase.connect.rest.fitbit.user.{{ .Values.user_repository_class }}
     fitbit.user.repository.url={{ .Values.radar_rest_sources_backend_url }}
     fitbit.user.repository.client.id={{ .Values.oauthClientId }}
     fitbit.user.repository.client.secret={{ .Values.oauthClientSecret }}
-    fitbit.user.repository.oauth2.token.url={{ .Values.managementportal_url }}/oauth/token
+    fitbit.user.repository.oauth2.token.url={{ .Values.auth_url }}
     fitbit.user.poll.interval={{ .Values.fitbit_user_poll_interval | int }}
     application.loop.interval.ms={{ .Values.application_loop_interval_ms | int }}
     user.cache.refresh.interval.ms={{ .Values.user_cache_refresh_interval_ms | int}}
