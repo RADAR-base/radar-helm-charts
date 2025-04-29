@@ -6,16 +6,44 @@
 replicaCount: 2
 
 image:
-  # -- radar-gateway image repository
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
   repository: radarbase/radar-gateway
-  # -- radar-gateway image tag (immutable tags are recommended)
+  # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:
-  # -- radar-gateway image pull policy
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
   pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
 
-# -- Docker registry secret names as an array
-imagePullSecrets: []
+image_exporter:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
+  repository: sscaling/jmx-prometheus-exporter
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: "sha256:48e3bd31f132146751e449429a3e8a260b141f2acd587878fc50b3eda4466c5d"
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
 
 # -- String to partially override radar-gateway.fullname template with a string (will prepend the release name)
 nameOverride: ""
@@ -43,6 +71,8 @@ service:
 
 # -- Reconfigure Ingress to not force TLS
 disable_tls: false
+# -- The protocol in advertised URIs (https, http)
+advertised_protocol: https
 
 ingress:
   # -- Enable ingress controller resource
@@ -71,7 +101,7 @@ ingress:
     - localhost
   tls:
     # -- Name of the secret that contains TLS certificates
-    secretName: radar-base-tls-radar-gateway
+    secretName: radar-base-tls
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -95,6 +125,9 @@ tolerations: []
 
 # -- Affinity labels for pod assignment
 affinity: {}
+
+# -- Standard JAVA_OPTS that should be passed to this service
+javaOpts: "-XX:GCTimeRatio=19 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=30 --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.management/javax.management.openmbean=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.management/javax.management=ALL-UNNAMED -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
 
 # -- Extra environment variables
 extraEnvVars: []
@@ -209,13 +242,15 @@ adminProperties: {}
 # -- Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs.
 producerProperties:
   compression.type: lz4
-# -- Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig].
+# -- Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSetDeConfig].
 serializationProperties: {}
 
 # -- Additional gateway server properties
 serverProperties:
   # -- Maximum request size, also after decompression.
   maxRequestSize: 25165824
+  # -- Maximum response time in seconds.
+  requestTimeout: 30
 
 cc:
   # -- set to true, if requests should be forwarded to Confluent Cloud based brokers.
@@ -229,6 +264,48 @@ cc:
   # -- Confluent Cloud schema registry API secret
   schemaRegistryApiSecret: srApiSecret
 
+# -- Enables config of public key endpoints for token verification
+# This config option is implemented to fix a compatibility issue with radar-gateway.
+# It can be removed when the publicKeyUrls config option is merged to master.
+public_key_endpoints_enabled: false
 # -- List of public key endpoints for token verification
 public_key_endpoints: []
-  # - https://localhost/managementportal/oauth/token_key
+
+# -- Resolvable server name, needed to find the advertised URL and callback URL
+serverName: localhost
+
+# Sentry monitoring configuration
+sentry:
+  # -- DSN (Data Source Name) of the sentry server
+  dsn:
+  # -- Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR)
+  level: ERROR
+  service:
+    # -- Name of the service to be displayed in the sentry dashboard
+    name:
+    # -- App version to be displayed in the sentry dashboard
+    release:
+    # -- Environment of the sentry service
+    environment: production
+  stacktrace:
+    # -- Set to true, if stack trace should be enabled
+    enabled: true
+    # -- Comma-separated list of package prefixes to be included in the stacktrace
+    packages: "org.radarbase.gateway,org.apache.avro"
+
+# OpenTelemetry monitoring configuration
+openTelemetry:
+  agent:
+    # -- Enable OpenTelemetry agent (currently only Sentry agent is supported)
+    enabled: false
+    # -- OpenTelemetry Sentry agent jar file name, depends on version of 'io.sentry:sentry-opentelemetry-agent'
+    agentJar: sentry-opentelemetry-agent-8.1.0.jar
+  exporter:
+    # -- Sample rate for traces (0.0 to 1.0)
+    tracesSampleRate: 1.0
+    # -- Enable OpenTelemetry metrics exporter other than Sentry
+    metricsExporterEnabled: false
+    # -- Enable OpenTelemetry traces exporter other than Sentry
+    tracesExporterEnabled: false
+    # -- Enable OpenTelemetry logs exporter other than Sentry
+    logsExporterEnabled: true

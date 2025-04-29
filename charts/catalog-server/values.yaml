@@ -6,16 +6,24 @@
 replicaCount: 1
 
 image:
-  # -- catalog-server image repository
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
   repository: radarbase/radar-schemas-tools
-  # -- catalog-server image tag (immutable tags are recommended)
+  # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:
-  # -- catalog-server image pull policy
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
   pullPolicy: IfNotPresent
-
-# -- Docker registry secret names as an array
-imagePullSecrets: []
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
 
 # -- String to partially override catalog-server.fullname template with a string (will prepend the release name)
 nameOverride: ""

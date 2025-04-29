@@ -2,20 +2,37 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# -- Hostname for the Self-Enrolment Portal service
+server_name: localhost
+
 # -- Number of replicas in deployment
 replicaCount: 1
 # -- Number of revisions kept in history
 revisionHistoryLimit: 5
-## -- Deployment image settings
-image:
-  # Portal image
-  repository: ghcr.io/radar-base/radar-self-enrolment-ui
-  # -- Image version
-  tag: dev
-  pullPolicy: IfNotPresent
 
-imagePullSecrets: []
+image:
+  # -- Image registry
+  registry: ghcr.io
+  # -- Image repository
+  repository: radar-base/radar-self-enrolment-ui
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
+
+# -- String to partially override radar-self-enrolment-ui.fullname template with a string (will prepend the release name)
 nameOverride: ""
+# -- String to fully override radar-self-enrolment-ui.fullname template with a string
 fullnameOverride: ""
 
 ## -- Application config
@@ -48,23 +65,33 @@ secret:
     helm.sh/hook: pre-install, pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/resource-policy: keep
-  # -- switch to false to prevent checksum annotations being maintained and propogated to the pods
+  # -- switch to false to prevent checksum annotations being maintained and propagated to the pods
   hashSumEnabled: true
 
+# -- Reconfigure Ingress to not force TLS
+disable_tls: false
+# -- The protocol in URIs (https, http)
+advertised_protocol: https
+
 ingress:
+  # -- Enable ingress controller resource
   enabled: true
-  className: "nginx"
+  # -- Annotations that define default ingress class, certificate issuer
+  # @default -- check values.yaml
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+  # -- Path within the url structure
+  path: "/kratos-ui(/|$)(.*)"
+  # -- Ingress Path type
+  pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
+  # -- Hosts to accept requests from
   hosts:
-    - host: localhost
-      paths:
-        - path: "/kratos-ui/?(.*)"
-          pathType: ImplementationSpecific
+    - '{{ .Values.server_name }}'
   tls:
-    - secretName: radar-base-tls
-      hosts:
-        - localhost
+    # -- TLS Secret Name
+    secretName: radar-base-tls
 
 ## -- Container level security context
 securityContext:
@@ -207,7 +234,7 @@ networkpolicy:
         protocol: TCP
 
 # -- Set this to ORY Kratos's Admin URL
-kratosAdminUrl: "kratos-admin"
+kratosAdminUrl: "http://kratos-admin:80/admin"
 
 # -- Set this to ORY Kratos's public URL
 kratosPublicUrl: "https://localhost/kratos"
@@ -215,13 +242,35 @@ kratosPublicUrl: "https://localhost/kratos"
 # -- Set this to ORY Kratos's public URL accessible from the outside world.
 kratosBrowserUrl: "https://localhost/kratos"
 
+# -- Set this to ORY Hydra's Admin URL
+hydraAdminUrl: "http://hydra-admin"
+
+# -- Set this to ORY Hydra's public URL
+hydraPublicUrl: "http://hydra-public:4444"
+
+# -- Set this to the REST source backend service URL
+restSourceBackendUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend"
+
+# -- Set this to the RADAR Gateway service URL
+gatewayUrl: "http://radar-gateway:8080"
+
+# -- Client ID for ARMT authentication
+armtClientId: "aRMT"
+
+# -- Client secret for ARMT authentication
+armtClientSecret: ""
+
+# -- Client ID for SEP authentication
+sepClientId: "SEP"
+
+# -- Client secret for SEP authentication
+sepClientSecret: ""
+
+# -- GitHub authentication token for API access (leave empty if not used)
+githubAuthToken: ""
+
 # -- The basePath
 basePath: "/kratos-ui"
-
-# -- The jwksUrl
-jwksUrl: ""
-
-projectName: SecureApp
 
 test:
   # -- use a busybox image from another repository

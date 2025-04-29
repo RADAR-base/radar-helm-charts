@@ -3,7 +3,7 @@
 # app-config
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/app-config)](https://artifacthub.io/packages/helm/radar-base/app-config)
 
-![Version: 1.3.3](https://img.shields.io/badge/Version-1.3.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.2](https://img.shields.io/badge/AppVersion-0.5.2-informational?style=flat-square)
+![Version: 1.5.1](https://img.shields.io/badge/Version-1.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.2](https://img.shields.io/badge/AppVersion-0.5.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base application config (app-config) backend service which is used as mobile app configuration engine with per-project and per-user configuration.
 
@@ -13,9 +13,7 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -23,19 +21,27 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 * <https://github.com/RADAR-base/radar-app-config>
 
 ## Prerequisites
-* Kubernetes 1.22+
-* Kubectl 1.22+
+* Kubernetes 1.28+
+* Kubectl 1.28+
 * Helm 3.1.0+
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of Appconfig replicas to deploy |
-| image.repository | string | `"radarbase/radar-app-config"` | Appconfig image repositorys |
-| image.tag | string | `nil` | Appconfig image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
-| image.pullPolicy | string | `"IfNotPresent"` | Appconfig image pull policy |
-| imagePullSecrets | list | `[]` | Docker registry secret names as an array |
+| image.registry | string | `"docker.io"` | Image registry |
+| image.repository | string | `"radarbase/radar-app-config"` | Image repository |
+| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | nameOverride | string | `""` | String to partially override appconfig.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override appconfig.fullname template with a string |
 | namespace | string | `"default"` | Kubernetes namespace that Appconfig is going to be deployed on |
@@ -52,7 +58,7 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-tls-appconfig"` | TLS Secret Name |
+| ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | resources.limits | object | `{"cpu":2}` | CPU/Memory resource limits |
 | resources.requests | object | `{"cpu":"100m","memory":"768Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
@@ -78,8 +84,12 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 | clientId | string | `"radar_appconfig"` | OAuth2 client id |
 | clientSecret | string | `"secret"` | OAuth2 client secret |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
+| jdbc.url | string | `nil` | JDBC Connection url of the database. |
+| jdbc.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-appconfig"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'url' value). |
+| jdbc.user | string | `nil` | Username of the database |
+| jdbc.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-appconfig"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
+| jdbc.password | string | `nil` | Password of the user |
+| jdbc.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-appconfig"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| jdbc.parameters | string | `nil` | Additional JDBC connection parameters e.g. sslmode=verify-full Ignored when using 'urlSecret'. |
 | jdbc.driver | string | `"org.postgresql.Driver"` | JDBC Driver to connect to the database. |
-| jdbc.url | string | `"jdbc:postgresql://postgresql:5432/appconfig"` | JDBC Connection url of the database. |
-| jdbc.user | string | `"postgres"` | Username of the database |
-| jdbc.password | string | `"password"` | Password of the user |
-| jdbc.dialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` | JDBC dialect to use for JDBC Connection |
+| jdbc.dialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` |  |

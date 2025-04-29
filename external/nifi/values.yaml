@@ -1,0 +1,456 @@
+---
+# Number of nifi nodes
+replicaCount: 1
+
+## Set default image, imageTag, and imagePullPolicy.
+## ref: https://hub.docker.com/r/apache/nifi/
+##
+image:
+  repository: apache/nifi
+  tag: "1.23.2"
+  pullPolicy: "IfNotPresent"
+
+  ## Optionally specify an imagePullSecret.
+  ## Secret must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+  # pullSecret: myRegistrKeySecretName
+
+securityContext:
+  runAsUser: 1000
+  fsGroup: 1000
+
+## @param useHostNetwork - boolean - optional
+## Bind ports on the hostNetwork. Useful for CNI networking where hostPort might
+## not be supported. The ports need to be available on all hosts. It can be
+## used for custom metrics instead of a service endpoint.
+##
+## WARNING: Make sure that hosts using this are properly firewalled otherwise
+## metrics and traces are accepted from any host able to connect to this host.
+#
+
+sts:
+  # Parallel podManagementPolicy for faster bootstrap and teardown. Default is OrderedReady.
+  podManagementPolicy: Parallel
+  AntiAffinity: soft
+  useHostNetwork: null
+  hostPort: null
+  pod:
+    annotations:
+      security.alpha.kubernetes.io/sysctls: net.ipv4.ip_local_port_range=10000 65000
+      #prometheus.io/scrape: "true"
+  serviceAccount:
+    create: false
+    #name: nifi
+    annotations: {}
+  hostAliases: []
+#    - ip: "1.2.3.4"
+#      hostnames:
+#        - example.com
+#        - example
+
+  startupProbe:
+    enabled: false
+    failureThreshold: 60
+    periodSeconds: 10
+
+## Useful if using any custom secrets
+## Pass in some secrets to use (if required)
+# secrets:
+# - name: myNifiSecret
+#   keys:
+#     - key1
+#     - key2
+#   mountPath: /opt/nifi/secret
+
+## Useful if using any custom configmaps
+## Pass in some configmaps to use (if required)
+# configmaps:
+#   - name: myNifiConf
+#     keys:
+#       - myconf.conf
+#     mountPath: /opt/nifi/custom-config
+
+
+properties:
+  # https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#nifi_sensitive_props_key
+  sensitiveKey: changeMechangeMe # Must have at least 12 characters
+  # NiFi assumes conf/nifi.properties is persistent but this helm chart
+  # recreates it every time.  Setting the Sensitive Properties Key
+  # (nifi.sensitive.props.key) is supposed to happen at the same time
+  # /opt/nifi/data/flow.xml.gz sensitive properties are encrypted.  If that
+  # doesn't happen then NiFi won't start because decryption fails.
+  # So if sensitiveKeySetFile is configured but doesn't exist, assume
+  # /opt/nifi/flow.xml.gz hasn't been encrypted and follow the procedure
+  # https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#updating-the-sensitive-properties-key
+  # to simultaneously encrypt it and set nifi.sensitive.props.key.
+  # sensitiveKeySetFile: /opt/nifi/data/sensitive-props-key-applied
+  # If sensitiveKey was already set, then pass in sensitiveKeyPrior with the old key.
+  # sensitiveKeyPrior: OldPasswordToChangeFrom
+  algorithm: NIFI_PBKDF2_AES_GCM_256
+  # use externalSecure for when inbound SSL is provided by nginx-ingress or other external mechanism
+  externalSecure: false
+  isNode: false
+  httpsPort: 8443
+  webProxyHost: # <clusterIP>:<NodePort> (If Nifi service is NodePort or LoadBalancer)
+  clusterPort: 6007
+  zkClientEnsembleTraker: false # https://issues.apache.org/jira/browse/NIFI-10481
+  clusterNodeConnectionTimeout: '5 sec'
+  clusterNodeReadTimeout: '5 sec'
+  zookeeperConnectTimeout: '3 secs'
+  zookeeperSessionTimeout: '3 secs'
+  archiveMaxRetentionPeriod: "3 days"
+  archiveMaxUsagePercentage: "85%"
+  provenanceStorage: "8 GB"
+  provenanceMaxStorageTime: "10 days"
+  flowArchiveMaxTime: "30 days"
+  flowArchiveMaxStorage: "500 MB"
+  siteToSite:
+    port: 10000
+  # use properties.safetyValve to pass explicit 'key: value' pairs that overwrite other configuration
+  safetyValve:
+    #nifi.variable.registry.properties: "${NIFI_HOME}/example1.properties, ${NIFI_HOME}/example2.properties"
+    nifi.web.http.network.interface.default: eth0
+    # listen to loopback interface so "kubectl port-forward ..." works
+    nifi.web.http.network.interface.lo: lo
+
+  ## Include aditional processors
+  # customLibPath: "/opt/configuration_resources/custom_lib"
+
+## Include additional libraries in the Nifi containers by using the postStart handler
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/
+# postStart: /opt/nifi/psql; wget -P /opt/nifi/psql https://jdbc.postgresql.org/download/postgresql-42.2.6.jar
+
+# Nifi User Authentication
+auth:
+  # If set while LDAP is enabled, this value will be used for the initial admin and not the ldap bind dn / admin
+  admin: CN=admin, OU=NIFI
+  SSL:
+    keystorePasswd: changeMe
+    truststorePasswd: changeMe
+
+  # Automaticaly disabled if OIDC or LDAP enabled
+  singleUser:
+    username: username
+    password: changemechangeme # Must to have at least 12 characters
+
+  clientAuth:
+    enabled: false
+
+  ldap:
+    enabled: false
+    host: #ldap://<hostname>:<port>
+    searchBase: #CN=Users,DC=ldap,DC=example,DC=be
+    admin: #cn=admin,dc=ldap,dc=example,dc=be
+    pass: #ChangeMe
+    searchFilter: (objectClass=*)
+    userIdentityAttribute: cn
+    authStrategy: SIMPLE # How the connection to the LDAP server is authenticated. Possible values are ANONYMOUS, SIMPLE, LDAPS, or START_TLS.
+    identityStrategy: USE_DN
+    authExpiration: 12 hours
+    userSearchScope: ONE_LEVEL # Search scope for searching users (ONE_LEVEL, OBJECT, or SUBTREE). Required if searching users.
+    groupSearchScope: ONE_LEVEL # Search scope for searching groups (ONE_LEVEL, OBJECT, or SUBTREE). Required if searching groups.
+
+  oidc:
+    enabled: false
+    discoveryUrl: #http://<oidc_provider_address>:<oidc_provider_port>/auth/realms/<client_realm>/.well-known/openid-configuration
+    clientId: #<client_name_in_oidc_provider>
+    clientSecret: #<client_secret_in_oidc_provider>
+    claimIdentifyingUser: email
+    admin: nifi@example.com
+    preferredJwsAlgorithm:
+    ## Request additional scopes, for example profile
+    additionalScopes:
+
+openldap:
+  enabled: false
+  persistence:
+    enabled: true
+  env:
+    LDAP_ORGANISATION: # name of your organization e.g. "Example"
+    LDAP_DOMAIN: # your domain e.g. "ldap.example.be"
+    LDAP_BACKEND: "hdb"
+    LDAP_TLS: "true"
+    LDAP_TLS_ENFORCE: "false"
+    LDAP_REMOVE_CONFIG_AFTER_SETUP: "false"
+  adminPassword: #ChengeMe
+  configPassword: #ChangeMe
+  customLdifFiles:
+    1-default-users.ldif: |-
+      # You can find an example ldif file at https://github.com/cetic/fadi/blob/master/examples/basic/example.ldif
+## Expose the nifi service to be accessed from outside the cluster (LoadBalancer service).
+## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
+## ref: http://kubernetes.io/docs/user-guide/services/
+##
+
+# headless service
+headless:
+  type: ClusterIP
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+
+# ui service
+service:
+  type: ClusterIP
+  httpsPort: 8443
+  # nodePort: 30236
+  annotations: {}
+    # loadBalancerIP:
+    ## Load Balancer sources
+    ## https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
+    ##
+    # loadBalancerSourceRanges:
+    # - 10.10.10.0/24
+    ## OIDC authentication requires "sticky" session on the LoadBalancer for JWT to work properly...but AWS doesn't like it on creation
+    # sessionAffinity: ClientIP
+    # sessionAffinityConfig:
+    #   clientIP:
+  #     timeoutSeconds: 10800
+
+  # Enables additional port/ports to nifi service for internal processors
+  processors:
+    enabled: false
+    ports:
+      - name: processor01
+        port: 7001
+        targetPort: 7001
+        #nodePort: 30701
+      - name: processor02
+        port: 7002
+        targetPort: 7002
+        #nodePort: 30702
+## Configure containerPorts section with following attributes: name, containerport and protocol.
+containerPorts: []
+# - name: example
+#   containerPort: 1111
+#   protocol: TCP
+
+## Configure Ingress based on the documentation here: https://kubernetes.io/docs/concepts/services-networking/ingress/
+##
+ingress:
+  enabled: false
+  # className: nginx
+  annotations: {}
+  tls: []
+  hosts: []
+  path: /
+  # If you want to change the default path, see this issue https://github.com/cetic/helm-nifi/issues/22
+
+# Amount of memory to give the NiFi java heap
+jvmMemory: 2g
+
+# Separate image for tailing each log separately and checking zookeeper connectivity
+sidecar:
+  image: busybox
+  tag: "1.32.0"
+  imagePullPolicy: "IfNotPresent"
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: false
+
+  # When creating persistent storage, the NiFi helm chart can either reference an already-defined
+  # storage class by name, such as "standard" or can define a custom storage class by specifying
+  # customStorageClass: true and providing the "storageClass", "storageProvisioner" and "storageType".
+  # For example, to use SSD storage on Google Compute Engine see values-gcp.yaml
+  #
+  # To use a storage class that already exists on the Kubernetes cluster, we can simply reference it by name.
+  # For example:
+  # storageClass: standard
+  #
+  # The default storage class is used if this variable is not set.
+
+  accessModes:  [ReadWriteOnce]
+
+  ## Use subPath and have 1 persistent volume instead of 7 volumes - use when your k8s nodes have limited volume slots, to limit waste of space,
+  ##  or your available volume sizes are quite large
+  #  The one disk will have a directory folder for each volumeMount, but this is hidden. Run 'mount' to view each mount.
+  subPath:
+    enabled: false
+    name: data
+    size: 30Gi
+
+  ## Storage Capacities for persistent volumes (these are ignored if using one volume with subPath)
+  configStorage:
+    size: 100Mi
+  authconfStorage:
+    size: 100Mi
+  # Storage capacity for the 'data' directory, which is used to hold things such as the flow.xml.gz, configuration, state, etc.
+  dataStorage:
+    size: 1Gi
+  # Storage capacity for the FlowFile repository
+  flowfileRepoStorage:
+    size: 10Gi
+  # Storage capacity for the Content repository
+  contentRepoStorage:
+    size: 10Gi
+  # Storage capacity for the Provenance repository. When changing this, one should also change the properties.provenanceStorage value above, also.
+  provenanceRepoStorage:
+    size: 10Gi
+  # Storage capacity for nifi logs
+  logStorage:
+    size: 5Gi
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+logresources:
+  requests:
+    cpu: 10m
+    memory: 10Mi
+  limits:
+    cpu: 50m
+    memory: 50Mi
+
+## Enables setting your own affinity. Mutually exclusive with sts.AntiAffinity
+## You need to set the value of sts.AntiAffinity other than "soft" and "hard"
+affinity: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+initContainers: {}
+  # foo-init:  # <- will be used as container name
+  #   image: "busybox:1.30.1"
+  #   imagePullPolicy: "IfNotPresent"
+  #   command: ['sh', '-c', 'echo this is an initContainer']
+  #   volumeMounts:
+  #     - mountPath: /tmp/foo
+  #       name: foo
+
+extraVolumeMounts: []
+
+extraVolumes: []
+
+## Extra containers
+extraContainers: []
+
+terminationGracePeriodSeconds: 30
+
+## Extra environment variables that will be pass onto deployment pods
+env: []
+
+## Extra environment variables from secrets and config maps
+envFrom: []
+
+## Extra options to add to the bootstrap.conf file
+extraOptions: []
+
+# envFrom:
+#   - configMapRef:
+#       name: config-name
+#   - secretRef:
+#       name: mysecret
+
+## Openshift support
+## Use the following varables in order to enable Route and Security Context Constraint creation
+openshift:
+  scc:
+    enabled: false
+  route:
+    enabled: false
+    #host: www.test.com
+    #path: /nifi
+
+# ca server details
+# Setting this true would create a nifi-toolkit based ca server
+# The ca server will be used to generate self-signed certificates required setting up secured cluster
+ca:
+  ## If true, enable the nifi-toolkit certificate authority
+  enabled: false
+  persistence:
+    enabled: true
+  server: ""
+  service:
+    port: 9090
+  token: sixteenCharacters
+  admin:
+    cn: admin
+  serviceAccount:
+    create: false
+    #name: nifi-ca
+  openshift:
+    scc:
+      enabled: false
+
+# cert-manager support
+# Setting this true will have cert-manager create a private CA for the cluster
+# as well as the certificates for each cluster node.
+certManager:
+  enabled: false
+  clusterDomain: cluster.local
+  keystorePasswd: changeme
+  truststorePasswd: changeme
+  replaceDefaultTrustStore: false
+  additionalDnsNames:
+    - localhost
+  refreshSeconds: 300
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  # cert-manager takes care of rotating the node certificates, so default
+  # their lifetime to 90 days.  But when the CA expires you may need to
+  # 'helm delete' the cluster, delete all the node certificates and secrets,
+  # and then 'helm install' the NiFi cluster again.  If a site-to-site trusted
+  # CA or a NiFi Registry CA certificate expires, you'll need to restart all
+  # pods to pick up the new version of the CA certificate.  So default the CA
+  # lifetime to 10 years to avoid that happening very often.
+  # c.f. https://github.com/cert-manager/cert-manager/issues/2478#issuecomment-1095545529
+  certDuration: 2160h
+  caDuration: 87660h
+
+# ------------------------------------------------------------------------------
+# Zookeeper:
+# ------------------------------------------------------------------------------
+zookeeper:
+  ## If true, install the Zookeeper chart
+  ## ref: https://github.com/bitnami/charts/blob/master/bitnami/zookeeper/values.yaml
+  enabled: true
+  ## If the Zookeeper Chart is disabled a URL and port are required to connect
+  url: ""
+  port: 2181
+  replicaCount: 3
+
+# ------------------------------------------------------------------------------
+# Nifi registry:
+# ------------------------------------------------------------------------------
+registry:
+  ## If true, install the Nifi registry
+  enabled: false
+  url: ""
+  port: 80
+  ## Add values for the nifi-registry here
+  ## ref: https://github.com/dysnix/charts/blob/main/dysnix/nifi-registry/values.yaml
+
+# Configure metrics
+metrics:
+  prometheus:
+    # Enable Prometheus metrics
+    enabled: false
+    # Port used to expose Prometheus metrics
+    port: 9092
+    serviceMonitor:
+      # Enable deployment of Prometheus Operator ServiceMonitor resource
+      enabled: false
+      # namespace: monitoring
+      # Additional labels for the ServiceMonitor
+      labels: {}

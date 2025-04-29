@@ -6,15 +6,24 @@
 replicaCount: 1
 
 image:
-  # -- docker image repository
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
   repository: radarbase/radar-data-dashboard-backend
-  # -- image pull policy
-  pullPolicy: Always
-  # -- Overrides the image tag whose default is the chart appVersion.
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
   tag:
-
-# -- Docker registry secret names as an array
-imagePullSecrets: []
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
 
 # -- String to partially override fullname template with a string (will prepend the release name)
 nameOverride: ""
@@ -53,13 +62,13 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   # -- Path within the url structure
-  path: /api
+  path: /dashboard-data
   pathType: ImplementationSpecific
   # -- Hosts to accept requests from
   hosts:
     - localhost
   tls:
-    secretName: radar-base-data-dashboard-tls
+    secretName: radar-base-tls
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -132,11 +141,8 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
-existingSecret: ""
-
 # -- Standard JAVA_OPTS that should be passed to this service
 javaOpts: "-Xmx550m"
-
 
 managementPortal:
   # -- ManagementPortal URL
@@ -148,18 +154,31 @@ managementPortal:
 # -- JWT Resource name to use for this service in ManagementPortal
 jwtResourceName: res_DataDashboardAPI
 
-# -- Base path to use in application
-path: /api
-
 jdbc:
+  # -- JDBC Connection url of the database.
+  url:
+  # -- Kubernetes secret containing the database JDBC Connection url
+  # (disables use of 'url' value).
+  urlSecret:
+    name: data-dashboard-timescaledb-app
+    key: jdbc-uri
+  # -- Username of the database
+  user:
+  # -- Kubernetes secret containing the database JDBC Connection url
+  # (disables use of 'url' value).
+  userSecret:
+    name: data-dashboard-timescaledb-app
+    key: username
+  # -- Password of the database
+  password:
+  # -- Kubernetes secret containing the database password
+  # (disables use of 'password' value).
+  passwordSecret:
+    name: data-dashboard-timescaledb-app
+    key: password
+
   # -- JDBC Driver to connect to the database.
   driver: org.postgresql.Driver
-  # -- JDBC Connection url of the database.
-  url: jdbc:postgresql://postgresql:5432/data-dashboard
-  # -- Username of the database
-  user: postgres
-  # -- Password of the user
-  password: secret
   # -- Hibernate dialect to use for JDBC Connection
   dialect: org.hibernate.dialect.PostgreSQLDialect
   properties:

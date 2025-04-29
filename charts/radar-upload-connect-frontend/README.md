@@ -3,7 +3,7 @@
 # radar-upload-connect-frontend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connect-frontend)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connect-frontend)
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
+![Version: 0.6.2](https://img.shields.io/badge/Version-0.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector frontend application that provides a UI for uploading files and sending them to the upload-backend.
 
@@ -13,9 +13,7 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -23,19 +21,27 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 * <https://github.com/RADAR-base/radar-upload-source-connector>
 
 ## Prerequisites
-* Kubernetes 1.22+
-* Kubectl 1.22+
+* Kubernetes 1.28+
+* Kubectl 1.28+
 * Helm 3.1.0+
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-upload-connect-frontend replicas to deploy |
-| image.repository | string | `"radarbase/radar-upload-connect-frontend"` | radar-upload-connect-frontend image repository |
-| image.tag | string | `nil` | radar-upload-connect-frontend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
-| image.pullPolicy | string | `"IfNotPresent"` | radar-upload-connect-frontend image pull policy |
-| imagePullSecrets | list | `[]` | Docker registry secret names as an array |
+| image.registry | string | `"docker.io"` | Image registry |
+| image.repository | string | `"radarbase/radar-upload-connect-frontend"` | Image repository |
+| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | nameOverride | string | `""` | String to partially override radar-upload-connect-frontend.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-upload-connect-frontend.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure radar-upload-connect-frontend pods' Security Context |
@@ -50,7 +56,7 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Host to listen to requests to |
-| ingress.tls.secretName | string | `"radar-base-tls-radar-upload-connect-frontend"` | Name of the secret containing TLS certificates |
+| ingress.tls.secretName | string | `"radar-base-tls"` | Name of the secret containing TLS certificates |
 | resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |

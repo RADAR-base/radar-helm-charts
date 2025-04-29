@@ -1,9 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "radar-rest-sources-authorizer.fullname" . }}
-  labels:
-{{ include "radar-rest-sources-authorizer.labels" . | indent 4 }}
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -16,10 +19,7 @@ spec:
         app.kubernetes.io/name: {{ include "radar-rest-sources-authorizer.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "radar-rest-sources-authorizer.imagePullSecrets" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       affinity:
@@ -42,8 +42,8 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ template "radar-rest-sources-authorizer.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           env:
           - name: BASE_HREF
             value: /rest-sources/authorizer/
@@ -59,6 +59,8 @@ spec:
             value: ""
           - name: AUTH_CALLBACK_URL
             value: {{ printf "%s://%s/rest-sources/authorizer/login" .Values.advertised_protocol .Values.serverName }}
+          - name: AUTH_PATH
+            value: {{ .Values.authPath }}
           - name: AUTH_URI
             value: {{ .Values.authUrl | default (printf "%s://%s/managementportal/oauth" .Values.advertised_protocol .Values.serverName) }}
           {{- with .Values.extraEnvVars }}

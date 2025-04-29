@@ -7,6 +7,20 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
+Return the proper image name
+*/}}
+{{- define "radar-rest-sources-backend.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global "chart" .Chart ) }}
+{{- end -}}
+
+{{/*
+Return the proper Docker Image Registry Secret Names
+*/}}
+{{- define "radar-rest-sources-backend.imagePullSecrets" -}}
+{{- include "common.images.pullSecrets" (dict "images" (list .Values.image) "global" .Values.global) -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
@@ -52,13 +66,52 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Get the password secret.
+Get the name of the secret object.
 */}}
 {{- define "radar-rest-sources-backend.secretName" -}}
-{{- if .Values.existingSecret }}
-    {{- printf "%s" .Values.existingSecret -}}
-{{- else -}}
-    {{- printf "%s" (include "radar-rest-sources-backend.fullname" .) -}}
+{{- if eq .type "url" -}}
+    {{- if .values.postgres.urlSecret }}
+        {{- .values.postgres.urlSecret.name | default .fullname -}}
+    {{- else -}}
+        {{- .fullname -}}
+    {{- end -}}
+{{- else if eq .type "user" -}}
+    {{- if .values.postgres.userSecret }}
+        {{- .values.postgres.userSecret.name | default .fullname -}}
+    {{- else -}}
+        {{- .fullname -}}
+    {{- end -}}
+{{- else if eq .type "password" -}}
+    {{- if .values.postgres.passwordSecret }}
+        {{- .values.postgres.passwordSecret.name | default .fullname -}}
+    {{- else -}}
+        {{- .fullname -}}
+    {{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the key for the secret object.
+*/}}
+{{- define "radar-rest-sources-backend.secretKey" -}}
+{{- if eq .type "url" -}}
+    {{- if .values.postgres.urlSecret }}
+        {{- .values.postgres.urlSecret.key | default "databaseUrl" -}}
+    {{- else -}}
+        databaseUrl
+    {{- end -}}
+{{- else if eq .type "user" -}}
+    {{- if .values.postgres.userSecret }}
+        {{- .values.postgres.userSecret.key | default "databaseUser" -}}
+    {{- else -}}
+        databaseUser
+    {{- end -}}
+{{- else if eq .type "password" -}}
+    {{- if .values.postgres.passwordSecret }}
+        {{- .values.postgres.passwordSecret.key | default "databasePassword" -}}
+    {{- else -}}
+        databasePassword
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -66,10 +119,14 @@ Get the password secret.
 Return true if a secret object should be created
 */}}
 {{- define "radar-rest-sources-backend.createSecret" -}}
-{{- if .Values.existingSecret }}
-{{- else if .Values.existingSecret -}}
+{{- $urlSecretName := (and .Values.postgres.urlSecret .Values.postgres.urlSecret.name) -}}
+{{- $userSecretName := (and .Values.postgres.userSecret .Values.postgres.userSecret.name) -}}
+{{- $passwordSecretName := (and .Values.postgres.passwordSecret .Values.postgres.passwordSecret.name) -}}
+
+{{- if not (and $urlSecretName $userSecretName $passwordSecretName) -}}
+true
 {{- else -}}
-    {{- true -}}
+false
 {{- end -}}
 {{- end -}}
 

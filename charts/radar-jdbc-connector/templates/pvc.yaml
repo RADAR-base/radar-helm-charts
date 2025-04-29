@@ -4,12 +4,12 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "radar-jdbc-connector.fullname" $ }}
-  labels:
-    app: "{{ template "radar-jdbc-connector.fullname" $ }}"
-    chart: "{{ template "radar-jdbc-connector.chart" $ }}"
-    release: {{ $.Release.Name | quote }}
-    heritage: {{ $.Release.Service | quote }}
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 spec:
   accessModes:
     - {{ .accessMode | quote }}

@@ -3,7 +3,7 @@
 # management-portal
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.5](https://img.shields.io/badge/AppVersion-2.1.5-informational?style=flat-square)
+![Version: 1.5.1](https://img.shields.io/badge/Version-1.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.8](https://img.shields.io/badge/AppVersion-2.1.8-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -13,9 +13,9 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Yatharth Ranjan | <yatharthranjan89@gmail.com> | <https://www.kcl.ac.uk/people/yatharth-ranjan> |
 | Pauline Conde | <mpgxvii@gmail.com> | <https://www.kcl.ac.uk/people/pauline-conde> |
+| Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
 
 ## Source Code
 
@@ -23,19 +23,27 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 * <https://github.com/RADAR-base/ManagementPortal>
 
 ## Prerequisites
-* Kubernetes 1.22+
-* Kubectl 1.22+
+* Kubernetes 1.28+
+* Kubectl 1.28+
 * Helm 3.1.0+
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of Management Portal replicas to deploy |
-| image.repository | string | `"radarbase/management-portal"` | Management Portal image repository |
-| image.tag | string | `nil` | Management Portal image tag (immutable tags are recommended) |
-| image.pullPolicy | string | `"IfNotPresent"` | Management Portal image pull policy |
-| imagePullSecrets | list | `[]` | Docker registry secret names as an array |
+| image.registry | string | `"docker.io"` | Image registry |
+| image.repository | string | `"radarbase/management-portal"` | Image repository |
+| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | nameOverride | string | `""` | String to partially override management-portal.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override management-portal.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure management-portal pods' Security Context |
@@ -50,7 +58,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-tls-managementportal"` | TLS Secret Name |
+| ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | resources.limits | object | `{"cpu":2,"memory":"1700Mi"}` | CPU/Memory resource limits |
 | resources.requests | object | `{"cpu":"100m","memory":"512Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
@@ -73,12 +81,15 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | keystore | string | `""` | base 64 encoded binary p12 keystore containing a ECDSA certificate with alias `radarbase-managementportal-ec` and a RSA certificate with alias `selfsigned`. |
-| postgres.host | string | `"postgresql"` | host name of the postgres db |
-| postgres.port | int | `5432` | post of the postgres db |
-| postgres.database | string | `"managementportal"` | database name |
-| postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
-| postgres.user | string | `"postgres"` | postgres user |
-| postgres.password | string | `"password"` | password of the postgres user |
+| postgres.host | string | `nil` | host name of the postgres db |
+| postgres.port | string | `nil` | post of the postgres db |
+| postgres.database | string | `nil` | database name |
+| postgres.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'host', 'port' and 'database' values). |
+| postgres.user | string | `nil` | database user |
+| postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
+| postgres.password | string | `nil` | password of the database user |
+| postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true if the connecting to postgres using SSL |
 | postgres.ssl.keystore | string | `""` | base64 encoded certificate needed to connect to the PostgreSQL With helmfile, this can be set in a production.yaml.gotmpl file by setting   keystore: {{ readFile "certificate.pem" | b64enc | quote }} or with SOPS   keystore: {{ exec "sops" (list "-d" "certificate.pem") | b64enc | quote }} |
 | server_name | string | `"localhost"` | domain name of the server |

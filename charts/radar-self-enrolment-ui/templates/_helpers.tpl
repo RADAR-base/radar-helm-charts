@@ -7,6 +7,20 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
+Return the proper image name
+*/}}
+{{- define "radar-self-enrolment-ui.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global "chart" .Chart ) }}
+{{- end -}}
+
+{{/*
+Return the proper Docker Image Registry Secret Names
+*/}}
+{{- define "radar-self-enrolment-ui.imagePullSecrets" -}}
+{{- include "common.images.pullSecrets" (dict "images" (list .Values.image) "global" .Values.global) -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
@@ -53,4 +67,18 @@ Create a secret name which can be overridden.
 {{- else -}}
 {{ include "radar-self-enrolment-ui.fullname" . }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Set value from existing secret if defined
+I tried using "common.secrets.password.manage" but it gives errors on helm upgrades.
+Arguments (dict):
+- secret: the name of the secret
+- key: the key in the secret
+- contxt: global/root helm context
+*/}}
+{{- define "radar-self-enrolment-ui.secret.value" -}}
+{{- $secretObj := (lookup "v1" "Secret" .context.Release.Namespace .secret) | default dict }}
+{{- $secretData := (get $secretObj "data") | default dict }}
+{{- get $secretData .key | b64dec }}
 {{- end -}}

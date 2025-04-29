@@ -3,9 +3,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "radar-jdbc-connector.fullname" . }}
-  labels:
-    {{- include "radar-jdbc-connector.labels" . | nindent 4 }}
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -20,10 +23,7 @@ spec:
         app.kubernetes.io/name: {{ include "radar-jdbc-connector.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- include "radar-jdbc-connector.imagePullSecrets" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       affinity:
@@ -46,9 +46,19 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ template "radar-jdbc-connector.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           env:
+          - name: CONNECT_JDBC_CONNECTION_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "radar-jdbc-connector.secretName" (dict "type" "user" "context" .) }}
+                key: {{ include "radar-jdbc-connector.secretKey" (dict "type" "user" "context" .) }}
+          - name: CONNECT_JDBC_CONNECTION_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "radar-jdbc-connector.secretName" (dict "type" "password" "context" .) }}
+                key: {{ include "radar-jdbc-connector.secretKey" (dict "type" "password" "context" .) }}
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: "{{ .Values.kafka }}"
           - name: CONNECT_REST_PORT

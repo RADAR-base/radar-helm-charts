@@ -3,7 +3,7 @@
 # velero-s3-deployment
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/velero-s3-deployment)](https://artifacthub.io/packages/helm/radar-base/velero-s3-deployment)
 
-![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2024-11-21T17-21-54Z](https://img.shields.io/badge/AppVersion-RELEASE.2024--11--21T17--21--54Z-informational?style=flat-square)
 
 A Helm chart for Velero S3 deployment, this chart holds resources used by Velero with a deployment to mirror the local object storage to a remote object storage.
 
@@ -13,17 +13,15 @@ A Helm chart for Velero S3 deployment, this chart holds resources used by Velero
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
 * <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/velero-s3-deployment>
 
 ## Prerequisites
-* Kubernetes 1.22+
-* Kubectl 1.22+
+* Kubernetes 1.28+
+* Kubectl 1.28+
 * Helm 3.1.0+
 * S3-compatible object storage
 
@@ -31,6 +29,7 @@ A Helm chart for Velero S3 deployment, this chart holds resources used by Velero
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 | https://radar-base.github.io/radar-helm-charts | velero | 2.30.1 |
 
 ## Values
@@ -38,10 +37,12 @@ A Helm chart for Velero S3 deployment, this chart holds resources used by Velero
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | objectStorageBackupReplicaCount | int | `1` | Number of replicas for object storage backup pod, should be 1 |
-| mc_image.repository | string | `"minio/mc"` | Object storage backup pod image repository |
-| mc_image.tag | string | `"RELEASE.2022-07-06T14-54-36Z"` | Object storage backup pod image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
-| mc_image.pullPolicy | string | `"IfNotPresent"` | Object storage backup pod image pull policy |
-| imagePullSecrets | list | `[]` | Docker registry secret names as an array |
+| mc_image.registry | string | `"docker.io"` | Image registry |
+| mc_image.repository | string | `"minio/mc"` | Image repository |
+| mc_image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| mc_image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| mc_image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| mc_image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | podSecurityContext | object | `{}` | Configure object storage backup pod pods' Security Context |
 | securityContext | object | `{}` | Configure object storage backup pod containers' Security Context |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |

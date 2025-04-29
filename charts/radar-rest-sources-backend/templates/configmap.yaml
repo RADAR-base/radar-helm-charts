@@ -2,9 +2,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "radar-rest-sources-backend.fullname" . }}
-  labels:
-{{ include "radar-rest-sources-backend.labels" . | indent 4 }}
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 data:
   authorizer.yml: |
     service:
@@ -20,16 +23,24 @@ data:
     auth:
       # Management Portal URL
       managementPortalUrl: {{ .Values.managementportal_url }}
+      # OAuth2 Auth URL for MP Client
+      authUrl: {{ .Values.auth_url }}
       # OAuth2 Client id of rest sources authorizer backend
       clientId: radar_rest_sources_auth_backend
       # OAuth2 Client Secret of rest sources authorizer backend client
       clientSecret: {{ .Values.client_secret }}
+      # List of public key endpoints for token verification
+      jwksUrls:
+        {{- if .Values.public_key_endpoints }}
+        {{- range .Values.public_key_endpoints }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- else }}
+        []
+        {{- end }}
 
     database:
       driver: org.postgresql.Driver
-      url: jdbc:postgresql://{{ .Values.postgres.host }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}{{ .Values.postgres.connection_parameters }}
-      user: {{ .Values.postgres.user }}
-      password: {{ .Values.postgres.password }}
       dialect: org.hibernate.dialect.PostgreSQLDialect
 
     restSourceClients:

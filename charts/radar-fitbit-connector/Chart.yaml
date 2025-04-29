@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "0.5.4"
+appVersion: 0.6.1
 description: A Helm chart for RADAR-base fitbit connector. This application collects data from participants via the Fitbit Web API.
 name: radar-fitbit-connector
-version: 0.4.0
+version: 0.7.3
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-fitbit-connector
@@ -16,12 +16,12 @@ deprecated: false
 type: application
 home: "https://radar-base.org"
 maintainers:
-  - email: keyvan@thehyve.nl
-    name: Keyvan Hedayati
-    url: https://www.thehyve.nl
   - email: pim@thehyve.nl
     name: Pim van Nierop
     url: https://www.thehyve.nl/experts/pim-van-nierop
-  - email: nivethika@thehyve.nl
-    name: Nivethika Mahasivam
-    url: https://www.thehyve.nl/experts/nivethika-mahasivam
+dependencies:
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  tags:
+  - bitnami-common
+  version: 2.x.x

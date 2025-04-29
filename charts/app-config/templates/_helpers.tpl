@@ -7,6 +7,20 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
+Return the proper image name
+*/}}
+{{- define "app-config.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global "chart" .Chart ) }}
+{{- end -}}
+
+{{/*
+Return the proper Docker Image Registry Secret Names
+*/}}
+{{- define "app-config.imagePullSecrets" -}}
+{{- include "common.images.pullSecrets" (dict "images" (list .Values.image) "global" .Values.global) -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
@@ -21,28 +35,6 @@ If release name contains chart name it will be used as a full name.
 {{- else -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Get the password secret.
-*/}}
-{{- define "app-config.secretName" -}}
-{{- if .Values.existingSecret }}
-    {{- printf "%s" .Values.existingSecret -}}
-{{- else -}}
-    {{- printf "%s" (include "app-config.fullname" .) -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return true if a secret object should be created
-*/}}
-{{- define "app-config.createSecret" -}}
-{{- if .Values.existingSecret }}
-{{- else if .Values.existingSecret -}}
-{{- else -}}
-    {{- true -}}
 {{- end -}}
 {{- end -}}
 

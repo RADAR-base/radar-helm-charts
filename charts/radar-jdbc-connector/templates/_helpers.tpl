@@ -7,6 +7,20 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
+Return the proper image name
+*/}}
+{{- define "radar-jdbc-connector.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global "chart" .Chart) }}
+{{- end -}}
+
+{{/*
+Return the proper Docker Image Registry Secret Names
+*/}}
+{{- define "radar-jdbc-connector.imagePullSecrets" -}}
+{{- include "common.images.pullSecrets" (dict "images" (list .Values.image) "global" .Values.global) -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
@@ -60,5 +74,86 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "radar-jdbc-connector.validateValues" -}}
 {{- if not (has .Values.mode (list "sink" "source")) }}
 {{- fail "Mode must be 'source' for JDBC source connector or 'sink' for JDBC sink connector."}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the name of the secret object.
+*/}}
+{{- define "radar-jdbc-connector.secretName" -}}
+{{- $useCloudnative := index .context.Values "radar-cloudnative-timescaledb" "enabled" }}
+{{- $suffix := ternary "-app" "" $useCloudnative }}
+{{- $fullName := ternary (index .context.Values "radar-cloudnative-timescaledb" "cluster" "fullnameOverride") (include "radar-jdbc-connector.fullname" .context) $useCloudnative }}
+{{- $fullSecretName := print $fullName $suffix }}
+{{- if (eq .type "user") }}
+    {{- .context.Values.jdbc.userSecret.name | default $fullSecretName }}
+{{- else if (eq .type "password") }}
+    {{- .context.Values.jdbc.passwordSecret.name | default $fullSecretName }}
+{{- else if (eq .type "url") }}
+    {{- .context.Values.jdbc.urlSecret.name | default $fullSecretName }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the key for the secret object.
+*/}}
+{{- define "radar-jdbc-connector.secretKey" -}}
+{{- $useCloudnative := index .context.Values "radar-cloudnative-timescaledb" "enabled" }}
+{{- if (eq .type "user") }}
+    {{- if $useCloudnative }}
+        {{- "username" }}
+    {{- else }}
+        {{ .context.Values.jdbc.userSecret.key | default "databaseUser" }}
+    {{- end }}
+{{- else if (eq .type "password") }}
+    {{- if $useCloudnative }}
+        {{- "password" }}
+    {{- else }}
+        {{ .context.Values.jdbc.passwordSecret.key | default "databasePassword" }}
+    {{- end }}
+{{- else if (eq .type "url") }}
+    {{- if $useCloudnative }}
+        {{- "jdbc-uri" }}
+    {{- else }}
+        {{ .context.Values.jdbc.urlSecret.key | default "databaseUrl" }}
+    {{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Get the database url. Has to be created before the secret is created.
+*/}}
+{{- define "radar-jdbc-connector.databaseUrl" -}}
+{{- $useCloudnative := index .Values "radar-cloudnative-timescaledb" "enabled" }}
+{{- $port := .Values.jdbc.port | default 5432 }}
+{{- if $useCloudnative -}}
+    {{- include "radar-jdbc-connector.cloudnativeDatabaseUrl" . -}}
+{{- else if .Values.jdbc.urlSecret.name -}}
+   {{- print include "common.secrets.lookup" (dict "secret" .Values.jdbc.urlSecret.name "key" .Values.jdbc.urlSecret.key "default") -}}
+{{- else -}}
+    {{- .Values.jdbc.url -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Construct the Cloudnative-PG database URL
+*/}}
+{{- define "radar-jdbc-connector.cloudnativeDatabaseUrl" -}}
+{{- $port := .Values.jdbc.port | default 5432 }}
+{{- $dbConfig := index .Values "radar-cloudnative-timescaledb" "cluster" }}
+{{- $dbname := $dbConfig.cluster.initdb.database | default "postgres" }}
+{{- $override := $dbConfig.nameOverride | default "cluster" }}
+{{- $host := printf "%s-%s-rw.default" .Release.Name $override }}
+{{- printf "jdbc:postgresql://%s:%d/%s" $host $port $dbname -}}
+{{- end -}}
+
+{{/*
+Return true if a secret object should be created
+*/}}
+{{- define "radar-jdbc-connector.createSecret" -}}
+{{- if or .Values.jdbc.urlSecret .Values.jdbc.userSecret .Values.jdbc.passwordSecret -}}
+    {{- true -}}
+{{- else -}}
+    {{- false -}}
 {{- end -}}
 {{- end -}}

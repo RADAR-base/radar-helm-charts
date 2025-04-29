@@ -3,7 +3,7 @@
 # radar-rest-sources-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-backend)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-backend)
 
-![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.4](https://img.shields.io/badge/AppVersion-4.4.4-informational?style=flat-square)
+![Version: 1.4.3](https://img.shields.io/badge/Version-1.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.9](https://img.shields.io/badge/AppVersion-4.4.9-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -13,9 +13,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -23,18 +21,27 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 * <https://github.com/RADAR-base/RADAR-Rest-Source-Auth>
 
 ## Prerequisites
-* Kubernetes 1.22+
-* Kubectl 1.22+
+* Kubernetes 1.28+
+* Kubectl 1.28+
 * Helm 3.1.0+
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-rest-sources-backend replicas to deploy |
-| image.repository | string | `"radarbase/radar-rest-source-auth-backend"` | radar-rest-sources-backend image repository |
-| image.tag | string | `nil` | radar-rest-sources-backend image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
-| image.pullPolicy | string | `"IfNotPresent"` | radar-rest-sources-backend image pull policy |
+| image.registry | string | `"docker.io"` | Image registry |
+| image.repository | string | `"radarbase/radar-rest-source-auth-backend"` | Image repository |
+| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | imagePullSecrets | list | `[]` | Docker registry secret names as an array |
 | nameOverride | string | `""` | String to partially override radar-rest-sources-backend.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-rest-sources-backend.fullname template with a string |
@@ -50,7 +57,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-tls-radar-rest-sources-backend"` | TLS Secret Name |
+| ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | resources.requests | object | `{"cpu":"100m","memory":"400Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
@@ -73,18 +80,23 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | authorizer.tokenExpiryTimeInMinutes | int | `15` | Within how many minutes an online authorization attempt should be finalized. Steps: logging in to Fitbit, returning to the authorizer. |
 | authorizer.persistentTokenExpiryInMin | int | `7200` | Within how many minutes an authorization attempt by a participant should be finalized. Steps: passing token to participant, them logging in to Fitbit, and returning to the authorizer. |
-| postgres.host | string | `"postgresql"` | host name of the postgres db |
-| postgres.port | int | `5432` | post of the postgres db |
-| postgres.database | string | `"restsourceauthorizer"` | database name |
-| postgres.connection_parameters | string | `""` | additional JDBC connection parameters e.g. sslmode=verify-full |
-| postgres.user | string | `"postgres"` | postgres user |
-| postgres.password | string | `"password"` | password of the postgres user |
+| postgres.host | string | `nil` | host name of the postgres db |
+| postgres.port | string | `nil` | port of the postgres db |
+| postgres.database | string | `nil` | database name |
+| postgres.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-restsourceauthorizer"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'host', 'port' and 'database' values). |
+| postgres.user | string | `nil` | postgres user |
+| postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-restsourceauthorizer"}` | Kubernetes secret containing the database user (disables use of 'user' value). |
+| postgres.password | string | `nil` | password of the postgres user |
+| postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-restsourceauthorizer"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
 | redis.uri | string | `"redis://redis-master:6379"` | URI of the redis database |
 | serverName | string | `"localhost"` | Resolvable server name, needed to find the advertised URL and callback URL |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | client_secret | string | `"secret"` | OAuth2 client secret of the radar-rest-sources-backend client from Management Portal |
+| public_key_endpoints | list | `["http://hydra-public:4444/.well-known/jwks.json"]` | List of public key endpoints for token verification |
+| auth_url | string | `"http://hydra-public:4444/oauth2/token"` | Auth url for MP client |
 | restSourceClients.fitbit.enable | bool | `false` | set to true, if Fitbit client should be used |
 | restSourceClients.fitbit.sourceType | string | `"FitBit"` | Type of the data sources |
 | restSourceClients.fitbit.authorizationEndpoint | string | `"https://www.fitbit.com/oauth2/authorize"` | Authorization endpoint for Fitbit authentication and authorization |

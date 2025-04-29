@@ -1,0 +1,23 @@
+license:
+  full: true
+
+scan:
+  # skip-files: # Don't scan third-party charts
+  # - charts/kube-prometheus-stack/charts/kube-prometheus-stack-65.3.2.tgz
+  # - charts/velero-s3-deployment/charts/velero-2.30.1.tgz
+  scanners:
+    - vuln
+    - misconfig
+    - license
+
+misconfiguration:
+  scanners:
+    - helm
+    - kubernetes
+
+severity:
+#  - MEDIUM
+#  - HIGH
+ - CRITICAL
+
+ignorefile: ".trivyignore.yaml"

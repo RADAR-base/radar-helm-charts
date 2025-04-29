@@ -1,9 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "radar-upload-connect-backend.fullname" . }}
-  labels:
-{{ include "radar-upload-connect-backend.labels" . | indent 4 }}
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 data:
   upload.yml: |
     baseUri: "http://0.0.0.0:8085/upload/api/"
@@ -13,11 +16,8 @@ data:
     clientSecret: {{ .Values.client_secret }}
     managementPortalUrl: {{ .Values.managementportal_url }}
     jdbcDriver: org.postgresql.Driver
-    jdbcUrl: jdbc:postgresql://{{ .Values.postgres.host }}:5432/uploadconnector
-    jdbcUser: {{ .Values.postgres.user }}
-    jdbcPassword: {{ .Values.postgres.password }}
     additionalPersistenceConfig:
-      "hibernate.dialect": "org.hibernate.dialect.PostgreSQL95Dialect"
+      "hibernate.dialect": "org.hibernate.dialect.PostgreSQLDialect"
     sourceTypes:
       - name: "altoida"
         topics:

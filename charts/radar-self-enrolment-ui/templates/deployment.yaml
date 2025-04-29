@@ -1,19 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "radar-self-enrolment-ui.fullname" . }}
-  {{- if .Release.Namespace }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
-  labels:
-    {{- include "radar-self-enrolment-ui.labels" . | nindent 4 }}
-    {{- with .Values.deployment.labels }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
-  annotations:
-    {{- with .Values.deployment.annotations }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
@@ -33,10 +26,7 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- include "radar-self-enrolment-ui.imagePullSecrets" . | nindent 6 }}
       automountServiceAccountToken: {{ .Values.deployment.automountServiceAccountToken }}
       {{- with .Values.deployment.extraVolumes }}
       volumes:
@@ -45,23 +35,39 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ template "radar-self-enrolment-ui.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           env:
-          - name: ORY_SDK_URL
+          - name: KRATOS_INTERNAL_URL
             value: {{ .Values.kratosPublicUrl | quote }}
+          - name: KRATOS_ADMIN_URL
+            value: {{ .Values.kratosAdminUrl | quote }}
           - name: HYDRA_ADMIN_URL
             value: {{ .Values.hydraAdminUrl | quote }}
           - name: HYDRA_PUBLIC_URL
             value: {{ .Values.hydraPublicUrl | quote }}
-          - name: PROJECT_NAME
-            value: {{ .Values.projectName | quote }}
+          - name: RSA_BACKEND_URL
+            value: {{ .Values.restSourceBackendUrl | quote }}
           - name: BASE_PATH
             value: {{ .Values.basePath | quote }}
-          - name: JWKS_URL
-            value: {{ .Values.jwksUrl | quote }}
           - name: SECURITY_MODE
             value: {{ .Values.securityMode | quote }}
+          - name: ARMT_CLIENT_ID
+            value: {{ .Values.armtClientId | quote }}
+          - name: ARMT_CLIENT_SECRET
+            value: {{ .Values.armtClientSecret | quote }}
+          - name: SEP_CLIENT_ID
+            value: {{ .Values.sepClientId | quote }}
+          - name: SEP_CLIENT_SECRET
+            value: {{ .Values.sepClientSecret | quote }}
+          - name: NEXT_PUBLIC_ARMT_REDIRECT_URI
+            value: {{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/armt
+          - name: NEXT_PUBLIC_SEP_REDIRECT_URI
+            value: {{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/sep
+          - name: GITHUB_AUTH_TOKEN
+            value: {{ .Values.githubAuthToken | quote }}
+          - name: GATEWAY_URL
+            value: {{ .Values.gatewayUrl | quote }}
           - name: COOKIE_SECRET
             valueFrom:
               secretKeyRef:

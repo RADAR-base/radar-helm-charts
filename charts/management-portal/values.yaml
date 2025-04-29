@@ -6,15 +6,24 @@
 replicaCount: 1
 
 image:
-  # -- Management Portal image repository
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
   repository: radarbase/management-portal
-  # -- Management Portal image tag (immutable tags are recommended)
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
   tag:
-  # -- Management Portal image pull policy
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
   pullPolicy: IfNotPresent
-
-# -- Docker registry secret names as an array
-imagePullSecrets: []
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
 
 # -- String to partially override management-portal.fullname template with a string (will prepend the release name)
 nameOverride: ""
@@ -64,7 +73,7 @@ ingress:
     - localhost
   tls:
     # -- TLS Secret Name
-    secretName: radar-base-tls-managementportal
+    secretName: radar-base-tls
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -217,7 +226,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: '{{ .Values.postgres.host | trunc 63 | trimSuffix "-" }}'
+          app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
   - to:
     - namespaceSelector:
         matchLabels:
@@ -239,20 +248,37 @@ keystore: ""
 # or with SOPS
 #   keystore: {{ exec "sops" (list "-d" "keystore.p12") | b64enc | quote }}
 
-# Configuration of the Postgres data base to store data from Management Portal
+# Configuration of the Postgres database to store data from Management Portal
 postgres:
   # -- host name of the postgres db
-  host: postgresql
+  host:
   # -- post of the postgres db
-  port: 5432
+  port:
   # -- database name
-  database: managementportal
-  # -- additional JDBC connection parameters e.g. sslmode=verify-full
+  database:
+  # -- Kubernetes secret containing the database JDBC Connection url
+  # (disables use of 'host', 'port' and 'database' values).
+  urlSecret:
+    name: radar-cloudnative-postgresql-managementportal
+    key: jdbc-uri
+  # -- database user
+  user:
+  # -- Kubernetes secret containing the database username
+  # (disables use of 'user' value).
+  userSecret:
+    name: radar-cloudnative-postgresql-managementportal
+    key: username
+  # -- password of the database user
+  password:
+  # -- Kubernetes secret containing the database password
+  # (disables use of 'password' value).
+  passwordSecret:
+    name: radar-cloudnative-postgresql-managementportal
+    key: password
+
+  # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
+  # Ignored when using 'urlSecret'.
   connection_parameters: ""
-  # -- postgres user
-  user: postgres
-  # -- password of the postgres user
-  password: password
   ssl:
     # -- set to true if the connecting to postgres using SSL
     enabled: false

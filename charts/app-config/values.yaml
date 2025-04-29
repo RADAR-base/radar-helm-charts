@@ -6,16 +6,24 @@
 replicaCount: 2
 
 image:
-  # -- Appconfig image repositorys
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
   repository: radarbase/radar-app-config
-  # -- Appconfig image tag (immutable tags are recommended)
+  # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:
-  # -- Appconfig image pull policy
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
   pullPolicy: IfNotPresent
-
-# -- Docker registry secret names as an array
-imagePullSecrets: []
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
 
 # -- String to partially override appconfig.fullname template with a string (will prepend the release name)
 nameOverride: ""
@@ -72,7 +80,7 @@ ingress:
     - localhost
   tls:
     # -- TLS Secret Name
-    secretName: radar-base-tls-appconfig
+    secretName: radar-base-tls
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -188,13 +196,31 @@ clientSecret: secret
 managementportal_url: http://management-portal:8080/managementportal
 
 jdbc:
+  # -- JDBC Connection url of the database.
+  url:
+  # -- Kubernetes secret containing the database JDBC Connection url
+  # (disables use of 'url' value).
+  urlSecret:
+    name: radar-cloudnative-postgresql-appconfig
+    key: jdbc-uri
+  # -- Username of the database
+  user:
+  # -- Kubernetes secret containing the database username
+  # (disables use of 'user' value).
+  userSecret:
+    name: radar-cloudnative-postgresql-appconfig
+    key: username
+  # -- Password of the user
+  password:
+  # -- Kubernetes secret containing the database password
+  # (disables use of 'password' value).
+  passwordSecret:
+    name: radar-cloudnative-postgresql-appconfig
+    key: password
+
+  # -- Additional JDBC connection parameters e.g. sslmode=verify-full
+  # Ignored when using 'urlSecret'.
+  parameters:
   # -- JDBC Driver to connect to the database.
   driver: org.postgresql.Driver
-  # -- JDBC Connection url of the database.
-  url: jdbc:postgresql://postgresql:5432/appconfig
-  # -- Username of the database
-  user: postgres
-  # -- Password of the user
-  password: password
-  # -- JDBC dialect to use for JDBC Connection
   dialect: org.hibernate.dialect.PostgreSQLDialect

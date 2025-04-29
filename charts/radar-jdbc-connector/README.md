@@ -3,20 +3,27 @@
 # radar-jdbc-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-jdbc-connector)](https://artifacthub.io/packages/helm/radar-base/radar-jdbc-connector)
 
-![Version: 0.5.5](https://img.shields.io/badge/Version-0.5.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.5.5](https://img.shields.io/badge/AppVersion-10.5.5-informational?style=flat-square)
+![Version: 0.7.3](https://img.shields.io/badge/Version-0.7.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.8.0](https://img.shields.io/badge/AppVersion-10.8.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
 
 **Homepage:** <https://radar-base.org>
+
+## CloudNativePG TimescaleDB
+
+This chart deploys the CloudNativePG TimescaleDB via the _radar-cloudnative-timescaledb_ chart. In turn,
+_radar-cloudnative-timescaledb_ uses the CloudNativePG operator chart to deploy the TimescaleDB database.
+Configuration to the _radar-cloudnative-timescaledb_ chart can be passed via the `radar-cloudnative-timescaledb:` key in
+the values.yaml file.
+
+Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: false` in the `radar-cloudnative-timescaledb:` key.
 
 ## Maintainers
 
 | Name | Email | Url |
 | ---- | ------ | --- |
 | Pauline Conde | <pauline.conde@kcl.ac.uk> | <https://www.kcl.ac.uk/people/pauline-conde> |
-| Keyvan Hedayati | <keyvan@thehyve.nl> | <https://www.thehyve.nl> |
 | Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
-| Nivethika Mahasivam | <nivethika@thehyve.nl> | <https://www.thehyve.nl/experts/nivethika-mahasivam> |
 
 ## Source Code
 
@@ -24,19 +31,28 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 * <https://github.com/RADAR-base/RADAR-JDBC-Connector>
 
 ## Prerequisites
-* Kubernetes 1.22+
-* Kubectl 1.22+
+* Kubernetes 1.28+
+* Kubectl 1.28+
 * Helm 3.1.0+
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| file://../radar-cloudnative-timescaledb | radar-cloudnative-timescaledb | 0.1.1 |
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-jdbc-connector replicas to deploy |
-| image.repository | string | `"radarbase/radar-jdbc-connector"` | radar-jdbc-connector image repository |
-| image.tag | string | `nil` | radar-jdbc-connector image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
-| image.pullPolicy | string | `"IfNotPresent"` | radar-jdbc-connector image pull policy |
-| imagePullSecrets | list | `[]` | Docker registry secret names as an array |
+| image.registry | string | `"docker.io"` | Image registry |
+| image.repository | string | `"radarbase/radar-jdbc-connector"` | Image repository |
+| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | nameOverride | string | `""` | String to partially override radar-jdbc-connector.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-jdbc-connector.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure radar-jdbc-connector pods' Security Context |
@@ -47,7 +63,7 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
-| extraEnvVars | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"PLAINTEXT"}]` | Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specifc [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration) |
+| extraEnvVars | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"PLAINTEXT"}]` | Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specific [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration) |
 | extraEnvVars[0] | object | `{"name":"CONNECT_SECURITY_PROTOCOL","value":"PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
@@ -74,7 +90,7 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | heapOpts | string | `"-Xms1500m"` | Java heap options |
 | source.name | string | `"radar-jdbc-source"` | Name of the connector Kafka producer group |
 | source.schema | string | `"public"` | Database schema (if any) |
-| source.tableWhitelist | string | `""` | Comma-separted list of tables to read |
+| source.tableWhitelist | string | `""` | Comma-separated list of tables to read |
 | source.topicPrefix | string | `""` | Prefix to prepend to table names to generate the name of the Kafka topic to publish data to. |
 | source.mode | string | `"incrementing"` | How to detect new values in a table. |
 | source.incrementingColumnName | string | `""` | When using mode incrementing, which column to use as incrementing. If empty, autodetection will be used. |
@@ -94,7 +110,12 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 | sink.primaryKeys.fields | list | `["time","userId","projectId"]` | fields to include as primary keys when creating the table |
 | sink.topics | string | `"android_phone_relative_location, android_phone_battery_level, connect_upload_altoida_summary, connect_fitbit_intraday_heart_rate, connect_fitbit_intraday_steps"` | Comma-separated list of topics the connector will read from and ingest into the database |
 | sink.tableNameFormat | string | `"${topic}"` | How to format a table name based on the inserted topic |
-| jdbc.url | string | `"jdbc:postgresql://timescaledb-postgresql-headless:5432/grafana-metrics"` | Host of the TimescaleDB database |
-| jdbc.user | string | `"grafana"` | TimescaleDB database username |
-| jdbc.password | string | `"password"` | TimescaleDB database password |
+| jdbc.url | string | `nil` | Host of the TimescaleDB database |
+| jdbc.urlSecret | object | `{"key":null,"name":null}` | Kubernetes secret name for the JDBC connection URL (disables the use of 'url' value) |
+| jdbc.user | string | `nil` | TimescaleDB database username |
+| jdbc.userSecret | object | `{"key":null,"name":null}` | Kubernetes secret name for the username (disables the use of 'user' value) |
+| jdbc.password | string | `nil` | TimescaleDB database password (using a secret is recommended) |
+| jdbc.passwordSecret | object | `{"key":null,"name":null}` | Kubernetes secret name for the password |
 | jdbc.dialect | string | `"TimescaleDBDatabaseDialect"` | JDBC connect dialect that the database uses |
+| radar-cloudnative-timescaledb.enabled | bool | `true` | Use the local cloudnative timescaledb cluster |
+| radar-cloudnative-timescaledb.cluster | object | check `values.yaml` | CloudNativePG TimescaleDB configuration |

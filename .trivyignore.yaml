@@ -1,0 +1,20 @@
+misconfigurations:
+  - id: AVD-KSV-0041
+    statement: Don't scan third-party charts
+    paths:
+      - kube-prometheus-stack/charts/kube-prometheus-stack/charts/kube-state-metrics/templates/role.yaml
+      - kube-prometheus-stack/charts/kube-prometheus-stack/templates/prometheus-operator/clusterrole.yaml
+      - kube-prometheus-stack/charts/kube-prometheus-stack/charts/grafana/templates/clusterrole.yaml
+      - radar-hydra/charts/hydra/charts/hydra-maester/templates/rbac.yaml
+  - id: AVD-KSV-0045
+    statement: Don't scan third-party charts
+    paths:
+      - kube-prometheus-stack/charts/kube-prometheus-stack/templates/prometheus-operator/clusterrole.yaml
+  - id: AVD-KSV-0044
+    statement: Don't scan third-party charts
+    paths:
+      - velero-s3-deployment/charts/velero/templates/role.yaml
+  - id: AVD-KSV-0112
+    statement: Don't scan third-party charts
+    paths:
+      - velero-s3-deployment/charts/velero/templates/role.yaml

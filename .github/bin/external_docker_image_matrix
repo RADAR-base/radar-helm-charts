@@ -1,0 +1,68 @@
+#!/bin/bash
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+output_file=${OUTPUT_FILE:-"workflows/docker_images_external.json"}
+
+cleanup() {
+  rm -f charts.tmp
+  rm -f external.tmp
+  rm -f images.*
+}
+
+shorten_image_ref() {
+  ref=$1
+  # Get the sha256 hash from the image reference.
+  digest=$(echo $ref | grep -oP "(?<=sha256:).*")
+  # Keep the first 5 chars of the digest
+  digest=${digest:0:5}
+  # remove the repository from the image reference
+  short_name=$(echo $ref | sed -r 's/^[^\/]+\///')
+  # remove the digest from the image reference
+  short_name=$(echo $short_name | sed -r "s/(@sha256.*)//g")
+  # add the shortened digest when defined
+  [ -n "$digest" ] && short_name="$short_name:sha-$digest"
+  echo $short_name
+}
+
+cleanup
+
+# Collect images from internal and external charts.
+for location in charts
+do
+  for chart in `ls -1 ../$location`
+  do
+    # skip when the chart is present in the EXCLUDE_CHARTS environment variable
+    echo $EXCLUDE_CHARTS | grep -qw $chart && continue
+    echo Analyzing chart $chart ...
+    helm template ../$location/$chart 2> /dev/null | grep -oP "(?<=image: ).*" | tr -d \" >> $location.tmp
+  done
+done
+
+# Add a docker.io prefix to images without a registry.
+cat charts.tmp | grep ".*\/.*\/.*" > images.tmp2
+cat charts.tmp | grep -v ".*\/.*\/.*" | sed "s/^/docker.io\//g" > images.tmp3
+cat images.tmp2 images.tmp3 | sort | uniq > images.txt
+
+# Exclude images refs that match any of the patterns passed in with the EXCLUDE_IMAGE_PATTERNS environment variable.
+if [ -n "$EXCLUDE_IMAGE_PATTERNS" ]; then
+  for pattern in $EXCLUDE_IMAGE_PATTERNS
+  do
+    grep -v $pattern images.txt > images.tmp
+    mv images.tmp images.txt
+  done
+fi
+
+# Generate the JSON array
+echo "{ \"include\": [" > $output_file
+while IFS= read -r line; do
+  short_name=`shorten_image_ref $line`
+  echo "  {\"DOCKER_IMAGE\": \"$line\", \"DOCKER_IMAGE_SHORT\": \"$short_name\"}," >> $output_file
+done < images.txt
+sed -i '$ s/,$//' $output_file
+echo "] }" >> $output_file
+
+cleanup
+
+# Return data to the GitHub action.
+echo matrix=`cat $output_file` >> $GITHUB_OUTPUT

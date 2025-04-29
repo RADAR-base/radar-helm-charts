@@ -7,6 +7,20 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
+Return the proper image name
+*/}}
+{{- define "management-portal.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global "chart" .Chart ) }}
+{{- end -}}
+
+{{/*
+Return the proper Docker Image Registry Secret Names
+*/}}
+{{- define "management-portal.imagePullSecrets" -}}
+{{- include "common.images.pullSecrets" (dict "images" (list .Values.image) "global" .Values.global) -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
@@ -49,26 +63,4 @@ Create chart name and version as used by the chart label.
 */}}
 {{- define "management-portal.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Get the password secret.
-*/}}
-{{- define "management-portal.secretName" -}}
-{{- if .Values.existingSecret }}
-    {{- printf "%s" .Values.existingSecret -}}
-{{- else -}}
-    {{- printf "%s" (include "management-portal.fullname" .) -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return true if a secret object should be created
-*/}}
-{{- define "management-portal.createSecret" -}}
-{{- if .Values.existingSecret }}
-{{- else if .Values.existingSecret -}}
-{{- else -}}
-    {{- true -}}
-{{- end -}}
 {{- end -}}

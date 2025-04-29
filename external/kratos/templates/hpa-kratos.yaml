@@ -1,0 +1,40 @@
+{{- $kubeVersion := .Capabilities.KubeVersion.GitVersion -}}
+{{- $containerResourceAvailable := and (not (empty $kubeVersion)) (semverCompare ">=1.30.0" $kubeVersion) -}}
+{{- if and .Values.autoscaling.enabled $containerResourceAvailable }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "kratos.fullname" . }}
+  labels:
+    {{- include "kratos.labels" . | nindent 4 }}
+spec:
+  {{- with .Values.autoscaling.behavior }}
+  behavior: {{- toYaml . | nindent 4 }}
+  {{- end }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "kratos.fullname" . }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+  {{- with .Values.autoscaling.targetMemory }}
+  - type: ContainerResource
+    containerResource:
+      name: memory
+      container: {{ $.Chart.Name }}
+      target:
+        {{- toYaml . | nindent 8 }}
+  {{- end }}
+  {{- with .Values.autoscaling.targetCPU}}
+  - type: ContainerResource
+    containerResource:
+      name: cpu
+      container: {{ $.Chart.Name }}
+      target:
+        {{- toYaml . | nindent 8 }}
+  {{- end }}
+  {{- if not (empty $.Values.autoscaling.extraMetrics) }}
+  {{- toYaml .Values.autoscaling.extraMetrics | nindent 2 }}
+  {{- end }}
+{{- end }}

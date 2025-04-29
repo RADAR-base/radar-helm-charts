@@ -1,9 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "radar-integration.fullname" . }}
-  labels:
-{{ include "radar-integration.labels" . | indent 4 }}
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 data:
   radar.yml: |
     # ManagementPortal configuration
@@ -22,10 +25,12 @@ data:
           enrolment_event: {{ .redcap_info.enrolment_event }} #Unique identifier for the enrolment event
           integration_form: {{ .redcap_info.integration_form }} #Name of integration REDCap form
           token: {{ .redcap_info.token }} #REDCap API Token used to identify the REDCap user against the REDCap instance
+          {{- if .redcap_info.attributes }}
           attributes:
             {{- range .redcap_info.attributes }}
             - field_name: {{ . }}
             {{- end }}
+          {{- end }}
         mp_info:
           # Management Portal project identifier
           project_name: {{ .mp_info.project_name }} #

@@ -4,9 +4,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "radar-jdbc-connector.fullname" . }}
-  labels:
-    {{- include "radar-jdbc-connector.labels" . | nindent 4 }}
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 data:
   connector.properties: |
     # Kafka connector configuration
@@ -15,9 +18,10 @@ data:
     tasks.max = {{ .Values.maxTasks }}
 
     # General connection parameters
-    connection.url={{ .Values.jdbc.url }}
-    connection.user={{ .Values.jdbc.user }}
-    connection.password={{ .Values.jdbc.password }}
+    {{/*At moment of this writing, 'connection.url' cannot be set from environment variable with JDBC-connector.
+     As such, it has to be added in config file and is created when any URL secret has been created*/}}
+    connection.url = {{ include "radar-jdbc-connector.databaseUrl" . }}
+    jdbc.credentials.provider.class=io.confluent.connect.jdbc.util.EnvVarsJdbcCredentialsProvider
     dialect.name = {{ .Values.jdbc.dialect }}
     max.retries = 15
     # Wait 10 minutes before retrying failed task
