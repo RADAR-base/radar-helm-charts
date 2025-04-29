@@ -31,9 +31,13 @@ data:
       clientSecret: {{ .Values.client_secret }}
       # List of public key endpoints for token verification
       jwksUrls:
+        {{- if .Values.public_key_endpoints }}
         {{- range .Values.public_key_endpoints }}
         - {{ . | quote }}
-        {{ end -}}
+        {{- end }}
+        {{- else }}
+        []
+        {{- end }}
 
     database:
       driver: org.postgresql.Driver

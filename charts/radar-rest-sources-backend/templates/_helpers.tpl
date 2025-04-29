@@ -70,11 +70,23 @@ Get the name of the secret object.
 */}}
 {{- define "radar-rest-sources-backend.secretName" -}}
 {{- if eq .type "url" -}}
-    {{- .values.postgres.urlSecret.name | default .fullname -}}
+    {{- if .values.postgres.urlSecret }}
+        {{- .values.postgres.urlSecret.name | default .fullname -}}
+    {{- else -}}
+        {{- .fullname -}}
+    {{- end -}}
 {{- else if eq .type "user" -}}
-    {{- .values.postgres.userSecret.name | default .fullname -}}
+    {{- if .values.postgres.userSecret }}
+        {{- .values.postgres.userSecret.name | default .fullname -}}
+    {{- else -}}
+        {{- .fullname -}}
+    {{- end -}}
 {{- else if eq .type "password" -}}
-    {{- .values.postgres.passwordSecret.name | default .fullname -}}
+    {{- if .values.postgres.passwordSecret }}
+        {{- .values.postgres.passwordSecret.name | default .fullname -}}
+    {{- else -}}
+        {{- .fullname -}}
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -83,11 +95,23 @@ Get the key for the secret object.
 */}}
 {{- define "radar-rest-sources-backend.secretKey" -}}
 {{- if eq .type "url" -}}
-    {{- .values.postgres.urlSecret.key | default "databaseUrl" -}}
+    {{- if .values.postgres.urlSecret }}
+        {{- .values.postgres.urlSecret.key | default "databaseUrl" -}}
+    {{- else -}}
+        databaseUrl
+    {{- end -}}
 {{- else if eq .type "user" -}}
-    {{- .values.postgres.userSecret.key | default "databaseUser" -}}
+    {{- if .values.postgres.userSecret }}
+        {{- .values.postgres.userSecret.key | default "databaseUser" -}}
+    {{- else -}}
+        databaseUser
+    {{- end -}}
 {{- else if eq .type "password" -}}
-    {{- .values.postgres.passwordSecret.key | default "databasePassword" -}}
+    {{- if .values.postgres.passwordSecret }}
+        {{- .values.postgres.passwordSecret.key | default "databasePassword" -}}
+    {{- else -}}
+        databasePassword
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -95,10 +119,14 @@ Get the key for the secret object.
 Return true if a secret object should be created
 */}}
 {{- define "radar-rest-sources-backend.createSecret" -}}
-{{- if not (and .Values.postgres.urlSecret.name .Values.postgres.userSecret.name .Values.postgres.passwordSecret.name) -}}
-    {{- true -}}
+{{- $urlSecretName := (and .Values.postgres.urlSecret .Values.postgres.urlSecret.name) -}}
+{{- $userSecretName := (and .Values.postgres.userSecret .Values.postgres.userSecret.name) -}}
+{{- $passwordSecretName := (and .Values.postgres.passwordSecret .Values.postgres.passwordSecret.name) -}}
+
+{{- if not (and $urlSecretName $userSecretName $passwordSecretName) -}}
+true
 {{- else -}}
-    {{- false -}}
+false
 {{- end -}}
 {{- end -}}
 
