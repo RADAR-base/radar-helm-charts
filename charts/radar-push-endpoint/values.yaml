@@ -296,6 +296,34 @@ garmin:
   backfill:
     # -- Whether to enable Garmin backfill requests
     enabled: true
+    # -- Whether to enable Garmin backfill requests for activities
+    activitiesEnabled: true
+    # -- Whether to enable Garmin backfill requests for activity details
+    activityDetailsEnabled: true
+    # -- Whether to enable Garmin backfill requests for body composition
+    bodyCompositionsEnabled: true
+    # -- Whether to enable Garmin backfill requests for dailies
+    dailiesEnabled: true
+    # -- Whether to enable Garmin backfill requests for epoch summaries
+    epochSummariesEnabled: true
+    # -- Whether to enable Garmin backfill requests for pulse oximeter
+    pulseOXEnabled: true
+    # -- Whether to enable Garmin backfill requests for sleep
+    sleepsEnabled: true
+    # -- Whether to enable Garmin backfill requests for stress
+    stressEnabled: true
+    # -- Whether to enable Garmin backfill requests for user metrics
+    userMetricsEnabled: true
+    # -- Whether to enable Garmin backfill requests for moveIQ
+    moveIQEnabled: true
+    # -- Whether to enable Garmin backfill requests for respiration
+    respirationEnabled: true
+    # -- Whether to enable blood pressure backfill requests
+    bloodPressureEnabled: false
+    # -- Whether to enable health snapshot backfill requests
+    healthSnapshotEnabled: false
+    # -- Whether to enable heart rate variability backfill requests
+    heartRateVariabilityEnabled: false
 
 redis:
   # -- The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties.

@@ -108,4 +108,18 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | garmin.userRepositoryClientSecret | string | `"secret"` | The client secret to access the user repository if the repository requires authorization |
 | garmin.userRepositoryTokenUrl | string | `"http://management-portal:8080/managementportal/oauth/token"` | The token URL for authentication (Usually the management portal token url). Make sure to avoid trailing slash (/) in the url. |
 | garmin.backfill.enabled | bool | `true` | Whether to enable Garmin backfill requests |
+| garmin.backfill.activitiesEnabled | bool | `true` | Whether to enable Garmin backfill requests for activities |
+| garmin.backfill.activityDetailsEnabled | bool | `true` | Whether to enable Garmin backfill requests for activity details |
+| garmin.backfill.bodyCompositionsEnabled | bool | `true` | Whether to enable Garmin backfill requests for body composition |
+| garmin.backfill.dailiesEnabled | bool | `true` | Whether to enable Garmin backfill requests for dailies |
+| garmin.backfill.epochSummariesEnabled | bool | `true` | Whether to enable Garmin backfill requests for epoch summaries |
+| garmin.backfill.pulseOXEnabled | bool | `true` | Whether to enable Garmin backfill requests for pulse oximeter |
+| garmin.backfill.sleepsEnabled | bool | `true` | Whether to enable Garmin backfill requests for sleep |
+| garmin.backfill.stressEnabled | bool | `true` | Whether to enable Garmin backfill requests for stress |
+| garmin.backfill.userMetricsEnabled | bool | `true` | Whether to enable Garmin backfill requests for user metrics |
+| garmin.backfill.moveIQEnabled | bool | `true` | Whether to enable Garmin backfill requests for moveIQ |
+| garmin.backfill.respirationEnabled | bool | `true` | Whether to enable Garmin backfill requests for respiration |
+| garmin.backfill.bloodPressureEnabled | bool | `false` | Whether to enable blood pressure backfill requests |
+| garmin.backfill.healthSnapshotEnabled | bool | `false` | Whether to enable health snapshot backfill requests |
+| garmin.backfill.heartRateVariabilityEnabled | bool | `false` | Whether to enable heart rate variability backfill requests |
 | redis.url | string | `"redis://localhost:6379"` | The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties. |
