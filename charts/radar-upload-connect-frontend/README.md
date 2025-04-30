@@ -45,9 +45,9 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 | nameOverride | string | `""` | String to partially override radar-upload-connect-frontend.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-upload-connect-frontend.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure radar-upload-connect-frontend pods' Security Context |
-| securityContext | object | `{}` | Configure radar-upload-connect-frontend containers' Security Context |
+| securityContext | object | `{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000,"seccompProfile":{"type":"RuntimeDefault"}}` | Configure radar-upload-connect-frontend containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
-| service.port | int | `80` | radar-upload-connect-frontend port |
+| service.port | int | `8080` | radar-upload-connect-frontend port |
 | disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
 | advertised_protocol | string | `"https"` | The protocol in advertised URIs (https, http) |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
