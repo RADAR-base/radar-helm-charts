@@ -244,6 +244,18 @@ networkpolicy:
       podSelector:
         matchLabels:
           app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: hydra
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: kratos
   - to:
     - namespaceSelector:
         matchLabels:
@@ -317,19 +329,19 @@ identity_server:
   # -- The admin email to link to the admin service account. This account should only be used to set up admin-users
   admin_email: admin@example.com
   # -- The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos
-  server_url:
+  server_url: http://radar-kratos-public
   # -- The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
-  server_admin_url: http://kratos-admin
+  server_admin_url: http://radar-kratos-admin
   # -- The publicly accessible login URL for the IDP; needed when deviating from http(s)://server_name/kratos-ui
-  login_url:
+  login_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui'
 
 authserver:
   # -- The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth
-  server_url: http://hydra:4444
+  server_url: http://radar-hydra-public:4444
   # -- The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
-  server_admin_url: http://hydra:4445
+  server_admin_url: http://radar-hydra-admin:4445
   # -- The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login
-  login_url: http://localhost:4444
+  login_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra'
 
 managementportal:
   # -- set to true, if automatic source-type import from catalogue server should be enabled
@@ -608,7 +620,7 @@ oauth_clients:
     access_token_validity: 900
     refresh_token_validity: 78000
     redirect_uri:
-      - http://dashboard.localhost/login/generic_oauth
+      - '{{ .Values.advertised_protocol }}://dashboard.{{ .Values.server_name }}/login/generic_oauth'
     autoapprove:
       - USER.READ
 
