@@ -82,13 +82,16 @@ spec:
             value: {{ printf "%s://%s" .Values.advertised_protocol .Values.server_name }}
           - name: MANAGEMENTPORTAL_COMMON_MANAGEMENT_PORTAL_BASE_URL
             value: {{ printf "%s://%s/managementportal" .Values.advertised_protocol .Values.server_name }}
+          - name: MANAGEMENTPORTAL_FRONTEND_CLIENTID
+            valueFrom:
+              secretKeyRef:
+                name: managementportal-oauth-client
+                key: CLIENT_ID
           - name: MANAGEMENTPORTAL_FRONTEND_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
-                name: {{ $secretName }}
-                key: managementportal_frontend_client_secret
-          - name: MANAGEMENTPORTAL_OAUTH_CLIENTS_FILE
-            value: /secrets/oauth_client_details.csv
+                name: managementportal-oauth-client
+                key: CLIENT_SECRET
           - name: MANAGEMENTPORTAL_CATALOGUE_SERVER_ENABLE_AUTO_IMPORT
             value: "{{ .Values.managementportal.catalogue_server_enable_auto_import }}"
           - name: MANAGEMENTPORTAL_OAUTH_REQUIRE_AAL2
@@ -98,17 +101,19 @@ spec:
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_ADMIN_EMAIL
             value: {{ .Values.identity_server.admin_email }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_URL
-            value: {{ $idpServerUrl }}
+            value: {{ tpl .Values.identity_server.server_url . }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_LOGIN_URL
-            value: {{ $idpLoginUrl }}
+            value: {{ tpl .Values.identity_server.login_url . }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_ADMIN_URL
-            value: {{ .Values.identity_server.server_admin_url }}
+            value: {{ tpl .Values.identity_server.server_admin_url . }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERURL
-            value:  {{ $idpServerUrl }}
+            value:  {{ tpl .Values.authserver.server_url . }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_LOGINURL
-            value: {{ $idpLoginUrl }}
+            value: {{ tpl .Values.authserver.login_url . }}
+          - name: MANAGEMENTPORTAL_AUTHSERVER_INTERNAL
+            value: "false"
           - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERADMINURL
-            value: {{ .Values.authserver.server_admin_url | quote }}
+            value: {{ tpl .Values.authserver.server_admin_url . }}
           - name: MANAGEMENTPORTAL_COMMON_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
