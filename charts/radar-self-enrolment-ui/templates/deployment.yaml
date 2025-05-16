@@ -39,17 +39,17 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           env:
           - name: KRATOS_INTERNAL_URL
-            value: {{ .Values.kratosPublicUrl | quote }}
+            value: {{ tpl .Values.kratosPublicUrl . | quote }}
           - name: KRATOS_ADMIN_URL
             value: {{ .Values.kratosAdminUrl | quote }}
           - name: HYDRA_ADMIN_URL
             value: {{ .Values.hydraAdminUrl | quote }}
           - name: HYDRA_PUBLIC_URL
-            value: {{ .Values.hydraPublicUrl | quote }}
+            value: {{ tpl .Values.hydraPublicUrl . | quote }}
           - name: RSA_BACKEND_URL
             value: {{ .Values.restSourceBackendUrl | quote }}
           - name: BASE_PATH
-            value: {{ .Values.basePath | quote }}
+            value: /{{ .Values.basePath | quote }}
           - name: SECURITY_MODE
             value: {{ .Values.securityMode | quote }}
           - name: ARMT_CLIENT_ID

@@ -2,7 +2,7 @@
 
 # radar-self-enrolment-ui
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base Self Enrolment UI
 
@@ -76,7 +76,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | podSecurityContext.runAsGroup | int | `10000` |  |
 | podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | deployment.resources | object | `{}` |  |
-| deployment.extraEnv | list | `[{"name":"HYDRA_ADMIN_URL","value":"http://hydra-admin"}]` | Array of extra envs to be passed to the deployment. Kubernetes format is expected - name: FOO   value: BAR |
+| deployment.extraEnv | list | `[{"name":"NEXT_PUBLIC_HYDRA_PUBLIC_URL","value":"http://localhost/hydra"}]` | Array of extra envs to be passed to the deployment. Kubernetes format is expected - name: FOO   value: BAR |
 | deployment.extraVolumes | list | `[]` | If you want to mount external volume For example, mount a secret containing Certificate root CA to verify database TLS connection. |
 | deployment.extraVolumeMounts | list | `[]` |  |
 | deployment.nodeSelector | object | `{}` | Node labels for pod assignment. |
@@ -103,18 +103,18 @@ A Helm chart for RADAR-base Self Enrolment UI
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
-| startupProbe.enabled | bool | `true` | Enable startupProbe |
+| startupProbe.enabled | bool | `false` | Enable startupProbe |
 | startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
 | startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
 | startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
 | startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
-| kratosAdminUrl | string | `"http://kratos-admin:80/admin"` | Set this to ORY Kratos's Admin URL |
-| kratosPublicUrl | string | `"https://localhost/kratos"` | Set this to ORY Kratos's public URL |
-| kratosBrowserUrl | string | `"https://localhost/kratos"` | Set this to ORY Kratos's public URL accessible from the outside world. |
-| hydraAdminUrl | string | `"http://hydra-admin"` | Set this to ORY Hydra's Admin URL |
-| hydraPublicUrl | string | `"http://hydra-public:4444"` | Set this to ORY Hydra's public URL |
+| kratosAdminUrl | string | `"http://radar-kratos-admin/admin"` | Set this to ORY Kratos's Admin URL |
+| kratosPublicUrl | string | `"http://radar-kratos-public"` | Set this to ORY Kratos's public URL |
+| kratosBrowserUrl | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos"` | Set this to ORY Kratos's public URL accessible from the outside world. |
+| hydraAdminUrl | string | `"http://radar-hydra-admin:4445/admin"` | Set this to ORY Hydra's Admin URL |
+| hydraPublicUrl | string | `"http://radar-hydra-public:4444"` | Set this to ORY Hydra's public URL |
 | restSourceBackendUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend"` | Set this to the REST source backend service URL |
 | gatewayUrl | string | `"http://radar-gateway:8080"` | Set this to the RADAR Gateway service URL |
 | armtClientId | string | `"aRMT"` | Client ID for ARMT authentication |
@@ -122,7 +122,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | sepClientId | string | `"SEP"` | Client ID for SEP authentication |
 | sepClientSecret | string | `""` | Client secret for SEP authentication |
 | githubAuthToken | string | `""` | GitHub authentication token for API access (leave empty if not used) |
-| basePath | string | `"/kratos-ui"` | The basePath |
+| basePath | string | `"kratos-ui"` | The basePath |
 | test.busybox | object | `{"repository":"busybox","tag":1}` | use a busybox image from another repository |
 
 ----------------------------------------------

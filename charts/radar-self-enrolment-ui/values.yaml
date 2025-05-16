@@ -137,8 +137,8 @@ deployment:
   # - name: FOO
   #   value: BAR
   extraEnv:
-    - name: HYDRA_ADMIN_URL
-      value: http://hydra-admin
+    - name: NEXT_PUBLIC_HYDRA_PUBLIC_URL
+      value: http://localhost/hydra
   # -- If you want to mount external volume
   # For example, mount a secret containing Certificate root CA to verify database
   # TLS connection.
@@ -231,7 +231,7 @@ customStartupProbe: {}
 
 startupProbe:
   # -- Enable startupProbe
-  enabled: true
+  enabled: false
   # -- Initial delay seconds for startupProbe
   initialDelaySeconds: 5
   # -- Period seconds for startupProbe
@@ -264,7 +264,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: kratos-admin
+          app.kubernetes.io/name: kratos
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -285,19 +285,19 @@ networkpolicy:
         protocol: TCP
 
 # -- Set this to ORY Kratos's Admin URL
-kratosAdminUrl: "http://kratos-admin:80/admin"
+kratosAdminUrl: "http://radar-kratos-admin/admin"
 
 # -- Set this to ORY Kratos's public URL
-kratosPublicUrl: "https://localhost/kratos"
+kratosPublicUrl: 'http://radar-kratos-public'
 
 # -- Set this to ORY Kratos's public URL accessible from the outside world.
-kratosBrowserUrl: "https://localhost/kratos"
+kratosBrowserUrl: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos'
 
 # -- Set this to ORY Hydra's Admin URL
-hydraAdminUrl: "http://hydra-admin"
+hydraAdminUrl: "http://radar-hydra-admin:4445/admin"
 
 # -- Set this to ORY Hydra's public URL
-hydraPublicUrl: "http://hydra-public:4444"
+hydraPublicUrl: "http://radar-hydra-public:4444"
 
 # -- Set this to the REST source backend service URL
 restSourceBackendUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend"
@@ -321,7 +321,7 @@ sepClientSecret: ""
 githubAuthToken: ""
 
 # -- The basePath
-basePath: "/kratos-ui"
+basePath: "kratos-ui"
 
 test:
   # -- use a busybox image from another repository
