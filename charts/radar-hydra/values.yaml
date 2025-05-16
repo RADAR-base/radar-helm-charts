@@ -9,7 +9,7 @@ hydra:
 
   ingress:
     admin:
-      enabled: true
+      enabled: false
       className: "nginx"
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -47,13 +47,13 @@ hydra:
       urls:
         self:
           issuer: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra/'
-        login: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/login'
-        consent: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra-ui/consent'
+        login: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/oauth-login'
+        consent: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/consent'
 
       log:
         level: debug
         format: text
-        leak_sensitive_values: false
+        leak_sensitive_values: true
 
       strategies:
         access_token: jwt
@@ -61,10 +61,14 @@ hydra:
           scope_claim: both
 
       oauth2:
-        allowed_top_level_claims: [scope, roles, authorities, sources, user_name]
+        allowed_top_level_claims: [scope, roles, authorities, sources, user_name, email]
         mirror_top_level_claims: false
         client_credentials:
           default_grant_allowed_scope: true
+        grant:
+          refresh_token:
+            # Set grace period. Omit this line to disable.
+            rotation_grace_period: 60s
 
       serve:
         public:
@@ -82,3 +86,22 @@ hydra:
         secretKeyRef:
           name: radar-cloudnative-postgresql-hydra
           key: uri
+
+oauth_clients:
+#  - oauth_client:
+  - name: managementportal
+    redirectUris:
+      - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/managementportal/api/redirect/login'
+    grantTypes:
+      - authorization_code
+      - refresh_token
+    responseTypes:
+      - code
+      - id_token
+    scope: SOURCEDATA.CREATE SOURCETYPE.UPDATE SOURCETYPE.DELETE AUTHORITY.UPDATE MEASUREMENT.DELETE PROJECT.READ AUDIT.CREATE USER.DELETE AUTHORITY.DELETE SUBJECT.DELETE MEASUREMENT.UPDATE SOURCEDATA.UPDATE SUBJECT.READ USER.UPDATE SOURCETYPE.CREATE AUTHORITY.READ USER.CREATE SOURCE.CREATE SOURCE.READ SUBJECT.CREATE ROLE.UPDATE ROLE.READ MEASUREMENT.READ PROJECT.UPDATE PROJECT.DELETE ROLE.DELETE SOURCE.DELETE SOURCETYPE.READ ROLE.CREATE SOURCEDATA.DELETE SUBJECT.UPDATE SOURCE.UPDATE PROJECT.CREATE AUDIT.READ MEASUREMENT.CREATE AUDIT.DELETE AUDIT.UPDATE AUTHORITY.CREATE USER.READ SOURCEDATA.READ ORGANIZATION.READ ORGANIZATION.CREATE ORGANIZATION.UPDATE
+    audience:
+      - res_ManagementPortal
+    allowed_cors_origins:
+      - http://localhost:3000
+    skip_consent: true
+    skip_logout_consent: false
