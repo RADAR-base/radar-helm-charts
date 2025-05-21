@@ -145,8 +145,7 @@ The following table lists the configurable parameters of the nifi chart and the 
 | `properties.QueueBackpressureCount`                               | When drawing a new connection between two components, this is the default value for that connection’s back pressure object threshold.   | `10000`
 | `properties.QueueBackpressureSize`                               | When drawing a new connection between two components, this is the default value for that connection’s back pressure data size threshold.    | `1 GB`
 | `properties.provenanceBufferSize`                               | The Provenance Repository buffer size.     | `100000`
-| `properties.questdbPersistNodeDays`                               | Choosing the cluster provider to manage state. Supports `kubernetes-provider` and `zk-provider`    | `kubernetes-provider`
-| `properties.clusterStateProvider`                               | The number of days the node status data (such as Repository disk space free, garbage collection information, etc.) will be kept.    | `14`
+| `properties.questdbPersistNodeDays`                               | The number of days the node status data (such as Repository disk space free, garbage collection information, etc.) will be kept.   | `14`
 | `properties.questdbPersistComponentDays`                               | The number of days the component status data (i.e., stats for each Processor, Connection, etc.) will be kept.  | `3`
 | `properties.webMaxRequestsPerSecond`                               | The maximum number of requests from a connection per second. Requests in excess of this are first delayed, then throttled.    | `30000`
 | `properties.webMaxAccessTokenRequestsPerSecond`                               | The maximum number of requests for login Access Tokens from a connection per second. Requests in excess of this are rejected with HTTP 429. | `25`
