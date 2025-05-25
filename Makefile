@@ -20,6 +20,7 @@ update-cloudnativepg-operator:
 	@rm -rf external/$(patsubst update-%,%,$@)
 	@helm repo add $(patsubst update-%,%,$@) https://cloudnative-pg.github.io/charts
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/cloudnative-pg
+	@mv external/cloudnative-pg external/$(patsubst update-%,%,$@)
 	@echo ""
 
 update-cloudnativepg-cluster:
@@ -27,6 +28,7 @@ update-cloudnativepg-cluster:
 	@rm -rf external/$(patsubst update-%,%,$@)
 	@helm repo add $(patsubst update-%,%,$@) https://cloudnative-pg.github.io/charts
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/cluster
+	@mv external/cluster external/$(patsubst update-%,%,$@)
 	@echo ""
 
 update-common:
