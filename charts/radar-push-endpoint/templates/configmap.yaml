@@ -65,10 +65,24 @@ data:
         userRepositoryClientSecret: {{ .Values.garmin.userRepositoryClientSecret }}
         userRepositoryTokenUrl: {{ .Values.garmin.userRepositoryTokenUrl }}
         backfill:
-          enabled: true
+          enabled: {{ .Values.garmin.backfill.enabled }}
           # Redis configuration
           redis:
             # Redis URI
             uri: {{ .Values.redis.url }}
             # Key prefix for locks
             lockPrefix: radar-push-garmin/lock/
+          activitiesEnabled: {{ .Values.garmin.backfill.activitiesEnabled }}
+          activityDetailsEnabled: {{ .Values.garmin.backfill.activityDetailsEnabled }}
+          bodyCompositionsEnabled: {{ .Values.garmin.backfill.bodyCompositionsEnabled }}
+          dailiesEnabled: {{ .Values.garmin.backfill.dailiesEnabled }}
+          epochSummariesEnabled: {{ .Values.garmin.backfill.epochSummariesEnabled }}
+          pulseOXEnabled: {{ .Values.garmin.backfill.pulseOXEnabled }}
+          sleepsEnabled: {{ .Values.garmin.backfill.sleepsEnabled }}
+          stressEnabled: {{ .Values.garmin.backfill.stressEnabled }}
+          userMetricsEnabled: {{ .Values.garmin.backfill.userMetricsEnabled }}
+          moveIQEnabled: {{ .Values.garmin.backfill.moveIQEnabled }}
+          respirationEnabled: {{ .Values.garmin.backfill.respirationEnabled }}
+          bloodPressureEnabled: {{ .Values.garmin.backfill.bloodPressureEnabled }}
+          healthSnapshotEnabled: {{ .Values.garmin.backfill.healthSnapshotEnabled }}
+          heartRateVariabilityEnabled: {{ .Values.garmin.backfill.heartRateVariabilityEnabled }}
