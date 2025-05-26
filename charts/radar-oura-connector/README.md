@@ -3,7 +3,7 @@
 # radar-oura-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-oura-connector)](https://artifacthub.io/packages/helm/radar-base/radar-oura-connector)
 
-![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.2](https://img.shields.io/badge/AppVersion-0.6.2-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.2](https://img.shields.io/badge/AppVersion-0.6.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base oura connector. This application collects data from participants via the Oura Web API.
 
@@ -64,17 +64,24 @@ A Helm chart for RADAR-base oura connector. This application collects data from 
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
-| livenessProbe.periodSeconds | int | `60` | Period seconds for livenessProbe |
+| livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
 | livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
 | livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
 | readinessProbe.enabled | bool | `true` | Enable readinessProbe |
 | readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
-| readinessProbe.periodSeconds | int | `60` | Period seconds for readinessProbe |
+| readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
 | readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
+| startupProbe.enabled | bool | `true` | Enable startupProbe |
+| startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
+| startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
+| startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
+| startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
+| startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | zookeeper | string | `"cp-zookeeper-headless:2181"` | URI of Zookeeper instances of the cluster |
 | kafka | string | `"PLAINTEXT://cp-kafka-headless:9092"` | URI of Kafka brokers of the cluster |
