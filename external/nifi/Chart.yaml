@@ -1,8 +1,8 @@
 ---
 apiVersion: v2
 name: nifi
-version: 1.2.1
-appVersion: 1.23.2
+version: 2.0.0
+appVersion: 2.3.0
 description: Apache NiFi is a software project from the Apache Software Foundation designed to automate the flow of data between software systems.
 keywords:
   - nifi
@@ -16,7 +16,6 @@ maintainers:
   - name: Heet
     email: heet.sankesara@kcl.ac.uk
     url: https://github.com/Hsankesara
-
 dependencies:
   - name: zookeeper
     version: 9.2.7
