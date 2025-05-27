@@ -273,8 +273,8 @@ jdbc:
   # -- JDBC connect dialect that the database uses
   dialect: TimescaleDBDatabaseDialect
 
-radar-cloudnative-timescaledb:
-  # -- Use the local cloudnative timescaledb cluster
+timescaledb:
+  # -- Use the local cloudnativepg timescaledb cluster
   enabled: true
   # -- CloudNativePG TimescaleDB configuration
   # @default -- check `values.yaml`

@@ -3,7 +3,7 @@
 # radar-jdbc-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-jdbc-connector)](https://artifacthub.io/packages/helm/radar-base/radar-jdbc-connector)
 
-![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.8.0](https://img.shields.io/badge/AppVersion-10.8.0-informational?style=flat-square)
+![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.8.0](https://img.shields.io/badge/AppVersion-10.8.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
 
@@ -11,12 +11,12 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 
 ## CloudNativePG TimescaleDB
 
-This chart deploys the CloudNativePG TimescaleDB via the _radar-cloudnative-timescaledb_ chart. In turn,
-_radar-cloudnative-timescaledb_ uses the CloudNativePG operator chart to deploy the TimescaleDB database.
-Configuration to the _radar-cloudnative-timescaledb_ chart can be passed via the `radar-cloudnative-timescaledb:` key in
+This chart deploys the CloudNativePG TimescaleDB via the _timescaledb_ chart. In turn,
+_timescaledb_ uses the CloudNativePG operator chart to deploy the TimescaleDB database.
+Configuration to the _timescaledb_ chart can be passed via the `timescaledb:` key in
 the values.yaml file.
 
-Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: false` in the `radar-cloudnative-timescaledb:` key.
+Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: false` in the `timescaledb:` key.
 
 ## Maintainers
 
@@ -39,7 +39,7 @@ Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: fal
 
 | Repository | Name | Version |
 |------------|------|---------|
-| file://../radar-cloudnative-timescaledb | radar-cloudnative-timescaledb | 0.1.1 |
+| file://../radar-cloudnative-timescaledb | timescaledb(radar-cloudnative-timescaledb) | 0.2.0 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
@@ -124,5 +124,5 @@ Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: fal
 | jdbc.password | string | `nil` | TimescaleDB database password (using a secret is recommended) |
 | jdbc.passwordSecret | object | `{"key":null,"name":null}` | Kubernetes secret name for the password |
 | jdbc.dialect | string | `"TimescaleDBDatabaseDialect"` | JDBC connect dialect that the database uses |
-| radar-cloudnative-timescaledb.enabled | bool | `true` | Use the local cloudnative timescaledb cluster |
-| radar-cloudnative-timescaledb.cluster | object | check `values.yaml` | CloudNativePG TimescaleDB configuration |
+| timescaledb.enabled | bool | `true` | Use the local cloudnativepg timescaledb cluster |
+| timescaledb.cluster | object | check `values.yaml` | CloudNativePG TimescaleDB configuration |

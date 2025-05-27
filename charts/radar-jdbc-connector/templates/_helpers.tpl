@@ -81,9 +81,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Get the name of the secret object.
 */}}
 {{- define "radar-jdbc-connector.secretName" -}}
-{{- $useCloudnative := index .context.Values "radar-cloudnative-timescaledb" "enabled" }}
+{{- $useCloudnative := .context.Values.timescaledb.enabled }}
 {{- $suffix := ternary "-app" "" $useCloudnative }}
-{{- $fullName := ternary (index .context.Values "radar-cloudnative-timescaledb" "cluster" "fullnameOverride") (include "radar-jdbc-connector.fullname" .context) $useCloudnative }}
+{{- $fullName := ternary (.context.Values.timescaledb.cluster.fullnameOverride) (include "radar-jdbc-connector.fullname" .context) $useCloudnative }}
 {{- $fullSecretName := print $fullName $suffix }}
 {{- if (eq .type "user") }}
     {{- .context.Values.jdbc.userSecret.name | default $fullSecretName }}
@@ -98,7 +98,7 @@ Get the name of the secret object.
 Get the key for the secret object.
 */}}
 {{- define "radar-jdbc-connector.secretKey" -}}
-{{- $useCloudnative := index .context.Values "radar-cloudnative-timescaledb" "enabled" }}
+{{- $useCloudnative := .context.Values.timescaledb.enabled }}
 {{- if (eq .type "user") }}
     {{- if $useCloudnative }}
         {{- "username" }}
@@ -124,7 +124,7 @@ Get the key for the secret object.
 Get the database url. Has to be created before the secret is created.
 */}}
 {{- define "radar-jdbc-connector.databaseUrl" -}}
-{{- $useCloudnative := index .Values "radar-cloudnative-timescaledb" "enabled" }}
+{{- $useCloudnative := .Values.timescaledb.enabled }}
 {{- $port := .Values.jdbc.port | default 5432 }}
 {{- if $useCloudnative -}}
     {{- include "radar-jdbc-connector.cloudnativeDatabaseUrl" . -}}
@@ -140,7 +140,7 @@ Construct the Cloudnative-PG database URL
 */}}
 {{- define "radar-jdbc-connector.cloudnativeDatabaseUrl" -}}
 {{- $port := .Values.jdbc.port | default 5432 }}
-{{- $dbConfig := index .Values "radar-cloudnative-timescaledb" "cluster" }}
+{{- $dbConfig := .Values.timescaledb.cluster }}
 {{- $dbname := $dbConfig.cluster.initdb.database | default "postgres" }}
 {{- $override := $dbConfig.nameOverride | default "cluster" }}
 {{- $host := printf "%s-%s-rw.default" .Release.Name $override }}
