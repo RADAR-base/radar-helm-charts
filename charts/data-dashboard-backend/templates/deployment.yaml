@@ -77,8 +77,11 @@ spec:
           livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
           {{- else if .Values.livenessProbe.enabled }}
           livenessProbe:
-            tcpSocket:
-              port: 80
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "wget -q --spider http://0.0.0.0:9000/dashboard-data/health"
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -89,8 +92,11 @@ spec:
           readinessProbe: {{- .Values.customReadinessProbe | toYaml | nindent 12 }}
           {{- else if .Values.readinessProbe.enabled }}
           readinessProbe:
-            tcpSocket:
-              port: 80
+            exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - "wget -q --spider http://0.0.0.0:9000/dashboard-data/health"
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
@@ -101,8 +107,11 @@ spec:
           startupProbe: {{- .Values.customStartupProbe | toYaml | nindent 12 }}
           {{- else if .Values.startupProbe.enabled }}
           startupProbe:
-            tcpSocket:
-              port: 80
+            exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - "wget -q --spider http://0.0.0.0:9000/dashboard-data/health"
             initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.startupProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
