@@ -1,0 +1,15 @@
+dependencies:
+- name: zookeeper
+  repository: https://charts.bitnami.com/bitnami
+  version: 9.2.7
+- name: nifi-registry
+  repository: https://dysnix.github.io/charts/
+  version: 1.0.0
+- name: ca
+  repository: ""
+  version: 1.0.1
+- name: openldap
+  repository: https://charts.helm.sh/stable
+  version: 1.2.7
+digest: sha256:c89c528c8e6bf7b2dfca235b3d925f31c638cc0bb3ae6e27b0c7d39214b22c31
+generated: "2024-02-12T13:38:48.253099046Z"

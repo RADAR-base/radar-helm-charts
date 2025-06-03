@@ -7,7 +7,7 @@ replicaCount: 1
 ##
 image:
   repository: apache/nifi
-  tag: "2.3.0"
+  tag: "1.23.2"
   pullPolicy: "IfNotPresent"
 
   ## Optionally specify an imagePullSecret.
@@ -40,7 +40,7 @@ sts:
       security.alpha.kubernetes.io/sysctls: net.ipv4.ip_local_port_range=10000 65000
       #prometheus.io/scrape: "true"
   serviceAccount:
-    create: true
+    create: false
     #name: nifi
     annotations: {}
   hostAliases: []
@@ -90,15 +90,13 @@ properties:
   algorithm: NIFI_PBKDF2_AES_GCM_256
   # use externalSecure for when inbound SSL is provided by nginx-ingress or other external mechanism
   externalSecure: false
-  isNode: true
+  isNode: false
   httpsPort: 8443
   webProxyHost: # <clusterIP>:<NodePort> (If Nifi service is NodePort or LoadBalancer)
   clusterPort: 6007
   zkClientEnsembleTraker: false # https://issues.apache.org/jira/browse/NIFI-10481
-  clusterNodeConnectionTimeout: '10 sec'
-  clusterNodeReadTimeout: '10 sec'
-  clusterHeartbeatInterval: '5 sec'
-  clusterHeartbeatMissableMax: 10
+  clusterNodeConnectionTimeout: '5 sec'
+  clusterNodeReadTimeout: '5 sec'
   zookeeperConnectTimeout: '3 secs'
   zookeeperSessionTimeout: '3 secs'
   archiveMaxRetentionPeriod: "3 days"
@@ -107,14 +105,6 @@ properties:
   provenanceMaxStorageTime: "10 days"
   flowArchiveMaxTime: "30 days"
   flowArchiveMaxStorage: "500 MB"
-  QueueBackpressureCount: 1000
-  QueueBackpressureSize: "1 GB"
-  provenanceBufferSize: 100000
-  questdbPersistNodeDays: 14
-  questdbPersistComponentDays: 3
-  webMaxRequestsPerSecond: 30000
-  webMaxAccessTokenRequestsPerSecond: 25
-  analyticsPredictEnabled: false
   siteToSite:
     port: 10000
   # use properties.safetyValve to pass explicit 'key: value' pairs that overwrite other configuration
@@ -123,7 +113,6 @@ properties:
     nifi.web.http.network.interface.default: eth0
     # listen to loopback interface so "kubectl port-forward ..." works
     nifi.web.http.network.interface.lo: lo
-  clusterStateProvider: kubernetes-provider
 
   ## Include aditional processors
   # customLibPath: "/opt/configuration_resources/custom_lib"
@@ -169,8 +158,6 @@ auth:
     clientSecret: #<client_secret_in_oidc_provider>
     claimIdentifyingUser: email
     admin: nifi@example.com
-    tokenRefreshWindow: 60 secs
-    claimGroups: admin
     preferredJwsAlgorithm:
     ## Request additional scopes, for example profile
     additionalScopes:
@@ -206,10 +193,6 @@ headless:
 service:
   type: ClusterIP
   httpsPort: 8443
-  sessionAffinity: ClientIP
-  sessionAffinityConfig:
-    clientIP:
-      timeoutSeconds: 10800
   # nodePort: 30236
   annotations: {}
     # loadBalancerIP:
@@ -391,7 +374,7 @@ ca:
   ## If true, enable the nifi-toolkit certificate authority
   enabled: false
   persistence:
-    enabled: false
+    enabled: true
   server: ""
   service:
     port: 9090
@@ -441,7 +424,7 @@ certManager:
 zookeeper:
   ## If true, install the Zookeeper chart
   ## ref: https://github.com/bitnami/charts/blob/master/bitnami/zookeeper/values.yaml
-  enabled: false
+  enabled: true
   ## If the Zookeeper Chart is disabled a URL and port are required to connect
   url: ""
   port: 2181

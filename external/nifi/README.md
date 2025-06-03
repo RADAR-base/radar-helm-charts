@@ -1,7 +1,16 @@
 # Helm Chart for Apache NiFi
+
+[![CircleCI](https://circleci.com/gh/cetic/helm-nifi.svg?style=svg)](https://circleci.com/gh/cetic/helm-nifi/tree/master) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) ![version](https://img.shields.io/github/tag/cetic/helm-nifi.svg?label=release) ![test](https://github.com/cetic/helm-nifi/actions/workflows/test.yml/badge.svg)
+
+## $${\color{red}Maintainers \space Wanted}$$
+
+$${\color{red}This \space project \space is \space not \space maintained \space anymore.}$$
+
+If you are interested in maintaining a fork of this project, please chime in in the [dedicated issue](https://github.com/cetic/helm-nifi/issues/330).
+
 ## Introduction
 
-This [Helm](https://helm.sh/) chart installs [Apache NiFi](https://nifi.apache.org/) 2.3.0 in a [Kubernetes](https://kubernetes.io/) cluster.
+This [Helm](https://helm.sh/) chart installs [Apache NiFi](https://nifi.apache.org/) 1.23.2 in a [Kubernetes](https://kubernetes.io/) cluster.
 
 ## Prerequisites
 
@@ -14,7 +23,7 @@ This [Helm](https://helm.sh/) chart installs [Apache NiFi](https://nifi.apache.o
 ### Add Helm repository
 
 ```bash
-helm repo add radar https://radar-base.github.io/radar-helm-charts
+helm repo add cetic https://cetic.github.io/helm-charts
 helm repo update
 ```
 
@@ -67,7 +76,7 @@ If you plan to use Grafana for the visualization of the metrics data [the follow
 Install the nifi helm chart with a release name `my-release`:
 
 ```bash
-helm install my-release radar/nifi
+helm install my-release cetic/nifi
 ```
 
 ### Install from local clone
@@ -139,17 +148,6 @@ The following table lists the configurable parameters of the nifi chart and the 
 | `properties.safetyValve`                                                    | Map of explicit 'property: value' pairs that overwrite other configuration                                         | `nil`                           |
 | `properties.customLibPath`                                                  | Path of the custom libraries folder                                                                                | `nil`                           |
 | `properties.webProxyHost`                               | Proxy to access to Nifi through the cluster ip address    | `Port:30236`
-| `properties.clusterStateProvider`                               | Choosing the cluster provider to manage state. Supports `kubernetes-provider` and `zk-provider`    | `kubernetes-provider`
-| `properties.clusterHeartbeatInterval`                               | The interval at which nodes should emit heartbeats to the Cluster Coordinator.  | `5 sec`
-| `properties.clusterHeartbeatMissableMax`                               | Maximum number of heartbeats a Cluster Coordinator can miss for a node in the cluster before the Cluster Coordinator updates the node status to Disconnected.   | `10`
-| `properties.QueueBackpressureCount`                               | When drawing a new connection between two components, this is the default value for that connection’s back pressure object threshold.   | `10000`
-| `properties.QueueBackpressureSize`                               | When drawing a new connection between two components, this is the default value for that connection’s back pressure data size threshold.    | `1 GB`
-| `properties.provenanceBufferSize`                               | The Provenance Repository buffer size.     | `100000`
-| `properties.questdbPersistNodeDays`                               | The number of days the node status data (such as Repository disk space free, garbage collection information, etc.) will be kept.   | `14`
-| `properties.questdbPersistComponentDays`                               | The number of days the component status data (i.e., stats for each Processor, Connection, etc.) will be kept.  | `3`
-| `properties.webMaxRequestsPerSecond`                               | The maximum number of requests from a connection per second. Requests in excess of this are first delayed, then throttled.    | `30000`
-| `properties.webMaxAccessTokenRequestsPerSecond`                               | The maximum number of requests for login Access Tokens from a connection per second. Requests in excess of this are rejected with HTTP 429. | `25`
-| `properties.analyticsPredictEnabled`                               | This indicates whether prediction should be enabled for the cluster. | `false`
 | **[Authentication](/doc/USERMANAGEMENT.md)**                                                |
 | **Single-user authentication**                                                | Automatically disabled if Client Certificate, OIDC, or LDAP enabled
 | `auth.     admin`                                                           | Default admin identity. It will overwrite the LDAP Bind DN for this purpose, when both is filled                   | ` CN=admin, OU=NIFI`            |
@@ -173,8 +171,6 @@ The following table lists the configurable parameters of the nifi chart and the 
 | `auth.oidc.claimIdentifyingUser`                                            | oidc claimIdentifyingUser                                                                                          | `email`                         |
 | `auth.oidc.preferredJwsAlgorithm`                                            | The preferred algorithm for validating identity tokens. If this value is blank, it will default to RS256 which is required to be supported by the OpenID Connect Provider according to the specification. If this value is HS256, HS384, or HS512, NiFi will attempt to validate HMAC protected tokens using the specified client secret. If this value is none, NiFi will attempt to validate unsecured/plain tokens.                                                                                           | `nil`                         |
 | `auth.oidc.admin`                                                           | Default OIDC admin identity                                                                                        | `nifi@example.com`              |
-| `auth.oidc.tokenRefreshWindow`                                                           |     The Token Refresh Window specifies the amount of time before the NiFi authorization session expires when the application will attempt to renew access using a cached Refresh Token.                                                                                | `60 secs`              |
-| `auth.oidc.claimGroups`                                                           |      Name of the ID token claim that contains an array of group names of which the user is a member.        |`admin`
 | Note that OIDC authentication to a multi-NiFi-node cluster requires Ingress sticky sessions | See [background](https://community.cloudera.com/t5/Support-Questions/OIDC-With-Azure-AD/m-p/232324#M194163)      | Also [how](https://kubernetes.github.io/ingress-nginx/examples/affinity/cookie/) |
 | **postStart**                                                               |
 | `postStart`                                                                 | Include additional libraries in the Nifi containers by using the postStart handler                                 | `nil`                           |
@@ -302,6 +298,9 @@ kubectl get pod
 NAME                  READY   STATUS    RESTARTS   AGE
 myrelease-nifi-0             3/4     Failed   1          56m
 myrelease-nifi-registry-0    1/1     Running   0          56m
+myrelease-nifi-zookeeper-0   1/1     Running   0          56m
+myrelease-nifi-zookeeper-1   1/1     Running   0          56m
+myrelease-nifi-zookeeper-2   1/1     Running   0          56m
 ```
 
 Inspect the pod, check the "Events" section at the end for anything suspicious.
@@ -322,11 +321,11 @@ Initially inspired from https://github.com/YolandaMDavis/apache-nifi.
 
 TLS work/inspiration from https://github.com/sushilkm/nifi-chart.git.
 
-Helm chart inspired from https://github.com/cetic/helm-nifi/
-
 ## Contributing
 
-Feel free to contribute by making a [pull request](https://github.com/RADAR-base/radar-helm-charts/pull/new/master).
+Feel free to contribute by making a [pull request](https://github.com/cetic/helm-nifi/pull/new/master).
+
+Please read the official [Helm Contribution Guide](https://github.com/helm/charts/blob/master/CONTRIBUTING.md) from Helm for more information on how you can contribute to this Chart.
 
 ## License
 
