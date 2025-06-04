@@ -143,8 +143,8 @@ Construct the Cloudnative-PG database URL
 {{- $dbConfig := .Values.timescaledb.cluster }}
 {{- $dbname := $dbConfig.cluster.initdb.database | default "postgres" }}
 {{- $override := $dbConfig.nameOverride | default "cluster" }}
-{{- $host := printf "%s-%s-rw.default" .Release.Name $override }}
-{{- printf "jdbc:postgresql://%s:%d/%s" $host $port $dbname -}}
+{{- $dbServiceName :=  $dbConfig.fullnameOverride | default (printf "%s-%s" .Release.Name $override) -}}
+{{- printf "jdbc:postgresql://%s-rw.default:%d/%s" $dbServiceName $port $dbname -}}
 {{- end -}}
 
 {{/*
