@@ -51,7 +51,7 @@ spec:
             - name: S3_ENABLED
               value: "true"
             - name: S3_URL
-              value: {{ .Values.s3.url | quote }}
+              value: {{ tpl .Values.s3.url . | quote }}
             {{- end }}
             {{- if .Values.restAuthorizer.enabled }}
             - name: REST_AUTHORIZER_ENABLED
@@ -61,7 +61,7 @@ spec:
             - name: DASHBOARD_ENABLED
               value: "true"
             - name: DASHBOARD_URL
-              value: {{ .Values.dashboard.url | quote }}
+              value: {{ tpl .Values.dashboard.url . | quote }}
             {{- end }}
             {{- if .Values.uploadPortal.enabled }}
             - name: UPLOAD_PORTAL_ENABLED
@@ -77,7 +77,7 @@ spec:
             {{- end }}
             {{- if .Values.logging.url }}
             - name: GRAYLOG_URL
-              value: {{ .Values.logging.url | quote }}
+              value: {{ tpl .Values.logging.url . | quote }}
             {{- end }}
             {{- if .Values.monitoring.enabled }}
             - name: MONITOR_ENABLED
@@ -85,7 +85,7 @@ spec:
             {{- end }}
             {{- if .Values.monitoring.url }}
             - name: MONITOR_URL
-              value: {{ .Values.monitoring.url | quote }}
+              value: {{ tpl .Values.monitoring.url . | quote }}
             {{- end }}
             {{- with .Values.extraEnvVars }}
               {{- toYaml . | nindent 10 }}
