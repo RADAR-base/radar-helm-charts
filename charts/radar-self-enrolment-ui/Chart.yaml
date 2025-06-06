@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "0.0.1"
 description: A Helm chart for RADAR-base Self Enrolment UI
 name: radar-self-enrolment-ui
-version: 0.3.0
+version: 0.4.0
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-self-enrolment-ui
