@@ -3,7 +3,7 @@
 # radar-home
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-home)](https://artifacthub.io/packages/helm/radar-base/radar-home)
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.4](https://img.shields.io/badge/AppVersion-0.1.4-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.4](https://img.shields.io/badge/AppVersion-0.1.4-informational?style=flat-square)
 
 RADAR-base home page.
 
@@ -48,12 +48,14 @@ RADAR-base home page.
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8080` | Port |
 | disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
+| server_name | string | `"localhost"` | Hostname for the home service |
+| advertised_protocol | string | `"https"` | The protocol in advertised URIs (https, http) |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
 | ingress.path | string | `"/"` | Path within the url structure |
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
-| ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
+| ingress.hosts | list | `["{{ .Values.server_name | quote }}"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | resources.limits | object | `{"cpu":"200m"}` | CPU/Memory resource limits |
 | resources.requests | object | `{"cpu":"10m","memory":"5Mi"}` | CPU/Memory resource requests |
@@ -84,13 +86,13 @@ RADAR-base home page.
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | s3.enabled | bool | `false` | Enable link to S3 |
-| s3.url | string | `nil` | URL to S3 |
+| s3.url | string | `"{{ .Values.advertised_protocol }}://s3.{{ .Values.server_name }}/login"` | URL to S3 |
 | dashboard.enabled | bool | `false` | Enable link to dashboard |
-| dashboard.url | string | `nil` | URL to dashboard |
+| dashboard.url | string | `"{{ .Values.advertised_protocol }}://dashboard.{{ .Values.server_name }}"` | URL to dashboard |
 | appConfig.enabled | bool | `false` | Enable link to app-config service |
 | uploadPortal.enabled | bool | `false` | Enable link to upload portal |
 | restAuthorizer.enabled | bool | `false` | Enable link to rest source authorizer |
 | monitoring.enabled | bool | `false` | Enable link to the monitoring stack, usually Prometheus |
-| monitoring.url | string | `nil` | URL to the monitoring stack, usually Prometheus |
+| monitoring.url | string | `"{{ .Values.advertised_protocol }}://grafana.{{ .Values.server_name }}/login"` | URL to the monitoring stack, usually Prometheus |
 | logging.enabled | bool | `false` | Enable link to the logging stack, usually Graylog |
-| logging.url | string | `nil` | URL to the monitoring stack, usually Graylog |
+| logging.url | string | `"{{ .Values.advertised_protocol }}://graylog.{{ .Values.server_name }}"` | URL to the monitoring stack, usually Graylog |
