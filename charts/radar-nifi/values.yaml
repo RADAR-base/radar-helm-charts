@@ -41,7 +41,7 @@ nifi:
         #prometheus.io/scrape: "true"
     serviceAccount:
       create: true
-      #name: nifi
+      name: nifi
       annotations: {}
     hostAliases: []
   #    - ip: "1.2.3.4"
@@ -140,7 +140,7 @@ nifi:
       keystorePasswd: changeMe
       truststorePasswd: changeMe
 
-    # Automaticaly disabled if OIDC or LDAP enabled
+    # Automaticaly disabled if OIDC or LDAP enabledxx
     singleUser:
       username: username
       password: changemechangeme # Must to have at least 12 characters

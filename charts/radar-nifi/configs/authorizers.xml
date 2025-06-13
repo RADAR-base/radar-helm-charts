@@ -1,4 +1,4 @@
-{{- $replicas := int .Values.replicaCount }}
+{{- $replicas := int .Values.nifi.replicaCount }}
 {{- $chart := .Chart.Name }}
 {{- $release := .Release.Name }}
 {{- $fullname := include "apache-nifi.fullname" . }}
@@ -50,10 +50,10 @@
         {{- range $i := until $replicas }}
         <property name="Initial User Identity {{ $i }}">CN={{ $fullname }}-{{ $i }}.{{ $fullname }}-headless.{{ $namespace }}.svc.cluster.local, OU=NIFI</property>
         {{- end }}
-        {{- if and .Values.auth.ldap.enabled (not .Values.auth.admin) }}
-        <property name="Initial User Identity admin">{{.Values.auth.ldap.admin}}</property>
+        {{- if and .Values.nifi.auth.ldap.enabled (not .Values.nifi.auth.admin) }}
+        <property name="Initial User Identity admin">{{.Values.nifi.auth.ldap.admin}}</property>
         {{- else }}
-        <property name="Initial User Identity admin">{{ .Values.auth.admin }}</property>
+        <property name="Initial User Identity admin">{{ .Values.nifi.auth.admin }}</property>
         {{- end}}
     </userGroupProvider>
     <!--
@@ -117,18 +117,18 @@
         NOTE: Any identity mapping rules specified in nifi.properties will also be applied to the user identities.
             Group names are not mapped.
     -->
-    {{- if .Values.auth.ldap.enabled}}
+    {{- if .Values.nifi.auth.ldap.enabled}}
     <userGroupProvider>
         <identifier>ldap-user-group-provider</identifier>
         <class>org.apache.nifi.ldap.tenants.LdapUserGroupProvider</class>
         <property name="Authentication Strategy">SIMPLE</property>
-        <property name="Manager DN">{{.Values.auth.ldap.admin}}</property>
-        <property name="Manager Password">{{.Values.auth.ldap.pass}}</property>
-        <property name="TLS - Keystore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Values.properties.namespace}}.svc.cluster.local/keystore.jks</property>
-        <property name="TLS - Keystore Password">{{.Values.auth.SSL.keystorePasswd}}</property>
+        <property name="Manager DN">{{.Values.nifi.auth.ldap.admin}}</property>
+        <property name="Manager Password">{{.Values.nifi.auth.ldap.pass}}</property>
+        <property name="TLS - Keystore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Values.nifi.properties.namespace}}.svc.cluster.local/keystore.jks</property>
+        <property name="TLS - Keystore Password">{{.Values.nifi.auth.SSL.keystorePasswd}}</property>
         <property name="TLS - Keystore Type">jks</property>
-        <property name="TLS - Truststore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Values.properties.namespace}}.svc.cluster.local/truststore.jks</property>
-        <property name="TLS - Truststore Password">{{.Values.auth.SSL.truststorePasswd}}</property>
+        <property name="TLS - Truststore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Values.nifi.properties.namespace}}.svc.cluster.local/truststore.jks</property>
+        <property name="TLS - Truststore Password">{{.Values.nifi.auth.SSL.truststorePasswd}}</property>
         <property name="TLS - Truststore Type">JKS</property>
         <property name="TLS - Client Auth">NONE</property>
         <property name="TLS - Protocol">TLS</property>
@@ -136,19 +136,19 @@
         <property name="Referral Strategy">IGNORE</property>
         <property name="Connect Timeout">10 secs</property>
         <property name="Read Timeout">10 secs</property>
-        <property name="Url">{{.Values.auth.ldap.host}}</property>
+        <property name="Url">{{.Values.nifi.auth.ldap.host}}</property>
         <property name="Page Size"></property>
         <property name="Sync Interval">30 mins</property>
-        <property name="User Search Base">{{.Values.auth.ldap.searchBase}}</property>
+        <property name="User Search Base">{{.Values.nifi.auth.ldap.searchBase}}</property>
         <property name="User Object Class">person</property>
-        <property name="User Search Scope">{{.Values.auth.ldap.userSearchScope}}</property>
-        <property name="User Search Filter">{{.Values.auth.ldap.searchFilter}}</property>
-        <property name="User Identity Attribute">{{.Values.auth.ldap.UserIdentityAttribute}}</property>
+        <property name="User Search Scope">{{.Values.nifi.auth.ldap.userSearchScope}}</property>
+        <property name="User Search Filter">{{.Values.nifi.auth.ldap.searchFilter}}</property>
+        <property name="User Identity Attribute">{{.Values.nifi.auth.ldap.UserIdentityAttribute}}</property>
         <property name="User Group Name Attribute"></property>
         <property name="User Group Name Attribute - Referenced Group Attribute"></property>
         <property name="Group Search Base"></property>
         <property name="Group Object Class">group</property>
-        <property name="Group Search Scope">{{.Values.auth.ldap.groupSearchScope}}</property>
+        <property name="Group Search Scope">{{.Values.nifi.auth.ldap.groupSearchScope}}</property>
         <property name="Group Search Filter"></property>
         <property name="Group Name Attribute"></property>
         <property name="Group Member Attribute"></property>
@@ -164,7 +164,7 @@
             NOTE: Any identity mapping rules specified in nifi.properties are not applied in this implementation. This behavior
             would need to be applied by the base implementation.
     -->
-    {{- if .Values.auth.ldap.enabled}}
+    {{- if .Values.nifi.auth.ldap.enabled}}
     <userGroupProvider>
         <identifier>composite-configurable-user-group-provider</identifier>
         <class>org.apache.nifi.authorization.CompositeConfigurableUserGroupProvider</class>
@@ -222,10 +222,10 @@
         <class>org.apache.nifi.authorization.FileAccessPolicyProvider</class>
         <property name="User Group Provider">file-user-group-provider</property>
         <property name="Authorizations File">./auth-conf/authorizations.xml</property>
-        {{- if and .Values.auth.ldap.enabled (not .Values.auth.admin) }}
-        <property name="Initial Admin Identity">{{.Values.auth.ldap.admin}}</property>
+        {{- if and .Values.nifi.auth.ldap.enabled (not .Values.nifi.auth.admin) }}
+        <property name="Initial Admin Identity">{{.Values.nifi.auth.ldap.admin}}</property>
         {{- else }}
-        <property name="Initial Admin Identity">{{ .Values.auth.admin }}</property>
+        <property name="Initial Admin Identity">{{ .Values.nifi.auth.admin }}</property>
         {{- end}}
         <property name="Legacy Authorized Users File"></property>
         {{- range $i := until $replicas }}
@@ -268,13 +268,13 @@
             NOTE: Any identity mapping rules specified in nifi.properties will also be applied to the node identities,
             so the values should be the unmapped identities (i.e. full DN from a certificate).
     -->
-    {{- if .Values.auth.ldap.enabled}}
+    {{- if .Values.nifi.auth.ldap.enabled}}
     <authorizer>
         <identifier>file-provider</identifier>
         <class>org.apache.nifi.authorization.FileAuthorizer</class>
         <property name="Authorizations File">./auth-conf/authorizations.xml</property>
         <property name="Users File">./auth-conf/users.xml</property>
-        <property name="Initial Admin Identity">{{.Values.auth.ldap.admin}}</property>
+        <property name="Initial Admin Identity">{{.Values.nifi.auth.ldap.admin}}</property>
         <property name="Legacy Authorized Users File"></property>
 
     </authorizer>
