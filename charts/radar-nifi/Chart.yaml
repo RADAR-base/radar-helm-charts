@@ -1,6 +1,6 @@
 ---
 apiVersion: v2
-name: nifi
+name: radar-nifi
 version: 2.0.0
 appVersion: 2.3.0
 description: Apache NiFi is a software project from the Apache Software Foundation designed to automate the flow of data between software systems.
@@ -19,4 +19,4 @@ maintainers:
 dependencies:
   - name: nifi
     repository: file://../../external/nifi
-    version: 1.23.2
+    version: 1.2.1

@@ -65,14 +65,14 @@
     <provider>
         <identifier>ldap-provider</identifier>
         <class>org.apache.nifi.ldap.LdapProvider</class>
-        <property name="Authentication Strategy">{{.Values.auth.ldap.authStrategy}}</property>
-        <property name="Manager DN">{{.Values.auth.ldap.admin}}</property>
-        <property name="Manager Password">{{.Values.auth.ldap.pass}}</property>
+        <property name="Authentication Strategy">{{.Values.nifi.auth.ldap.authStrategy}}</property>
+        <property name="Manager DN">{{.Values.nifi.auth.ldap.admin}}</property>
+        <property name="Manager Password">{{.Values.nifi.auth.ldap.pass}}</property>
         <property name="TLS - Keystore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Release.Namespace}}.svc.cluster.local/keystore.jks</property>
-        <property name="TLS - Keystore Password">{{.Values.auth.keystorePasswd}}</property>
+        <property name="TLS - Keystore Password">{{.Values.nifi.auth.keystorePasswd}}</property>
         <property name="TLS - Keystore Type">JKS</property>
         <property name="TLS - Truststore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Release.Namespace}}.svc.cluster.local/truststore.jks</property>
-        <property name="TLS - Truststore Password">{{.Values.auth.truststorePasswd}}</property>
+        <property name="TLS - Truststore Password">{{.Values.nifi.auth.truststorePasswd}}</property>
         <property name="TLS - Truststore Type">JKS</property>
         <property name="TLS - Client Auth">NONE</property>
         <property name="TLS - Protocol">TLS</property>
@@ -81,10 +81,10 @@
         <property name="Referral Strategy">FOLLOW</property>
         <property name="Connect Timeout">10 secs</property>
         <property name="Read Timeout">10 secs</property>
-        <property name="Url">{{.Values.auth.ldap.host}}</property>
-        <property name="User Search Base">{{.Values.auth.ldap.searchBase}}</property>
-        <property name="User Search Filter">({{.Values.auth.ldap.userIdentityAttribute}}={0})</property>
-        <property name="Identity Strategy">{{.Values.auth.ldap.IdentityStrategy}}</property>
-        <property name="Authentication Expiration">{{.Values.auth.ldap.authExpiration}}</property>
+        <property name="Url">{{.Values.nifi.auth.ldap.host}}</property>
+        <property name="User Search Base">{{.Values.nifi.auth.ldap.searchBase}}</property>
+        <property name="User Search Filter">({{.Values.nifi.auth.ldap.userIdentityAttribute}}={0})</property>
+        <property name="Identity Strategy">{{.Values.nifi.auth.ldap.IdentityStrategy}}</property>
+        <property name="Authentication Expiration">{{.Values.nifi.auth.ldap.authExpiration}}</property>
     </provider>
 </loginIdentityProviders>

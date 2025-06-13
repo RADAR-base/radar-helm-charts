@@ -1,0 +1,6 @@
+dependencies:
+- name: nifi
+  repository: file://../../external/nifi
+  version: 1.2.1
+digest: sha256:f17884dbd79cd7e79fb63033a582d8af7bc7b9710f7d5e142ca928677ec5bcfb
+generated: "2025-06-03T15:40:12.458315+01:00"

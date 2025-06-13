@@ -1,4 +1,4 @@
-{{- if and .Values.sts.serviceAccount.create (eq .Values.properties.clusterStateProvider "kubernetes-provider") }}
+{{- if and .Values.nifi.sts.serviceAccount.create (eq .Values.nifi.properties.clusterStateProvider "kubernetes-provider") }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
