@@ -41,6 +41,10 @@ service:
 
 # -- Reconfigure Ingress to not force TLS
 disable_tls: false
+# -- Hostname for the home service
+server_name: localhost
+# -- The protocol in advertised URIs (https, http)
+advertised_protocol: https
 
 ingress:
   # -- Enable ingress controller resource
@@ -57,7 +61,7 @@ ingress:
   ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:
-    - localhost
+    - '{{ .Values.server_name | quote }}'
   tls:
     # -- TLS Secret Name
     secretName: radar-base-tls
@@ -173,13 +177,13 @@ s3:
   # -- Enable link to S3
   enabled: false
   # -- URL to S3
-  url:
+  url: '{{ .Values.advertised_protocol }}://s3.{{ .Values.server_name }}/login'
 
 dashboard:
   # -- Enable link to dashboard
   enabled: false
   # -- URL to dashboard
-  url:
+  url: '{{ .Values.advertised_protocol }}://dashboard.{{ .Values.server_name }}'
 
 appConfig:
   # -- Enable link to app-config service
@@ -197,10 +201,10 @@ monitoring:
   # -- Enable link to the monitoring stack, usually Prometheus
   enabled: false
   # -- URL to the monitoring stack, usually Prometheus
-  url:
+  url: '{{ .Values.advertised_protocol }}://grafana.{{ .Values.server_name }}/login'
 
 logging:
   # -- Enable link to the logging stack, usually Graylog
   enabled: false
   # -- URL to the monitoring stack, usually Graylog
-  url:
+  url: '{{ .Values.advertised_protocol }}://graylog.{{ .Values.server_name }}'
