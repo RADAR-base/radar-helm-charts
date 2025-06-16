@@ -18,11 +18,11 @@ CURL="curl -s --socks5-hostname $S5IP:$S5PORT"
 #       workstation browser to use the SOCKS5 proxy (using the IP address and port
 #       discovered through the above kubectl commands, and with remote DNS resolution)
 #       to access the NiFi UI as https://nifi.default.svc.cluster.local:8843/nifi/ and
-#       confirm it all works--including the FQDN-based redirects from NiFi to Keycloak and 
-#       back again.  And it's very useful if (when, really) it doesn't work to have the full 
+#       confirm it all works--including the FQDN-based redirects from NiFi to Keycloak and
+#       back again.  And it's very useful if (when, really) it doesn't work to have the full
 #       desktop browser debugging and tracing capabilities available.
 #
-#       Also, while writing the tests it was sure nice having the full browser available 
+#       Also, while writing the tests it was sure nice having the full browser available
 #       to spelunk through the DOM of the Keycloak and NiFi pages to zero in on what
 #       to have puppeteer interact with, both in terms of sending text/clicks and
 #       scraping results.
@@ -45,12 +45,12 @@ $CURL \
      --request POST $KCURL/admin/realms/ \
      --header "Authorization: Bearer $KCAT" \
      --header "Content-Type: application/json" \
-     --data-raw '{ 
-                   "realm":"nifi", 
+     --data-raw '{
+                   "realm":"nifi",
                    "displayName":"NiFi",
                    "enabled":"true",
                    "ssoSessionIdleTimeout":7200,
-                   "accessTokenLifespan":3600 
+                   "accessTokenLifespan":3600
                  }'
 
 # Create the NiFi User
@@ -59,12 +59,12 @@ $CURL \
      --request POST $KCURL/admin/realms/nifi/users \
      --header "Authorization: Bearer $KCAT" \
      --header "Content-Type: application/json" \
-     --data-raw '{ 
+     --data-raw '{
                    "firstName":"NiFi",
                    "lastName":"User",
-                   "username":"nifi", 
-                   "enabled":"true", 
-                   "email":"nifi@example.com", 
+                   "username":"nifi",
+                   "enabled":"true",
+                   "email":"nifi@example.com",
                    "credentials":[
                                    {
                                       "type":"password",
@@ -78,10 +78,22 @@ $CURL \
      --request POST $KCURL/admin/realms/nifi/clients \
      --header "Authorization: Bearer $KCAT" \
      --header "Content-Type: application/json" \
-     --data-raw '{ 
-                   "clientId":"nifi", 
-                   "enabled":"true", 
+     --data-raw '{
+                   "clientId":"nifi",
+                   "enabled":"true",
                    "redirectUris": [ "https://nifi.default.svc.cluster.local:8443/*", "https://ingress-nginx-controller.ingress-nginx.svc.cluster.local:443/*" ],
                    "publicClient": "false",
                    "secret":"CZhA1IOePlXHz3PWqVwYoVAcYIUHTcDK"
+                 }'
+
+$CURL \
+     --request POST $KCURL/admin/realms/nifi/clients \
+     --header "Authorization: Bearer $KCAT" \
+     --header "Content-Type: application/json" \
+     --data-raw '{
+                   "clientId":"nifi-registry",
+                   "enabled":"true",
+                   "redirectUris": [ "https://nifi-registry.default.svc.cluster.local:18443/*", "https://ingress-nginx-controller.ingress-nginx.svc.cluster.local:443/*" ],
+                   "publicClient": "false",
+                   "secret":"Dlh86339JJNInG03zG7DJoxiiYZteITb"
                  }'
