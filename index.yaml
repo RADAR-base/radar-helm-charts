@@ -9998,6 +9998,35 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-home-0.1.0/radar-home-0.1.0.tgz
     version: 0.1.0
+  radar-hydra:
+  - apiVersion: v2
+    appVersion: v2.2.0
+    created: "2025-06-16T09:46:15.015031271Z"
+    dependencies:
+    - name: hydra
+      repository: file://../../external/hydra
+      version: 0.53.0
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A ORY Hydra Helm chart for RADAR-base. ORY Hydra is a cloud native
+      Identity and User Management system.
+    digest: d252ba62348f64f16b221c77fab3b9dfb4c276400bcd91bc74052f1764594122
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-hydra
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-hydra
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-hydra-0.2.2/radar-hydra-0.2.2.tgz
+    version: 0.2.2
   radar-integration:
   - annotations:
       artifacthub.io/license: Apache-2.0
@@ -11565,6 +11594,35 @@ entries:
     type: application
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-jdbc-connector-0.1.1/radar-jdbc-connector-0.1.1.tgz
+    version: 0.1.1
+  radar-kratos:
+  - apiVersion: v2
+    appVersion: v1.3.0
+    created: "2025-06-16T09:46:15.150681999Z"
+    dependencies:
+    - name: kratos
+      repository: file://../../external/kratos
+      version: 0.52.1
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A ORY Kratos Helm chart for RADAR-base. ORY Kratos is a cloud native
+      Identity and User Management system.
+    digest: 3a8df42fdcac3f3e4534797c9c1b383176a7f778eb197d14ddadaa3ccdc2920d
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-kratos
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-kratos
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-kratos-0.1.1/radar-kratos-0.1.1.tgz
     version: 0.1.1
   radar-mockserver:
   - apiVersion: v2
@@ -19733,4 +19791,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-04T10:58:21.281141063Z"
+generated: "2025-06-16T09:46:15.151522578Z"
