@@ -12,7 +12,7 @@ keywords:
   - remote-trial
 annotations:
   artifacthub.io/license: Apache-2.0
-deprecated: false
+deprecated: true
 type: application
 home: "https://radar-base.org"
 maintainers:
