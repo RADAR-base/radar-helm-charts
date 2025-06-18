@@ -208,12 +208,10 @@ networkpolicy:
 kafka_num_brokers: 3
 # -- Number of Kafka Topic replicates. Should be min 2, max 4, and is normally 3, but is limited by the number of brokers.
 # ref: https://learn.conduktor.io/kafka/kafka-topics-choosing-the-replication-factor-and-partitions-count/
-# -1 sets to use default configured in the kafka broker.
-kafka_num_replication: -1
+kafka_num_replication: 3
 # -- Number of Kafka Topic data partitions, Rule of thumb 3 times the number of brokers. Headroom is used for future upscale of brokers.
 # ref: https://learn.conduktor.io/kafka/kafka-topics-choosing-the-replication-factor-and-partitions-count/
-# -1 sets to use default configured in the kafka broker.
-kafka_num_partitions: -1
+kafka_num_partitions: 3
 # -- URI of Kafka brokers
 # On strimzi operator, this points to the listener that has no tls, and scram-sha-512 authentication.
 kafka: radar-kafka-bootstrap:9094
