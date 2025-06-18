@@ -47,8 +47,8 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | server_name | string | `"localhost"` | domain name of the server |
 | disable_tls | bool | `false` |  |
 | dev_deployment | bool | `false` | Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode) |
-| nameOverride | string | `""` | String to partially override radar-gateway.fullname template with a string (will prepend the release name) |
-| fullnameOverride | string | `"radar"` | String to fully override radar-gateway.fullname template with a string |
+| nameOverride | string | `""` | String to partially override radar-kafka.fullname template with a string (will prepend the release name) |
+| fullnameOverride | string | `""` | String to fully override radar-kafka.fullname template with a string |
 | metrics | object | `{"enabled":true,"kafkaExporter":{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"}}` | Enable metrics to be collected via Prometheus-operator |
 | metrics.enabled | bool | `true` | Enable monitoring of metrics |
 | metrics.kafkaExporter | object | `{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"}` | Values for Prometheus JMX Exporter attached to Kafka pods ref: https://strimzi.io/docs/operators/latest/deploying#proc-metrics-kafka-deploy-options-str |

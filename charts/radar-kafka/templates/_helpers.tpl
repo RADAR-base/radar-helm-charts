@@ -68,17 +68,3 @@ Create a secret name which can be overridden.
 {{ include "radar-kafka.fullname" . }}
 {{- end -}}
 {{- end -}}
-
-{{/*
-Create a default fully qualified app name for dependency charts.
-*/}}
-{{- define "radar-kafka.subchart.fullname" -}}
-{{- $parentFullname := include "radar-kafka.fullname" .context -}}
-{{- if .values.fullnameOverride -}}
-    {{- .values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else if and .values.nameOverride (not (contains .values.nameOverride $parentFullname)) -}}
-    {{- printf "%s-%s" $parentFullname .values.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-    {{- $parentFullname }}
-{{- end -}}
-{{- end -}}

@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaUser
 metadata:
-  name: {{ include "radar-kafka.subchart.fullname" (dict "values" (index .Values "schema-registry") "context" .) }}
+  name: {{ template "common.names.fullname" . }}-schema-registry
   labels:
     strimzi.io/cluster: {{ include "common.names.fullname" . }}
 spec:

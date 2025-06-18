@@ -1,8 +1,7 @@
-{{ $values := index .Values "schema-registry" }}
 apiVersion: roundtable.lsst.codes/v1beta1
 kind: StrimziSchemaRegistry
 metadata:
-  name: {{ include "radar-kafka.subchart.fullname" (dict "values" $values "context" .) }}
+  name: {{ template "common.names.fullname" . }}-schema-registry
   labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
 spec:
-  {{- toYaml $values.registry.spec | nindent 2 }}
+  {{- toYaml (index .Values "schema-registry" "spec") | nindent 2 }}

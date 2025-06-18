@@ -5,10 +5,10 @@ disable_tls: false
 # -- Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode)
 dev_deployment: false
 
-# -- String to partially override radar-gateway.fullname template with a string (will prepend the release name)
+# -- String to partially override radar-kafka.fullname template with a string (will prepend the release name)
 nameOverride: ""
-# -- String to fully override radar-gateway.fullname template with a string
-fullnameOverride: radar
+# -- String to fully override radar-kafka.fullname template with a string
+fullnameOverride: ""
 
 # -- Enable metrics to be collected via Prometheus-operator
 metrics:
@@ -70,8 +70,6 @@ kafka:
 # ref: https://github.com/lsst-sqre/strimzi-registry-operator
 # @default -- check `values.yaml`
 schema-registry:
-  nameOverride: schema-registry
-  fullnameOverride: ""
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -99,7 +97,6 @@ schema-registry:
       cleanup.policy: compact
 
   registry:
-    nameOverride: schema-registry
     spec:
       strimziVersion: v1beta2
       listener: tls

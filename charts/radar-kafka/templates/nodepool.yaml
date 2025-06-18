@@ -2,7 +2,7 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaNodePool
 metadata:
-  name: {{ template "common.names.fullname" . }}-node-pool
+  name: node-pool
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
     strimzi.io/cluster: {{ template "common.names.fullname" . }}
