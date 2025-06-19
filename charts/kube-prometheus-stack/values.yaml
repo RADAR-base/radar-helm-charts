@@ -3,6 +3,9 @@ nginx_auth: |
 
 kube-prometheus-stack:
 
+  # -- domain name of the server
+  server_name: localhost
+
   ## Create default rules for monitoring the cluster
   ##
   defaultRules:
@@ -78,7 +81,7 @@ kube-prometheus-stack:
       ## Hosts must be provided if Ingress is enabled.
       ##
       hosts:
-        - localhost
+        - alertmanager.{{ .Values.server_name }}
       ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
       ##
       paths:
@@ -87,7 +90,7 @@ kube-prometheus-stack:
       tls:
       - secretName: radar-base-tls-alertmanager
         hosts:
-        - localhost
+        - alertmanager.{{ .Values.server_name }}
     alertmanagerSpec:
 
       ## Size is the expected size of the alertmanager cluster. The controller will eventually make the size of the
@@ -128,7 +131,7 @@ kube-prometheus-stack:
       # hosts:
       #   - grafana.domain.com
       hosts:
-        - localhost
+        - grafana.{{ .Values.server_name }}
 
       ## TLS configuration for grafana Ingress
       ## Secret must be manually created in the namespace
@@ -136,7 +139,7 @@ kube-prometheus-stack:
       tls:
       - secretName: radar-base-tls-grafana
         hosts:
-        - localhost
+        - grafana.{{ .Values.server_name }}
 
   ## Manages Prometheus and Alertmanager components
   ##
@@ -184,7 +187,7 @@ kube-prometheus-stack:
       # hosts:
       #   - prometheus.domain.com
       hosts:
-        - localhost
+        - prometheus.{{ .Values.server_name }}
       ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
       ##
       paths:
@@ -200,7 +203,7 @@ kube-prometheus-stack:
       tls:
       - secretName: radar-base-tls-prometheus
         hosts:
-        - localhost
+        - prometheus.{{ .Values.server_name }}
 
     ## Settings affecting prometheusSpec
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#prometheusspec
