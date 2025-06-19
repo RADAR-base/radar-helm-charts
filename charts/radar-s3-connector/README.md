@@ -78,7 +78,7 @@ A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 conne
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | kafka_num_brokers | int | `3` | Number of deployed Kafka broker instances |
-| kafka.url | string | `"SASL_PLAINTEXT://radar-kafka-bootstrap:9094"` | Kafka broker URLs |
+| kafka.url | string | `"SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094"` | Kafka broker URLs |
 | kafka.security | object | `{"env":[{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_PRODUCER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_PRODUCER_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_CONSUMER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_CONSUMER_SASL_MECHANISM","value":"SCRAM-SHA-512"}],"jaasSecret":{"key":"sasl.jaas.config","name":"shared-service-user"}}` | Security related env vars set in pods. Not applied when `cc.enabled` is true. |
 | kafka.security.env | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_PRODUCER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_PRODUCER_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_CONSUMER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_CONSUMER_SASL_MECHANISM","value":"SCRAM-SHA-512"}]` | Env vars set for authentication with Kafka brokers. Not applied when `cc.enabled` is true. |
 | kafka.security.env[0] | object | `{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
@@ -88,7 +88,7 @@ A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 conne
 | kafka.security.env[4] | object | `{"name":"CONNECT_CONSUMER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | kafka.security.env[5] | object | `{"name":"CONNECT_CONSUMER_SASL_MECHANISM","value":"SCRAM-SHA-512"}` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. |
 | kafka.security.jaasSecret | object | `{"key":"sasl.jaas.config","name":"shared-service-user"}` | Secret for the Kafka SASL JAAS configuration. Not applied when `cc.enabled` is true. |
-| schemaRegistry.url | string | `"http://radar-schema-registry:8081"` | Schema registry URL |
+| schemaRegistry.url | string | `"http://radar-kafka-schema-registry:8081"` | Schema registry URL |
 | catalogServer.url | string | `"http://catalog-server:9010"` | Catalog server URL |
 | topics | string | `""` | List of topics to be consumed by the sink connector separated by comma. Topics defined in the catalog server will automatically be loaded if `initTopics.enabled` is true. |
 | s3Endpoint | string | `"http://minio:9000/"` | Target S3 endpoint url |

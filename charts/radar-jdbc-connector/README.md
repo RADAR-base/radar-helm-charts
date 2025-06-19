@@ -91,9 +91,9 @@ Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: fal
 | startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
-| kafka | string | `"SASL_PLAINTEXT://radar-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
+| kafka | string | `"SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
 | kafka_num_brokers | string | `"3"` | Number of Kafka brokers. This is used to validate the cluster availability at connector init. |
-| schema_registry | string | `"http://radar-schema-registry:8081"` | URL of the Kafka schema registry |
+| schema_registry | string | `"http://radar-kafka-schema-registry:8081"` | URL of the Kafka schema registry |
 | maxTasks | int | `2` | Maximum number of worker threads inside a connector pod. |
 | mode | string | `"sink"` | Either source or sink |
 | logLevel.root | string | `"INFO"` | Default log level |

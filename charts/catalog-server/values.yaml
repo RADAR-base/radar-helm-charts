@@ -196,13 +196,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: radar-kafka-bootstrap
+          app.kubernetes.io/name: radar-kafka-kafka-bootstrap
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: radar-schema-registry
+          app.kubernetes.io/name: radar-kafka-schema-registry
 
 # -- Number of deployed Kafka brokers
 kafka_num_brokers: 3
@@ -214,9 +214,9 @@ kafka_num_replication: 3
 kafka_num_partitions: 3
 # -- URI of Kafka brokers
 # On strimzi operator, this points to the listener that has no tls, and scram-sha-512 authentication.
-kafka: radar-kafka-bootstrap:9094
+kafka: radar-kafka-kafka-bootstrap:9094
 # -- URL of the confluent schema registry
-schema_registry: http://radar-schema-registry:8081
+schema_registry: http://radar-kafka-schema-registry:8081
 
 # -- Additional kafka properties such as security config. The template replaces `_` with `.` in keys so property keys can be specified using `_` instead of `.`. For example `security_protocol` is same as `security.protocol` kafka config.
 kafkaProperties:

@@ -181,13 +181,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-bootstrap'
+          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-schema-registry'
+          app.kubernetes.io/name: 'radar-kafka-schema-registry'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -216,11 +216,11 @@ networkpolicy:
 # -- URI of Zookeeper instances of the cluster. Leave unset on default RADAR-base deployment (uses Kraft).
 zookeeper:
 # -- URI of Kafka brokers of the cluster
-kafka: SASL_PLAINTEXT://radar-kafka-bootstrap:9094
+kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
 # -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
 kafka_num_brokers: "3"
 # -- URL of the Kafka schema registry
-schema_registry: http://radar-schema-registry:8081
+schema_registry: http://radar-kafka-schema-registry:8081
 
 kafka_wait:
   # -- Whether to wait before the specified number of brokers are available.

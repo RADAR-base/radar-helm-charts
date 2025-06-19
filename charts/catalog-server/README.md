@@ -83,8 +83,8 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | kafka_num_brokers | int | `3` | Number of deployed Kafka brokers |
 | kafka_num_replication | int | `3` | Number of Kafka Topic replicates. Should be min 2, max 4, and is normally 3, but is limited by the number of brokers. ref: https://learn.conduktor.io/kafka/kafka-topics-choosing-the-replication-factor-and-partitions-count/ |
 | kafka_num_partitions | int | `3` | Number of Kafka Topic data partitions, Rule of thumb 3 times the number of brokers. Headroom is used for future upscale of brokers. ref: https://learn.conduktor.io/kafka/kafka-topics-choosing-the-replication-factor-and-partitions-count/ |
-| kafka | string | `"radar-kafka-bootstrap:9094"` | URI of Kafka brokers On strimzi operator, this points to the listener that has no tls, and scram-sha-512 authentication. |
-| schema_registry | string | `"http://radar-schema-registry:8081"` | URL of the confluent schema registry |
+| kafka | string | `"radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers On strimzi operator, this points to the listener that has no tls, and scram-sha-512 authentication. |
+| schema_registry | string | `"http://radar-kafka-schema-registry:8081"` | URL of the confluent schema registry |
 | kafkaProperties | object | `{"sasl_mechanism":"SCRAM-SHA-512","security_protocol":"SASL_PLAINTEXT"}` | Additional kafka properties such as security config. The template replaces `_` with `.` in keys so property keys can be specified using `_` instead of `.`. For example `security_protocol` is same as `security.protocol` kafka config. |
 | kafkaProperties.security_protocol | string | `"SASL_PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | kafkaProperties.sasl_mechanism | string | `"SCRAM-SHA-512"` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. |

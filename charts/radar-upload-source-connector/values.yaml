@@ -161,13 +161,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-bootstrap'
+          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-schema-registry'
+          app.kubernetes.io/name: 'radar-kafka-schema-registry'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -196,11 +196,11 @@ networkpolicy:
 # -- Zookeeper URL. Leave unset using Kafka in Kraft mode.
 zookeeper:
 # -- Kafka broker URLs
-kafka: SASL_PLAINTEXT://radar-kafka-bootstrap:9094
+kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
 # -- Number of brokers in the cluster
 kafka_num_brokers: "3"
 # -- Schema registry URL
-schema_registry: http://radar-schema-registry:8081
+schema_registry: http://radar-kafka-schema-registry:8081
 # -- URL of the Management Portal
 managementportal_url: http://management-portal:8080/managementportal
 # -- Host name of the upload connect backend application
