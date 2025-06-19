@@ -132,6 +132,46 @@ spec:
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+          {{- if .Values.sentry.dsn }}
+          - name: SENTRY_DSN
+            value: {{ .Values.sentry.dsn }}
+          - name: SENTRY_LOG_LEVEL
+            value: {{ .Values.sentry.level }}
+            {{- if .Values.sentry.stacktrace.enabled }}
+          - name: SENTRY_ATTACHSTACKTRACE
+            value: {{ .Values.sentry.stacktrace.enabled | quote }}
+          - name: SENTRY_STACKTRACE_APP_PACKAGES
+            value: {{ .Values.sentry.stacktrace.packages}}
+            {{- end }}
+          - name: SENTRY_NAME
+            value: {{ .Values.sentry.service.name | default (include "radar-output.fullname" .) }}
+          - name: SENTRY_RELEASE
+            value: {{ .Values.sentry.service.release | default (printf "%s-%s" .Chart.Version .Chart.AppVersion) }}
+          - name: SENTRY_ENVIRONMENT
+            value: {{ .Values.sentry.service.environment }}
+            {{- if .Values.openTelemetry.agent.enabled }}
+          - name: SENTRY_TRACES_SAMPLE_RATE
+            value: {{ .Values.openTelemetry.exporter.tracesSampleRate | quote }}
+              {{- if not .Values.openTelemetry.exporter.metricsExporterEnabled }}
+          - name: OTEL_METRICS_EXPORTER
+            value: none
+              {{- end }}
+              {{- if not .Values.openTelemetry.exporter.tracesExporterEnabled }}
+          - name: OTEL_TRACES_EXPORTER
+            value: none
+              {{- end }}
+              {{- if not .Values.openTelemetry.exporter.logsExporterEnabled }}
+          - name: OTEL_LOGS_EXPORTER
+            value: none
+              {{- end }}
+            {{- end }}
+          {{- else }}
+          - name: SENTRY_ENABLED
+            value: "false"
+          {{- end }}
+          {{- with .Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
