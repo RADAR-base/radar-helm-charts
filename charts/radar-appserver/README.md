@@ -121,3 +121,16 @@ A Helm chart for the backend application of RADAR-base Appserver
 | upload.storage.secret_key | string | `"secret"` | Secret key of the S3 storage |
 | upload.storage.path.prefix | string | `"output"` | Prefix for the path in the storage; will become <bucket>/<prefix>/<project>/<subject>/<topic> |
 | upload.storage.path.collection_per_day | bool | `false` | if set to true, a new folder will be created for each day |
+| sentry.dsn | string | `nil` | DSN (Data Source Name) of the sentry server |
+| sentry.level | string | `"ERROR"` | Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR) |
+| sentry.service.name | string | `nil` | Name of the service to be displayed in the sentry dashboard |
+| sentry.service.release | string | `nil` | App version to be displayed in the sentry dashboard |
+| sentry.service.environment | string | `"production"` | Environment of the sentry service |
+| sentry.stacktrace.enabled | bool | `true` | Set to true, if stack trace should be enabled |
+| sentry.stacktrace.packages | string | `"org.radarbase.gateway,org.apache.avro"` | Comma-separated list of package prefixes to be included in the stacktrace |
+| openTelemetry.agent.enabled | bool | `false` | Enable OpenTelemetry agent (currently only Sentry agent is supported) |
+| openTelemetry.agent.agentJar | string | `"sentry-opentelemetry-agent-8.1.0.jar"` | OpenTelemetry Sentry agent jar file name, depends on version of 'io.sentry:sentry-opentelemetry-agent' |
+| openTelemetry.exporter.tracesSampleRate | float | `1` | Sample rate for traces (0.0 to 1.0) |
+| openTelemetry.exporter.metricsExporterEnabled | bool | `false` | Enable OpenTelemetry metrics exporter other than Sentry |
+| openTelemetry.exporter.tracesExporterEnabled | bool | `false` | Enable OpenTelemetry traces exporter other than Sentry |
+| openTelemetry.exporter.logsExporterEnabled | bool | `true` | Enable OpenTelemetry logs exporter other than Sentry |
