@@ -3,7 +3,7 @@
 # management-portal
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.8](https://img.shields.io/badge/AppVersion-2.1.8-informational?style=flat-square)
+![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.8](https://img.shields.io/badge/AppVersion-2.1.8-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -124,6 +124,19 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | smtp.starttls | bool | `false` | set to true,if ttls should be enabled |
 | smtp.auth | bool | `true` | set to true, if the account should be authenticated before sending emails |
 | oauth_clients | object | check `values.yaml` | OAuth2 Client configuration |
+| sentry.dsn | string | `nil` | DSN (Data Source Name) of the sentry server |
+| sentry.level | string | `"ERROR"` | Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR) |
+| sentry.service.name | string | `nil` | Name of the service to be displayed in the sentry dashboard |
+| sentry.service.release | string | `nil` | App version to be displayed in the sentry dashboard |
+| sentry.service.environment | string | `"production"` | Environment of the sentry service |
+| sentry.stacktrace.enabled | bool | `true` | Set to true, if stack trace should be enabled |
+| sentry.stacktrace.packages | string | `"org.radarbase.gateway,org.apache.avro"` | Comma-separated list of package prefixes to be included in the stacktrace |
+| openTelemetry.agent.enabled | bool | `false` | Enable OpenTelemetry agent (currently only Sentry agent is supported) |
+| openTelemetry.agent.agentJar | string | `"sentry-opentelemetry-agent-8.1.0.jar"` | OpenTelemetry Sentry agent jar file name, depends on version of 'io.sentry:sentry-opentelemetry-agent' |
+| openTelemetry.exporter.tracesSampleRate | float | `1` | Sample rate for traces (0.0 to 1.0) |
+| openTelemetry.exporter.metricsExporterEnabled | bool | `false` | Enable OpenTelemetry metrics exporter other than Sentry |
+| openTelemetry.exporter.tracesExporterEnabled | bool | `false` | Enable OpenTelemetry traces exporter other than Sentry |
+| openTelemetry.exporter.logsExporterEnabled | bool | `true` | Enable OpenTelemetry logs exporter other than Sentry |
 
 ## OAuth Client Configuration
 List of OAuth client configurations supported by RADAR-base. Each client should be enabled separately, if relevant and used in the installation.

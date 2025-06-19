@@ -264,3 +264,39 @@ application_loop_interval_ms: 300000
 # -- How often to invalidate the cache and poll for new user registrations.
 # Only use to speed up processing times during e2e testing.
 user_cache_refresh_interval_ms: 3600000
+
+# Sentry monitoring configuration
+sentry:
+  # -- DSN (Data Source Name) of the sentry server
+  dsn:
+  # -- Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR)
+  level: ERROR
+  service:
+    # -- Name of the service to be displayed in the sentry dashboard
+    name:
+    # -- App version to be displayed in the sentry dashboard
+    release:
+    # -- Environment of the sentry service
+    environment: production
+  stacktrace:
+    # -- Set to true, if stack trace should be enabled
+    enabled: true
+    # -- Comma-separated list of package prefixes to be included in the stacktrace
+    packages: "org.radarbase.gateway,org.apache.avro"
+
+# OpenTelemetry monitoring configuration
+openTelemetry:
+  agent:
+    # -- Enable OpenTelemetry agent (currently only Sentry agent is supported)
+    enabled: false
+    # -- OpenTelemetry Sentry agent jar file name, depends on version of 'io.sentry:sentry-opentelemetry-agent'
+    agentJar: sentry-opentelemetry-agent-8.1.0.jar
+  exporter:
+    # -- Sample rate for traces (0.0 to 1.0)
+    tracesSampleRate: 1.0
+    # -- Enable OpenTelemetry metrics exporter other than Sentry
+    metricsExporterEnabled: false
+    # -- Enable OpenTelemetry traces exporter other than Sentry
+    tracesExporterEnabled: false
+    # -- Enable OpenTelemetry logs exporter other than Sentry
+    logsExporterEnabled: true

@@ -3,7 +3,7 @@
 # radar-rest-sources-authorizer
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-authorizer)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-authorizer)
 
-![Version: 2.3.0](https://img.shields.io/badge/Version-2.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.8](https://img.shields.io/badge/AppVersion-4.4.8-informational?style=flat-square)
+![Version: 2.4.0](https://img.shields.io/badge/Version-2.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.8](https://img.shields.io/badge/AppVersion-4.4.8-informational?style=flat-square)
 
 A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer which is a portal to authorize the Fitbit connector to read data from Fitbit accounts.
 
@@ -88,3 +88,16 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 | serverName | string | `"localhost"` | Domain name of the server |
 | authUrl | string | `nil` | Authorization URL of the IDP (overrides the default value derived from the serverName) |
 | authPath | string | `"/auth"` | Authorization path appended to the authUrl of the IDP (/auth for Hydra, /authorize for MP) |
+| sentry.dsn | string | `nil` | DSN (Data Source Name) of the sentry server |
+| sentry.level | string | `"ERROR"` | Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR) |
+| sentry.service.name | string | `nil` | Name of the service to be displayed in the sentry dashboard |
+| sentry.service.release | string | `nil` | App version to be displayed in the sentry dashboard |
+| sentry.service.environment | string | `"production"` | Environment of the sentry service |
+| sentry.stacktrace.enabled | bool | `true` | Set to true, if stack trace should be enabled |
+| sentry.stacktrace.packages | string | `"org.radarbase.gateway,org.apache.avro"` | Comma-separated list of package prefixes to be included in the stacktrace |
+| openTelemetry.agent.enabled | bool | `false` | Enable OpenTelemetry agent (currently only Sentry agent is supported) |
+| openTelemetry.agent.agentJar | string | `"sentry-opentelemetry-agent-8.1.0.jar"` | OpenTelemetry Sentry agent jar file name, depends on version of 'io.sentry:sentry-opentelemetry-agent' |
+| openTelemetry.exporter.tracesSampleRate | float | `1` | Sample rate for traces (0.0 to 1.0) |
+| openTelemetry.exporter.metricsExporterEnabled | bool | `false` | Enable OpenTelemetry metrics exporter other than Sentry |
+| openTelemetry.exporter.tracesExporterEnabled | bool | `false` | Enable OpenTelemetry traces exporter other than Sentry |
+| openTelemetry.exporter.logsExporterEnabled | bool | `true` | Enable OpenTelemetry logs exporter other than Sentry |
