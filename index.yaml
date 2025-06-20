@@ -19678,6 +19678,54 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/s3-proxy-0.1.1/s3-proxy-0.1.1.tgz
     version: 0.1.1
+  strimzi-kafka-operator:
+  - apiVersion: v2
+    appVersion: 0.46.0
+    created: "2025-06-20T13:09:00.822808698Z"
+    description: 'Strimzi: Apache Kafka running on Kubernetes'
+    digest: 5bbffe8a60bbd6cf9d8377bd38c5abb0b8adf4369b117dbdb58c3a6b19aff3c8
+    home: https://strimzi.io/
+    icon: https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/documentation/logo/strimzi_logo.png
+    keywords:
+    - kafka
+    - queue
+    - stream
+    - event
+    - messaging
+    - datastore
+    - topic
+    maintainers:
+    - name: Frawless
+    - name: ppatierno
+    - name: samuel-hawker
+    - name: scholzj
+    - name: tombentley
+    - name: sknot-rh
+    - name: PaulRMellor
+    - name: im-konge
+    - name: see-quick
+    name: strimzi-kafka-operator
+    sources:
+    - https://github.com/strimzi/strimzi-kafka-operator
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/strimzi-kafka-operator-0.46.0/strimzi-kafka-operator-0.46.0.tgz
+    version: 0.46.0
+  strimzi-registry-operator:
+  - apiVersion: v2
+    appVersion: 0.6.0
+    created: "2025-06-20T13:09:00.947541401Z"
+    description: Operator to create and manage a Confluent Schema Registry in a Strimzi-managed
+      Kafka cluster.
+    digest: cd05fa1b2f76c129a503c816a48857acb590bfa9790db0ee0858bfc3afd71a19
+    home: https://github.com/lsst-sqre/strimzi-registry-operator
+    maintainers:
+    - name: swnelson
+    - name: jonathansick
+    name: strimzi-registry-operator
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/strimzi-registry-operator-2.1.0/strimzi-registry-operator-2.1.0.tgz
+    version: 2.1.0
   trivy:
   - apiVersion: v2
     appVersion: 0.30.4
@@ -20163,4 +20211,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-20T13:08:56.548704578Z"
+generated: "2025-06-20T13:09:00.94852926Z"
