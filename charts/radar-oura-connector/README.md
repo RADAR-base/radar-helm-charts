@@ -3,7 +3,7 @@
 # radar-oura-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-oura-connector)](https://artifacthub.io/packages/helm/radar-base/radar-oura-connector)
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.2](https://img.shields.io/badge/AppVersion-0.6.2-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.2](https://img.shields.io/badge/AppVersion-0.6.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base oura connector. This application collects data from participants via the Oura Web API.
 
@@ -59,8 +59,10 @@ A Helm chart for RADAR-base oura connector. This application collects data from 
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
-| extraEnvVars | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"PLAINTEXT"}]` | Extra environment variables |
-| extraEnvVars[0] | object | `{"name":"CONNECT_SECURITY_PROTOCOL","value":"PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
+| secret.jaas | object | `{"key":"sasl.jaas.config","name":"shared-service-user"}` | Secret for the Kafka SASL JAAS configuration |
+| extraEnvVars | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"}]` | Extra environment variables |
+| extraEnvVars[0] | object | `{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
+| extraEnvVars[1] | object | `{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"}` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
@@ -83,10 +85,10 @@ A Helm chart for RADAR-base oura connector. This application collects data from 
 | startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
-| zookeeper | string | `"cp-zookeeper-headless:2181"` | URI of Zookeeper instances of the cluster |
-| kafka | string | `"PLAINTEXT://cp-kafka-headless:9092"` | URI of Kafka brokers of the cluster |
+| zookeeper | string | `nil` | URI of Zookeeper instances of the cluster |
+| kafka | string | `"SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
 | kafka_num_brokers | string | `"3"` | Number of Kafka brokers. This is used to validate the cluster availability at connector init. |
-| schema_registry | string | `"http://cp-schema-registry:8081"` | URL of the Kafka schema registry |
+| schema_registry | string | `"http://radar-kafka-schema-registry:8081"` | URL of the Kafka schema registry |
 | kafka_wait.enabled | bool | `true` | Whether to wait before the specified number of brokers are available. |
 | kafka_wait.properties | string | `""` | Kafka connection properties file contents during wait. If empty, all environment variables starting with `CONNECT_` will be used. |
 | radar_rest_sources_backend_url | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | Base URL of the rest-sources-authorizer-backend service |

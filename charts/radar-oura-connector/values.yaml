@@ -94,11 +94,20 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+secret:
+  # -- Secret for the Kafka SASL JAAS configuration
+  jaas:
+    name: shared-service-user
+    key: sasl.jaas.config
+
 # -- Extra environment variables
 extraEnvVars:
   # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
   - name: CONNECT_SECURITY_PROTOCOL
-    value: PLAINTEXT
+    value: SASL_PLAINTEXT
+  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  - name: CONNECT_SASL_MECHANISM
+    value: SCRAM-SHA-512
 
 # -- Custom livenessProbe that overrides the default one
 customLivenessProbe: {}
@@ -170,19 +179,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-zookeeper'
+          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-kafka'
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: 'cp-schema-registry'
+          app.kubernetes.io/name: 'radar-kafka-schema-registry'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -209,13 +212,13 @@ networkpolicy:
         protocol: TCP
 
 # -- URI of Zookeeper instances of the cluster
-zookeeper: cp-zookeeper-headless:2181
+zookeeper:
 # -- URI of Kafka brokers of the cluster
-kafka: PLAINTEXT://cp-kafka-headless:9092
+kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
 # -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
 kafka_num_brokers: "3"
 # -- URL of the Kafka schema registry
-schema_registry: http://cp-schema-registry:8081
+schema_registry: http://radar-kafka-schema-registry:8081
 
 kafka_wait:
   # -- Whether to wait before the specified number of brokers are available.

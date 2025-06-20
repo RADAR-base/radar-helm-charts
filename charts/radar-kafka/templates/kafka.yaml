@@ -1,0 +1,70 @@
+{{/*use 3 as max replication factor; use 1 when in dev mode*/}}
+{{- $topicReplicationFactor := min 3 (ternary 1 .Values.kafka.replicas .Values.dev_deployment) }}
+{{/*when in dev mode only 1 in-sync replica is needed*/}}
+{{- $insyncReplicas := ternary 1 .Values.kafka.insyncReplicas .Values.dev_deployment -}}
+{{- $topicPartitions := ternary 1 .Values.kafka.partitions .Values.dev_deployment }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  annotations:
+    strimzi.io/node-pools: enabled
+    strimzi.io/kraft: enabled
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+spec:
+  kafka:
+    version: {{ .Chart.AppVersion }}
+    metadataVersion: {{ .Values.kafka.metadataVersion }}
+    authorization:
+      type: simple
+    config:
+      offsets.topic.replication.factor: {{ $topicReplicationFactor }}
+      transaction.state.log.replication.factor: {{ $topicReplicationFactor }}
+      transaction.state.log.min.isr: {{ $insyncReplicas }}
+      default.replication.factor: {{ $topicReplicationFactor }}
+      min.insync.replicas: {{ $insyncReplicas }}
+      num.partitions: {{ $topicPartitions }}
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+        authentication:
+          type: tls
+      - name: scram
+        port: 9094
+        type: internal
+        tls: false
+        authentication:
+          type: scram-sha-512
+  {{- if or .Values.kafka.securityContext .Values.kafka.podSecurityContext }}
+    template:
+      {{- with .Values.kafka.podSecurityContext }}
+      pod:
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+      {{- end }}
+      {{- with .Values.kafka.securityContext }}
+        container:
+            securityContext:
+            {{- toYaml . | nindent 10 }}
+        {{- end }}
+  {{- end }}
+  {{- if .Values.metrics.enabled }}
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: {{ template "common.names.fullname" . }}-kafka-metrics
+          key: kafka-metrics-config.yml
+  kafkaExporter:
+    {{- toYaml .Values.metrics.kafkaExporter | nindent 4 }}
+  {{- end }}
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}

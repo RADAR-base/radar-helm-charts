@@ -3,7 +3,7 @@
 # catalog-server
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/catalog-server)](https://artifacthub.io/packages/helm/radar-base/catalog-server)
 
-![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.11](https://img.shields.io/badge/AppVersion-0.8.11-informational?style=flat-square)
+![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.11](https://img.shields.io/badge/AppVersion-0.8.11-informational?style=flat-square)
 
 A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 
@@ -36,6 +36,7 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| dev_deployment | bool | `false` | Deploy with settings for development (e.g., num_brokers = 1) |
 | replicaCount | int | `1` | Number of catalog-server replicas to deploy |
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"radarbase/radar-schemas-tools"` | Image repository |
@@ -80,12 +81,14 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | kafka_num_brokers | int | `3` | Number of deployed Kafka brokers |
-| kafka_num_replication | int | `3` | Number of Kafka replicates (may not be lower than kafka_num_brokers) |
-| kafka_num_partitions | int | `3` | Number of Kafka data partitions |
-| kafka | string | `"cp-kafka-headless:9092"` | URI of Kafka brokers |
-| schema_registry | string | `"http://cp-schema-registry:8081"` | URL of the confluent schema registry |
-| kafkaProperties | object | `{"security_protocol":"PLAINTEXT"}` | Additional kafka properties such as security config. The template replaces `_` with `.` in keys so property keys can be specified using `_` instead of `.`. For example `security_protocol` is same as `security.protocol` kafka config. |
-| kafkaProperties.security_protocol | string | `"PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
+| kafka_num_replication | int | `3` | Number of Kafka Topic replicates. Should be min 2, max 4, and is normally 3, but is limited by the number of brokers. ref: https://learn.conduktor.io/kafka/kafka-topics-choosing-the-replication-factor-and-partitions-count/ |
+| kafka_num_partitions | int | `3` | Number of Kafka Topic data partitions, Rule of thumb 3 times the number of brokers. Headroom is used for future upscale of brokers. ref: https://learn.conduktor.io/kafka/kafka-topics-choosing-the-replication-factor-and-partitions-count/ |
+| kafka | string | `"radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers On strimzi operator, this points to the listener that has no tls, and scram-sha-512 authentication. |
+| schema_registry | string | `"http://radar-kafka-schema-registry:8081"` | URL of the confluent schema registry |
+| kafkaProperties | object | `{"sasl_mechanism":"SCRAM-SHA-512","security_protocol":"SASL_PLAINTEXT"}` | Additional kafka properties such as security config. The template replaces `_` with `.` in keys so property keys can be specified using `_` instead of `.`. For example `security_protocol` is same as `security.protocol` kafka config. |
+| kafkaProperties.security_protocol | string | `"SASL_PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
+| kafkaProperties.sasl_mechanism | string | `"SCRAM-SHA-512"` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. |
+| secret.jaas | object | `{"key":"sasl.jaas.config","name":"shared-service-user"}` | Secret for the Kafka SASL JAAS configuration |
 | sources.include | list | `[]` | Only include given specification directory files. You can use File glob syntax as described in <https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-> If include is specified, exclude will be ignored. The glob pattern should start from the specifications directory. |
 | sources.exclude | list | `[]` | Exclude all given specification directory files. You can use File glob syntax as described in <https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-> If include is specified, exclude will be ignored. The glob pattern should start from the specifications directory. |
 | sources.active | list | `[]` | active source specification, as done in RADAR-schemas/specifications/active. The array elements should be the full YAML specification. |

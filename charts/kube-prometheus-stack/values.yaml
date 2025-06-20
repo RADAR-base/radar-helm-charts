@@ -1,9 +1,10 @@
-server_name: localhost
-
 nginx_auth: |
   test:$2y$05$/okvi.SPEUOHzFuW/lao0ejB.2XBQMDw2pNVxag8R.nKVr5Y/7pGm
 
 kube-prometheus-stack:
+
+  # -- domain name of the server
+  server_name: localhost
 
   ## Create default rules for monitoring the cluster
   ##
@@ -80,7 +81,7 @@ kube-prometheus-stack:
       ## Hosts must be provided if Ingress is enabled.
       ##
       hosts:
-        - localhost
+        - alertmanager.{{ .Values.server_name }}
       ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
       ##
       paths:
@@ -89,7 +90,7 @@ kube-prometheus-stack:
       tls:
       - secretName: radar-base-tls-alertmanager
         hosts:
-        - localhost
+        - alertmanager.{{ .Values.server_name }}
     alertmanagerSpec:
 
       ## Size is the expected size of the alertmanager cluster. The controller will eventually make the size of the
@@ -130,7 +131,7 @@ kube-prometheus-stack:
       # hosts:
       #   - grafana.domain.com
       hosts:
-        - localhost
+        - grafana.{{ .Values.server_name }}
 
       ## TLS configuration for grafana Ingress
       ## Secret must be manually created in the namespace
@@ -138,7 +139,7 @@ kube-prometheus-stack:
       tls:
       - secretName: radar-base-tls-grafana
         hosts:
-        - localhost
+        - grafana.{{ .Values.server_name }}
 
   ## Manages Prometheus and Alertmanager components
   ##
@@ -186,7 +187,7 @@ kube-prometheus-stack:
       # hosts:
       #   - prometheus.domain.com
       hosts:
-        - localhost
+        - prometheus.{{ .Values.server_name }}
       ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
       ##
       paths:
@@ -202,7 +203,7 @@ kube-prometheus-stack:
       tls:
       - secretName: radar-base-tls-prometheus
         hosts:
-        - localhost
+        - prometheus.{{ .Values.server_name }}
 
     ## Settings affecting prometheusSpec
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#prometheusspec
@@ -213,11 +214,24 @@ kube-prometheus-stack:
       ## prometheus resource to be created with selectors based on values in the helm deployment,
       ## which will also match the servicemonitors created
       ##
-      serviceMonitorSelectorNilUsesHelmValues: "false"
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelectorNilUsesHelmValues: false
+      probeSelectorNilUsesHelmValues: false
+      ruleSelectorNilUsesHelmValues: false
 
       ## Namespaces to be selected for ServiceMonitor discovery.
       ##
       serviceMonitorNamespaceSelector: {}
+
+      ## Namespaces to be selected for PodMonitor discovery.
+      ##
+      podMonitorNamespaceSelector: {}
+
+      ## Namespaces to be selected for PrometheusRules discovery.
+      ## If nil, select own namespace. Namespaces to be selected for ServiceMonitor discovery.
+      ## See https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#namespaceselector for usage
+      ##
+      ruleNamespaceSelector: {}
 
       ## Number of replicas of each shard to deploy for a Prometheus deployment.
       ## Number of replicas multiplied by shards is the total number of Pods created.
@@ -240,9 +254,3 @@ kube-prometheus-stack:
             resources:
               requests:
                 storage: 2Gi
-
-      ## Namespaces to be selected for PrometheusRules discovery.
-      ## If nil, select own namespace. Namespaces to be selected for ServiceMonitor discovery.
-      ## See https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#namespaceselector for usage
-      ##
-      ruleNamespaceSelector: {}

@@ -32,3 +32,7 @@ data:
     elif [ $(echo "$STATUS" | grep RUNNING | wc -l) -le 1 ]; then
       exit 1
     fi
+  {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
+  kafka-wait.properties: |
+    {{ .Values.kafka_wait.properties | indent 4 }}
+  {{- end }}

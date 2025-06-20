@@ -2,6 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# -- Deploy with settings for development (e.g., num_brokers = 1)
+dev_deployment: false
+
 # -- Number of catalog-server replicas to deploy
 replicaCount: 1
 
@@ -193,29 +196,40 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: cp-kafka
+          app.kubernetes.io/name: radar-kafka-kafka-bootstrap
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: cp-schema-registry
+          app.kubernetes.io/name: radar-kafka-schema-registry
 
 # -- Number of deployed Kafka brokers
 kafka_num_brokers: 3
-# -- Number of Kafka replicates (may not be lower than kafka_num_brokers)
+# -- Number of Kafka Topic replicates. Should be min 2, max 4, and is normally 3, but is limited by the number of brokers.
+# ref: https://learn.conduktor.io/kafka/kafka-topics-choosing-the-replication-factor-and-partitions-count/
 kafka_num_replication: 3
-# -- Number of Kafka data partitions
+# -- Number of Kafka Topic data partitions, Rule of thumb 3 times the number of brokers. Headroom is used for future upscale of brokers.
+# ref: https://learn.conduktor.io/kafka/kafka-topics-choosing-the-replication-factor-and-partitions-count/
 kafka_num_partitions: 3
 # -- URI of Kafka brokers
-kafka: cp-kafka-headless:9092
+# On strimzi operator, this points to the listener that has no tls, and scram-sha-512 authentication.
+kafka: radar-kafka-kafka-bootstrap:9094
 # -- URL of the confluent schema registry
-schema_registry: http://cp-schema-registry:8081
+schema_registry: http://radar-kafka-schema-registry:8081
 
 # -- Additional kafka properties such as security config. The template replaces `_` with `.` in keys so property keys can be specified using `_` instead of `.`. For example `security_protocol` is same as `security.protocol` kafka config.
 kafkaProperties:
 # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
-  security_protocol: PLAINTEXT
+  security_protocol: SASL_PLAINTEXT
+  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  sasl_mechanism: SCRAM-SHA-512
+
+secret:
+  # -- Secret for the Kafka SASL JAAS configuration
+  jaas:
+    name: shared-service-user
+    key: sasl.jaas.config
 
 sources:
   # -- Only include given specification directory files. You can use File glob syntax as described in <https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html#getPathMatcher-java.lang.String-> If include is specified, exclude will be ignored. The glob pattern should start from the specifications directory.

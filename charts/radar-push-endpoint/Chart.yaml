@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "0.3.2"
+appVersion: "0.4.0"
 description: A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming data from Push or Subscription based WEB APIs. It performs authentication, authorization and content validation. For more details of the configurations, see https://github.com/RADAR-base/RADAR-PushEndpoint.
 name: radar-push-endpoint
-version: 0.5.0
+version: 0.6.0
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-push-endpoint
