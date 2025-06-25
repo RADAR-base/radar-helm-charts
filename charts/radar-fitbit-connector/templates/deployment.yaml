@@ -112,6 +112,11 @@ spec:
               secretKeyRef:
                 name: {{ .Values.secret.jaas.name }}
                 key: {{ .Values.secret.jaas.key }}
+          - name: CONNECT_PRODUCER_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.jaas.name }}
+                key: {{ .Values.secret.jaas.key }}
           {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
