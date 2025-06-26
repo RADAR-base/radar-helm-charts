@@ -4,4 +4,4 @@ metadata:
   name: {{ template "common.names.fullname" . }}-schema-registry
   labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
 spec:
-  {{- toYaml (index .Values "schema-registry" "spec") | nindent 2 }}
+  {{- toYaml (index .Values "schema-registry" "registry" "spec") | nindent 2 }}

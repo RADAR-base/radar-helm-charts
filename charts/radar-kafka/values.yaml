@@ -100,5 +100,8 @@ schema-registry:
     spec:
       strimziVersion: v1beta2
       listener: tls
+      # Different from other services, we use TLS connection to the kafka brokers for the schema registry.
+      # This is because I could not find information on how to pass JAAS secrets to schema registry to work with SASL_PLAINTEXT.
       securityProtocol: SSL
+      # 'none' compatibility level for schema registry was taken from legacy schema registry chart.
       compatibilityLevel: none
