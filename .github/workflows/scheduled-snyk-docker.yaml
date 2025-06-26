@@ -49,8 +49,6 @@ jobs:
             charts/radar-grafana
             charts/radar-hydra
             charts/radar-kratos
-            charts/radar-postgresql
-            charts/radar-timescaledb
             charts/radar-s3-proxy
             charts/velero-s3-deployment
             external/cloudnativepg-operator
