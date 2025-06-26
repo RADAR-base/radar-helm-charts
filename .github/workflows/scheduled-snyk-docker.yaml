@@ -34,18 +34,19 @@ jobs:
           # - busybox: init container
           # - alpine: init container
           # - linuxserver/yq: init container
-          EXCLUDE_IMAGE_PATTERNS:  bats busybox docker.io/alpine linuxserver/yq
+          EXCLUDE_IMAGE_PATTERNS:  bats
+            busybox
+            docker.io/alpine
+            linuxserver/yq
           # In this action we only scan 'external' dependencies of the RADAR-base deployment.
           # RADAR-base services are scanned in the respective GitHub repositories.
-          # Note on missing charts:
+          # Notes on charts:
           # - elasticsearch:
           #   FIXME: the elasticsearch image gives sarif related errors, so it is excluded for now.
           #        we need a better way to handle this.
           INCLUDE_CHARTS: charts/cc-schema-registry-proxy
             charts/cert-manager-lets-encrypt
             charts/kube-prometheus-stack
-            charts/radar-cloudnative-postgresql
-            charts/radar-cloudnative-timescaledb
             charts/radar-grafana
             charts/radar-hydra
             charts/radar-kratos
@@ -59,6 +60,18 @@ jobs:
             external/mongodb
             external/nifi
             external/redis
+            external/strimzi-kafka-operator
+            external/strimzi-registry-operator
+          # Any image that matches any of these patterns will be included for scanning.
+          # Reasons:
+          # - ghcr.io/cloudnative-pg/postgresql:16: deployed via operator so image tag not specifies in the chart in this repo.
+          # - timescale/timescaledb-ha:pg16-ts2.15: deployed via operator so image tag not specified in the chart in this repo.
+          # - quay.io/strimzi/kafka:0.46.0-kafka-3.9.0: deployed via operator so image tag not specified in the chart in this repo.
+          # - confluentinc/cp-schema-registry:7.2.1: deployed via operator so image tag not specified in the chart in this repo.
+          INCLUDE_IMAGES: ghcr.io/cloudnative-pg/postgresql:16
+            timescale/timescaledb-ha:pg16-ts2.15
+            quay.io/strimzi/kafka:0.46.0-kafka-3.9.0
+            confluentinc/cp-schema-registry:7.2.1
         run: .github/bin/external_docker_image_matrix
 
       - name: Commit and push if docker-images-matrix.json changed
