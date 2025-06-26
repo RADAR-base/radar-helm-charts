@@ -7,16 +7,17 @@ replicaCount: 1
 
 image:
   # -- Image registry
-  registry: docker.io
+#  registry: docker.io
+  registry: ""
   # -- Image repository
   repository: radarbase/kafka-connect-rest-fitbit-source
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag:
+  tag: "latest9"
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # -- Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
   # e.g:
@@ -63,7 +64,9 @@ resources:
     cpu: 100m
     memory: 1Gi
 
-heapOptions: "-Xms256m -Xmx768m"
+jvmOptions:
+  xmx: "768m"
+  xms: "256m"
 
 persistence:
   # -- Enable persistence using PVC

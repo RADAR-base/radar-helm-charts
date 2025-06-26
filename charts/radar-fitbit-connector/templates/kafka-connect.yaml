@@ -14,12 +14,19 @@ spec:
   replicas: {{ .Values.replicaCount }}
   bootstrapServers: {{ .Values.kafka }}
   image: {{ template "radar-fitbit-connector.image" . }}
+  {{- if .Values.secret.jaas.name }}
   authentication:
     type: scram-sha-512
     username: shared-service-user
     passwordSecret:
       secretName: {{ .Values.secret.jaas.name }}
-      password: password
+      password: {{ .Values.secret.jaas.key }} # TODO double-check - worked with password: "password"
+  {{- end }}
+  autoRestart:
+    enabled: true # automatic restarts of failed connectors or their tasks
+  jvmOptions:
+    "-Xmx": {{ .Values.jvmOptions.xmx | quote }}
+    "-Xms": {{ .Values.jvmOptions.xms | quote }}
   config:
     group.id: "default"
     offset.storage.topic: "default.offsets"
@@ -56,10 +63,17 @@ spec:
         labels:
           app.kubernetes.io/name: {{ include "radar-fitbit-connector.name" . }}
           app.kubernetes.io/instance: {{ .Release.Name }}
-      {{- include "radar-fitbit-connector.imagePullSecrets" . | nindent 6 }}
+      imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+      {{- if .Values.image.pullSecrets }}  # TODO double-check if this should be here or in the pod template
+      imagePullSecrets:
+        {{- toYaml .Values.image.pullSecrets | nindent 8 }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       affinity:
+        {{- if .Values.affinity }}
+        {{- toYaml .Values.affinity | nindent 8 }}
+        {{- end }}
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 1
@@ -75,88 +89,62 @@ spec:
                       values:
                         - {{ .Release.Name }}
                 topologyKey: "kubernetes.io/hostname"
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
         - name: config-users
           configMap:
             name: {{ include "radar-fitbit-connector.fullname" . }}-users
-        - name: logs
-        {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "radar-fitbit-connector.fullname" .) }}
-        {{- else }}
-          emptyDir: { }
-        {{ end }}
+      containers:
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
     connectContainer:
-      env:
-        {{- if .Values.secret.jaas.name }}
-        - name: CONNECT_SASL_JAAS_CONFIG
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.secret.jaas.name }}
-              key: {{ .Values.secret.jaas.key }}
-        {{- end }}
-        - name: CONNECT_APPLICATION_LOOP_INTERVAL_MS
-          value: {{ .Values.application_loop_interval_ms | quote }}
-        - name: CONNECT_USER_CACHE_REFRESH_INTERVAL_MS
-          value: {{ .Values.user_cache_refresh_interval_ms | quote }}
-        - name: CONNECT_REST_SOURCE_BASE_URL
-          value: {{ .Values.fitbit_api_url }}
-        - name: CONNECT_REST_SOURCE_POLL_INTERVAL_MS
-          value: {{ .Values.rest_source_poll_interval_ms | quote }}
-        - name: CONNECT_REST_SOURCE_REQUEST_GENERATOR_CLASS
-          value: org.radarbase.connect.rest.fitbit.request.FitbitRequestGenerator
-        - name: CONNECT_REST_ADVERTISED_HOST_NAME
-          value: {{ include "radar-fitbit-connector.fullname" . }}
-        {{- if .Values.zookeeper }}
-        - name: CONNECT_ZOOKEEPER_CONNECT
-          value: "{{ .Values.zookeeper }}"
-        {{- end }}
-        - name: KAFKA_HEAP_OPTS
-          value: {{ .Values.heapOptions }}
-        - name: KAFKA_BROKERS
-          value: "{{ .Values.kafka_num_brokers }}"
-        - name: CONNECT_LOG4J_LOGGERS
-          value: "org.reflections=ERROR"
-        - name: WAIT_FOR_KAFKA
-          value: {{ if .Values.kafka_wait.enabled }}"1"{{ else }}"0"{{ end }}
-        {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
-        - name: COMMAND_CONFIG_FILE_PATH
-          value: /etc/kafka-connect/source-fitbit/kafka-wait.properties
-        {{- end }}
-        {{- with .Values.extraEnvVars }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
+{{/*      env:*/}} # TODO double-check all these variables are now part of connector config
+{{/*        {{- if .Values.secret.jaas.name }}*/}}
+{{/*        - name: CONNECT_SASL_JAAS_CONFIG*/}} # TODO add producer
+{{/*          valueFrom:*/}}
+{{/*            secretKeyRef:*/}}
+{{/*              name: {{ .Values.secret.jaas.name }}*/}}
+{{/*              key: {{ .Values.secret.jaas.key }}*/}}
+{{/*        {{- end }}*/}}
+{{/*        - name: CONNECT_APPLICATION_LOOP_INTERVAL_MS*/}}
+{{/*          value: {{ .Values.application_loop_interval_ms | quote }}*/}}
+{{/*        - name: CONNECT_USER_CACHE_REFRESH_INTERVAL_MS*/}}
+{{/*          value: {{ .Values.user_cache_refresh_interval_ms | quote }}*/}}
+{{/*        - name: CONNECT_REST_SOURCE_BASE_URL*/}}
+{{/*          value: {{ .Values.fitbit_api_url }}*/}}
+{{/*        - name: CONNECT_REST_SOURCE_POLL_INTERVAL_MS*/}}
+{{/*          value: {{ .Values.rest_source_poll_interval_ms | quote }}*/}}
+{{/*        - name: CONNECT_REST_SOURCE_REQUEST_GENERATOR_CLASS*/}}
+{{/*          value: org.radarbase.connect.rest.fitbit.request.FitbitRequestGenerator*/}}
+{{/*        - name: CONNECT_REST_ADVERTISED_HOST_NAME*/}}
+{{/*          value: {{ include "radar-fitbit-connector.fullname" . }}*/}}
+{{/*        - name: KAFKA_BROKERS*/}}
+{{/*          value: "{{ .Values.kafka_num_brokers }}"*/}}
+{{/*        - name: CONNECT_LOG4J_LOGGERS*/}}
+{{/*          value: "org.reflections=ERROR"*/}}
+{{/*        - name: WAIT_FOR_KAFKA*/}}
+{{/*          value: {{ if .Values.kafka_wait.enabled }}"1"{{ else }}"0"{{ end }}*/}}
+{{/*        {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}*/}}
+{{/*        - name: COMMAND_CONFIG_FILE_PATH*/}}
+{{/*          value: /etc/kafka-connect/source-fitbit/kafka-wait.properties*/}}
+{{/*        {{- end }}*/}}
+{{/*        {{- with .Values.extraEnvVars }}*/}}
+{{/*          {{- toYaml . | nindent 8 }}*/}}
+{{/*        {{- end }}*/}}
       volumeMounts:
         - name: config-users
           mountPath: /mnt/users
-{{/* TODO is logs mount needed or was it there only to store the offset file (CONNECT_OFFSET_STORAGE_FILE_FILENAME: "/var/lib/kafka-connect-fitbit-source/logs/connect.offsets) */}}
-        - name: logs
-          mountPath: /mnt/logs
-{{/*    {{- if .Values.persistence.fsUserOverride }}*/}}
-{{/* TODO is this needed? Init container cannot be specified in the previous format (no matching specs) */}}
-{{/*    initContainer:*/}}
-{{/*      - name: fix-permissions*/}}
-{{/*        command:*/}}
-{{/*          - chown*/}}
-{{/*          - -R*/}}
-{{/*          - {{ .Values.persistence.fsUserOverride }}*/}}
-{{/*          - /var/lib/kafka-connect-fitbit-source/logs*/}}
-{{/*        image: alpine:latest*/}}
-{{/*        imagePullPolicy: IfNotPresent*/}}
-{{/*        volumeMounts:*/}}
-{{/*          - mountPath: /var/lib/kafka-connect-fitbit-source/logs*/}}
-{{/*            name: logs*/}}
-{{/*    {{- end }}*/}}
   {{- if .Values.customLivenessProbe }}
   livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
   {{- else if .Values.livenessProbe.enabled }}
   livenessProbe:
-{{/*    TODO exec not supported (not part of Probe schema) */}}
-{{/*    exec:*/}}
-{{/*      command:*/}}
-{{/*        - /bin/sh*/}}
-{{/*        - -c*/}}
-{{/*        - curl -sf localhost:8083/connectors/radar-fitbit-source/status | grep -o '\"state\":\"[^\"]*\"' | tr '\\n' ',' | grep -vq FAILED || exit 1*/}}
     initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
     periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
     timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -167,12 +155,6 @@ spec:
   readinessProbe: {{- .Values.customReadinessProbe | toYaml | nindent 12 }}
   {{- else if .Values.readinessProbe.enabled }}
   readinessProbe:
-{{/*    TODO exec not supported (not part of Probe schema) */}}
-{{/*    exec:*/}}
-{{/*      command:*/}}
-{{/*        - /bin/sh*/}}
-{{/*        - -c*/}}
-{{/*        - curl -sf localhost:8083/connectors/radar-fitbit-source/status | grep -o '\"state\":\"[^\"]*\"' | tr '\\n' ',' | grep -vq FAILED || exit 1*/}}
     initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
     periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
     timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
@@ -181,17 +163,3 @@ spec:
   {{- end }}
   resources:
     {{- toYaml .Values.resources | nindent 4 }}
-
-{{/* TODO no matching config in specs for options below */}}
-{{/*  {{- with .Values.nodeSelector }}*/}}
-{{/*  nodeSelector:*/}}
-{{/*    {{- toYaml . | nindent 4 }}*/}}
-{{/*  {{- end }}*/}}
-{{/*  {{- with .Values.affinity }}*/}}
-{{/*  affinity:*/}}
-{{/*    {{- toYaml . | nindent 4 }}*/}}
-{{/*  {{- end }}*/}}
-{{/*  {{- with .Values.tolerations }}*/}}
-{{/*  tolerations:*/}}
-{{/*    {{- toYaml . | nindent 4 }}*/}}
-{{/*  {{- end }}*/}}

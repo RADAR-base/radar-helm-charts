@@ -8,4 +8,3 @@ metadata:
 spec:
   class: org.radarbase.connect.rest.fitbit.FitbitSourceConnector
   tasksMax: 4
-
