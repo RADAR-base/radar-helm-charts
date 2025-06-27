@@ -9,7 +9,8 @@ metadata:
   labels:
     strimzi.io/cluster: {{ template "common.names.fullname" . }}
 spec:
-  partitions: {{ $context.partitions }}
+  # IMPORTANT: do not change, According to https://stackoverflow.com/a/74777178 schema topic should not have more than 1 partition
+  partitions: 1
   replicas: {{ $topicReplicationFactor }}
   config:
     {{- toYaml $context.config | nindent 4 }}
