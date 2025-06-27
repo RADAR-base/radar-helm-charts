@@ -106,7 +106,7 @@ secret:
     key: sasl.jaas.config
 
 # -- Extra environment variables
-extraEnvVars:
+extraEnvVars:  # TODO to be removed - replaced by spec.authentication and template builder in https://github.com/strimzi/strimzi-kafka-operator/blob/main/cluster-operator/src/main/java/io/strimzi/operator/cluster/model/KafkaConnectConfigurationBuilder.java
   # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
   - name: CONNECT_SECURITY_PROTOCOL
     value: SASL_PLAINTEXT

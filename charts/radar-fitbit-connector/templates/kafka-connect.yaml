@@ -20,15 +20,15 @@ spec:
     username: shared-service-user
     passwordSecret:
       secretName: {{ .Values.secret.jaas.name }}
-      password: {{ .Values.secret.jaas.key }} # TODO double-check - worked with password: "password"
+      password: password # The name of the key in the secret that contains the password
   {{- end }}
   autoRestart:
     enabled: true # automatic restarts of failed connectors or their tasks
   jvmOptions:
     "-Xmx": {{ .Values.jvmOptions.xmx | quote }}
     "-Xms": {{ .Values.jvmOptions.xms | quote }}
-  config:
-    group.id: "default"
+  config: # Properties that configure the Kafka Connect cluster itself
+    group.id: {{ include "radar-fitbit-connector.fullname" . }}
     offset.storage.topic: "default.offsets"
     config.storage.topic: "default.config"
     status.storage.topic: "default.status"
@@ -42,7 +42,10 @@ spec:
     value.converter.schema.registry.url: {{ .Values.schema_registry }}
     internal.key.converter: "org.apache.kafka.connect.json.JsonConverter"
     internal.value.converter: "org.apache.kafka.connect.json.JsonConverter"
-    # CONNECTOR properties
+    # CONNECTOR properties that configure the fitbit connector, used to create custom-config/kafka-connect.properties in the connector pod
+    # using Connect configuration template builder class:
+    # https://github.com/strimzi/strimzi-kafka-operator/blob/main/cluster-operator/src/main/java/io/strimzi/operator/cluster/model/KafkaConnectConfigurationBuilder.java
+    # TODO recommended to place these in KafkaConnector.spec.config instead of here, but they are not stored in any file then (in-memory?)
     name: radar-fitbit-source
     fitbit.api.client: {{ .Values.fitbit_api_client }}
     fitbit.api.secret: {{ .Values.fitbit_api_secret }}
@@ -54,6 +57,11 @@ spec:
     fitbit.user.repository.oauth2.token.url: {{ .Values.managementportal_url }}/oauth/token
     fitbit.user.poll.interval: {{ .Values.fitbit_user_poll_interval | int }}
     fitbit.user.dir: /mnt/users
+    application.loop.interval.ms: {{ .Values.application_loop_interval_ms | quote }}
+    user.cache.refresh.interval.ms: {{ .Values.user_cache_refresh_interval_ms | quote }}
+    rest.source.base.url: {{ .Values.fitbit_api_url }}
+    rest.source.poll.interval.ms: {{ .Values.rest_source_poll_interval_ms | quote }}
+    rest.source.request.generator.class: org.radarbase.connect.rest.fitbit.request.FitbitRequestGenerator
   template:
     pod:
       metadata:
@@ -64,7 +72,7 @@ spec:
           app.kubernetes.io/name: {{ include "radar-fitbit-connector.name" . }}
           app.kubernetes.io/instance: {{ .Release.Name }}
       imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
-      {{- if .Values.image.pullSecrets }}  # TODO double-check if this should be here or in the pod template
+      {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml .Values.image.pullSecrets | nindent 8 }}
       {{- end }}
@@ -105,39 +113,16 @@ spec:
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
     connectContainer:
-{{/*      env:*/}} # TODO double-check all these variables are now part of connector config
-{{/*        {{- if .Values.secret.jaas.name }}*/}}
-{{/*        - name: CONNECT_SASL_JAAS_CONFIG*/}} # TODO add producer
-{{/*          valueFrom:*/}}
-{{/*            secretKeyRef:*/}}
-{{/*              name: {{ .Values.secret.jaas.name }}*/}}
-{{/*              key: {{ .Values.secret.jaas.key }}*/}}
-{{/*        {{- end }}*/}}
-{{/*        - name: CONNECT_APPLICATION_LOOP_INTERVAL_MS*/}}
-{{/*          value: {{ .Values.application_loop_interval_ms | quote }}*/}}
-{{/*        - name: CONNECT_USER_CACHE_REFRESH_INTERVAL_MS*/}}
-{{/*          value: {{ .Values.user_cache_refresh_interval_ms | quote }}*/}}
-{{/*        - name: CONNECT_REST_SOURCE_BASE_URL*/}}
-{{/*          value: {{ .Values.fitbit_api_url }}*/}}
-{{/*        - name: CONNECT_REST_SOURCE_POLL_INTERVAL_MS*/}}
-{{/*          value: {{ .Values.rest_source_poll_interval_ms | quote }}*/}}
-{{/*        - name: CONNECT_REST_SOURCE_REQUEST_GENERATOR_CLASS*/}}
-{{/*          value: org.radarbase.connect.rest.fitbit.request.FitbitRequestGenerator*/}}
-{{/*        - name: CONNECT_REST_ADVERTISED_HOST_NAME*/}}
-{{/*          value: {{ include "radar-fitbit-connector.fullname" . }}*/}}
-{{/*        - name: KAFKA_BROKERS*/}}
-{{/*          value: "{{ .Values.kafka_num_brokers }}"*/}}
-{{/*        - name: CONNECT_LOG4J_LOGGERS*/}}
-{{/*          value: "org.reflections=ERROR"*/}}
-{{/*        - name: WAIT_FOR_KAFKA*/}}
-{{/*          value: {{ if .Values.kafka_wait.enabled }}"1"{{ else }}"0"{{ end }}*/}}
-{{/*        {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}*/}}
-{{/*        - name: COMMAND_CONFIG_FILE_PATH*/}}
-{{/*          value: /etc/kafka-connect/source-fitbit/kafka-wait.properties*/}}
-{{/*        {{- end }}*/}}
-{{/*        {{- with .Values.extraEnvVars }}*/}}
-{{/*          {{- toYaml . | nindent 8 }}*/}}
-{{/*        {{- end }}*/}}
+      env:
+        - name: CONNECT_REST_ADVERTISED_HOST_NAME   # TODO: check if is replaced by ADVERTISED_HOSTNAME in kafka_connect_run.sh
+          value: {{ include "radar-fitbit-connector.fullname" . }}
+        - name: KAFKA_BROKERS
+          value: "{{ .Values.kafka_num_brokers }}"
+        - name: CONNECT_LOG4J_LOGGERS # Property used in log4j.properties.template file
+          value: "org.reflections=ERROR"
+        {{- with .Values.extraEnvVars }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       volumeMounts:
         - name: config-users
           mountPath: /mnt/users
