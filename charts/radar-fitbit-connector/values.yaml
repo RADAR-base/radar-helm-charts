@@ -7,16 +7,17 @@ replicaCount: 1
 
 image:
   # -- Image registry
-  registry: docker.io
+#  registry: docker.io
+  registry: ""
   # -- Image repository
   repository: radarbase/kafka-connect-rest-fitbit-source
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag:
+  tag: "latest9"
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # -- Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
   # e.g:
@@ -63,11 +64,13 @@ resources:
     cpu: 100m
     memory: 1Gi
 
-heapOptions: "-Xms256m -Xmx768m"
+jvmOptions:
+  xmx: "768m"
+  xms: "256m"
 
 persistence:
   # -- Enable persistence using PVC
-  enabled: true
+  enabled: false
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
@@ -103,7 +106,7 @@ secret:
     key: sasl.jaas.config
 
 # -- Extra environment variables
-extraEnvVars:
+extraEnvVars:  # TODO to be removed - replaced by spec.authentication and template builder in https://github.com/strimzi/strimzi-kafka-operator/blob/main/cluster-operator/src/main/java/io/strimzi/operator/cluster/model/KafkaConnectConfigurationBuilder.java
   # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
   - name: CONNECT_SECURITY_PROTOCOL
     value: SASL_PLAINTEXT
@@ -228,7 +231,7 @@ schema_registry: http://radar-kafka-schema-registry:8081
 
 kafka_wait:
   # -- Whether to wait before the specified number of brokers are available.
-  enabled: true
+  enabled: false
   # -- Kafka connection properties file contents during wait. If empty, all environment variables starting with
   # `CONNECT_` will be used.
   properties: ""
