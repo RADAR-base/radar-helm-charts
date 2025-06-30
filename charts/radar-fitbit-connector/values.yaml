@@ -7,17 +7,16 @@ replicaCount: 1
 
 image:
   # -- Image registry
-#  registry: docker.io
-  registry: ""
+  registry: docker.io
   # -- Image repository
   repository: radarbase/kafka-connect-rest-fitbit-source
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest9"
+  tag:
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   # -- Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
   # e.g:
@@ -106,17 +105,7 @@ secret:
     key: sasl.jaas.config
 
 # -- Extra environment variables
-extraEnvVars:  # TODO to be removed - replaced by spec.authentication and template builder in https://github.com/strimzi/strimzi-kafka-operator/blob/main/cluster-operator/src/main/java/io/strimzi/operator/cluster/model/KafkaConnectConfigurationBuilder.java
-  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
-  - name: CONNECT_SECURITY_PROTOCOL
-    value: SASL_PLAINTEXT
-  - name: CONNECT_PRODUCER_SECURITY_PROTOCOL
-    value: SASL_PLAINTEXT
-  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
-  - name: CONNECT_SASL_MECHANISM
-    value: SCRAM-SHA-512
-  - name: CONNECT_PRODUCER_SASL_MECHANISM
-    value: SCRAM-SHA-512
+extraEnvVars: []
 
 # -- Custom livenessProbe that overrides the default one
 customLivenessProbe: {}
@@ -151,23 +140,6 @@ readinessProbe:
   successThreshold: 1
   # -- Failure threshold for readinessProbe
   failureThreshold: 3
-
-# -- Custom startupProbe that overrides the default one
-customStartupProbe: {}
-
-startupProbe:
-  # -- Enable startupProbe
-  enabled: true
-  # -- Initial delay seconds for startupProbe
-  initialDelaySeconds: 5
-  # -- Period seconds for startupProbe
-  periodSeconds: 10
-  # -- Timeout seconds for startupProbe
-  timeoutSeconds: 10
-  # -- Success threshold for startupProbe
-  successThreshold: 1
-  # -- Failure threshold for startupProbe
-  failureThreshold: 30
 
 # -- Network policy defines who can access this application and who this applications has access to
 # @default -- check `values.yaml`
@@ -220,25 +192,14 @@ networkpolicy:
       - port: 53
         protocol: TCP
 
-# -- URI of Zookeeper instances of the cluster. Leave unset on default RADAR-base deployment (uses Kraft).
-zookeeper:
 # -- URI of Kafka brokers of the cluster
 kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
-# -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
-kafka_num_brokers: "3"
 # -- URL of the Kafka schema registry
 schema_registry: http://radar-kafka-schema-registry:8081
 
-kafka_wait:
-  # -- Whether to wait before the specified number of brokers are available.
-  enabled: false
-  # -- Kafka connection properties file contents during wait. If empty, all environment variables starting with
-  # `CONNECT_` will be used.
-  properties: ""
-
 # -- Base URL of the rest-sources-authorizer-backend service
 radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
-# -- Number of connector tasks to be used in connector.properties
+# -- Number of connector tasks to be used in kafka-connector spec properties
 connector_num_tasks: "5"
 
 # -- Fitbit API URL.

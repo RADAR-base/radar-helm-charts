@@ -15,6 +15,7 @@ spec:
   bootstrapServers: {{ .Values.kafka }}
   image: {{ template "radar-fitbit-connector.image" . }}
   {{- if .Values.secret.jaas.name }}
+  # Authentication-related props are handled by the template builder in https://github.com/strimzi/strimzi-kafka-operator/blob/main/cluster-operator/src/main/java/io/strimzi/operator/cluster/model/KafkaConnectConfigurationBuilder.java
   authentication:
     type: scram-sha-512
     username: shared-service-user
@@ -42,15 +43,13 @@ spec:
     value.converter.schema.registry.url: {{ .Values.schema_registry }}
     internal.key.converter: "org.apache.kafka.connect.json.JsonConverter"
     internal.value.converter: "org.apache.kafka.connect.json.JsonConverter"
-    # CONNECTOR properties that configure the fitbit connector, used to create custom-config/kafka-connect.properties in the connector pod
-    # using Connect configuration template builder class:
-    # https://github.com/strimzi/strimzi-kafka-operator/blob/main/cluster-operator/src/main/java/io/strimzi/operator/cluster/model/KafkaConnectConfigurationBuilder.java
-    # TODO recommended to place these in KafkaConnector.spec.config instead of here, but they are not stored in any file then (in-memory?)
+    # CONNECTOR properties that configure the fitbit connector, used to create custom-config/kafka-connect.properties in the connector pod.
+    # These properties could be placed in the KafkaConnector spec.config, but in that case they will only be stored in-memory, not in the properties file.
     name: radar-fitbit-source
     fitbit.api.client: {{ .Values.fitbit_api_client }}
     fitbit.api.secret: {{ .Values.fitbit_api_secret }}
     fitbit.api.intraday: {{ .Values.includeIntradayData }}
-    fitbit.user.repository.class: org.radarbase.connect.rest.fitbit.user.ServiceUserRepository
+    fitbit.user.repository.class: org.radarbase.connect.rest.fitbit.user.{{ .Values.user_repository_class }}
     fitbit.user.repository.url: {{ .Values.radar_rest_sources_backend_url }}
     fitbit.user.repository.client.id: {{ .Values.oauthClientId }}
     fitbit.user.repository.client.secret: {{ .Values.oauthClientSecret }}
@@ -114,10 +113,8 @@ spec:
           {{- toYaml .Values.securityContext | nindent 12 }}
     connectContainer:
       env:
-        - name: CONNECT_REST_ADVERTISED_HOST_NAME   # TODO: check if is replaced by ADVERTISED_HOSTNAME in kafka_connect_run.sh
+        - name: CONNECT_REST_ADVERTISED_HOST_NAME  # Possibly replaced by ADVERTISED_HOSTNAME in kafka_connect_run.sh
           value: {{ include "radar-fitbit-connector.fullname" . }}
-        - name: KAFKA_BROKERS
-          value: "{{ .Values.kafka_num_brokers }}"
         - name: CONNECT_LOG4J_LOGGERS # Property used in log4j.properties.template file
           value: "org.reflections=ERROR"
         {{- with .Values.extraEnvVars }}

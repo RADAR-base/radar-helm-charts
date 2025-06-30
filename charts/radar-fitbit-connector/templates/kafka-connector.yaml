@@ -7,4 +7,4 @@ metadata:
     strimzi.io/cluster: {{ template "common.names.fullname" . }}
 spec:
   class: org.radarbase.connect.rest.fitbit.FitbitSourceConnector
-  tasksMax: 4
+  tasksMax: {{ .Values.connector_num_tasks }}
