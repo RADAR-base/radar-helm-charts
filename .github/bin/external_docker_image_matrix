@@ -31,12 +31,21 @@ cleanup
 for chart in $INCLUDE_CHARTS
 do
   echo Analyzing chart $chart ...
-  helm template ../$chart 2> /dev/null | grep -oP "(?<=image: ).*" | tr -d \" >> $location.tmp
+  helm template ../$chart 2> /dev/null | grep -oP "(?<=image: ).*" | tr -d \" >> images.tmp
+done
+
+echo
+
+# Add the images that derived by the INCLUDE_IMAGES environment variable.
+for image in $INCLUDE_IMAGES
+do
+  echo Adding hard coded image $image ...
+  echo $image >> images.tmp
 done
 
 # Add a docker.io prefix to images without a registry.
-cat charts.tmp | grep ".*\/.*\/.*" > images.tmp2
-cat charts.tmp | grep -v ".*\/.*\/.*" | sed "s/^/docker.io\//g" > images.tmp3
+cat images.tmp | grep ".*/.*/.*" > images.tmp2
+cat images.tmp | grep -v ".*/.*/.*" | sed "s/^/docker.io\//g" > images.tmp3
 cat images.tmp2 images.tmp3 | sort | uniq > images.txt
 
 # Exclude images refs that match any of the patterns passed in with the EXCLUDE_IMAGE_PATTERNS environment variable.
