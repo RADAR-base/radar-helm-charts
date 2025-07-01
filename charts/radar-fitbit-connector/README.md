@@ -3,7 +3,7 @@
 # radar-fitbit-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-fitbit-connector)](https://artifacthub.io/packages/helm/radar-base/radar-fitbit-connector)
 
-![Version: 0.9.1](https://img.shields.io/badge/Version-0.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.2](https://img.shields.io/badge/AppVersion-0.6.2-informational?style=flat-square)
+![Version: 0.9.2](https://img.shields.io/badge/Version-0.9.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base fitbit connector. This application collects data from participants via the Fitbit Web API.
 
@@ -50,8 +50,9 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8083` | radar-fitbit-connector port |
 | resources.requests | object | `{"cpu":"100m","memory":"1Gi"}` | CPU/Memory resource requests |
-| heapOptions | string | `"-Xms256m -Xmx768m"` |  |
-| persistence.enabled | bool | `true` | Enable persistence using PVC |
+| jvmOptions.xmx | string | `"768m"` |  |
+| jvmOptions.xms | string | `"256m"` |  |
+| persistence.enabled | bool | `false` | Enable persistence using PVC |
 | persistence.accessMode | string | `"ReadWriteOnce"` | PVC Access Mode for radar-fitbit-connector volume |
 | persistence.size | string | `"5Gi"` | PVC Storage Request for radar-fitbit-connector volume |
 | persistence.fsUserOverride | string | `nil` | Overrides the user of the fitbit connector logs, for example, `"1000:1000"`. |
@@ -59,9 +60,7 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
 | secret.jaas | object | `{"key":"sasl.jaas.config","name":"shared-service-user"}` | Secret for the Kafka SASL JAAS configuration |
-| extraEnvVars | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_PRODUCER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_PRODUCER_SASL_MECHANISM","value":"SCRAM-SHA-512"}]` | Extra environment variables |
-| extraEnvVars[0] | object | `{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
-| extraEnvVars[2] | object | `{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"}` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. |
+| extraEnvVars | list | `[]` | Extra environment variables |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
@@ -76,22 +75,11 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
-| customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
-| startupProbe.enabled | bool | `true` | Enable startupProbe |
-| startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
-| startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
-| startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
-| startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
-| startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
-| zookeeper | string | `nil` | URI of Zookeeper instances of the cluster. Leave unset on default RADAR-base deployment (uses Kraft). |
 | kafka | string | `"SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
-| kafka_num_brokers | string | `"3"` | Number of Kafka brokers. This is used to validate the cluster availability at connector init. |
 | schema_registry | string | `"http://radar-kafka-schema-registry:8081"` | URL of the Kafka schema registry |
-| kafka_wait.enabled | bool | `true` | Whether to wait before the specified number of brokers are available. |
-| kafka_wait.properties | string | `""` | Kafka connection properties file contents during wait. If empty, all environment variables starting with `CONNECT_` will be used. |
 | radar_rest_sources_backend_url | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | Base URL of the rest-sources-authorizer-backend service |
-| connector_num_tasks | string | `"5"` | Number of connector tasks to be used in connector.properties |
+| connector_num_tasks | string | `"5"` | Number of connector tasks to be used in kafka-connector spec properties |
 | fitbit_api_url | string | `"https://api.fitbit.com"` | Fitbit API URL. |
 | fitbit_api_client | string | `""` | Fitbit API client id. |
 | fitbit_api_secret | string | `""` | Fitbit API client secret. |

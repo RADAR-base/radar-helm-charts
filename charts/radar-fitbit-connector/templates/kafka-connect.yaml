@@ -1,0 +1,129 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+spec:
+  version: {{ .Chart.AppVersion }}
+  replicas: {{ .Values.replicaCount }}
+  bootstrapServers: {{ .Values.kafka }}
+  image: {{ template "radar-fitbit-connector.image" . }}
+  {{- if .Values.secret.jaas.name }}
+  # Authentication-related props are handled by the template builder in https://github.com/strimzi/strimzi-kafka-operator/blob/main/cluster-operator/src/main/java/io/strimzi/operator/cluster/model/KafkaConnectConfigurationBuilder.java
+  authentication:
+    type: scram-sha-512
+    username: shared-service-user
+    passwordSecret:
+      secretName: {{ .Values.secret.jaas.name }}
+      password: password # The name of the key in the secret that contains the password
+  {{- end }}
+  autoRestart:
+    enabled: true # automatic restarts of failed connectors or their tasks
+  jvmOptions:
+    "-Xmx": {{ .Values.jvmOptions.xmx | quote }}
+    "-Xms": {{ .Values.jvmOptions.xms | quote }}
+  config: # Properties that configure the Kafka Connect cluster itself
+    group.id: {{ include "radar-fitbit-connector.fullname" . }}
+    offset.storage.topic: {{ template "radar-fitbit-connector.fullname" . }}.offset
+    config.storage.topic: {{ template "radar-fitbit-connector.fullname" . }}.config
+    status.storage.topic: {{ template "radar-fitbit-connector.fullname" . }}.status
+    # -1 means it will use the default replication factor configured in the broker
+    config.storage.replication.factor: -1
+    offset.storage.replication.factor: -1
+    status.storage.replication.factor: -1
+    key.converter: "io.confluent.connect.avro.AvroConverter"
+    value.converter: "io.confluent.connect.avro.AvroConverter"
+    key.converter.schema.registry.url: {{ .Values.schema_registry }}
+    value.converter.schema.registry.url: {{ .Values.schema_registry }}
+    internal.key.converter: "org.apache.kafka.connect.json.JsonConverter"
+    internal.value.converter: "org.apache.kafka.connect.json.JsonConverter"
+  template:
+    pod:
+      metadata:
+        annotations:
+          checksum/configmap-users: {{ include (print $.Template.BasePath "/configmap-users.yaml") . | sha256sum }}
+          backup.velero.io/backup-volumes: logs
+        labels:
+          app.kubernetes.io/name: {{ include "radar-fitbit-connector.name" . }}
+          app.kubernetes.io/instance: {{ .Release.Name }}
+      imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.image.pullSecrets | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      affinity:
+        {{- if .Values.affinity }}
+        {{- toYaml .Values.affinity | nindent 8 }}
+        {{- end }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/name"
+                      operator: In
+                      values:
+                        - {{ template "radar-fitbit-connector.name" . }}
+                    - key: "app.kubernetes.io/instance"
+                      operator: In
+                      values:
+                        - {{ .Release.Name }}
+                topologyKey: "kubernetes.io/hostname"
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: config-users
+          configMap:
+            name: {{ include "radar-fitbit-connector.fullname" . }}-users
+      containers:
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+    connectContainer:
+      env:
+        - name: CONNECT_REST_ADVERTISED_HOST_NAME  # Possibly replaced by ADVERTISED_HOSTNAME in kafka_connect_run.sh
+          value: {{ include "radar-fitbit-connector.fullname" . }}
+        - name: CONNECT_LOG4J_LOGGERS # Property used in log4j.properties.template file
+          value: "org.reflections=ERROR"
+        {{- with .Values.extraEnvVars }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+      volumeMounts:
+        - name: config-users
+          mountPath: /mnt/users
+  {{- if .Values.customLivenessProbe }}
+  livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
+  {{- else if .Values.livenessProbe.enabled }}
+  livenessProbe:
+    initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+    periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+    timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+    successThreshold: {{ .Values.livenessProbe.successThreshold }}
+    failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+  {{- end }}
+  {{- if .Values.customReadinessProbe }}
+  readinessProbe: {{- .Values.customReadinessProbe | toYaml | nindent 12 }}
+  {{- else if .Values.readinessProbe.enabled }}
+  readinessProbe:
+    initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+    periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+    timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+    successThreshold: {{ .Values.readinessProbe.successThreshold }}
+    failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+  {{- end }}
+  resources:
+    {{- toYaml .Values.resources | nindent 4 }}
