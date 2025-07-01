@@ -1,0 +1,27 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: radar-fitbit-source
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    strimzi.io/cluster: {{ template "common.names.fullname" . }}
+spec:
+  class: org.radarbase.connect.rest.fitbit.FitbitSourceConnector
+  tasksMax: {{ .Values.connector_num_tasks }}
+  config: # Properties that configure Fitbit source connector
+    name: radar-fitbit-source
+    fitbit.api.client: {{ .Values.fitbit_api_client }}
+    fitbit.api.secret: {{ .Values.fitbit_api_secret }}
+    fitbit.api.intraday: {{ .Values.includeIntradayData }}
+    fitbit.user.repository.class: org.radarbase.connect.rest.fitbit.user.{{ .Values.user_repository_class }}
+    fitbit.user.repository.url: {{ .Values.radar_rest_sources_backend_url }}
+    fitbit.user.repository.client.id: {{ .Values.oauthClientId }}
+    fitbit.user.repository.client.secret: {{ .Values.oauthClientSecret }}
+    fitbit.user.repository.oauth2.token.url: {{ .Values.managementportal_url }}/oauth/token
+    fitbit.user.poll.interval: {{ .Values.fitbit_user_poll_interval | int }}
+    fitbit.user.dir: /mnt/users
+    application.loop.interval.ms: {{ .Values.application_loop_interval_ms | quote }}
+    user.cache.refresh.interval.ms: {{ .Values.user_cache_refresh_interval_ms | quote }}
+    rest.source.base.url: {{ .Values.fitbit_api_url }}
+    rest.source.poll.interval.ms: {{ .Values.rest_source_poll_interval_ms | quote }}
+    rest.source.request.generator.class: org.radarbase.connect.rest.fitbit.request.FitbitRequestGenerator
