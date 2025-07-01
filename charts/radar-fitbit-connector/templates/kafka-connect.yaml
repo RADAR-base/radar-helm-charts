@@ -30,9 +30,9 @@ spec:
     "-Xms": {{ .Values.jvmOptions.xms | quote }}
   config: # Properties that configure the Kafka Connect cluster itself
     group.id: {{ include "radar-fitbit-connector.fullname" . }}
-    offset.storage.topic: "default.offsets"
-    config.storage.topic: "default.config"
-    status.storage.topic: "default.status"
+    offset.storage.topic: {{ template "radar-fitbit-connector.fullname" . }}.offset
+    config.storage.topic: {{ template "radar-fitbit-connector.fullname" . }}.config
+    status.storage.topic: {{ template "radar-fitbit-connector.fullname" . }}.status
     # -1 means it will use the default replication factor configured in the broker
     config.storage.replication.factor: -1
     offset.storage.replication.factor: -1
