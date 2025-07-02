@@ -67,28 +67,6 @@ jvmOptions:
   xmx: "768m"
   xms: "256m"
 
-persistence:
-  # -- Enable persistence using PVC
-  enabled: false
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
-  ##
-  # storageClass: "-"
-  ##
-  ## If you want to reuse an existing claim, you can pass the name of the PVC using
-  ## the existingClaim variable
-  # existingClaim: your-claim
-
-  # -- PVC Access Mode for radar-fitbit-connector-strimzi volume
-  accessMode: ReadWriteOnce
-  # -- PVC Storage Request for radar-fitbit-connector-strimzi volume
-  size: 5Gi
-  # -- Overrides the user of the fitbit connector logs, for example, `"1000:1000"`.
-  fsUserOverride: null
-
 # -- Node labels for pod assignment
 nodeSelector: {}
 
@@ -221,6 +199,7 @@ managementportal_url: http://management-portal:8080/managementportal
 includeIntradayData: true
 
 # -- Class of the user repository to use. This should be a class that implements the UserRepository interface.
+# Use of the YamlUserRepository is deprecated, use ServiceUserRepositoryLegacy instead.
 user_repository_class: ServiceUserRepositoryLegacy
 
 # -- How often to poll the source URL.

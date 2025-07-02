@@ -52,10 +52,6 @@ A Helm chart for RADAR-base fitbit Kafka connector using the Strimzi Operator. T
 | resources.requests | object | `{"cpu":"100m","memory":"1Gi"}` | CPU/Memory resource requests |
 | jvmOptions.xmx | string | `"768m"` |  |
 | jvmOptions.xms | string | `"256m"` |  |
-| persistence.enabled | bool | `false` | Enable persistence using PVC |
-| persistence.accessMode | string | `"ReadWriteOnce"` | PVC Access Mode for radar-fitbit-connector-strimzi volume |
-| persistence.size | string | `"5Gi"` | PVC Storage Request for radar-fitbit-connector-strimzi volume |
-| persistence.fsUserOverride | string | `nil` | Overrides the user of the fitbit connector logs, for example, `"1000:1000"`. |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
@@ -88,7 +84,7 @@ A Helm chart for RADAR-base fitbit Kafka connector using the Strimzi Operator. T
 | auth_url | string | `"http://management-portal:8080/managementportal/oauth/token"` | OAuth2 Auth URL for connector client to get access tokens |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of Management Portal. This will be used to create URLs to access Management Portal |
 | includeIntradayData | bool | `true` | Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties. |
-| user_repository_class | string | `"ServiceUserRepositoryLegacy"` | Class of the user repository to use. This should be a class that implements the UserRepository interface. |
+| user_repository_class | string | `"ServiceUserRepositoryLegacy"` | Class of the user repository to use. This should be a class that implements the UserRepository interface. Use of the YamlUserRepository is deprecated, use ServiceUserRepositoryLegacy instead. |
 | rest_source_poll_interval_ms | int | `60000` | How often to poll the source URL. Only use to speed up processing times during e2e testing. |
 | fitbit_user_poll_interval | int | `5000` | Polling interval per Fitbit user per request route in seconds. Only use to speed up processing times during e2e testing. |
 | application_loop_interval_ms | int | `300000` | How often to perform the main application loop (only controls how often to poll for new user registrations). Only use to speed up processing times during e2e testing. |
