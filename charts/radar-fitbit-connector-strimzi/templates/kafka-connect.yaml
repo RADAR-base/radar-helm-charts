@@ -86,10 +86,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      volumes:
-        - name: config-log4j
-          configMap:
-            name: {{ include "radar-fitbit-connector-strimzi.fullname" . }}-log4j
       containers:
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
@@ -100,7 +96,7 @@ spec:
         - name: CONNECT_LOG4J_ROOT_LOGLEVEL
           value: {{ .Values.log4j.rootLogLevel | quote }}
         - name: KAFKA_LOG4J_OPTS
-          value: "-Dlog4j.configuration=file:/opt/kafka/config/log4j.properties"
+          value: "-Dlog4j.configuration=file:/opt/kafka/custom-config/log4j.properties"
         {{- if .Values.sentry.dsn }}
         - name: SENTRY_DSN
           value: {{ .Values.sentry.dsn | quote }}
@@ -110,10 +106,12 @@ spec:
         {{- with .Values.extraEnvVars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      volumeMounts:
-        - name: config-log4j
-          mountPath: /opt/kafka/config/log4j.properties
-          subPath: log4j.properties
+  logging:
+    type: external
+    valueFrom:
+      configMapKeyRef:
+        name: {{ template "common.names.fullname" . }}-log4j
+        key: log4j.properties
   {{- if .Values.customLivenessProbe }}
   livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
   {{- else if .Values.livenessProbe.enabled }}
