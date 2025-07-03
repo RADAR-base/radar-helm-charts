@@ -214,3 +214,15 @@ application_loop_interval_ms: 300000
 # -- How often to invalidate the cache and poll for new user registrations.
 # Only use to speed up processing times during e2e testing.
 user_cache_refresh_interval_ms: 3600000
+
+# -- Log4j configuration
+log4j:
+  # -- Root log level for the Kafka Connect instance
+  rootLogLevel: INFO
+
+# Sentry monitoring configuration
+sentry:
+  # -- DSN (Data Source Name) of the sentry server
+  dsn:
+  # -- Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR)
+  level: ERROR

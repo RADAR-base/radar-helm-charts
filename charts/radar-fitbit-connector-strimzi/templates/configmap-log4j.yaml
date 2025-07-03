@@ -1,0 +1,28 @@
+# This approach allows to specify dynamic logging configuration for Kafka Connect through an external logging section of KafkaConnect resource specification.
+# See: https://strimzi.io/docs/operators/0.45.1/configuring#property-kafka-connect-logging-reference
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "common.names.fullname" . }}-log4j
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  log4j.properties: |-
+    # Root logger configuration
+    # The sentryAppender is added to the rootLogger if SENTRY_DSN is set
+    log4j.rootLogger=${env:CONNECT_LOG4J_ROOT_LOGLEVEL:-INFO}, stdout${env:SENTRY_DSN:+, sentryAppender}
+
+    log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+    log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+    log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c)%n
+
+    # Appender for Sentry monitoring, only active if SENTRY_DSN is set
+    log4j.appender.sentryAppender=io.sentry.log4j.SentryAppender
+    log4j.appender.sentryAppender.threshold=${env:SENTRY_LOG_LEVEL:-ERROR}
+
+    # Default log levels
+    log4j.logger.org.reflections=ERROR
+    log4j.logger.org.I0Itec.zkclient=ERROR

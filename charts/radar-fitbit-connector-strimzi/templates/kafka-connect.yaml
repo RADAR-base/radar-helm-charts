@@ -47,6 +47,7 @@ spec:
     pod:
       metadata:
         annotations:
+          checksum/configmap-log4j: {{ include (print $.Template.BasePath "/configmap-log4j.yaml") . | sha256sum }}
           backup.velero.io/backup-volumes: logs
         labels:
           app.kubernetes.io/name: {{ include "radar-fitbit-connector-strimzi.name" . }}
@@ -85,6 +86,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: config-log4j
+          configMap:
+            name: {{ include "radar-fitbit-connector-strimzi.fullname" . }}-log4j
       containers:
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
@@ -92,11 +97,23 @@ spec:
       env:
         - name: CONNECT_REST_ADVERTISED_HOST_NAME  # Possibly replaced by ADVERTISED_HOSTNAME in kafka_connect_run.sh
           value: {{ include "radar-fitbit-connector-strimzi.fullname" . }}
-        - name: CONNECT_LOG4J_LOGGERS # Property used in log4j.properties.template file
-          value: "org.reflections=ERROR"
+        - name: CONNECT_LOG4J_ROOT_LOGLEVEL
+          value: {{ .Values.log4j.rootLogLevel | quote }}
+        - name: KAFKA_LOG4J_OPTS
+          value: "-Dlog4j.configuration=file:/opt/kafka/config/log4j.properties"
+        {{- if .Values.sentry.dsn }}
+        - name: SENTRY_DSN
+          value: {{ .Values.sentry.dsn | quote }}
+        - name: SENTRY_LOG_LEVEL
+          value: {{ .Values.sentry.level | quote }}
+        {{- end }}
         {{- with .Values.extraEnvVars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+      volumeMounts:
+        - name: config-log4j
+          mountPath: /opt/kafka/config/log4j.properties
+          subPath: log4j.properties
   {{- if .Values.customLivenessProbe }}
   livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
   {{- else if .Values.livenessProbe.enabled }}

@@ -89,3 +89,7 @@ A Helm chart for RADAR-base fitbit Kafka connector using the Strimzi Operator. T
 | fitbit_user_poll_interval | int | `5000` | Polling interval per Fitbit user per request route in seconds. Only use to speed up processing times during e2e testing. |
 | application_loop_interval_ms | int | `300000` | How often to perform the main application loop (only controls how often to poll for new user registrations). Only use to speed up processing times during e2e testing. |
 | user_cache_refresh_interval_ms | int | `3600000` | How often to invalidate the cache and poll for new user registrations. Only use to speed up processing times during e2e testing. |
+| log4j | object | `{"rootLogLevel":"INFO"}` | Log4j configuration |
+| log4j.rootLogLevel | string | `"INFO"` | Root log level for the Kafka Connect instance |
+| sentry.dsn | string | `nil` | DSN (Data Source Name) of the sentry server |
+| sentry.level | string | `"ERROR"` | Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR) |
