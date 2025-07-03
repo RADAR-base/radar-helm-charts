@@ -1,0 +1,46 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    strimzi.io/cluster: {{ template "common.names.fullname" . }}
+spec:
+  class: io.confluent.connect.s3.S3SinkConnector
+  tasksMax: {{ .Values.connector_num_tasks }}
+  config:
+    name: radar-s3-sink-connector
+    topics: {{ .Values.topics }}
+    s3.bucket.name: {{ .Values.bucketName }}
+    {{- if .Values.s3Region }}
+    s3.region: {{ .Values.s3Region }}
+    {{- end }}
+    s3.part.size: {{ .Values.s3PartSize | int }}
+    s3.object.tagging: {{ .Values.s3Tagging }}
+    {{- if .Values.s3Endpoint }}
+    store.url: {{ .Values.s3Endpoint }}
+    {{- end }}
+    storage.class: io.confluent.connect.s3.storage.S3Storage
+    format.class: io.confluent.connect.s3.format.avro.AvroFormat
+    transforms: combineKeyValue
+    transforms.combineKeyValue.type: org.radarbase.kafka.connect.transforms.CombineKeyValue
+    rotate.schedule.interval.ms: {{ .Values.rotateInterval | int }}
+    timezone: UTC
+  template:
+    connectContainer:
+      env:
+        {{- if and .Values.bucketAccessKey .Values.bucketSecretKey }}
+        - name: AWS_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "common.names.fullname" . }}
+              key: awsAccessKey
+        - name: AWS_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "common.names.fullname" . }}
+              key: awsSecretKey
+        {{- end }}
+        {{- with .Values.extraEnvVars }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}

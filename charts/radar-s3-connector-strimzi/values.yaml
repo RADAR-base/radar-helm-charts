@@ -1,0 +1,247 @@
+# Default values for radar-s3-connector-strimzi.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of radar-s3-connector replicas to deploy
+replicaCount: 1
+
+image:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
+  repository: radarbase/kafka-connect-transform-s3
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
+
+# -- String to partially override common.names.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override common.names.fullname template with a string
+fullnameOverride: ""
+
+# -- Configure radar-s3-connector pods' Security Context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Configure radar-s3-connector containers' Security Context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # -- Kubernetes Service type
+  type: ClusterIP
+  # -- radar-s3-connector port
+  port: 8083
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  # -- CPU/Memory resource requests
+  requests:
+    cpu: 100m
+    memory: 3Gi
+
+jvmOptions:
+  xmx: "4g"
+  xms: "3g"
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Toleration labels for pod assignment
+tolerations: []
+
+# -- Affinity labels for pod assignment
+affinity: {}
+
+secret:
+  # -- Secret for the Kafka SASL JAAS configuration
+  jaas:
+    name: shared-service-user
+    key: sasl.jaas.config
+
+# -- Extra environment variables
+extraEnvVars: []
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for livenessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-kafka-schema-registry'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'catalog-server'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'minio'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
+# -- URL of the Kafka schema registry
+schema_registry: http://radar-kafka-schema-registry:8081
+
+# -- Base URL of the rest-sources-authorizer-backend service
+radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
+# -- Number of connector tasks to be used in kafka-connector spec properties
+connector_num_tasks: "5"
+
+catalogServer:
+  # -- Catalog server URL
+  url: http://catalog-server:9010
+
+# -- List of topics to be consumed by the sink connector separated by comma. Topics defined in the catalog server
+# will automatically be loaded if `initTopics.enabled` is true.
+topics: ""
+# -- Target S3 endpoint url
+s3Endpoint: http://minio:9000/
+# -- set to true, if S3 objects should be tagged with start and end offsets, as well as record count.
+s3Tagging: false
+# -- The Part Size in S3 Multi-part Uploads.
+s3PartSize: 5242880
+# -- The AWS region to be used the connector. Some compatibility layers require this.
+s3Region:
+# -- Number of records written to store before invoking file commits.
+flushSize: 10000
+# -- The time interval in milliseconds to invoke file commits.
+rotateInterval: 900000
+# -- Number of tasks in the connector
+maxTasks: 4
+# -- Access key of the target S3 bucket
+bucketAccessKey: access_key
+# -- Secret key of the target S3 bucket
+bucketSecretKey: secret
+# -- Bucket name of the target S3 bucket
+bucketName: radar_intermediate_storage
+
+cc:
+  # -- Set to true, if Confluent Cloud is used
+  enabled: false
+  # -- Confluent cloud based Kafka broker URL (if Confluent Cloud based Kafka cluster is used)
+  bootstrapServerurl: ""
+  # -- Confluent cloud based Schema registry URL (if Confluent Cloud based Schema registry is used)
+  schemaRegistryUrl: ""
+  # -- API Key of the Confluent Cloud cluster
+  apiKey: ccApikey
+  # -- API secret of the Confluent Cloud cluster
+  apiSecret: ccApiSecret
+  # -- API Key of the Confluent Cloud Schema registry
+  schemaRegistryApiKey: srApiKey
+  # -- API Key of the Confluent Cloud Schema registry
+  schemaRegistryApiSecret: srApiSecret
+
+initTopics:
+  # -- If true, fetch list of topics from catalog server
+  enabled: true
+
+  image:
+    # -- Image repository to fetch topics with
+    repository: linuxserver/yq
+    # -- Image tag to fetch topics with
+    tag: 3.2.2
+    # -- Image pull policy to fetch topics with
+    pullPolicy: IfNotPresent
+
+# -- Log4j configuration
+log4j:
+  # -- Root log level for the Kafka Connect instance
+  rootLogLevel: INFO
+
+# Sentry monitoring configuration
+sentry:
+  # -- DSN (Data Source Name) of the sentry server
+  dsn:
+  # -- Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR)
+  level: ERROR
