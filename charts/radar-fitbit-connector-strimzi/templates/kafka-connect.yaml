@@ -93,8 +93,6 @@ spec:
       env:
         - name: CONNECT_REST_ADVERTISED_HOST_NAME  # Possibly replaced by ADVERTISED_HOSTNAME in kafka_connect_run.sh
           value: {{ include "radar-fitbit-connector-strimzi.fullname" . }}
-        - name: CONNECT_LOG4J_ROOT_LOGLEVEL
-          value: {{ .Values.log4j.rootLogLevel | quote }}
         - name: KAFKA_LOG4J_OPTS
           value: "-Dlog4j.configuration=file:/opt/kafka/custom-config/log4j.properties"
         {{- if .Values.sentry.dsn }}
