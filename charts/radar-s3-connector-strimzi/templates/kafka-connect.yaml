@@ -5,7 +5,8 @@ metadata:
   namespace: {{ include "common.names.namespace" . | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
   annotations:
-    strimzi.io/use-connector-resources: "true"
+{{/*    TODO we need to revert this back to 'true'*/}}
+    strimzi.io/use-connector-resources: "false"
     {{- if .Values.commonAnnotations }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
     {{- end }}
