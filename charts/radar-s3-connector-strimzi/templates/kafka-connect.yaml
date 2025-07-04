@@ -57,8 +57,6 @@ spec:
     key.converter.schema.registry.url: {{ .Values.schema_registry }}
     value.converter.schema.registry.url: {{ .Values.schema_registry }}
     {{- end }}
-    internal.key.converter: "org.apache.kafka.connect.json.JsonConverter"
-    internal.value.converter: "org.apache.kafka.connect.json.JsonConverter"
     flush.size: {{ .Values.flushSize | int }}
     connect.meta.data: false
   template:

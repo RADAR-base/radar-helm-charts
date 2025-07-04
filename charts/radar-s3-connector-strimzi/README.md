@@ -72,11 +72,12 @@ A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 conne
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
+| kafka | string | `"SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
 | schema_registry | string | `"http://radar-kafka-schema-registry:8081"` | URL of the Kafka schema registry |
 | radar_rest_sources_backend_url | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | Base URL of the rest-sources-authorizer-backend service |
 | connector_num_tasks | string | `"5"` | Number of connector tasks to be used in kafka-connector spec properties |
 | catalogServer.url | string | `"http://catalog-server:9010"` | Catalog server URL |
-| topics | string | `""` | List of topics to be consumed by the sink connector separated by comma. Topics defined in the catalog server will automatically be loaded if `initTopics.enabled` is true. |
+| topics | string | `"questionnaire_response"` | List of topics to be consumed by the sink connector separated by comma. Topics defined in the catalog server will automatically be loaded if `initTopics.enabled` is true. |
 | s3Endpoint | string | `"http://minio:9000/"` | Target S3 endpoint url |
 | s3Tagging | bool | `false` | set to true, if S3 objects should be tagged with start and end offsets, as well as record count. |
 | s3PartSize | int | `5242880` | The Part Size in S3 Multi-part Uploads. |
