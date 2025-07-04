@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "radar-oura-connector-strimzi.fullname" . }}-test-connection"
+  labels:
+    app.kubernetes.io/name: {{ include "radar-oura-connector-strimzi.name" . }}
+    helm.sh/chart: {{ include "radar-oura-connector-strimzi.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "radar-oura-connector-strimzi.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

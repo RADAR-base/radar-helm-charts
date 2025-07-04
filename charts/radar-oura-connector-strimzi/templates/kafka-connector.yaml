@@ -1,0 +1,24 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: radar-oura-source
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    strimzi.io/cluster: {{ template "common.names.fullname" . }}
+spec:
+  class: org.radarbase.connect.rest.oura.OuraSourceConnector
+  tasksMax: {{ .Values.connector_num_tasks }}
+  config: # Properties that configure Oura source connector
+    name: radar-oura-source
+    connector.class: org.radarbase.connect.rest.oura.OuraSourceConnector
+    tasks.max: {{ .Values.connector_num_tasks }}
+    rest.source.base.url: https://api.ouraring.com
+    rest.source.poll.interval.ms: 5000
+    oura.api.client: {{ .Values.oura_api_client }}
+    oura.api.secret: {{ .Values.oura_api_secret }}
+    oura.api.intraday: {{ .Values.includeIntradayData }}
+    oura.user.repository.class: org.radarbase.connect.rest.oura.user.{{ .Values.user_repository_class }}
+    oura.user.repository.url: {{ .Values.radar_rest_sources_backend_url }}
+    oura.user.repository.client.id: {{ .Values.oauthClientId }}
+    oura.user.repository.client.secret: {{ .Values.oauthClientSecret }}
+    oura.user.repository.oauth2.token.url: {{ .Values.auth_url }}

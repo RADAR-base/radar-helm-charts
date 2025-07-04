@@ -1,18 +1,18 @@
 apiVersion: v2
-appVersion: 0.6.2
-description: A Helm chart for RADAR-base oura connector. This application collects data from participants via the Oura Web API.
-name: radar-oura-connector
-version: 0.4.1
+appVersion: 3.9.0
+description: A Helm chart for RADAR-base oura connector using the Strimzi Operator. This application collects data from participants via the Oura Web API.
+name: radar-oura-connector-strimzi
+version: 0.0.1
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
-- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-oura-connector
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-oura-connector-strimzi
 - https://github.com/RADAR-base/RADAR-REST-Connector
 keywords:
   - radar-base
   - remote-trial
 annotations:
   artifacthub.io/license: Apache-2.0
-deprecated: true
+deprecated: false
 type: application
 home: "https://radar-base.org"
 maintainers:
