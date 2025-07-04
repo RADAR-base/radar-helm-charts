@@ -1,3 +1,4 @@
+{{ if .Values.syncTopics.enabled }}
 {{- $connectClusterName := printf "%s-%s" (include "common.names.fullname" .) "connect-api" }}
 {{- $connectorName := include "common.names.fullname" . }}
 apiVersion: v1
@@ -54,8 +55,8 @@ spec:
       template:
         spec:
           containers:
-          - name: sync-topics
-            image: badouralix/curl-jq:latest
+          - name: topics-sync
+            image: {{ .Values.syncTopics.image.repository }}:{{ .Values.syncTopics.image.tag }}
             command: ["/tmp/sync-topics.sh"]
             volumeMounts:
               - mountPath: /tmp/
@@ -66,3 +67,4 @@ spec:
             configMap:
               name: {{ include "common.names.fullname" . }}-topics-sync-job
               defaultMode: 0777
+{{- end }}

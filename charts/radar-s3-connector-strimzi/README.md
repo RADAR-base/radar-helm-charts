@@ -77,7 +77,7 @@ A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 conne
 | radar_rest_sources_backend_url | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | Base URL of the rest-sources-authorizer-backend service |
 | connector_num_tasks | string | `"5"` | Number of connector tasks to be used in kafka-connector spec properties |
 | catalogServer.url | string | `"http://catalog-server:9010"` | Catalog server URL |
-| topics | string | `"questionnaire_response"` | List of topics to be consumed by the sink connector separated by comma. Topics defined in the catalog server will automatically be loaded if `initTopics.enabled` is true. |
+| topics | string | `""` | List of topics to be consumed by the sink connector separated by comma. Topics defined in the catalog server will automatically be loaded if `syncTopics.enabled` is true. |
 | s3Endpoint | string | `"http://minio:9000/"` | Target S3 endpoint url |
 | s3Tagging | bool | `false` | set to true, if S3 objects should be tagged with start and end offsets, as well as record count. |
 | s3PartSize | int | `5242880` | The Part Size in S3 Multi-part Uploads. |
@@ -95,10 +95,10 @@ A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 conne
 | cc.apiSecret | string | `"ccApiSecret"` | API secret of the Confluent Cloud cluster |
 | cc.schemaRegistryApiKey | string | `"srApiKey"` | API Key of the Confluent Cloud Schema registry |
 | cc.schemaRegistryApiSecret | string | `"srApiSecret"` | API Key of the Confluent Cloud Schema registry |
-| initTopics.enabled | bool | `true` | If true, fetch list of topics from catalog server |
-| initTopics.image.repository | string | `"linuxserver/yq"` | Image repository to fetch topics with |
-| initTopics.image.tag | string | `"3.2.2"` | Image tag to fetch topics with |
-| initTopics.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy to fetch topics with |
+| syncTopics.enabled | bool | `true` | If true, fetch list of topics from catalog server |
+| syncTopics.image.repository | string | `"badouralix/curl-jq"` | Image repository to fetch topics with |
+| syncTopics.image.tag | string | `"latest"` | Image tag to fetch topics with |
+| syncTopics.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy to fetch topics with |
 | log4j | object | `{"rootLogLevel":"INFO"}` | Log4j configuration |
 | log4j.rootLogLevel | string | `"INFO"` | Root log level for the Kafka Connect instance |
 | sentry.dsn | string | `nil` | DSN (Data Source Name) of the sentry server |
