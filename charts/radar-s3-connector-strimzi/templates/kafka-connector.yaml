@@ -26,21 +26,3 @@ spec:
     transforms.combineKeyValue.type: org.radarbase.kafka.connect.transforms.CombineKeyValue
     rotate.schedule.interval.ms: {{ .Values.rotateInterval | int }}
     timezone: UTC
-  template:
-    connectContainer:
-      env:
-        {{- if and .Values.bucketAccessKey .Values.bucketSecretKey }}
-        - name: AWS_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "common.names.fullname" . }}
-              key: awsAccessKey
-        - name: AWS_SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "common.names.fullname" . }}
-              key: awsSecretKey
-        {{- end }}
-        {{- with .Values.extraEnvVars }}
-          {{- toYaml . | nindent 10 }}
-        {{- end }}

@@ -108,6 +108,18 @@ spec:
           {{- toYaml .Values.securityContext | nindent 12 }}
     connectContainer:
       env:
+        {{- if and .Values.bucketAccessKey .Values.bucketSecretKey }}
+        - name: AWS_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "common.names.fullname" . }}
+              key: awsAccessKey
+        - name: AWS_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "common.names.fullname" . }}
+              key: awsSecretKey
+        {{- end }}
         - name: CONNECT_REST_ADVERTISED_HOST_NAME  # Possibly replaced by ADVERTISED_HOSTNAME in kafka_connect_run.sh
           value: {{ include "common.names.fullname" . }}
         - name: KAFKA_LOG4J_OPTS
