@@ -1,0 +1,51 @@
+{{- $connectClusterName := include "common.names.fullname" . -}}
+{{- $connectorName := include "common.names.fullname" . -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.names.fullname" . }}-topics-sync-job
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  sync-topics.sh: |
+    #!/bin/sh
+    CONFIG=$(curl {{ $connectClusterName }}:8083/connectors/{{ $connectorName }}/config | jq)
+    UPSTREAM_TOPICS=$(curl -sf {{ .Values.catalogServer.url }}/source-types | jq -r '[to_entries | .[] | select(.key | test("^.*-source-types$")) | .value[].data[].topic] | sort | unique | join(",")')
+    CURRENT_TOPICS=$(echo "$CONFIG" | jq -r '.topics')
+    # Compare the upstream topics with the current topics in the connector config
+    if [ "$UPSTREAM_TOPICS" != "$CURRENT_TOPICS" ]; then
+      echo "Updating topics in connector config..."
+      UPDATED_CONFIG=$(echo "$CONFIG" | jq --arg TOPICS "$TOPICS" '.topics = $TOPICS')
+      curl -X PUT -H "Content-Type: application/json" -d "$UPDATED_CONFIG" {{ $connectClusterName }}:8083/connectors/{{ $connectorName }}/config
+    else
+      echo "No changes in topics, skipping update."
+      exit 0
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "common.names.fullname" . }}-topics-sync-job
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  # every 10 minutes
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: sync-topics
+            image: badouralix/curl-jq:latest
+            command: ["./sync-topics.sh"]
+          restartPolicy: OnFailure
+          volumes:
+          - name: sync-topics-config
+            configMap:
+              name: {{ include "common.names.fullname" . }}-topics-sync-job
