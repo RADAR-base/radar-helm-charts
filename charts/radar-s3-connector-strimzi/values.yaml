@@ -185,8 +185,8 @@ catalogServer:
   url: http://catalog-server:9010
 
 # -- List of topics to be consumed by the sink connector separated by comma. Topics defined in the catalog server
-# will automatically be loaded if `syncTopics.enabled` is true.
-topics: ""
+# will automatically be loaded if `initTopics.enabled` is true.
+topics: questionnaire_response
 # -- Target S3 endpoint url
 s3Endpoint: http://minio:9000/
 # -- set to true, if S3 objects should be tagged with start and end offsets, as well as record count.

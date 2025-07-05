@@ -9,7 +9,6 @@ spec:
   class: io.confluent.connect.s3.S3SinkConnector
   tasksMax: {{ .Values.connector_num_tasks }}
   config:
-    name: radar-s3-sink-connector
     topics: {{ .Values.topics }}
     s3.bucket.name: {{ .Values.bucketName }}
     {{- if .Values.s3Region }}
@@ -26,3 +25,5 @@ spec:
     transforms.combineKeyValue.type: org.radarbase.kafka.connect.transforms.CombineKeyValue
     rotate.schedule.interval.ms: {{ .Values.rotateInterval | int }}
     timezone: UTC
+    flush.size: {{ .Values.flushSize | int }}
+    connect.meta.data: false
