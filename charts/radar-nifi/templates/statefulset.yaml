@@ -87,7 +87,7 @@ spec:
 {{ toYaml .Values.securityContext | indent 8 }}
 {{- end }}
       initContainers:
-{{- if and .Values.properties.isNode (.Values.properties.clusterStateProvider | eq "zk-provider") }}
+{{- if and .Values.properties.isNode  (.Values.properties.clusterStateProvider | eq "zk-provider") }}
       - name: zookeeper
         imagePullPolicy: {{ .Values.sidecar.imagePullPolicy | default "Always" | quote }}
         image: "{{ .Values.sidecar.image }}:{{ .Values.sidecar.tag }}"
@@ -237,6 +237,9 @@ spec:
 
           prop_replace nifi.security.autoreload.enabled true
           prop_replace nifi.security.autoreload.interval "{{ .Values.certManager.refreshSeconds }} secs"
+{{- if eq .Values.properties.clusterStateProvider "kubernetes-provider" }}
+          prop_replace nifi.cluster.leader.election.implementation KubernetesLeaderElectionManager
+{{- end }}
 
           while [ ! -r "${NIFI_HOME}/tls/truststore.jks" ]
           do
@@ -249,21 +252,9 @@ spec:
             echo "${NIFI_HOME}/tls/keystore.jks" is not readable!  Waiting for cert-manager sidecar to populate it.
             sleep 2
           done
+{{ else }}
 
-{{- /* if .Values.certManager.enabled */}}{{ else }}
-
-          if [ ! -r "${NIFI_HOME}/conf/nifi-cert.pem" ]
-          then
-            /opt/nifi/nifi-toolkit-current/bin/tls-toolkit.sh standalone \
-              -n '{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Release.Namespace}}.svc.cluster.local' \
-              -C '{{.Values.auth.admin}}' \
-              -o "${NIFI_HOME}/conf/" \
-              -P {{.Values.auth.SSL.truststorePasswd}} \
-              -S {{.Values.auth.SSL.keystorePasswd}} \
-              --nifiPropertiesFile /opt/nifi/nifi-current/conf/nifi.properties
-          fi
-
-{{- /* if .Values.certManager.enabled */}}{{ end }}
+{{ end }}
 
 {{- if .Values.properties.safetyValve }}
   {{- range $prop, $val := .Values.properties.safetyValve }}
@@ -627,7 +618,6 @@ spec:
         - -ce
         - |
           trap "exit 0" TERM
-          
           NODENAME=$(hostname)
           mkdir -p "${NIFI_HOME}"/tls/cert-manager
 
@@ -798,7 +788,6 @@ spec:
           items:
             - key: "flow.json"
               path: "flow.json"
-
 {{- if .Values.certManager.enabled }}
       - name: secret-reader-token
         secret:
