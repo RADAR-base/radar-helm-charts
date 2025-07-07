@@ -235,9 +235,10 @@ syncTopics:
     # -- Image pull policy to fetch topics with
     pullPolicy: IfNotPresent
   job:
-
+    # -- How often to retry the job in case of failure during topics init.
+    backoffLimit: 100000
   cronjob:
-    # -- Cron  expression for the topics sync cronjob
+    # -- Cron expression for the topics sync cronjob
     schedule: "*/10 * * * *"
     # -- Number of successful jobs to keep in history
     successfulJobsHistoryLimit: 1

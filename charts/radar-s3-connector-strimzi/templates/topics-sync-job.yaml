@@ -15,11 +15,11 @@ data:
     #!/bin/sh
     set -u  # Only unset variable errors
 
-    echo "Fetching {{ $connectorName }} configuration... {{ $connectClusterName }}:8083"
+    echo "Fetching {{ $connectorName }} configuration..."
     current_config=$(curl -sf {{ $connectClusterName }}:8083/connectors/{{ $connectorName }}/config)
     curl_status=$?
     if [ $curl_status -ne 0 ]; then
-      echo "S3-connector cluster cannot be reached. Will retry in a moment."
+      echo "Cannot reach {{ $connectorName }} cluster; will retry in a moment."
       exit $curl_status
     fi
 
@@ -27,12 +27,12 @@ data:
     upstream_topics=$(curl -sf {{ .Values.catalogServer.url }}/source-types | jq -r '[to_entries | .[] | select(.key | test("^.*-source-types$")) | .value[].data[].topic] | sort | unique | join(",")')
     curl_status=$?
     if [ $curl_status -ne 0 ]; then
-      echo "Catalog-server cannot be reached. Will retry in a moment."
+      echo "Cannot reach catalog-server; will retry in a moment."
       exit $curl_status
     fi
 
     if [ -z "$upstream_topics" ]; then
-      echo "No topics found in catalog server. Exiting because there is nothing to synchronize."
+      echo "No topics found in catalog-server. Exiting because there is nothing to synchronize."
       exit 0
     fi
 
@@ -44,7 +44,7 @@ data:
     fi
 
     if [ "$upstream_topics" != "$current_topics" ]; then
-      echo "Updating topics in connector config..."
+      echo "Updating topics in {{ $connectorName }} config..."
       updated_config=$(echo "$current_config" | jq --arg topics "$upstream_topics" '.topics = $topics')
       jq_status=$?
       if [ $jq_status -ne 0 ]; then
@@ -60,14 +60,14 @@ data:
       echo "Topics updated successfully."
       exit 0
     else
-      echo "No changes in topics, skipping update."
+      echo "No changes in topics; will not update."
       exit 0
     fi
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "common.names.fullname" . }}-topics-sync-job
+  name: {{ include "common.names.fullname" . }}-topics-sync
   namespace: {{ include "common.names.namespace" . | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
   {{- if .Values.commonAnnotations }}
@@ -98,14 +98,14 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "common.names.fullname" . }}-topics-sync-job-init
+  name: {{ include "common.names.fullname" . }}-topics-init
   namespace: {{ include "common.names.namespace" . | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
   {{- if .Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  backoffLimit: 23
+  backoffLimit: {{ .Values.syncTopics.job.backoffLimit }}
   template:
     spec:
       containers:

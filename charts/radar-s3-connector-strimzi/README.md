@@ -99,8 +99,8 @@ A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 conne
 | syncTopics.image.repository | string | `"badouralix/curl-jq"` | Image repository to fetch topics with |
 | syncTopics.image.tag | string | `"latest"` | Image tag to fetch topics with |
 | syncTopics.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy to fetch topics with |
-| syncTopics.job | string | `nil` |  |
-| syncTopics.cronjob.schedule | string | `"*/10 * * * *"` | Cron  expression for the topics sync cronjob |
+| syncTopics.job.backoffLimit | int | `100000` | How often to retry the job in case of failure during topics init. |
+| syncTopics.cronjob.schedule | string | `"*/10 * * * *"` | Cron expression for the topics sync cronjob |
 | syncTopics.cronjob.successfulJobsHistoryLimit | int | `1` | Number of successful jobs to keep in history |
 | syncTopics.cronjob.failedJobsHistoryLimit | int | `1` | Number of failed jobs to keep in history |
 | log4j | object | `{"rootLogLevel":"INFO"}` | Log4j configuration |
