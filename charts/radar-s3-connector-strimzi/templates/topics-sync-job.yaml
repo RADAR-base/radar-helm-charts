@@ -51,7 +51,7 @@ data:
         echo "ERROR: Failed to update config with new topics (exit code $jq_status)"
         exit $jq_status
       fi
-      curl -X PUT -H "Content-Type: application/json" -d "$updated_config" -sf {{ $connectClusterName }}:8083/connectors/{{ $connectorName }}/config
+      curl -X PUT -H "Content-Type: application/json" -d "$updated_config" -sf {{ $connectClusterName }}:8083/connectors/{{ $connectorName }}/config > /dev/null
       put_status=$?
       if [ $put_status -ne 0 ]; then
         echo "ERROR: Failed to update connector config (exit code $put_status)"
@@ -80,6 +80,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            job-selector: {{ include "common.names.fullname" . }}-topics-sync
         spec:
           containers:
             - name: topics-sync
