@@ -13,7 +13,7 @@ spec:
   version: {{ .Chart.AppVersion }}
   replicas: {{ .Values.replicaCount }}
   bootstrapServers: {{ .Values.kafka }}
-  image: {{ template "radar-fitbit-connector-strimzi.image" . }}
+  image: {{ template "radar-fitbit-connector.image" . }}
   {{- if .Values.secret.jaas.name }}
   # Authentication-related props are handled by the template builder in https://github.com/strimzi/strimzi-kafka-operator/blob/main/cluster-operator/src/main/java/io/strimzi/operator/cluster/model/KafkaConnectConfigurationBuilder.java
   authentication:
@@ -29,10 +29,10 @@ spec:
     "-Xmx": {{ .Values.jvmOptions.xmx | quote }}
     "-Xms": {{ .Values.jvmOptions.xms | quote }}
   config: # Properties that configure the Kafka Connect cluster itself
-    group.id: {{ include "radar-fitbit-connector-strimzi.fullname" . }}
-    offset.storage.topic: {{ template "radar-fitbit-connector-strimzi.fullname" . }}.offset
-    config.storage.topic: {{ template "radar-fitbit-connector-strimzi.fullname" . }}.config
-    status.storage.topic: {{ template "radar-fitbit-connector-strimzi.fullname" . }}.status
+    group.id: {{ include "common.names.fullname" . }}
+    offset.storage.topic: {{ template "common.names.fullname" . }}.offset
+    config.storage.topic: {{ template "common.names.fullname" . }}.config
+    status.storage.topic: {{ template "common.names.fullname" . }}.status
     # -1 means it will use the default replication factor configured in the broker
     config.storage.replication.factor: -1
     offset.storage.replication.factor: -1
@@ -48,9 +48,8 @@ spec:
       metadata:
         annotations:
           checksum/configmap-log4j: {{ include (print $.Template.BasePath "/configmap-log4j.yaml") . | sha256sum }}
-          backup.velero.io/backup-volumes: logs
         labels:
-          app.kubernetes.io/name: {{ include "radar-fitbit-connector-strimzi.name" . }}
+          app.kubernetes.io/name: {{ include "common.names.name" . }}
           app.kubernetes.io/instance: {{ .Release.Name }}
       imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
       {{- if .Values.image.pullSecrets }}
@@ -72,7 +71,7 @@ spec:
                     - key: "app.kubernetes.io/name"
                       operator: In
                       values:
-                        - {{ template "radar-fitbit-connector-strimzi.name" . }}
+                        - {{ template "common.names.name" . }}
                     - key: "app.kubernetes.io/instance"
                       operator: In
                       values:
@@ -92,7 +91,7 @@ spec:
     connectContainer:
       env:
         - name: CONNECT_REST_ADVERTISED_HOST_NAME  # Possibly replaced by ADVERTISED_HOSTNAME in kafka_connect_run.sh
-          value: {{ include "radar-fitbit-connector-strimzi.fullname" . }}
+          value: {{ include "common.names.fullname" . }}
         - name: KAFKA_LOG4J_OPTS
           value: "-Dlog4j.configuration=file:/opt/kafka/custom-config/log4j.properties"
         {{- if .Values.sentry.dsn }}

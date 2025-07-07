@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "radar-oura-connector-strimzi.fullname" . }}-test-connection"
+  name: "{{ include "common.names.fullname" . }}-test-connection"
   labels:
-    app.kubernetes.io/name: {{ include "radar-oura-connector-strimzi.name" . }}
-    helm.sh/chart: {{ include "radar-oura-connector-strimzi.chart" . }}
+    app.kubernetes.io/name: {{ include "common.names.name" . }}
+    helm.sh/chart: {{ include "common.names.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
@@ -14,5 +14,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args:  ['{{ include "radar-oura-connector-strimzi.fullname" . }}:{{ .Values.service.port }}']
+      args:  ['{{ include "common.names.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never

@@ -11,6 +11,6 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-{{ include "radar-fitbit-connector-strimzi.labels" . | indent 6 }}
+{{ include "common.labels.standard" . | indent 6 }}
     {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
 {{- end -}}
