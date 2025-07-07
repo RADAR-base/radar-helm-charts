@@ -13,22 +13,50 @@ metadata:
 data:
   sync-topics.sh: |
     #!/bin/sh
-    set -Eeuo pipefail
+    set -u  # Only unset variable errors
+
     echo "Fetching {{ $connectorName }} configuration... {{ $connectClusterName }}:8083"
-    CONFIG=$(curl -sf {{ $connectClusterName }}:8083/connectors/{{ $connectorName }}/config | jq)
+    current_config=$(curl -sf {{ $connectClusterName }}:8083/connectors/{{ $connectorName }}/config)
+    curl_status=$?
+    if [ $curl_status -ne 0 ]; then
+      echo "S3-connector cluster cannot be reached. Will retry in a moment."
+      exit $curl_status
+    fi
+
     echo "Fetching current topics from catalog-server..."
-    UPSTREAM_TOPICS=$(curl -sf {{ .Values.catalogServer.url }}/source-types | jq -r '[to_entries | .[] | select(.key | test("^.*-source-types$")) | .value[].data[].topic] | sort | unique | join(",")')
-    # If the upstream topics are empty, exit
-    if [ -z "$UPSTREAM_TOPICS" ]; then
-      echo "No topics found in catalog server, exiting."
+    upstream_topics=$(curl -sf {{ .Values.catalogServer.url }}/source-types | jq -r '[to_entries | .[] | select(.key | test("^.*-source-types$")) | .value[].data[].topic] | sort | unique | join(",")')
+    curl_status=$?
+    if [ $curl_status -ne 0 ]; then
+      echo "Catalog-server cannot be reached. Will retry in a moment."
+      exit $curl_status
+    fi
+
+    if [ -z "$upstream_topics" ]; then
+      echo "No topics found in catalog server. Exiting because there is nothing to synchronize."
       exit 0
     fi
-    CURRENT_TOPICS=$(echo "$CONFIG" | jq -r '.topics')
-    # Compare the upstream topics with the current topics in the connector config
-    if [ "$UPSTREAM_TOPICS" != "$CURRENT_TOPICS" ]; then
+
+    current_topics=$(echo "$current_config" | jq -r '.topics')
+    jq_status=$?
+    if [ $jq_status -ne 0 ]; then
+      echo "ERROR: Failed to parse current topics (exit code $jq_status)"
+      exit $jq_status
+    fi
+
+    if [ "$upstream_topics" != "$current_topics" ]; then
       echo "Updating topics in connector config..."
-      UPDATED_CONFIG=$(echo "$CONFIG" | jq --arg TOPICS "$TOPICS" '.topics = $TOPICS')
-      curl -X PUT -H "Content-Type: application/json" -d "$UPDATED_CONFIG" -sf {{ $connectClusterName }}:8083/connectors/{{ $connectorName }}/config
+      updated_config=$(echo "$current_config" | jq --arg topics "$upstream_topics" '.topics = $topics')
+      jq_status=$?
+      if [ $jq_status -ne 0 ]; then
+        echo "ERROR: Failed to update config with new topics (exit code $jq_status)"
+        exit $jq_status
+      fi
+      curl -X PUT -H "Content-Type: application/json" -d "$updated_config" -sf {{ $connectClusterName }}:8083/connectors/{{ $connectorName }}/config
+      put_status=$?
+      if [ $put_status -ne 0 ]; then
+        echo "ERROR: Failed to update connector config (exit code $put_status)"
+        exit $put_status
+      fi
       echo "Topics updated successfully."
       exit 0
     else
@@ -46,25 +74,51 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  # every 10 minutes
-  schedule: "*/10 * * * *"
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 1
+  schedule: {{ default "*/10 * * * *" .Values.syncTopics.cronjob.schedule | quote }}
+  successfulJobsHistoryLimit: {{ .Values.syncTopics.cronjob.successfulJobsHistoryLimit | default 1 }}
+  failedJobsHistoryLimit: {{ .Values.syncTopics.cronjob.failedJobsHistoryLimit | default 1 }}
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: topics-sync
-            image: {{ .Values.syncTopics.image.repository }}:{{ .Values.syncTopics.image.tag }}
-            command: ["/tmp/sync-topics.sh"]
-            volumeMounts:
-              - mountPath: /tmp/
-                name: sync-topics-config
+            - name: topics-sync
+              image: {{ .Values.syncTopics.image.repository }}:{{ .Values.syncTopics.image.tag }}
+              command: ["/tmp/sync-topics.sh"]
+              volumeMounts:
+                - mountPath: /tmp/
+                  name: sync-topics-config
           restartPolicy: OnFailure
           volumes:
-          - name: sync-topics-config
-            configMap:
-              name: {{ include "common.names.fullname" . }}-topics-sync-job
-              defaultMode: 0777
+            - name: sync-topics-config
+              configMap:
+                name: {{ include "common.names.fullname" . }}-topics-sync-job
+                defaultMode: 0777
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "common.names.fullname" . }}-topics-sync-job-init
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  backoffLimit: 23
+  template:
+    spec:
+      containers:
+        - name: topics-sync
+          image: {{ .Values.syncTopics.image.repository }}:{{ .Values.syncTopics.image.tag }}
+          command: ["/tmp/sync-topics.sh"]
+          volumeMounts:
+            - mountPath: /tmp/
+              name: sync-topics-config
+      restartPolicy: OnFailure
+      volumes:
+        - name: sync-topics-config
+          configMap:
+            name: {{ include "common.names.fullname" . }}-topics-sync-job
+            defaultMode: 0777
 {{- end }}
