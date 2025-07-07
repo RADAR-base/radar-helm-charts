@@ -15,6 +15,8 @@ data:
     #!/bin/sh
     set -u  # Only unset variable errors
 
+    sleep 5  # Needed for successful connection to the cluster when the job is run for the first time
+
     echo "Fetching {{ $connectorName }} configuration..."
     current_config=$(curl -sf {{ $connectClusterName }}:8083/connectors/{{ $connectorName }}/config)
     curl_status=$?
