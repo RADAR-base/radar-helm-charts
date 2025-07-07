@@ -63,7 +63,6 @@ spec:
       metadata:
         annotations:
           checksum/configmap-log4j: {{ include (print $.Template.BasePath "/configmap-log4j.yaml") . | sha256sum }}
-          backup.velero.io/backup-volumes: logs
         labels:
           app.kubernetes.io/name: {{ include "common.names.name" . }}
           app.kubernetes.io/instance: {{ .Release.Name }}
@@ -131,6 +130,12 @@ spec:
         {{- with .Values.extraEnvVars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+  logging:
+    type: external
+    valueFrom:
+      configMapKeyRef:
+        name: {{ template "common.names.fullname" . }}-log4j
+        key: log4j.properties
   {{- if .Values.customLivenessProbe }}
   livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
   {{- else if .Values.livenessProbe.enabled }}
