@@ -17,6 +17,20 @@ maintainers:
     email: heet.sankesara@kcl.ac.uk
     url: https://github.com/Hsankesara
 dependencies:
-  - name: nifi
-    repository: file://../../external/nifi
-    version: 1.2.1
+- condition: zookeeper.enabled
+  name: zookeeper
+  repository: https://charts.bitnami.com/bitnami
+  version: 9.2.7
+- alias: registry
+  condition: registry.enabled
+  name: nifi-registry
+  repository: https://dysnix.github.io/charts/
+  version: 1.0.0
+- condition: ca.enabled
+  name: ca
+  repository: ""
+  version: 1.0.1
+- condition: openldap.enabled
+  name: openldap
+  repository: https://charts.helm.sh/stable
+  version: ~1.2.4
