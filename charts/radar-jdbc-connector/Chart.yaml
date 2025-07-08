@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: 10.8.0
 name: radar-jdbc-connector
 description: A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
-version: 0.10.0
+version: 0.10.1
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-jdbc-connector
@@ -12,7 +12,7 @@ keywords:
   - remote-trial
 annotations:
   artifacthub.io/license: Apache-2.0
-deprecated: false
+deprecated: true
 type: application
 home: "https://radar-base.org"
 maintainers:
