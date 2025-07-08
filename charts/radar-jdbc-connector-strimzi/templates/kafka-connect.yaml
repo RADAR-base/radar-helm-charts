@@ -13,7 +13,7 @@ spec:
   version: {{ .Chart.AppVersion }}
   replicas: {{ .Values.replicaCount }}
   bootstrapServers: {{ .Values.kafka }}
-  image: {{ template "radar-fitbit-connector.image" . }}
+  image: {{ template "radar-jdbc-connector.image" . }}
   {{- if .Values.secret.jaas.name }}
   # Authentication-related props are handled by the template builder in https://github.com/strimzi/strimzi-kafka-operator/blob/main/cluster-operator/src/main/java/io/strimzi/operator/cluster/model/KafkaConnectConfigurationBuilder.java
   authentication:
@@ -41,8 +41,6 @@ spec:
     value.converter: "io.confluent.connect.avro.AvroConverter"
     key.converter.schema.registry.url: {{ .Values.schema_registry }}
     value.converter.schema.registry.url: {{ .Values.schema_registry }}
-    internal.key.converter: "org.apache.kafka.connect.json.JsonConverter"
-    internal.value.converter: "org.apache.kafka.connect.json.JsonConverter"
   template:
     pod:
       metadata:
@@ -90,6 +88,16 @@ spec:
           {{- toYaml .Values.securityContext | nindent 12 }}
     connectContainer:
       env:
+        - name: CONNECT_JDBC_CONNECTION_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "radar-jdbc-connector.secretName" (dict "type" "user" "context" .) }}
+              key: {{ include "radar-jdbc-connector.secretKey" (dict "type" "user" "context" .) }}
+        - name: CONNECT_JDBC_CONNECTION_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "radar-jdbc-connector.secretName" (dict "type" "password" "context" .) }}
+              key: {{ include "radar-jdbc-connector.secretKey" (dict "type" "password" "context" .) }}
         - name: CONNECT_REST_ADVERTISED_HOST_NAME  # Possibly replaced by ADVERTISED_HOSTNAME in kafka_connect_run.sh
           value: {{ include "common.names.fullname" . }}
         - name: KAFKA_LOG4J_OPTS
