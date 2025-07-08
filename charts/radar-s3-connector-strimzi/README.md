@@ -75,7 +75,6 @@ A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 conne
 | kafka | string | `"SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
 | schema_registry | string | `"http://radar-kafka-schema-registry:8081"` | URL of the Kafka schema registry |
 | radar_rest_sources_backend_url | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | Base URL of the rest-sources-authorizer-backend service |
-| connector_num_tasks | string | `"5"` | Number of connector tasks to be used in kafka-connector spec properties |
 | catalogServer.url | string | `"http://catalog-server:9010"` | Catalog server URL |
 | topics | string | `"questionnaire_response"` | List of topics to be consumed by the sink connector separated by comma. Topics defined in the catalog server will automatically be loaded if `syncTopics.enabled` is true. May not be empty or the Strimzi operator will not start the connector. |
 | s3Endpoint | string | `"http://minio:9000/"` | Target S3 endpoint url |

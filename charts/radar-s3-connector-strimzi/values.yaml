@@ -177,8 +177,6 @@ schema_registry: http://radar-kafka-schema-registry:8081
 
 # -- Base URL of the rest-sources-authorizer-backend service
 radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
-# -- Number of connector tasks to be used in kafka-connector spec properties
-connector_num_tasks: "5"
 
 catalogServer:
   # -- Catalog server URL
