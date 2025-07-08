@@ -44,6 +44,7 @@ jobs:
           # - elasticsearch:
           #   FIXME: the elasticsearch image gives sarif related errors, so it is excluded for now.
           #        we need a better way to handle this.
+          # - velero: we do not offer this chart as part of the offical release and therefore do not check for vulnerabilities.
           INCLUDE_CHARTS: charts/cc-schema-registry-proxy
             charts/cert-manager-lets-encrypt
             charts/kube-prometheus-stack
@@ -51,7 +52,6 @@ jobs:
             charts/radar-hydra
             charts/radar-kratos
             charts/radar-s3-proxy
-            charts/velero-s3-deployment
             external/cloudnativepg-operator
             external/fluent-bit
             external/graylog
