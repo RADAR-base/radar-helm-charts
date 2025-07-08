@@ -2,8 +2,9 @@
 
 # radar-s3-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-s3-connector)](https://artifacthub.io/packages/helm/radar-base/radar-s3-connector)
+> **:exclamation: This Helm Chart is deprecated!**
 
-![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 7.8.1](https://img.shields.io/badge/AppVersion-7.8.1-informational?style=flat-square)
+![Version: 0.7.1](https://img.shields.io/badge/Version-0.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 7.8.1](https://img.shields.io/badge/AppVersion-7.8.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 connector with a custom data transformers. These configurations enable a sink connector. See full list of properties here https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options
 
