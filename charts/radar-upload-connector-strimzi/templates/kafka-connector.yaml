@@ -1,0 +1,23 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    strimzi.io/cluster: {{ template "common.names.fullname" . }}
+spec:
+  class: org.radarbase.connect.upload.UploadSourceConnector
+  tasksMax: {{ .Values.maxTasks }}
+  config:
+    upload.source.client.id: {{ .Values.client_id }}
+    upload.source.client.secret: {{ .Values.client_secret }}
+    upload.source.client.tokenUrl: {{ .Values.managementportal_url }}/oauth/token
+    upload.source.backend.baseUrl: http://{{ .Values.radar_upload_connect_backend }}:8085/upload/api/
+    upload.source.poll.interval.ms: {{ .Values.poll_interval | int }}
+    upload.source.queue.size: {{ .Values.task.queueSize | int }}
+    upload.source.record.converter.classes: {{ .Values.record_converter_classes }}
+    upload.source.file.uploader.type: {{ .Values.uploaderType }}
+    upload.source.file.uploader.target.endpoint: {{ .Values.s3Endpoint }}
+    upload.source.file.uploader.target.root.directory: {{ .Values.targetBucketName }}
+    upload.source.file.uploader.username: {{ .Values.bucketAccessKey }}
+    upload.source.file.uploader.password: {{ .Values.bucketSecretKey }}

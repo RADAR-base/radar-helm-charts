@@ -1,0 +1,228 @@
+# Default values for radar-upload-connector-strimzi.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of radar-upload-connector-strimzi replicas to deploy
+replicaCount: 1
+
+image:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
+  repository: radarbase/radar-upload-connector
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
+
+# -- String to partially override common.names.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override common.names.fullname template with a string
+fullnameOverride: ""
+
+# -- Configure radar-upload-connector-strimzi pods' Security Context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Configure radar-upload-connector-strimzi containers' Security Context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # -- Kubernetes Service type
+  type: ClusterIP
+  # -- radar-upload-connector-strimzi port
+  port: 8083
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  # -- CPU/Memory resource requests
+  requests:
+    cpu: 100m
+    memory: 1Gi
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Toleration labels for pod assignment
+tolerations: []
+
+# -- Affinity labels for pod assignment
+affinity: {}
+
+secret:
+  # -- Secret name for the JAAS configuration
+  jaas:
+    name: shared-service-user
+    key: sasl.jaas.config
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for livenessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: 'radar-kafka-schema-registry'
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: 'management-portal'
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: 'minio'
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: 'radar-upload-connect-backend'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
+# -- Java heap options
+jvmOptions:
+  xms: "1500m"
+  xmx: "2500m"
+
+# -- URI of Kafka brokers of the cluster
+kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
+# -- URL of the Kafka schema registry
+schema_registry: http://radar-kafka-schema-registry:8081
+# -- URL of the Management Portal
+managementportal_url: http://management-portal:8080/managementportal
+# -- Host name of the upload connect backend application
+radar_upload_connect_backend: radar-upload-connect-backend
+# -- OAuth2 Client Id of the Upload connector
+client_id: radar_upload_connect
+# -- OAuth2 Client secret of the Upload connector
+client_secret: upload_secret
+# -- How often the connector should poll for new records from upload connect backend in milliseconds.
+poll_interval: 60000
+# -- List of converter classes to be activated as comma separated values.
+# @default -- Check values.yaml
+record_converter_classes: org.radarbase.connect.upload.converter.altoida.AltoidaConverterFactory,org.radarbase.connect.upload.converter.axivity.AxivityConverterFactory,org.radarbase.connect.upload.converter.oxford.WearableCameraConverterFactory,org.radarbase.connect.upload.converter.gaitup.Physilog5ConverterFactory
+# -- Uploader type for converters which directly write the files bypassing the Kafka processing. e.g. images and binaries.
+uploaderType: s3
+# -- Target S3 endpoint, if files should be written to a location bypassing the Kafka processing.
+s3Endpoint: http://minio:9000/
+# -- Target S3 access key
+bucketAccessKey: access_key
+# -- Target S3 secret key
+bucketSecretKey: secret
+# -- Target S3 bucket name
+targetBucketName: radar-output-storage
+# -- Maximum number of worker threads inside a connector pod.
+maxTasks: 2
+
+task:
+  # -- Maximum number of source records that can be produced at a time, preventing out of memory errors.
+  queueSize: 10000
+
+connect:
+  # -- Interval at which to try committing offsets for tasks. See
+  offsetFlushIntervalMs: 5000
+
+# -- Override kafka producer configs. For more details see https://docs.confluent.io/platform/current/installation/configuration/producer-configs.html
+# @default -- Check below
+producer:
+  # -- The compression type for all data generated by the producer.
+  compressionType: lz4
+  # -- The total bytes of memory the producer can use to buffer records waiting to be sent to the server.
+  bufferMemory: 2000000
+  # -- Batch size in bytes to batch records together into fewer requests when multiple records are being sent to the same partition.
+  batchSize: 200000
+
+# -- Log4j configuration
+log4j:
+  # -- Root log level for the Kafka Connect instance
+  rootLogLevel: INFO
+
+# Sentry monitoring configuration
+sentry:
+  # -- DSN (Data Source Name) of the sentry server
+  dsn:
+  # -- Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR)
+  level: ERROR
