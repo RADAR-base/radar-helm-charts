@@ -2,9 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# -- Number of radar-jdbc-connector replicas to deploy
-replicaCount: 1
-
 image:
   # -- Image registry
   registry: docker.io
@@ -152,14 +149,17 @@ networkpolicy:
       - port: 53
         protocol: TCP
 
-# -- URI of Kafka brokers of the cluster
-kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
-
-# -- URL of the Kafka schema registry
-schema_registry: http://radar-kafka-schema-registry:8081
 
 # -- Maximum number of worker threads inside a connector pod.
-maxTasks: 2
+maxTasks: 5
+
+# -- The version of the Kafka deployed by the Strimzi operator. Must be consistent across the RADAR-base platform.
+kafkaVersion: 3.9.0
+
+# -- URI of Kafka brokers of the cluster
+kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
+# -- URL of the Kafka schema registry
+schema_registry: http://radar-kafka-schema-registry:8081
 
 # -- Either source or sink
 mode: sink

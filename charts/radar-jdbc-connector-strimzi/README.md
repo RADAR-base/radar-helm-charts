@@ -3,7 +3,7 @@
 # radar-jdbc-connector-strimzi
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-jdbc-connector-strimzi)](https://artifacthub.io/packages/helm/radar-base/radar-jdbc-connector-strimzi)
 
-![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
+![Version: 0.10.1](https://img.shields.io/badge/Version-0.10.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base JDBC Kafka connector for Strimzi Connect. This is a f rk of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
 
@@ -38,7 +38,6 @@ A Helm chart for RADAR-base JDBC Kafka connector for Strimzi Connect. This is a 
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| replicaCount | int | `1` | Number of radar-jdbc-connector replicas to deploy |
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"radarbase/radar-jdbc-connector"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
@@ -71,9 +70,10 @@ A Helm chart for RADAR-base JDBC Kafka connector for Strimzi Connect. This is a 
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
+| maxTasks | int | `5` | Maximum number of worker threads inside a connector pod. |
+| kafkaVersion | string | `"3.9.0"` | The version of the Kafka deployed by the Strimzi operator. Must be consistent across the RADAR-base platform. |
 | kafka | string | `"SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
 | schema_registry | string | `"http://radar-kafka-schema-registry:8081"` | URL of the Kafka schema registry |
-| maxTasks | int | `2` | Maximum number of worker threads inside a connector pod. |
 | mode | string | `"sink"` | Either source or sink |
 | jvmOptions | object | `{"xms":"1500m","xmx":"2500m"}` | Java heap options |
 | source.name | string | `"radar-jdbc-source"` | Name of the connector Kafka producer group |
