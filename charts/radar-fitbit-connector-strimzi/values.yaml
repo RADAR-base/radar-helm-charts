@@ -170,15 +170,18 @@ networkpolicy:
       - port: 53
         protocol: TCP
 
+# -- Maximum number of worker threads inside a connector pod.
+maxTasks: 5
+
+# -- The version of the Kafka deployed by the Strimzi operator. Must be consistent across the RADAR-base platform.
+kafkaVersion: 3.9.0
+
 # -- URI of Kafka brokers of the cluster
 kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
 # -- URL of the Kafka schema registry
 schema_registry: http://radar-kafka-schema-registry:8081
-
 # -- Base URL of the rest-sources-authorizer-backend service
 radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
-# -- Number of connector tasks to be used in kafka-connector spec properties
-connector_num_tasks: "5"
 
 # -- Fitbit API URL.
 fitbit_api_url: https://api.fitbit.com
@@ -200,7 +203,7 @@ includeIntradayData: true
 
 # -- Class of the user repository to use. This should be a class that implements the UserRepository interface.
 # Use of the YamlUserRepository is deprecated, use ServiceUserRepositoryLegacy instead.
-user_repository_class: ServiceUserRepositoryLegacy
+user_repository_class: org.radarbase.connect.rest.fitbit.user.ServiceUserRepositoryLegacy
 
 # -- How often to poll the source URL.
 # Only use to speed up processing times during e2e testing.

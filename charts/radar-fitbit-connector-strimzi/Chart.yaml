@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: 3.9.0
+appVersion: 0.6.2
 description: A Helm chart for RADAR-base fitbit Kafka connector using the Strimzi Operator. This application collects data from participants via the Fitbit Web API.
 name: radar-fitbit-connector-strimzi
 version: 0.0.2
