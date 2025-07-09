@@ -205,15 +205,19 @@ networkpolicy:
       - port: 53
         protocol: TCP
 
+# -- Maximum number of worker threads inside a connector pod.
+maxTasks: 5
+
+# -- The version of the Kafka deployed by the Strimzi operator. Must be consistent across the RADAR-base platform.
+kafkaVersion: 3.9.0
+
 # -- URI of Kafka brokers of the cluster
 kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
 # -- URL of the Kafka schema registry
 schema_registry: http://radar-kafka-schema-registry:8081
-
 # -- Base URL of the rest-sources-authorizer-backend service
 radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
-# -- Number of connector tasks to be used in connector.properties
-connector_num_tasks: "5"
+
 # -- Oura API client id.
 oura_api_client: ""
 # -- Oura API client secret.

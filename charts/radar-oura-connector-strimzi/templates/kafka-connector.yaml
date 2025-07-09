@@ -7,11 +7,10 @@ metadata:
     strimzi.io/cluster: {{ template "common.names.fullname" . }}
 spec:
   class: org.radarbase.connect.rest.oura.OuraSourceConnector
-  tasksMax: {{ .Values.connector_num_tasks }}
+  tasksMax: {{ .Values.maxTasks }}
   config: # Properties that configure Oura source connector
     name: radar-oura-source
     connector.class: org.radarbase.connect.rest.oura.OuraSourceConnector
-    tasks.max: {{ .Values.connector_num_tasks }}
     rest.source.base.url: https://api.ouraring.com
     rest.source.poll.interval.ms: 5000
     oura.api.client: {{ .Values.oura_api_client }}

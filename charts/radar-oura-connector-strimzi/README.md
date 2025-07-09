@@ -3,7 +3,7 @@
 # radar-oura-connector-strimzi
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-oura-connector-strimzi)](https://artifacthub.io/packages/helm/radar-base/radar-oura-connector-strimzi)
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
+![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.2](https://img.shields.io/badge/AppVersion-0.6.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base oura connector using the Strimzi Operator. This application collects data from participants via the Oura Web API.
 
@@ -83,10 +83,11 @@ A Helm chart for RADAR-base oura connector using the Strimzi Operator. This appl
 | startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
+| maxTasks | int | `5` | Maximum number of worker threads inside a connector pod. |
+| kafkaVersion | string | `"3.9.0"` | The version of the Kafka deployed by the Strimzi operator. Must be consistent across the RADAR-base platform. |
 | kafka | string | `"SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
 | schema_registry | string | `"http://radar-kafka-schema-registry:8081"` | URL of the Kafka schema registry |
 | radar_rest_sources_backend_url | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | Base URL of the rest-sources-authorizer-backend service |
-| connector_num_tasks | string | `"5"` | Number of connector tasks to be used in connector.properties |
 | oura_api_client | string | `""` | Oura API client id. |
 | oura_api_secret | string | `""` | Oura API client secret. |
 | oauthClientId | string | `"radar_oura_connector"` | OAuth2 client id from Management Portal |
