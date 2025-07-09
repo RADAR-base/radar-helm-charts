@@ -1,0 +1,64 @@
+{{- $isSource := eq .Values.mode "source" -}}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    strimzi.io/cluster: {{ template "common.names.fullname" . }}
+spec:
+  class: io.confluent.connect.jdbc.JdbcSinkConnector
+  tasksMax: {{ .Values.maxTasks }}
+  config: # Properties that configure Fitbit source connector
+    {{/*At moment of this writing, 'connection.url' cannot be set from environment variable with JDBC-connector.
+     As such, it has to be added in config file and is created when any URL secret has been created*/}}
+    connection.url: {{ include "radar-jdbc-connector.databaseUrl" . }}
+    jdbc.credentials.provider.class: io.confluent.connect.jdbc.util.EnvVarsJdbcCredentialsProvider
+    dialect.name: {{ .Values.jdbc.dialect }}
+    max.retries: 15
+    retry.backoff.ms: 600000
+    connection.attempts: 15
+    connection.backoff.ms: 600000
+
+    {{- if not $isSource }}
+    connector.class: io.confluent.connect.jdbc.JdbcSinkConnector
+
+      {{- with .Values.sink }}
+    insert.mode: {{ .insertMode }}
+    topics: {{ .topics }}
+    table.name.format: {{ .tableNameFormat }}
+    auto.create: {{ .autoCreate }}
+        {{- with .primaryKeys }}
+    pk.mode: {{ .mode }}
+    pk.fields: {{ join ", " .fields }}
+        {{- end }}
+
+        {{- if or (dig "mergeKey" false .) (dig "transforms" "enabled" false .) }}
+          {{- with .transforms }}
+    transforms: mergeKey,timestamp
+    transforms.mergeKey.type: {{ .mergeKeyType }}
+    transforms.timestamp.type: {{ .timestampType }}
+    transforms.timestamp.fields: {{ join ", " .timestampFields }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}}}
+
+    {{- if $isSource }}
+      {{- with .Values.source }}
+        {{- if .schema }}
+    schema.pattern: {{ .schema }}
+        {{- end }}
+    table.whitelist: {{ .tableWhitelist }}
+    topic.prefix: {{ .topicPrefix }}
+    mode: {{ .mode }}
+    incrementing.column.name: {{ .incrementingColumnName }}
+        {{- if .keyField }}
+    transforms: createKey,extractField
+    transforms.createKey.type: org.apache.kafka.connect.transforms.ValueToKey
+    transforms.createKey.fields: {{ .keyField }}
+    transforms.extractField.type: org.apache.kafka.connect.transforms.ExtractField$Key
+    transforms.extractField.field: {{ .keyField }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
