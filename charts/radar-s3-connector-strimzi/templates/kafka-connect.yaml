@@ -10,7 +10,7 @@ metadata:
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
     {{- end }}
 spec:
-  version: {{ .Chart.AppVersion }}
+  version: {{ .Values.kafkaVersion }}
   replicas: {{ .Values.replicaCount }}
   bootstrapServers: {{ .Values.kafka }}
   image: {{ template "radar-s3-connector.image" . }}

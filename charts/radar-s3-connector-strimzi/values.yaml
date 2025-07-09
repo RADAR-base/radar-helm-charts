@@ -170,14 +170,18 @@ networkpolicy:
       - port: 53
         protocol: TCP
 
+# -- Maximum number of worker threads inside a connector pod.
+maxTasks: 5
+
+# -- The version of the Kafka deployed by the Strimzi operator. Must be consistent across the RADAR-base platform.
+kafkaVersion: 3.9.0
+
 # -- URI of Kafka brokers of the cluster
 kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
 # -- URL of the Kafka schema registry
 schema_registry: http://radar-kafka-schema-registry:8081
-
 # -- Base URL of the rest-sources-authorizer-backend service
 radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
-
 catalogServer:
   # -- Catalog server URL
   url: http://catalog-server:9010
@@ -197,8 +201,6 @@ s3Region:
 flushSize: 10000
 # -- The time interval in milliseconds to invoke file commits.
 rotateInterval: 900000
-# -- Number of tasks in the connector
-maxTasks: 4
 # -- Access key of the target S3 bucket
 bucketAccessKey: access_key
 # -- Secret key of the target S3 bucket
