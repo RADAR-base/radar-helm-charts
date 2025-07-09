@@ -3,7 +3,7 @@
 # radar-upload-connector-strimzi
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connector-strimzi)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connector-strimzi)
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
+![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.0](https://img.shields.io/badge/AppVersion-0.7.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload kafka connector. This is used for reading uploaded data from backend and sending them to Kafka cluster for later processing.
 
@@ -70,6 +70,8 @@ A Helm chart for RADAR-base upload kafka connector. This is used for reading upl
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | jvmOptions | object | `{"xms":"1500m","xmx":"2500m"}` | Java heap options |
+| maxTasks | int | `5` | Maximum number of worker threads inside a connector pod. |
+| kafkaVersion | string | `"3.9.0"` | The version of the Kafka deployed by the Strimzi operator. Must be consistent across the RADAR-base platform. |
 | kafka | string | `"SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
 | schema_registry | string | `"http://radar-kafka-schema-registry:8081"` | URL of the Kafka schema registry |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
@@ -83,7 +85,6 @@ A Helm chart for RADAR-base upload kafka connector. This is used for reading upl
 | bucketAccessKey | string | `"access_key"` | Target S3 access key |
 | bucketSecretKey | string | `"secret"` | Target S3 secret key |
 | targetBucketName | string | `"radar-output-storage"` | Target S3 bucket name |
-| maxTasks | int | `2` | Maximum number of worker threads inside a connector pod. |
 | task.queueSize | int | `10000` | Maximum number of source records that can be produced at a time, preventing out of memory errors. |
 | connect.offsetFlushIntervalMs | int | `5000` | Interval at which to try committing offsets for tasks. See |
 | producer | object | Check below | Override kafka producer configs. For more details see https://docs.confluent.io/platform/current/installation/configuration/producer-configs.html |
