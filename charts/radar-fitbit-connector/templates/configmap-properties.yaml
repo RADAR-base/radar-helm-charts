@@ -26,6 +26,30 @@ data:
     fitbit.user.poll.interval={{ .Values.fitbit_user_poll_interval | int }}
     application.loop.interval.ms={{ .Values.application_loop_interval_ms | int }}
     user.cache.refresh.interval.ms={{ .Values.user_cache_refresh_interval_ms | int}}
+    fitbit.intraday.steps.enabled={{ .Values.routes.intradaySteps.enabled | quote }}
+    fitbit.intraday.steps.topic={{ .Values.routes.intradaySteps.topic }}
+    fitbit.intraday.heart.rate.enabled={{ .Values.routes.intradayHeartRate.enabled | quote }}
+    fitbit.intraday.heart.rate.topic={{ .Values.routes.intradayHeartRate.topic }}
+    fitbit.intraday.heart.rate.variability.enabled={{ .Values.routes.intradayHeartRateVariability.enabled | quote }}
+    fitbit.intraday.heart.rate.variability.topic={{ .Values.routes.intradayHeartRateVariability.topic }}
+    fitbit.resting.heart.rate.enabled={{ .Values.routes.restingHeartRate.enabled | quote }}
+    fitbit.resting.heart.rate.topic={{ .Values.routes.restingHeartRate.topic }}
+    fitbit.sleep.stages.enabled={{ .Values.routes.sleepStages.enabled | quote }}
+    fitbit.sleep.stages.topic={{ .Values.routes.sleepStages.topic }}
+    fitbit.sleep.classic.enabled={{ .Values.routes.sleepClassic.enabled | quote }}
+    fitbit.sleep.classic.topic={{ .Values.routes.sleepClassic.topic }}
+    fitbit.timezone.enabled={{ .Values.routes.timezone.enabled | quote }}
+    fitbit.timezone.topic={{ .Values.routes.timezone.topic }}
+    fitbit.activity.log.enabled={{ .Values.routes.activityLog.enabled | quote }}
+    fitbit.activity.log.topic={{ .Values.routes.activityLog.topic }}
+    fitbit.intraday.calories.enabled={{ .Values.routes.intradayCalories.enabled | quote }}
+    fitbit.intraday.calories.topic={{ .Values.routes.intradayCalories.topic }}
+    fitbit.intraday.spo2.enabled={{ .Values.routes.intradaySpo2.enabled | quote }}
+    fitbit.intraday.spo2.topic={{ .Values.routes.intradaySpo2.topic }}
+    fitbit.breathing.rate.enabled={{ .Values.routes.breathingRate.enabled | quote }}
+    fitbit.breathing.rate.topic={{ .Values.routes.breathingRate.topic }}
+    fitbit.skin.temperature.enabled={{ .Values.routes.skinTemperature.enabled | quote }}
+    fitbit.skin.temperature.topic={{ .Values.routes.skinTemperature.topic }}
   {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
   kafka-wait.properties: |
     {{ .Values.kafka_wait.properties | indent 4 }}
