@@ -99,8 +99,8 @@ rules:
 - apiGroups: [""]
   resources: ["secrets"]
   verbs: ["get"]
-{{/* 
-     SECURITY NOTE: This Role can read any secret in the namespace, which 
+{{/*
+     SECURITY NOTE: This Role can read any secret in the namespace, which
                     at first can seem excessive.  However, in mitigation,
                     this role's secret is only exposed to the cert-manager
                     sidecar.  That sidecar runs a very simple script that

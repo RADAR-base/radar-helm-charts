@@ -106,4 +106,4 @@ spec:
     app: {{ template "apache-nifi.name" . }}
     release: {{ .Release.Name }}
   type: ClusterIP
-  {{- end }}    
+  {{- end }}

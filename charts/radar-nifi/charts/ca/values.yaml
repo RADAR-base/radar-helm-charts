@@ -55,7 +55,7 @@ serviceAccount:
   #name: nifi-ca
 
 ## Openshift support
-## Use the following varables in order to enable Route and Security Context Constraint creation
+## Use the following variables in order to enable Route and Security Context Constraint creation
 openshift:
   scc:
     enabled: false

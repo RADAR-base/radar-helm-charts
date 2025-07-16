@@ -38,10 +38,10 @@ sts:
   pod:
     annotations:
       security.alpha.kubernetes.io/sysctls: net.ipv4.ip_local_port_range=10000 65000
-      #prometheus.io/scrape: "true"
+      # prometheus.io/scrape: "true"
   serviceAccount:
     create: true
-    #name: nifi
+    # name: nifi
     annotations: {}
   hostAliases: []
 #    - ip: "1.2.3.4"
@@ -74,7 +74,7 @@ sts:
 
 properties:
   # https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#nifi_sensitive_props_key
-  sensitiveKey: changeMechangeMe # Must have at least 12 characters
+  sensitiveKey: changeMechangeMe  # Must have at least 12 characters
   # NiFi assumes conf/nifi.properties is persistent but this helm chart
   # recreates it every time.  Setting the Sensitive Properties Key
   # (nifi.sensitive.props.key) is supposed to happen at the same time
@@ -92,13 +92,13 @@ properties:
   externalSecure: false
   isNode: true
   httpsPort: 8443
-  webProxyHost: # <clusterIP>:<NodePort> (If Nifi service is NodePort or LoadBalancer)
+  webProxyHost:  # <clusterIP>:<NodePort> (If Nifi service is NodePort or LoadBalancer)
   clusterPort: 6007
-  zkClientEnsembleTraker: false # https://issues.apache.org/jira/browse/NIFI-10481
+  zkClientEnsembleTracker: false  # https://issues.apache.org/jira/browse/NIFI-10481
   clusterNodeConnectionTimeout: '10 sec'
   clusterNodeReadTimeout: '10 sec'
   clusterHeartbeatInterval: '5 sec'
-  clusterHeartbeatMissableMax: 10
+  clusterHeartbeatMiscibleMax: 10
   zookeeperConnectTimeout: '3 secs'
   zookeeperSessionTimeout: '3 secs'
   archiveMaxRetentionPeriod: "3 days"
@@ -119,13 +119,13 @@ properties:
     port: 10000
   # use properties.safetyValve to pass explicit 'key: value' pairs that overwrite other configuration
   safetyValve:
-    #nifi.variable.registry.properties: "${NIFI_HOME}/example1.properties, ${NIFI_HOME}/example2.properties"
+    # nifi.variable.registry.properties: "${NIFI_HOME}/example1.properties, ${NIFI_HOME}/example2.properties"
     nifi.web.http.network.interface.default: eth0
     # listen to loopback interface so "kubectl port-forward ..." works
     nifi.web.http.network.interface.lo: lo
   clusterStateProvider: kubernetes-provider
 
-  ## Include aditional processors
+  ## Include additional processors
   # customLibPath: "/opt/configuration_resources/custom_lib"
 
 ## Include additional libraries in the Nifi containers by using the postStart handler
@@ -140,33 +140,33 @@ auth:
     keystorePasswd: changeMe
     truststorePasswd: changeMe
 
-  # Automaticaly disabled if OIDC or LDAP enabled
+  # Automatically disabled if OIDC or LDAP enabled
   singleUser:
     username: username
-    password: changemechangeme # Must to have at least 12 characters
+    password: changemechangeme  # Must to have at least 12 characters
 
   clientAuth:
     enabled: false
 
   ldap:
     enabled: false
-    host: #ldap://<hostname>:<port>
-    searchBase: #CN=Users,DC=ldap,DC=example,DC=be
-    admin: #cn=admin,dc=ldap,dc=example,dc=be
-    pass: #ChangeMe
+    host:  # ldap://<hostname>:<port>
+    searchBase:  # CN=Users,DC=ldap,DC=example,DC=be
+    admin:  # cn=admin,dc=ldap,dc=example,dc=be
+    pass:  # ChangeMe
     searchFilter: (objectClass=*)
     userIdentityAttribute: cn
-    authStrategy: SIMPLE # How the connection to the LDAP server is authenticated. Possible values are ANONYMOUS, SIMPLE, LDAPS, or START_TLS.
+    authStrategy: SIMPLE  # How the connection to the LDAP server is authenticated. Possible values are ANONYMOUS, SIMPLE, LDAPS, or START_TLS.
     identityStrategy: USE_DN
     authExpiration: 12 hours
-    userSearchScope: ONE_LEVEL # Search scope for searching users (ONE_LEVEL, OBJECT, or SUBTREE). Required if searching users.
-    groupSearchScope: ONE_LEVEL # Search scope for searching groups (ONE_LEVEL, OBJECT, or SUBTREE). Required if searching groups.
+    userSearchScope: ONE_LEVEL  # Search scope for searching users (ONE_LEVEL, OBJECT, or SUBTREE). Required if searching users.
+    groupSearchScope: ONE_LEVEL  # Search scope for searching groups (ONE_LEVEL, OBJECT, or SUBTREE). Required if searching groups.
 
   oidc:
     enabled: false
-    discoveryUrl: #http://<oidc_provider_address>:<oidc_provider_port>/auth/realms/<client_realm>/.well-known/openid-configuration
-    clientId: #<client_name_in_oidc_provider>
-    clientSecret: #<client_secret_in_oidc_provider>
+    discoveryUrl:  # http://<oidc_provider_address>:<oidc_provider_port>/auth/realms/<client_realm>/.well-known/openid-configuration
+    clientId:  # <client_name_in_oidc_provider>
+    clientSecret:  # <client_secret_in_oidc_provider>
     claimIdentifyingUser: email
     admin: nifi@example.com
     tokenRefreshWindow: 60 secs
@@ -180,14 +180,14 @@ openldap:
   persistence:
     enabled: true
   env:
-    LDAP_ORGANISATION: # name of your organization e.g. "Example"
-    LDAP_DOMAIN: # your domain e.g. "ldap.example.be"
+    LDAP_ORGANISATION:  # name of your organization e.g. "Example"
+    LDAP_DOMAIN:  # your domain e.g. "ldap.example.be"
     LDAP_BACKEND: "hdb"
     LDAP_TLS: "true"
     LDAP_TLS_ENFORCE: "false"
     LDAP_REMOVE_CONFIG_AFTER_SETUP: "false"
-  adminPassword: #ChengeMe
-  configPassword: #ChangeMe
+  adminPassword:  # ChengeMe
+  configPassword:  # ChangeMe
   customLdifFiles:
     1-default-users.ldif: |-
       # You can find an example ldif file at https://github.com/cetic/fadi/blob/master/examples/basic/example.ldif
@@ -231,11 +231,11 @@ service:
       - name: processor01
         port: 7001
         targetPort: 7001
-        #nodePort: 30701
+        # nodePort: 30701
       - name: processor02
         port: 7002
         targetPort: 7002
-        #nodePort: 30702
+        # nodePort: 30702
 ## Configure containerPorts section with following attributes: name, containerport and protocol.
 containerPorts: []
 # - name: example
@@ -279,7 +279,7 @@ persistence:
   #
   # The default storage class is used if this variable is not set.
 
-  accessModes:  [ReadWriteOnce]
+  accessModes: [ReadWriteOnce]
 
   ## Use subPath and have 1 persistent volume instead of 7 volumes - use when your k8s nodes have limited volume slots, to limit waste of space,
   ##  or your available volume sizes are quite large
@@ -375,14 +375,14 @@ extraOptions: []
 #       name: mysecret
 
 ## Openshift support
-## Use the following varables in order to enable Route and Security Context Constraint creation
+## Use the following variables in order to enable Route and Security Context Constraint creation
 openshift:
   scc:
     enabled: false
   route:
     enabled: false
-    #host: www.test.com
-    #path: /nifi
+    # host: www.test.com
+    # path: /nifi
 
 # ca server details
 # Setting this true would create a nifi-toolkit based ca server
@@ -400,7 +400,7 @@ ca:
     cn: admin
   serviceAccount:
     create: false
-    #name: nifi-ca
+    # name: nifi-ca
   openshift:
     scc:
       enabled: false

@@ -22,7 +22,7 @@ image:
   tag: 1.2.4
   pullPolicy: IfNotPresent
 
-# Spcifies an existing secret to be used for admin and config user passwords
+# Specifies an existing secret to be used for admin and config user passwords
 existingSecret: ""
 
 # settings for enabling TLS

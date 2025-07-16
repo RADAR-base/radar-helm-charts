@@ -24,4 +24,3 @@ spec:
     - name: {{ include "common.names.fullname" . }}
       rules: {{- toYaml .Values.metrics.prometheusRule.rules | nindent 8 }}
 {{- end }}
-

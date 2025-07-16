@@ -299,12 +299,12 @@ spec:
               echo "truststore=$(prop nifi.security.truststore)" >> secure.properties
               echo "truststorePasswd=$(prop nifi.security.truststorePasswd)" >> secure.properties
               echo "proxiedEntity={{ .Values.auth.admin }}" >> secure.properties
-             
+
               secureArgs="-p secure.properties"
 
               echo baseUrl ${baseUrl}
               echo "gracefully disconnecting node '$FQDN' from cluster"
-              ${NIFI_TOOLKIT_HOME}/bin/cli.sh nifi get-nodes -ot json -u ${baseUrl} ${secureArgs} > nodes.json
+              ${NIFI_TOOLKIT_HOME}/bin/cli.sh nifi get-nodes --outputType json -u ${baseUrl} ${secureArgs} > nodes.json
               nnid=$(jq --arg FQDN "$FQDN" '.cluster.nodes[] | select(.address==$FQDN) | .nodeId' nodes.json)
               echo "disconnecting node ${nnid}"
               ${NIFI_TOOLKIT_HOME}/bin/cli.sh nifi disconnect-node -nnid $nnid -u ${baseUrl} ${secureArgs}
@@ -317,7 +317,7 @@ spec:
               echo "wait until node has state 'DISCONNECTED'"
               while [[ "${node_state}" != "DISCONNECTED" ]]; do
                   sleep 1
-                  ${NIFI_TOOLKIT_HOME}/bin/cli.sh nifi get-nodes -ot json -u ${baseUrl} ${secureArgs} > nodes.json
+                  ${NIFI_TOOLKIT_HOME}/bin/cli.sh nifi get-nodes --outputType json -u ${baseUrl} ${secureArgs} > nodes.json
                   node_state=$(jq -r --arg FQDN "$FQDN" '.cluster.nodes[] | select(.address==$FQDN) | .status' nodes.json)
                   echo "state is '${node_state}'"
               done
@@ -329,7 +329,7 @@ spec:
               echo "wait until node has state 'OFFLOADED'"
               while [[ "${node_state}" != "OFFLOADED" ]]; do
                   sleep 1
-                  ${NIFI_TOOLKIT_HOME}/bin/cli.sh nifi get-nodes -ot json -u ${baseUrl} ${secureArgs} > nodes.json
+                  ${NIFI_TOOLKIT_HOME}/bin/cli.sh nifi get-nodes --outputType json -u ${baseUrl} ${secureArgs} > nodes.json
                   node_state=$(jq -r --arg FQDN "$FQDN" '.cluster.nodes[] | select(.address==$FQDN) | .status' nodes.json)
                   echo "state is '${node_state}'"
               done
@@ -366,7 +366,7 @@ spec:
 {{- if .Values.metrics.prometheus.enabled }}
         - containerPort: {{ .Values.metrics.prometheus.port }}
           name: metrics
-          protocol: TCP                  
+          protocol: TCP
 {{- end }}
         - containerPort: {{ .Values.properties.httpsPort }}
 {{- if .Values.sts.hostPort }}
@@ -561,7 +561,7 @@ spec:
       - name: app-log
         imagePullPolicy: {{ .Values.sidecar.imagePullPolicy | default "Always" | quote }}
         image: "{{ .Values.sidecar.image }}:{{ .Values.sidecar.tag }}"
-        args: 
+        args:
           - /bin/sh
           - -c
           - trap "exit 0" TERM; tail -n+1 -F /var/log/nifi-app.log & wait $!
@@ -636,12 +636,12 @@ spec:
                  --output /tmp/secret.json
             jq .data < /tmp/secret.json > /tmp/secret-data.json
             rm -f /tmp/secret.json
-          }       
-        
+          }
+
           pullNodeSecretData
           jq -r '."ca.crt"' < /tmp/secret-data.json | base64 -d > "${NIFI_HOME}"/tls/cert-manager/ca.crt
           touch /tmp/tls.crt.old
-            
+
           rm -f "${NIFI_HOME}/tls/truststore-new.jks"
           for ca in "${NIFI_HOME}"/tls/*/ca.crt
           do

@@ -41,7 +41,7 @@ spec:
             backend:
               service:
                 name: {{ $fullName }}
-                port: 
+                port:
                   number: {{ $ingressHttpsPort }}
   {{- end }}
 {{- end }}

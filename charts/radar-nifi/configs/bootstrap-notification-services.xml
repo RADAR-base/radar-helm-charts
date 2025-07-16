@@ -24,12 +24,12 @@
                 <property name="another property">another property value</property>
             </service>
         </services>
-        
+
         This file can contain 0 to many different service definitions.
         The id can then be referenced from the bootstrap.conf file in order to configure the notification service
         to be used when particular lifecycle events occur.
     -->
-    
+
 <!--
      <service>
         <id>email-notification</id>
