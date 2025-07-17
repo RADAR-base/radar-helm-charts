@@ -26,4 +26,4 @@
 .circleci/
 
 doc/
-.github
+.github/

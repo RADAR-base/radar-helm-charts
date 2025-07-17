@@ -1,0 +1,35 @@
+{{- if .Values.flowProvider.git.ssh.known_hosts -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "nifi-registry.fullname" . }}-ssh-known-hosts
+  namespace: {{ .Release.Namespace }}
+data:
+  known_hosts: |
+    {{- if .Values.flowProvider.git.ssh.known_hosts }}
+      {{- if contains "\n" .Values.flowProvider.git.ssh.known_hosts }}
+        {{- range $value := .Values.flowProvider.git.ssh.known_hosts | splitList "\n" }}
+          {{ print $value }}
+        {{- end }}
+      {{- else }}
+        {{ .Values.flowProvider.git.ssh.known_hosts }}
+      {{- end }}
+    {{- end }}
+---
+{{- end -}}
+{{- if .Values.flowProvider.git.ssh.config -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "nifi-registry.fullname" . }}-ssh-config
+  namespace: {{ .Release.Namespace }}
+data:
+  config: |
+      {{- if contains "\n" .Values.flowProvider.git.ssh.config }}
+        {{- range $value := .Values.flowProvider.git.ssh.config | splitList "\n" }}
+          {{ print $value }}
+      {{- end }}
+      {{- else }}
+          {{ .Values.flowProvider.git.ssh.config }}
+      {{- end }}
+{{- end }}

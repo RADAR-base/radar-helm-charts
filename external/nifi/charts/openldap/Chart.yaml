@@ -1,0 +1,13 @@
+apiVersion: v1
+appVersion: 2.4.48
+deprecated: true
+description: DEPRECATED - Community developed LDAP software
+home: https://www.openldap.org
+icon: http://www.openldap.org/images/headers/LDAPworm.gif
+keywords:
+- ldap
+- openldap
+name: openldap
+sources:
+- https://github.com/kubernetes/charts
+version: 1.2.7
