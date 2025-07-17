@@ -1,0 +1,30 @@
+{{ if .Values.syncTopics.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "common.names.fullname" . }}-topics-sync
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          job-name: {{ include "common.names.fullname" . }}-topics-init
+    - podSelector:
+        matchLabels:
+          job-selector: {{ include "common.names.fullname" . }}-topics-sync
+    ports:
+    - port: 8083
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      strimzi.io/cluster: {{ include "common.names.fullname" . }}
+      strimzi.io/kind: KafkaConnect
+      strimzi.io/name: {{ include "common.names.fullname" . }}-connect
+  policyTypes:
+  - Ingress
+  {{- end }}

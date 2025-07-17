@@ -548,6 +548,18 @@ oauth_clients:
       - client_credentials
     access_token_validity: 900
 
+  radar_oura_connector:
+    enable: false
+    resource_ids:
+      - res_restAuthorizer
+    client_secret: ""
+    scope:
+      - SUBJECT.READ
+      - MEASUREMENT.CREATE
+    authorized_grant_types:
+      - client_credentials
+    access_token_validity: 900
+
   radar_appconfig:
     enable: false
     resource_ids:
