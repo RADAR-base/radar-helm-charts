@@ -271,3 +271,42 @@ application_loop_interval_ms: 300000
 # -- How often to invalidate the cache and poll for new user registrations.
 # Only use to speed up processing times during e2e testing.
 user_cache_refresh_interval_ms: 3600000
+
+# -- Whether to include the specific routes and to specify the topics to use for each route.
+routes:
+  intradaySteps:
+    enabled: true
+    topic: "connect_fitbit_intraday_steps"
+  intradayHeartRate:
+    enabled: true
+    topic: "connect_fitbit_intraday_heart_rate"
+  intradayHeartRateVariability:
+    enabled: true
+    topic: "connect_fitbit_intraday_heart_rate_variability"
+  restingHeartRate:
+    enabled: true
+    topic: "connect_fitbit_resting_heart_rate"
+  sleepStages:
+    enabled: true
+    topic: "connect_fitbit_sleep_stages"
+  sleepClassic:
+    enabled: true
+    topic: "connect_fitbit_sleep_classic"
+  timezone:
+    enabled: true
+    topic: "connect_fitbit_timezone"
+  activityLog:
+    enabled: true
+    topic: "connect_fitbit_activity_log"
+  intradayCalories:
+    enabled: true
+    topic: "connect_fitbit_intraday_calories"
+  intradaySpo2:
+    enabled: true
+    topic: "connect_fitbit_intraday_spo2"
+  breathingRate:
+    enabled: true
+    topic: "connect_fitbit_breathing_rate"
+  skinTemperature:
+    enabled: true
+    topic: "connect_fitbit_skin_temperature"

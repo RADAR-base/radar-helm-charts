@@ -3,7 +3,7 @@
 # radar-fitbit-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-fitbit-connector)](https://artifacthub.io/packages/helm/radar-base/radar-fitbit-connector)
 
-![Version: 0.9.1](https://img.shields.io/badge/Version-0.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.2](https://img.shields.io/badge/AppVersion-0.6.2-informational?style=flat-square)
+![Version: 0.9.2](https://img.shields.io/badge/Version-0.9.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.0](https://img.shields.io/badge/AppVersion-0.7.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base fitbit connector. This application collects data from participants via the Fitbit Web API.
 
@@ -105,3 +105,4 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | fitbit_user_poll_interval | int | `5000` | Polling interval per Fitbit user per request route in seconds. Only use to speed up processing times during e2e testing. |
 | application_loop_interval_ms | int | `300000` | How often to perform the main application loop (only controls how often to poll for new user registrations). Only use to speed up processing times during e2e testing. |
 | user_cache_refresh_interval_ms | int | `3600000` | How often to invalidate the cache and poll for new user registrations. Only use to speed up processing times during e2e testing. |
+| routes | object | `{"activityLog":{"enabled":true,"topic":"connect_fitbit_activity_log"},"breathingRate":{"enabled":true,"topic":"connect_fitbit_breathing_rate"},"intradayCalories":{"enabled":true,"topic":"connect_fitbit_intraday_calories"},"intradayHeartRate":{"enabled":true,"topic":"connect_fitbit_intraday_heart_rate"},"intradayHeartRateVariability":{"enabled":true,"topic":"connect_fitbit_intraday_heart_rate_variability"},"intradaySpo2":{"enabled":true,"topic":"connect_fitbit_intraday_spo2"},"intradaySteps":{"enabled":true,"topic":"connect_fitbit_intraday_steps"},"restingHeartRate":{"enabled":true,"topic":"connect_fitbit_resting_heart_rate"},"skinTemperature":{"enabled":true,"topic":"connect_fitbit_skin_temperature"},"sleepClassic":{"enabled":true,"topic":"connect_fitbit_sleep_classic"},"sleepStages":{"enabled":true,"topic":"connect_fitbit_sleep_stages"},"timezone":{"enabled":true,"topic":"connect_fitbit_timezone"}}` | Whether to include the specific routes and to specify the topics to use for each route. |
