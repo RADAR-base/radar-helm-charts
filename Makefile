@@ -115,6 +115,26 @@ update-mongodb:
 	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-nifi-cluster:
+	@echo "Updating NiFi Cluster"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@mkdir -p /tmp/nifikop
+	@git clone https://github.com/konpyutaika/nifikop.git /tmp/nifikop
+	@mkdir -p external/$(patsubst update-%,%,$@)
+	@cp -r /tmp/nifikop/helm/nifi-cluster/* external/$(patsubst update-%,%,$@)/
+	@rm -rf /tmp/nifikop
+	@echo ""
+
+update-nifikop:
+	@echo "Updating NiFiKop"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@mkdir -p /tmp/nifikop
+	@git clone https://github.com/konpyutaika/nifikop.git /tmp/nifikop
+	@mkdir -p external/$(patsubst update-%,%,$@)
+	@cp -r /tmp/nifikop/helm/nifikop/* external/$(patsubst update-%,%,$@)/
+	@rm -rf /tmp/nifikop
+	@echo ""
+
 update-postgresql:
 	@echo "Updating postgresql"
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -155,12 +175,5 @@ update-velero:
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
 	@rm -rf external/$(patsubst update-%,%,$@)
 	@helm repo add $(patsubst update-%,%,$@) https://vmware-tanzu.github.io/helm-charts
-	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
-	@echo ""
-
-update-nifi:
-	@echo "Updating NiFi"
-	@rm -rf external/$(patsubst update-%,%,$@)
-	@helm repo add $(patsubst update-%,%,$@) https://cetic.github.io/helm-charts
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""

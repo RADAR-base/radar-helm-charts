@@ -1,15 +1,6 @@
 dependencies:
-- name: zookeeper
-  repository: https://charts.bitnami.com/bitnami
-  version: 9.2.7
-- name: nifi-registry
-  repository: https://dysnix.github.io/charts/
-  version: 1.0.0
-- name: ca
-  repository: ""
-  version: 1.0.1
-- name: openldap
-  repository: https://charts.helm.sh/stable
-  version: 1.2.7
-digest: sha256:c89c528c8e6bf7b2dfca235b3d925f31c638cc0bb3ae6e27b0c7d39214b22c31
-generated: "2025-07-07T12:57:36.223453+01:00"
+- name: nifi-cluster
+  repository: file://../../external/nifi-cluster
+  version: 1.14.1
+digest: sha256:93046787aa8ca1cd7f7b26d671f6a19806f685346d8091f01ce47389788082fe
+generated: "2025-07-21T10:35:35.756186189+02:00"
