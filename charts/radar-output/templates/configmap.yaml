@@ -141,8 +141,11 @@ data:
       # Output path construction factory
       factory: {{ .Values.paths.factory }}
       # Additional properties
-      properties:
-        {{ .Values.paths.properties | toYaml | indent 8 | trim }}
+      {{- if .Values.paths.pathProperties }}
+      path:
+        format: {{ .Values.paths.pathProperties.format }}
+        plugins: {{ .Values.paths.pathProperties.plugins | quote }}
+      {{- end }}
 
     # Individual topic configuration
     {{- if .Values.topics }}
