@@ -306,30 +306,38 @@ kratos:
   # Register cloudnativepg secret to be used by Kratos.
   deployment:
     extraEnv:
-      - name: DSN
+      - name: POSTGRES_URI
         valueFrom:
           secretKeyRef:
             name: radar-cloudnative-postgresql-kratos
             key: uri
+      - name: DSN
+        value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
   statefulSet:
     extraEnv:
-      - name: DSN
+      - name: POSTGRES_URI
         valueFrom:
           secretKeyRef:
             name: radar-cloudnative-postgresql-kratos
             key: uri
+      - name: DSN
+        value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
   job:
     extraEnv:
-      - name: DSN
+      - name: POSTGRES_URI
         valueFrom:
           secretKeyRef:
             name: radar-cloudnative-postgresql-kratos
             key: uri
+      - name: DSN
+        value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
   cronjob:
     cleanup:
       extraEnv:
-        - name: DSN
+        - name: POSTGRES_URI
           valueFrom:
             secretKeyRef:
               name: radar-cloudnative-postgresql-kratos
               key: uri
+        - name: DSN
+          value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
