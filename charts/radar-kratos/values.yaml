@@ -181,9 +181,24 @@ kratos:
             valid:
               email:
                 body:
-                  html: base64://SGksPGJyPjxicj5QbGVhc2XCoHZlcmlmecKgeW91csKgYWNjb3VudMKgYnnCoGVudGVyaW5nwqB0aGXCoGZvbGxvd2luZ8KgY29kZTo8YnI+PGgyPnt7IC5WZXJpZmljYXRpb25Db2RlIH19PC9oMj4=
-                  plaintext: base64://SGksIFBsZWFzZcKgdmVyaWZ5wqB5b3VywqBhY2NvdW50wqBiecKgZW50ZXJpbmfCoHRoZcKgZm9sbG93aW5nwqBjb2RlOiB7eyAuVmVyaWZpY2F0aW9uQ29kZSB9fQ==
-
+                  html: base64://SGksPGJyPjxicj5QbGVhc2XCoHZlcmlmecKgeW91csKgYWNjb3VudMKgYnnCoGVudGVyaW5nwqB0aGXCoGZvbGxvd2luZ8KgY29kZTo8YnI+PGgyPnt7IC5WZXJpZmljYXRpb25Db2RlIH19PC9oMj48YnI+PGEgaHJlZj17eyAuVmVyaWZpY2F0aW9uVVJMIH19Pnt7IC5WZXJpZmljYXRpb25VUkwgfX08L2E+
+                  plaintext: base64://SGksIFBsZWFzZcKgdmVyaWZ5wqB5b3VywqBhY2NvdW50wqBiecKgZW50ZXJpbmfCoHRoZcKgZm9sbG93aW5nwqBjb2RlOiB7eyAuVmVyaWZpY2F0aW9uQ29kZSB9fSB7eyAuVmVyaWZpY2F0aW9uVVJMIH19
+          recovery:
+            valid:
+              email:
+                body:
+                  # HTML Body: "Hi,<br><br>Please click the link below to set your password:<br><br><a href="{{ .RecoveryURL }}">Set Password</a>"
+                  html: base64://SGksPGJyPjxicj5QbGVhc2UgY2xpY2sgdGhlIGxpbmsgYmVsb3cgdG8gc2V0IHlvdXIgcGFzc3dvcmQ6PGJyPjxicj48YSBocmVmPSJ7eyAuUmVjb3ZlcnlVUkwgfX0iPlNldCBQYXNzd29yZDwvYT4=
+                  # Plain Text Body: "Hi, Please click the following link to set your password: {{ .RecoveryURL }}"
+                  plaintext: base64://SGksLCBQbGVhc2UgY2xpY2sgdGhlIGZvbGxvd2luZyBsaW5rIHRvIHNldCB5b3VyIHBhc3N3b3JkOiB7eyAuUmVjb3ZlcnlVUkwgfX0=
+          recovery_code:
+            valid:
+              email:
+                body:
+                  # HTML Body: "Hi,<br><br>Please click the link below to set your password:<br><br><a href="{{ .RecoveryURL }}">Set Password</a>"
+                  html: base64://SGksPGJyPjxicj5QbGVhc2UgY2xpY2sgdGhlIGxpbmsgYmVsb3cgdG8gc2V0IHlvdXIgcGFzc3dvcmQ6PGJyPjxicj48YSBocmVmPSJ7eyAuUmVjb3ZlcnlVUkwgfX0iPlNldCBQYXNzd29yZDwvYT4=
+                  # Plain Text Body: "Hi, Please click the following link to set your password: {{ .RecoveryURL }}"
+                  plaintext: base64://SGksLCBQbGVhc2UgY2xpY2sgdGhlIGZvbGxvd2luZyBsaW5rIHRvIHNldCB5b3VyIHBhc3N3b3JkOiB7eyAuUmVjb3ZlcnlVUkwgfX0=
       serve:
         public:
           base_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos/'
