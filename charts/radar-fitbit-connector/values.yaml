@@ -257,14 +257,14 @@ managementportal_url: http://management-portal:8080/managementportal
 includeIntradayData: true
 
 # -- Class of the user repository to use. This should be a class that implements the UserRepository interface.
-user_repository_class: ServiceUserRepositoryLegacy
+user_repository_class: ServiceUserRepository
 
 # -- How often to poll the source URL.
 # Only use to speed up processing times during e2e testing.
 rest_source_poll_interval_ms: 60000
 # -- Polling interval per Fitbit user per request route in seconds.
 # Only use to speed up processing times during e2e testing.
-fitbit_user_poll_interval: 5000
+fitbit_user_poll_interval: 150
 # -- How often to perform the main application loop (only controls how often to poll for new user registrations).
 # Only use to speed up processing times during e2e testing.
 application_loop_interval_ms: 300000
