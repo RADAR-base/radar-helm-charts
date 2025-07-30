@@ -358,6 +358,8 @@ managementportal:
   frontend_client_secret: xxx
   # -- Admin password of the default admin user created by the system
   common_admin_password: xxx
+   # -- The file where the OAuth2 client details are stored
+  oauth_clients_file: /secrets/oauth_client_details.csv
 
 # Configurations of the SMTP server to send activation emails from Management Portal
 smtp:

@@ -115,6 +115,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | managementportal.oauth_require_aal2 | bool | `true` | Whether or not to require AAL2 level authentication (i.e. MFA) |
 | managementportal.frontend_client_secret | string | `"xxx"` | OAuth2 Client secret of the Management Portal frontend application |
 | managementportal.common_admin_password | string | `"xxx"` | Admin password of the default admin user created by the system |
+| managementportal.oauth_clients_file | string | `"/secrets/oauth_client_details.csv"` | The file where the OAuth2 client details are stored |
 | smtp.enabled | bool | `false` | set to true, if SMTP server should be enabled. Required to be true for production setup |
 | smtp.host | string | `"smtp"` | Hostname of the SMTP server |
 | smtp.port | int | `25` | Port of the SMTP server |

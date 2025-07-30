@@ -94,6 +94,8 @@ spec:
                 key: CLIENT_SECRET
           - name: MANAGEMENTPORTAL_CATALOGUE_SERVER_ENABLE_AUTO_IMPORT
             value: "{{ .Values.managementportal.catalogue_server_enable_auto_import }}"
+          - name: MANAGEMENTPORTAL_OAUTH_CLIENTS_FILE
+            value: "{{ .Values.managementportal.oauth_clients_file }}"
           - name: MANAGEMENTPORTAL_OAUTH_REQUIRE_AAL2
             value: "{{ .Values.managementportal.oauth_require_aal2 }}"
           - name: MANAGEMENTPORTAL_CATALOGUE_SERVER_SERVER_URL
@@ -106,6 +108,8 @@ spec:
             value: {{ tpl .Values.identity_server.login_url . }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_ADMIN_URL
             value: {{ tpl .Values.identity_server.server_admin_url . }}
+          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_INTERNAL
+            value: "false"
           - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERURL
             value:  {{ tpl .Values.authserver.server_url . }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_LOGINURL
@@ -207,6 +211,7 @@ spec:
               mountPath: /config/
             - name: secrets-config
               mountPath: /secrets/
+              # Otherwise: Unable to read header from OAuth clients file: java.nio.file.NoSuchFileException: /mp-includes/config/oauth_client_details.csv
             - name: keystore
               mountPath: /mp-includes/config/
             {{- if .Values.postgres.ssl.enabled }}
