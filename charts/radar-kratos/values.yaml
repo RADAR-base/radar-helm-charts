@@ -172,6 +172,19 @@ kratos:
         cookie:
           ## -- If false, cookie is removed when the browser is closed --##
           persistent: false
+        whoami:
+          # -- Session-to-JWT token exchange configuration
+          # This enables Kratos to convert session tokens to JWT tokens for ManagementPortal integration
+          tokenizer:
+            enabled: true
+            templates:
+              mp_jwt_template:
+#                # -- JSON keystore file path for JWT signing keys
+                jwks_url: "file:///etc/kratos/jwks.json"
+                # -- JWT token time-to-live
+                ttl: 1h
+                # -- JWT claims mapper URL pointing to JsonNet template
+                claims_mapper_url: "file:///etc/kratos/claims-mapper.jsonnet"
 
       courier:
         smtp:
@@ -343,6 +356,20 @@ kratos:
             key: uri
       - name: DSN
         value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
+    extraVolumes:
+      - name: keystore
+        secret:
+          secretName: radar-kratos-keystore
+      - name: claims-mapper
+        configMap:
+          name: radar-kratos-claims-mapper
+    extraVolumeMounts:
+      - name: keystore
+        mountPath: /etc/kratos/jwks.json
+        subPath: jwks.json
+      - name: claims-mapper
+        mountPath: /etc/kratos/claims-mapper.jsonnet
+        subPath: claims-mapper.jsonnet
   statefulSet:
     extraEnv:
       - name: POSTGRES_URI
@@ -352,6 +379,20 @@ kratos:
             key: uri
       - name: DSN
         value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
+    extraVolumes:
+      - name: keystore
+        secret:
+          secretName: radar-kratos-keystore
+      - name: claims-mapper
+        configMap:
+          name: radar-kratos-claims-mapper
+    extraVolumeMounts:
+      - name: keystore
+        mountPath: /etc/kratos/keystore.jks
+        subPath: keystore.jks
+      - name: claims-mapper
+        mountPath: /etc/kratos/claims-mapper.jsonnet
+        subPath: claims-mapper.jsonnet
   job:
     extraEnv:
       - name: POSTGRES_URI
@@ -371,3 +412,9 @@ kratos:
               key: uri
         - name: DSN
           value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
+
+# -- Keystore for JWT signing
+keystore: ""
+# With helmfile, this can be set in a production.yaml.gotmpl
+# file by setting
+#   keystore: {{ readFile "../etc/radar-kratos/jwks.json" }}

@@ -277,6 +277,12 @@ keystore: ""
 # or with SOPS
 #   keystore: {{ exec "sops" (list "-d" "keystore.p12") | b64enc | quote }}
 
+# The public keys used for JWT signing in radar-kratos
+public_jwks: ""
+# With helmfile, this can be set in a production.yaml.gotmpl
+# file by setting
+#  public_jwks: {{ readFile "../etc/management-portal/public-jwks.json" | b64enc | quote }}
+
 # Configuration of the Postgres database to store data from Management Portal
 postgres:
   # -- host name of the postgres db

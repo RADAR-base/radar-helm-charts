@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "common.names.fullname" . }}-claims-mapper
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  claims-mapper.jsonnet: |
+    local claims = std.extVar("claims");
+    local session = std.extVar("session");
+
+    {
+      claims: {
+        // Standard JWT claims
+        iss: claims.iss,
+        sub: claims.sub,
+        exp: claims.exp,
+        jti: claims.jti,
+        sid: claims.sid,
+        nbf: claims.nbf,
+        iat: claims.iat,
+        aud: "res_ManagementPortal",
+
+        // Custom claims
+        authorities: if std.objectHas(session.identity, "metadata_public") &&
+          std.objectHas(session.identity.metadata_public, "authorities") &&
+          session.identity.metadata_public.authorities != null
+          then session.identity.metadata_public.authorities
+          else [],
+
+        roles: if std.objectHas(session.identity, "metadata_public") &&
+          std.objectHas(session.identity.metadata_public, "roles") &&
+          session.identity.metadata_public.roles != null
+          then session.identity.metadata_public.roles
+          else [],
+
+        scope: if std.objectHas(session.identity, "metadata_public") &&
+          std.objectHas(session.identity.metadata_public, "scope") &&
+          session.identity.metadata_public.scope != null
+          then std.join(" ", session.identity.metadata_public.scope)
+          else "",
+
+        sources: if std.objectHas(session.identity, "metadata_public") &&
+          std.objectHas(session.identity.metadata_public, "sources") &&
+          session.identity.metadata_public.sources != null
+          then session.identity.metadata_public.sources
+          else [],
+
+        grant_type: if std.objectHas(session.identity, "metadata_public") &&
+          std.objectHas(session.identity.metadata_public, "grant_type") &&
+          session.identity.metadata_public.grant_type != null
+          then session.identity.metadata_public.grant_type
+          else "password",
+
+        client_id: if std.objectHas(session.identity, "metadata_public") &&
+          std.objectHas(session.identity.metadata_public, "client_id") &&
+          session.identity.metadata_public.client_id != null
+          then session.identity.metadata_public.client_id
+          else "",
+
+        user_name: if std.objectHas(session.identity, "metadata_public") &&
+          std.objectHas(session.identity.metadata_public, "mp_login") &&
+          session.identity.metadata_public.mp_login != null
+          then session.identity.metadata_public.mp_login
+          else if std.objectHas(session.identity.traits, "email")
+          then session.identity.traits.email
+          else ""
+      }
+    }
