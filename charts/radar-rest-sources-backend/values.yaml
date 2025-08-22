@@ -289,11 +289,11 @@ client_secret: secret
 
 # -- List of public key endpoints for token verification
 public_key_endpoints:
-  - http://hydra-public:4444/.well-known/jwks.json
-  # - https://localhost/managementportal/oauth/token_key
+  - http://radar-hydra-public:4444/.well-known/jwks.json
+#  - http://management-portal:8080/managementportal/oauth/token_key
 
 # -- Auth url for MP client
-auth_url: http://hydra-public:4444/oauth2/token
+auth_url: http://radar-hydra-public:4444/oauth2/token
 
 restSourceClients:
   fitbit:

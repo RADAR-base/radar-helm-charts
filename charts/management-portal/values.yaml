@@ -348,6 +348,7 @@ authserver:
   server_admin_url: http://radar-hydra-admin:4445
   # -- The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login
   login_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra'
+  client_secret: secret
 
 managementportal:
   # -- set to true, if automatic source-type import from catalogue server should be enabled
@@ -366,6 +367,8 @@ managementportal:
   common_admin_password: xxx
    # -- The file where the OAuth2 client details are stored
   oauth_clients_file: /secrets/oauth_client_details.csv
+  # -- Base URL managementportal calls from inside the application container
+  base_url: http://localhost:8080/managementportal
 
 # Configurations of the SMTP server to send activation emails from Management Portal
 smtp:

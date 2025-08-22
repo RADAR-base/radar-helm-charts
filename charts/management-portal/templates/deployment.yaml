@@ -81,17 +81,22 @@ spec:
           - name: MANAGEMENTPORTAL_COMMON_BASEURL
             value: {{ printf "%s://%s" .Values.advertised_protocol .Values.server_name }}
           - name: MANAGEMENTPORTAL_COMMON_MANAGEMENT_PORTAL_BASE_URL
-            value: {{ printf "%s://%s/managementportal" .Values.advertised_protocol .Values.server_name }}
+            value: {{ .Values.managementportal.base_url }}
+{{/* TODO for now secret with client_id and client_secret replaced with job creating clients with fixed client names*/}}
+{{/*          - name: MANAGEMENTPORTAL_FRONTEND_CLIENTID*/}}
+{{/*            valueFrom:*/}}
+{{/*              secretKeyRef:*/}}
+{{/*                name: managementportalapp-oauth-client*/}}
+{{/*                key: CLIENT_ID*/}}
+{{/*          - name: MANAGEMENTPORTAL_FRONTEND_CLIENT_SECRET*/}}
+{{/*            valueFrom:*/}}
+{{/*              secretKeyRef:*/}}
+{{/*                name: managementportalapp-oauth-client*/}}
+{{/*                key: CLIENT_SECRET*/}}
           - name: MANAGEMENTPORTAL_FRONTEND_CLIENTID
-            valueFrom:
-              secretKeyRef:
-                name: managementportal-oauth-client
-                key: CLIENT_ID
+            value: "ManagementPortalapp"
           - name: MANAGEMENTPORTAL_FRONTEND_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: managementportal-oauth-client
-                key: CLIENT_SECRET
+            value: "{{ .Values.authserver.client_secret }}"
           - name: MANAGEMENTPORTAL_CATALOGUE_SERVER_ENABLE_AUTO_IMPORT
             value: "{{ .Values.managementportal.catalogue_server_enable_auto_import }}"
           - name: MANAGEMENTPORTAL_OAUTH_CLIENTS_FILE

@@ -1,65 +1,61 @@
-{{ range .Values.oauth_clients }}
-apiVersion: hydra.ory.sh/v1alpha1
-kind: OAuth2Client
-metadata:
-  name: {{ .name }}-oauth-client
-  namespace: default
-spec:
-  clientName: {{ .name }}
-  clientID: {{ .name }}
-  grantTypes: {{ toYaml .grantTypes | nindent 4}}
-  responseTypes: {{ toYaml .responseTypes | nindent 4}}
-  scope: {{ .scope }}
-  secretName: {{ .name }}-oauth-client
-  redirectUris:
-    {{- tpl (toYaml .redirectUris | nindent 4) $ -}}
-{{/*   {{ toYaml .redirectUris | nindent 4}}*/}}
-{{/*  postLogoutRedirectUris:*/}}
-  audience: {{ toYaml .audience | nindent 4}}
-
-  hydraAdmin:
-    # if hydraAdmin is specified, all of these fields are required,
-    # but they can be empty/0
-    url: http://radar-hydra-admin
-    port: 4445
-    endpoint: /admin/clients
-    forwardedProto: http
-  tokenEndpointAuthMethod: client_secret_basic
-{{end}}
+{{/*TODO alternative to hydra-clients-job - client ids and secrets in all the settings would need to be passed dynamically via secrets */}}
+{{/*For now keeping as an alternative implementation */}}
+{{- range $name, $client := .Values.oauth_clients }}
+{{- if ne $client.enable false }}
 ---
 apiVersion: hydra.ory.sh/v1alpha1
 kind: OAuth2Client
 metadata:
-  name: my-oauth2-client
+  name: {{ $name | lower | replace "_" "-" }}-oauth-client
   namespace: default
 spec:
-  clientID: my-oauth2-client
-  clientName: my-oauth2-client
+  clientID: {{ $name | quote }}
+  clientName: {{ $name | quote }}
+  {{- if $client.grantTypes }}
   grantTypes:
-    - client_credentials
-    - implicit
-    - authorization_code
-    - refresh_token
+    {{- range $client.grantTypes }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if $client.responseTypes }}
   responseTypes:
-    - id_token
-    - code
-    - token
-  scope: "read write"
-  secretName: my-secret-123
-  # these are optional
-  redirectUris:
-    - https://client/account
-    - http://localhost:8080
-  postLogoutRedirectUris:
-    - https://client/logout
+    {{- range $client.responseTypes }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if $client.scope }}
+  scope: {{ if kindIs "string" $client.scope }}{{ $client.scope | quote }}{{ else }}{{ join " " $client.scope | quote }}{{ end }}
+  {{- end }}
+  {{- if $client.audience }}
   audience:
-    - audience-a
-    - audience-b
+    {{- range $client.audience }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if $client.redirectUris }}
+  redirectUris:
+    {{- range $client.redirectUris }}
+    - {{ tpl . $ | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if $client.allowed_cors_origins }}
+  allowedCORSOrigins:
+    {{- range $client.allowed_cors_origins }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if hasKey $client "skip_consent" }}
+  skipConsent: {{ $client.skip_consent }}
+  {{- end }}
+  {{- if hasKey $client "skip_logout_consent" }}
+  skipLogoutConsent: {{ $client.skip_logout_consent }}
+  {{- end }}
+  secretName: {{ $name | lower | replace "_" "-" }}-oauth-client
+  tokenEndpointAuthMethod: {{ default "client_secret_basic" $client.tokenEndpointAuthMethod | quote }}
   hydraAdmin:
-    # if hydraAdmin is specified, all of these fields are required,
-    # but they can be empty/0
     url: http://radar-hydra-admin
     port: 4445
     endpoint: /admin/clients
     forwardedProto: http
-  tokenEndpointAuthMethod: client_secret_basic
+{{- end }}
+{{- end }}
