@@ -175,8 +175,10 @@ spec:
           volumeMounts:
             - name: config-properties
               mountPath: /etc/kafka-connect/source-fitbit
+            {{- if eq .Values.user_repository_class "YamlUserRepository" }}
             - name: config-users
               mountPath: /var/lib/kafka-connect-fitbit-source/users
+            {{- end }}
             - name: logs
               mountPath: /var/lib/kafka-connect-fitbit-source/logs
       {{- if .Values.persistence.fsUserOverride }}
@@ -197,9 +199,12 @@ spec:
         - name: config-properties
           configMap:
             name: {{ include "radar-fitbit-connector.fullname" . }}-properties
+        {{- if eq .Values.user_repository_class "YamlUserRepository" }}
         - name: config-users
           configMap:
             name: {{ include "radar-fitbit-connector.fullname" . }}-users
+            defaultMode: 0666
+        {{- end }}
         - name: logs
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
