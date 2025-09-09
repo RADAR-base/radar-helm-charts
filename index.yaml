@@ -12489,6 +12489,44 @@ entries:
   radar-nifi:
   - apiVersion: v2
     appVersion: 2.3.0
+    created: "2025-09-09T11:49:10.768458963Z"
+    dependencies:
+    - condition: zookeeper.enabled
+      name: zookeeper
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.2.7
+    - alias: registry
+      condition: registry.enabled
+      name: nifi-registry
+      repository: https://dysnix.github.io/charts/
+      version: 1.0.0
+    - condition: ca.enabled
+      name: ca
+      repository: ""
+      version: 1.0.1
+    - condition: openldap.enabled
+      name: openldap
+      repository: https://charts.helm.sh/stable
+      version: ~1.2.4
+    description: Apache NiFi is a software project from the Apache Software Foundation
+      designed to automate the flow of data between software systems.
+    digest: 986e7be334473ea7277079bb9caacc50e8ac516a9d01c12c526a0b33f7aa0777
+    home: https://nifi.apache.org/
+    icon: https://svn.apache.org/repos/asf/nifi/site/trunk/images/niFi-logo-horizontal-scaled.png
+    keywords:
+    - nifi
+    - data
+    - process
+    maintainers:
+    - email: heet.sankesara@kcl.ac.uk
+      name: Heet
+      url: https://github.com/Hsankesara
+    name: radar-nifi
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-nifi-2.0.1/radar-nifi-2.0.1.tgz
+    version: 2.0.1
+  - apiVersion: v2
+    appVersion: 2.3.0
     created: "2025-07-17T17:40:31.608290238Z"
     dependencies:
     - condition: zookeeper.enabled
@@ -13628,6 +13666,26 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-output-0.1.1/radar-output-0.1.1.tgz
     version: 0.1.1
   radar-postgresql:
+  - apiVersion: v2
+    appVersion: 11.16.0
+    created: "2025-09-09T11:49:10.909452434Z"
+    dependencies:
+    - name: postgresql
+      repository: file://../../external/postgresql
+      version: 12.1.9
+    deprecated: true
+    description: PostgreSQL (Postgres) is an open source object-relational database
+      known for reliability and data integrity. ACID-compliant, it supports foreign
+      keys, joins, views, triggers and stored procedures.
+    digest: 003b6e999cb0ee02f11477cd53bc503077e1b5924249d0180084ec5a027cf3d5
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-postgresql
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-postgresql-0.1.4/radar-postgresql-0.1.4.tgz
+    version: 0.1.4
   - apiVersion: v2
     appVersion: 11.16.0
     created: "2025-04-07T08:57:52.370671142Z"
@@ -21078,4 +21136,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-09-09T10:39:49.130208223Z"
+generated: "2025-09-09T11:49:10.910655724Z"
