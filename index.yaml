@@ -3763,6 +3763,37 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: added
+          description: "Add VPA controlledValues option"
+    apiVersion: v1
+    appVersion: 4.0.3
+    created: "2025-09-09T10:39:49.129360473Z"
+    description: Fast and lightweight log processor and forwarder or Linux, OSX and
+      BSD family operating systems.
+    digest: 884c3c4fd21e1e458e9ce361aa2b0329ea2d6e795fd956930585bc4649645f98
+    home: https://fluentbit.io/
+    icon: https://raw.githubusercontent.com/cncf/artwork/master/projects/fluentd/fluentbit/icon/fluentbit-icon-color.svg
+    keywords:
+    - logging
+    - fluent-bit
+    - fluentd
+    maintainers:
+    - email: eduardo@calyptia.com
+      name: edsiper
+    - email: naseem@transit.app
+      name: naseemkullah
+    - email: towmeykaw@gmail.com
+      name: Towmeykaw
+    - email: steve.hipwell@gmail.com
+      name: stevehipwell
+    name: fluent-bit
+    sources:
+    - https://github.com/fluent/fluent-bit/
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/fluent-bit-0.50.0/fluent-bit-0.50.0.tgz
+    version: 0.50.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
           description: "Add ability to manually set clusterIP address."
     apiVersion: v1
     appVersion: 1.8.15
@@ -21047,4 +21078,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-09-09T10:39:45.3989134Z"
+generated: "2025-09-09T10:39:49.130208223Z"
