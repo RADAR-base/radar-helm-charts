@@ -10,9 +10,9 @@ replicaCount: 1
 
 image:
   # -- Image registry
-  registry: docker.io
+  registry: ghcr.io
   # -- Image repository
-  repository: radarbase/radar-schemas-tools
+  repository: radar-base/radar-schemas/radar-schemas-tools
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:
