@@ -7,9 +7,9 @@ replicaCount: 1
 
 image:
   # -- Image registry
-  registry: docker.io
+  registry: ghcr.io
   # -- Image repository
-  repository: radarbase/kafka-connect-rest-oura-source
+  repository: radar-base/radar-rest-connector/kafka-connect-oura-source
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:

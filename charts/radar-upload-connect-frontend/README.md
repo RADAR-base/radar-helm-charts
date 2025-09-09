@@ -3,7 +3,7 @@
 # radar-upload-connect-frontend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-upload-connect-frontend)](https://artifacthub.io/packages/helm/radar-base/radar-upload-connect-frontend)
 
-![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.5.14](https://img.shields.io/badge/AppVersion-0.5.14-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.3](https://img.shields.io/badge/AppVersion-0.6.3-informational?style=flat-square)
 
 A Helm chart for RADAR-base upload connector frontend application that provides a UI for uploading files and sending them to the upload-backend.
 
@@ -36,8 +36,8 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-upload-connect-frontend replicas to deploy |
-| image.registry | string | `"docker.io"` | Image registry |
-| image.repository | string | `"radarbase/radar-upload-connect-frontend"` | Image repository |
+| image.registry | string | `"ghcr.io"` | Image registry |
+| image.repository | string | `"radar-base/radar-upload-source-connector/radar-upload-connect-frontend"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |

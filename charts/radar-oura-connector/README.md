@@ -3,7 +3,7 @@
 # radar-oura-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-oura-connector)](https://artifacthub.io/packages/helm/radar-base/radar-oura-connector)
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.2](https://img.shields.io/badge/AppVersion-0.6.2-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.1](https://img.shields.io/badge/AppVersion-0.7.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base oura connector. This application collects data from participants via the Oura Web API.
 
@@ -39,8 +39,8 @@ A Helm chart for RADAR-base oura connector. This application collects data from 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-oura-connector replicas to deploy |
-| image.registry | string | `"docker.io"` | Image registry |
-| image.repository | string | `"radarbase/kafka-connect-rest-oura-source"` | Image repository |
+| image.registry | string | `"ghcr.io"` | Image registry |
+| image.repository | string | `"radar-base/radar-rest-connector/kafka-connect-oura-source"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
