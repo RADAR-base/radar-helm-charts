@@ -8603,6 +8603,21 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-fitbit-connector-0.1.1/radar-fitbit-connector-0.1.1.tgz
     version: 0.1.1
+  radar-fluent-bit:
+  - apiVersion: v2
+    appVersion: 4.0.3
+    created: "2025-09-09T10:39:45.398041795Z"
+    dependencies:
+    - name: fluent-bit
+      repository: file://../../external/fluent-bit
+      version: 0.50.0
+    description: RADAR-base chart for fluent-bit
+    digest: ba6f606cfe2a0b4adefa8a20ea04850816bea75932c3edd4d1ddfdd42a0dc2d9
+    name: radar-fluent-bit
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-fluent-bit-0.1.0/radar-fluent-bit-0.1.0.tgz
+    version: 0.1.0
   radar-gateway:
   - annotations:
       artifacthub.io/license: Apache-2.0
@@ -21032,4 +21047,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-09-09T10:38:02.579297668Z"
+generated: "2025-09-09T10:39:45.3989134Z"
