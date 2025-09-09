@@ -44,7 +44,7 @@ Apache ZooKeeper provides a reliable, centralized register of configuration data
 | diagnosticMode.command[0] | string | `"sleep"` |  |
 | diagnosticMode.args[0] | string | `"infinity"` |  |
 | image.registry | string | `"docker.io"` |  |
-| image.repository | string | `"bitnami/zookeeper"` |  |
+| image.repository | string | `"bitnamilegacy/zookeeper"` |  |
 | image.tag | string | `"3.8.0-debian-11-r5"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.pullSecrets | list | `[]` |  |
@@ -175,7 +175,7 @@ Apache ZooKeeper provides a reliable, centralized register of configuration data
 | persistence.dataLogDir.selector | object | `{}` |  |
 | volumePermissions.enabled | bool | `false` |  |
 | volumePermissions.image.registry | string | `"docker.io"` |  |
-| volumePermissions.image.repository | string | `"bitnami/bitnami-shell"` |  |
+| volumePermissions.image.repository | string | `"bitnamilegacy/bitnami-shell"` |  |
 | volumePermissions.image.tag | string | `"11-debian-11-r4"` |  |
 | volumePermissions.image.pullPolicy | string | `"IfNotPresent"` |  |
 | volumePermissions.image.pullSecrets | list | `[]` |  |

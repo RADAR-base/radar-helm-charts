@@ -1,6 +1,6 @@
 postgresql:
   image:
-    repository: bitnami/postgresql
+    repository: bitnamilegacy/postgresql
     tag: 11.16.0
   global:
     postgresql:
