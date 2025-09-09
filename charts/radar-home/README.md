@@ -3,7 +3,7 @@
 # radar-home
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-home)](https://artifacthub.io/packages/helm/radar-base/radar-home)
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.4](https://img.shields.io/badge/AppVersion-0.1.4-informational?style=flat-square)
+![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.5](https://img.shields.io/badge/AppVersion-0.1.5-informational?style=flat-square)
 
 RADAR-base home page.
 
@@ -36,8 +36,8 @@ RADAR-base home page.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of Appconfig replicas to deploy |
-| image.registry | string | `"docker.io"` | Image registry |
-| image.repository | string | `"radarbase/radar-home"` | Image repository |
+| image.registry | string | `"ghcr.io"` | Image registry |
+| image.repository | string | `"radar-base/radar-home/radar-home"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
