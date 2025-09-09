@@ -40,7 +40,7 @@ A Helm chart for RADAR-base oura connector. This application collects data from 
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-oura-connector replicas to deploy |
 | image.registry | string | `"ghcr.io"` | Image registry |
-| image.repository | string | `"radar-base/kafka-connect-rest-oura-source"` | Image repository |
+| image.repository | string | `"radar-base/radar-rest-connector/kafka-connect-oura-source"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |

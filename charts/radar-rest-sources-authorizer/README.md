@@ -37,7 +37,7 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-rest-sources-authorizer replicas to deploy |
 | image.registry | string | `"ghcr.io"` | Image registry |
-| image.repository | string | `"radar-base/radar-rest-source-authorizer"` | Image repository |
+| image.repository | string | `"radar-base/radar-rest-source-auth/radar-rest-source-authorizer"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |

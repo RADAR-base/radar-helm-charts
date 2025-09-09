@@ -38,7 +38,7 @@ A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 conne
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-s3-connector replicas to deploy |
 | image.registry | string | `"ghcr.io"` | Image registry |
-| image.repository | string | `"radar-base/kafka-connect-transform-s3"` | Image repository |
+| image.repository | string | `"radar-base/kafka-connect-transform-keyvalue/kafka-connect-transform-s3"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |

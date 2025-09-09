@@ -9,7 +9,7 @@ image:
   # -- Image registry
   registry: ghcr.io
   # -- Image repository
-  repository: radar-base/kafka-connect-transform-s3
+  repository: radar-base/kafka-connect-transform-keyvalue/kafka-connect-transform-s3
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:

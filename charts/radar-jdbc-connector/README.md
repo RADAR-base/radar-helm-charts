@@ -48,7 +48,7 @@ Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: fal
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-jdbc-connector replicas to deploy |
 | image.registry | string | `"ghcr.io"` | Image registry |
-| image.repository | string | `"radar-base/radar-jdbc-connector"` | Image repository |
+| image.repository | string | `"radar-base/radar-jdbc-connector/radar-jdbc-connector"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |

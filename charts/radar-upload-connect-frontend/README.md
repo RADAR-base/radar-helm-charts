@@ -37,7 +37,7 @@ A Helm chart for RADAR-base upload connector frontend application that provides 
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-upload-connect-frontend replicas to deploy |
 | image.registry | string | `"ghcr.io"` | Image registry |
-| image.repository | string | `"radar-base/radar-upload-connect-frontend"` | Image repository |
+| image.repository | string | `"radar-base/radar-upload-source-connector/radar-upload-connect-frontend"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
