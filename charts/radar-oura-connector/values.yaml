@@ -252,4 +252,43 @@ managementportal_url: http://management-portal:8080/managementportal
 includeIntradayData: true
 
 # -- Class name of the user repository. This should be the same as the one used in the connector.
-user_repository_class: OuraServiceUserRepositoryLegacy
+user_repository_class: OuraServiceUserRepository
+
+# -- Whether to include the specific routes.
+routes:
+  dailyActivity:
+    enabled: true
+  dailyReadiness:
+    enabled: true
+  dailySleep:
+    enabled: true
+  dailyOxygenSaturation:
+    enabled: true
+  heartRate:
+    enabled: true
+  personalInfo:
+    enabled: true
+  session:
+    enabled: true
+  sleep:
+    enabled: true
+  tag:
+    enabled: true
+  workout:
+    enabled: true
+  ringConfiguration:
+    enabled: true
+  restModePeriod:
+    enabled: true
+  sleepTimeRecommendation:
+    enabled: true
+  dailyStress:
+    enabled: true
+  dailyCardiovascularAge:
+    enabled: true
+  dailyResilience:
+    enabled: true
+  enhancedTag:
+    enabled: true
+  vo2Max:
+    enabled: true

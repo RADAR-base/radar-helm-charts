@@ -3,7 +3,7 @@
 # radar-oura-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-oura-connector)](https://artifacthub.io/packages/helm/radar-base/radar-oura-connector)
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.1](https://img.shields.io/badge/AppVersion-0.7.1-informational?style=flat-square)
+![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.2](https://img.shields.io/badge/AppVersion-0.7.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base oura connector. This application collects data from participants via the Oura Web API.
 
@@ -100,4 +100,5 @@ A Helm chart for RADAR-base oura connector. This application collects data from 
 | auth_url | string | `"http://management-portal:8080/managementportal/oauth/token"` | OAuth2 Auth URL for connector client to get access tokens |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of Management Portal. This will be used to create URLs to access Management Portal |
 | includeIntradayData | bool | `true` | Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties. |
-| user_repository_class | string | `"OuraServiceUserRepositoryLegacy"` | Class name of the user repository. This should be the same as the one used in the connector. |
+| user_repository_class | string | `"OuraServiceUserRepository"` | Class name of the user repository. This should be the same as the one used in the connector. |
+| routes | object | `{"dailyActivity":{"enabled":true},"dailyCardiovascularAge":{"enabled":true},"dailyOxygenSaturation":{"enabled":true},"dailyReadiness":{"enabled":true},"dailyResilience":{"enabled":true},"dailySleep":{"enabled":true},"dailyStress":{"enabled":true},"enhancedTag":{"enabled":true},"heartRate":{"enabled":true},"personalInfo":{"enabled":true},"restModePeriod":{"enabled":true},"ringConfiguration":{"enabled":true},"session":{"enabled":true},"sleep":{"enabled":true},"sleepTimeRecommendation":{"enabled":true},"tag":{"enabled":true},"vo2Max":{"enabled":true},"workout":{"enabled":true}}` | Whether to include the specific routes. |
