@@ -9,7 +9,7 @@ image:
   # -- Image registry
   registry: ghcr.io
   # -- Image repository
-  repository: radar-base/radar-rest-source-auth/radar-rest-source-auth-backend:latest
+  repository: radar-base/radar-rest-source-auth/radar-rest-source-auth-backend
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:
