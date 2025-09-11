@@ -151,7 +151,7 @@ cluster:
     provider: s3
     s3:
       region: ""
-      bucket: "postgresql"
+      bucket: "cloudnative-postgresql"
       path: "/"
     wal:
       compression: ''
@@ -161,6 +161,7 @@ cluster:
       encryption: ''
 
     scheduledBackups:
+      -
         name: daily-backup
         schedule: "0 0 0 * * *"
 

@@ -3,7 +3,7 @@
 # radar-cloudnative-timescaledb
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-cloudnative-timescaledb)](https://artifacthub.io/packages/helm/radar-base/radar-cloudnative-timescaledb)
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square)
+![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square)
 
 CloudNativePG TimescaleDB cluster helm chart for RADAR-base
 
@@ -61,3 +61,16 @@ for additional information on how to configure the operator if needed.
 | cluster.cluster.monitoring.enabled | bool | `true` |  |
 | cluster.cluster.initdb.database | string | `"database"` |  |
 | cluster.cluster.initdb.owner | string | `"database"` |  |
+| cluster.backups.enabled | bool | `true` |  |
+| cluster.backups.endpointURL | string | `"http://minio:9000"` |  |
+| cluster.backups.provider | string | `"s3"` |  |
+| cluster.backups.s3.region | string | `""` |  |
+| cluster.backups.s3.bucket | string | `"cloudnative-timescaledb"` |  |
+| cluster.backups.s3.path | string | `"/"` |  |
+| cluster.backups.wal.compression | string | `""` |  |
+| cluster.backups.wal.encryption | string | `""` |  |
+| cluster.backups.data.compression | string | `""` |  |
+| cluster.backups.data.encryption | string | `""` |  |
+| cluster.backups.scheduledBackups[0].name | string | `"daily-backup"` |  |
+| cluster.backups.scheduledBackups[0].schedule | string | `"0 0 0 * * *"` |  |
+| cluster.backups.retentionPolicy | string | `"7d"` |  |
