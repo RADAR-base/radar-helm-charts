@@ -7646,6 +7646,36 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-cloudnative-timescaledb-0.1.0/radar-cloudnative-timescaledb-0.1.0.tgz
     version: 0.1.0
+  radar-cp-ksql-server:
+  - apiVersion: v2
+    appVersion: 7.6.0
+    created: "2025-09-11T10:40:27.232295682Z"
+    dependencies:
+    - alias: ksql
+      name: cp-ksql-server
+      repository: https://radar-base.github.io/cp-helm-charts
+      version: 0.4.1
+    description: ConfluentInc Ksql Server for RADAR-base
+    digest: af694d775e967d8b115a7fa055cf2b0ee632641a42c4dbd1daf77e855ab71304
+    home: https://radar-base.org
+    keywords:
+    - kafka
+    - queue
+    - stream
+    - event
+    - messaging
+    - datastore
+    - topic
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-cp-ksql-server
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-cp-ksql-server-0.0.1/radar-cp-ksql-server-0.0.1.tgz
+    version: 0.0.1
   radar-fitbit-connector:
   - annotations:
       artifacthub.io/license: Apache-2.0
@@ -21271,4 +21301,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-09-11T09:36:04.550766546Z"
+generated: "2025-09-11T10:40:27.234702066Z"
