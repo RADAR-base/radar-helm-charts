@@ -12289,6 +12289,42 @@ entries:
   radar-kafka:
   - apiVersion: v2
     appVersion: 3.9.0
+    created: "2025-09-11T09:35:52.203658257Z"
+    dependencies:
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    - name: strimzi-kafka-operator
+      repository: file://../../external/strimzi-kafka-operator
+      version: 0.46.0
+    - name: strimzi-registry-operator
+      repository: file://../../external/strimzi-registry-operator
+      version: 2.1.0
+    description: Apache Kafka for RADAR-base using the Strimzi Operator
+    digest: 0062f6741b3d019612fceded55189a9a90722be6ccc5be4d17c0b05dcaf1c83d
+    home: https://radar-base.org
+    keywords:
+    - kafka
+    - queue
+    - stream
+    - event
+    - messaging
+    - datastore
+    - topic
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-kafka
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-kafka-0.0.3/radar-kafka-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: 3.9.0
     created: "2025-06-26T08:22:32.057388112Z"
     dependencies:
     - name: common
@@ -21204,4 +21240,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-09-11T06:04:44.850034132Z"
+generated: "2025-09-11T09:35:52.204448158Z"
