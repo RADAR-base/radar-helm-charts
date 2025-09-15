@@ -303,3 +303,25 @@ timescaledb:
       initdb:
         database: database_name
         owner: database_name
+
+    backups:
+      enabled: true
+      endpointURL: http://minio:9000
+
+      provider: s3
+      s3:
+        region: ""
+        bucket: "cloudnative-timescaledb"
+        path: "/"
+      wal:
+        compression: ''
+        encryption: ''
+      data:
+        compression: ''
+        encryption: ''
+
+      scheduledBackups:
+        - name: daily-backup
+          schedule: "0 0 0 * * *"
+
+      retentionPolicy: "7d"
