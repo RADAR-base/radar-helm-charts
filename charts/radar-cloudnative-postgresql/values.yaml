@@ -145,24 +145,22 @@ cluster:
 
   backups:
     enabled: true
-
     endpointURL: http://minio:9000
 
     provider: s3
     s3:
-      region: ""
       bucket: "cloudnative-postgresql"
       path: "/"
+    # TODO: Currently compression and encryption are not used as this would result in an error when trying to create the backup.
     wal:
-      compression: ''
-      encryption: ''
+      compression:
+      encryption:
     data:
-      compression: ''
-      encryption: ''
+      compression:
+      encryption:
 
     scheduledBackups:
-      -
-        name: daily-backup
+      - name: daily-backup
         schedule: "0 0 0 * * *"
 
     retentionPolicy: "7d"

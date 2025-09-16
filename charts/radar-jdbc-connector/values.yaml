@@ -310,15 +310,15 @@ timescaledb:
 
       provider: s3
       s3:
-        region: ""
         bucket: "cloudnative-timescaledb"
         path: "/"
+      # TODO: Currently compression and encryption are not used as this would result in an error when trying to create the backup.
       wal:
-        compression: ''
-        encryption: ''
+        compression:
+        encryption:
       data:
-        compression: ''
-        encryption: ''
+        compression:
+        encryption:
 
       scheduledBackups:
         - name: daily-backup
