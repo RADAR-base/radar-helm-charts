@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# This script is a temporary fix until the vulnerability reporting action is improved and fixed.
+
+REPO="RADAR-base/radar-helm-charts"
+LABEL="${LABEL:?You must define the LABEL env var}"
+BATCH_SIZE="${BATCH_SIZE:-200}"
+
+while :; do
+  ids=$(gh issue list -R "$REPO" -s open -L "$BATCH_SIZE" \
+        --search "-label:\"$LABEL\"" \
+        --json number \
+      | jq -r '.[].number')
+
+  [ -z "$ids" ] && { echo "Done"; break; }
+
+  echo "Closing:" $ids
+  echo "$ids" | xargs -r -n1 -I{} gh issue close -R "$REPO" {}
+  sleep 1
+done

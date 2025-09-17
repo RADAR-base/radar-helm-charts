@@ -116,3 +116,22 @@ jobs:
           category: ${{ matrix.DOCKER_IMAGE_SHORT }}
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # This step is a temporary fix for closing obsolete issues.
+  # It can be removed when using an improved version of the thehyve/report-vulnerability action.
+  close-old-snyk-issues:
+    needs: scan
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Close previous Snyk issues without current run label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LABEL: Snyk-timestamp:${{ github.run_id }}
+        run: .github/bin/close_gh_issues
