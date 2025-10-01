@@ -165,6 +165,33 @@ oauth_clients:
     redirectUris:
       - http://localhost:8080/managementportal/api/redirect/login
 
+  SEP:
+    enable: false
+    audience:
+      - res_gateway
+      - res_ManagementPortal
+      - res_appconfig
+      - res_AppServer
+      - res_DataDashboardAPI
+      - res_restAuthorizer
+    client_secret: ""
+    scope:
+      - PROJECT.READ
+      - SOURCETYPE.READ
+      - SUBJECT.READ
+      - SUBJECT.UPDATE
+      - SUBJECT.CREATE
+      - USER.READ
+    grantTypes:
+      - refresh_token
+      - authorization_code
+      - client_credentials
+    access_token_validity: 43200
+    refresh_token_validity: 7948800
+    additional_information: '{"dynamic_registration": true}'
+    redirectUris:
+      - http://localhost/managementportal/api/redirect/login
+
   THINC-IT:
     enable: false
     audience:
