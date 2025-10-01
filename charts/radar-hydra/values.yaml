@@ -94,7 +94,7 @@ oauth_clients:
   ManagementPortalapp:
     enable: true
     redirectUris:
-      - http://localhost:8080/managementportal/api/redirect/login
+      - http://localhost/managementportal/api/redirect/login
     grantTypes:
       - authorization_code
       - refresh_token
@@ -163,7 +163,7 @@ oauth_clients:
     additional_information: '{"dynamic_registration": true}'
     tokenEndpointAuthMethod: client_secret_post
     redirectUris:
-      - http://localhost:8080/managementportal/api/redirect/login
+      - http://localhost/managementportal/api/redirect/login
 
   SEP:
     enable: false

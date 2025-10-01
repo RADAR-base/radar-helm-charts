@@ -46,7 +46,7 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 | hydra_server_url | string | `"http://radar-hydra-public:4444"` |  |
 | hydra_admin_url | string | `"http://radar-hydra-admin:4445/admin"` |  |
 | oauth_clients.ManagementPortalapp.enable | bool | `true` |  |
-| oauth_clients.ManagementPortalapp.redirectUris[0] | string | `"http://localhost:8080/managementportal/api/redirect/login"` |  |
+| oauth_clients.ManagementPortalapp.redirectUris[0] | string | `"http://localhost/managementportal/api/redirect/login"` |  |
 | oauth_clients.ManagementPortalapp.grantTypes[0] | string | `"authorization_code"` |  |
 | oauth_clients.ManagementPortalapp.grantTypes[1] | string | `"refresh_token"` |  |
 | oauth_clients.ManagementPortalapp.responseTypes[0] | string | `"code"` |  |
@@ -100,7 +100,28 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 | oauth_clients.aRMT.refresh_token_validity | int | `7948800` |  |
 | oauth_clients.aRMT.additional_information | string | `"{\"dynamic_registration\": true}"` |  |
 | oauth_clients.aRMT.tokenEndpointAuthMethod | string | `"client_secret_post"` |  |
-| oauth_clients.aRMT.redirectUris[0] | string | `"http://localhost:8080/managementportal/api/redirect/login"` |  |
+| oauth_clients.aRMT.redirectUris[0] | string | `"http://localhost/managementportal/api/redirect/login"` |  |
+| oauth_clients.SEP.enable | bool | `false` |  |
+| oauth_clients.SEP.audience[0] | string | `"res_gateway"` |  |
+| oauth_clients.SEP.audience[1] | string | `"res_ManagementPortal"` |  |
+| oauth_clients.SEP.audience[2] | string | `"res_appconfig"` |  |
+| oauth_clients.SEP.audience[3] | string | `"res_AppServer"` |  |
+| oauth_clients.SEP.audience[4] | string | `"res_DataDashboardAPI"` |  |
+| oauth_clients.SEP.audience[5] | string | `"res_restAuthorizer"` |  |
+| oauth_clients.SEP.client_secret | string | `""` |  |
+| oauth_clients.SEP.scope[0] | string | `"PROJECT.READ"` |  |
+| oauth_clients.SEP.scope[1] | string | `"SOURCETYPE.READ"` |  |
+| oauth_clients.SEP.scope[2] | string | `"SUBJECT.READ"` |  |
+| oauth_clients.SEP.scope[3] | string | `"SUBJECT.UPDATE"` |  |
+| oauth_clients.SEP.scope[4] | string | `"SUBJECT.CREATE"` |  |
+| oauth_clients.SEP.scope[5] | string | `"USER.READ"` |  |
+| oauth_clients.SEP.grantTypes[0] | string | `"refresh_token"` |  |
+| oauth_clients.SEP.grantTypes[1] | string | `"authorization_code"` |  |
+| oauth_clients.SEP.grantTypes[2] | string | `"client_credentials"` |  |
+| oauth_clients.SEP.access_token_validity | int | `43200` |  |
+| oauth_clients.SEP.refresh_token_validity | int | `7948800` |  |
+| oauth_clients.SEP.additional_information | string | `"{\"dynamic_registration\": true}"` |  |
+| oauth_clients.SEP.redirectUris[0] | string | `"http://localhost/managementportal/api/redirect/login"` |  |
 | oauth_clients.THINC-IT.enable | bool | `false` |  |
 | oauth_clients.THINC-IT.audience[0] | string | `"res_gateway"` |  |
 | oauth_clients.THINC-IT.audience[1] | string | `"res_ManagementPortal"` |  |
