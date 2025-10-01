@@ -340,6 +340,10 @@ identity_server:
   server_admin_url: http://radar-kratos-admin
   # -- The publicly accessible login URL for the IDP; needed when deviating from http(s)://server_name/kratos-ui
   login_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui'
+  # -- The user activation flow type to use for Management Portal (e.g., recovery, verification)
+  user_activation_flow_type: "recovery"
+  # -- The user activation method to use for Management Portal (e.g., link, code)
+  user_activation_method: "link"
 
 authserver:
   # -- The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth
@@ -348,7 +352,7 @@ authserver:
   server_admin_url: http://radar-hydra-admin:4445
   # -- The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login
   login_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra'
-  client_secret: secret
+  client_secret: ""
 
 managementportal:
   # -- set to true, if automatic source-type import from catalogue server should be enabled
@@ -368,7 +372,7 @@ managementportal:
    # -- The file where the OAuth2 client details are stored
   oauth_clients_file: /secrets/oauth_client_details.csv
   # -- Base URL managementportal calls from inside the application container
-  base_url: http://localhost:8080/managementportal
+  base_url: http://localhost/managementportal
 
 # Configurations of the SMTP server to send activation emails from Management Portal
 smtp:

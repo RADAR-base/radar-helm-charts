@@ -115,6 +115,10 @@ spec:
             value: {{ tpl .Values.identity_server.server_admin_url . }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_INTERNAL
             value: "false"
+          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_USER_ACTIVATION_FLOW_TYPE
+            value: {{ .Values.identity_server.user_activation_flow_type | quote }}
+          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_USER_ACTIVATION_METHOD
+            value: {{ .Values.identity_server.user_activation_method | quote }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERURL
             value:  {{ tpl .Values.authserver.server_url . }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_LOGINURL
