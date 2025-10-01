@@ -100,7 +100,6 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
 | redis.uri | string | `"redis://redis-master:6379"` | URI of the redis database |
 | serverName | string | `"localhost"` | Resolvable server name, needed to find the advertised URL and callback URL |
-| managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | client_secret | string | `"secret"` | OAuth2 client secret of the radar-rest-sources-backend client from Management Portal |
 | public_key_endpoints | list | `["http://radar-hydra-public:4444/.well-known/jwks.json"]` | List of public key endpoints for token verification |
 | auth_url | string | `"http://radar-hydra-public:4444/oauth2/token"` | Auth url for MP client |
