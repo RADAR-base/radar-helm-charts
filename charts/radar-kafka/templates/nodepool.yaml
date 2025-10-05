@@ -12,6 +12,10 @@ spec:
   roles:
     - controller
     - broker
+  {{- if .Values.kafka.resources }}
+  resources:
+    {{ .Values.kafka.resources | toYaml | indent 4 | trim }}
+  {{- end }}
   storage:
     type: jbod
     volumes:

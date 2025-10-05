@@ -37,8 +37,7 @@ strimzi-registry-operator:
   # -- Keep in sync with namespace used by deployment
   operatorNamespace: default
 
-# -- Values for strimzi-registry-operator
-# ref: https://strimzi.io/docs/operators/latest/deploying#proc-registry-deploy-options-str
+# -- Values for Kafka cluster deployed by Strimzi kafka operator
 kafka:
 
   # -- Number of Kafka brokers
@@ -57,6 +56,12 @@ kafka:
   # -- Storage size for Kafka pods
   storage:
     size: 10Gi
+
+  # -- Resource requests for Kafka pods
+  resources:
+    requests:
+      cpu: 100m
+      memory: 1Gi
 
   # -- Security Context for Kafka pods
   # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str
