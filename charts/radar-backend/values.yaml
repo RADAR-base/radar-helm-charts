@@ -88,13 +88,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
+          app.kubernetes.io/name: 'kafka'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-schema-registry'
+          app: 'radar-kafka-schema-registry'
   - to:
     - namespaceSelector:
         matchLabels:
