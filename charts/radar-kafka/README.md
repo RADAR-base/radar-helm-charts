@@ -49,9 +49,12 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | dev_deployment | bool | `false` | Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode) |
 | nameOverride | string | `""` | String to partially override radar-kafka.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-kafka.fullname template with a string |
-| metrics | object | `{"enabled":true,"kafkaExporter":{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"}}` | Enable metrics to be collected via Prometheus-operator |
+| metrics | object | `{"enabled":true,"kafkaExporter":{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"},"prometheusRules":{"consumerGroupLagDelta":20000}}` | Enable metrics to be collected via Prometheus-operator |
 | metrics.enabled | bool | `true` | Enable monitoring of metrics |
 | metrics.kafkaExporter | object | `{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"}` | Values for Prometheus JMX Exporter attached to Kafka pods ref: https://strimzi.io/docs/operators/latest/deploying#proc-metrics-kafka-deploy-options-str |
+| metrics.kafkaExporter.groupRegex | string | `".*"` | Regex that selects consumer groups for KafkaExporter errors/warnings. |
+| metrics.prometheusRules | object | `{"consumerGroupLagDelta":20000}` | Custom parameters to selected prometheus rules |
+| metrics.prometheusRules.consumerGroupLagDelta | int | `20000` | Threshold of backpressure (number of messages not handled by consumer group) warning for consumer groups. |
 | strimzi-kafka-operator | object | check `values.yaml` | Values for kafka operator ref: https://strimzi.io/docs/operators/latest/deploying#assembly-operators-str |
 | strimzi-registry-operator | object | `{"clusterName":"radar","operatorNamespace":"default"}` | Values for schema registry operator ref: https://github.com/lsst-sqre/strimzi-registry-operator |
 | strimzi-registry-operator.clusterName | string | `"radar"` | Keep in sync with 'fullnameOverride' |
