@@ -133,7 +133,7 @@ spec:
               command:
               - /bin/sh
               - -c
-              - curl -sf localhost:8083/connectors/radar-fitbit-source/status | grep -o '\"state\":\"[^\"]*\"' | tr '\\n' ',' | grep -vq FAILED || exit 1
+              - resp=$(curl -sf localhost:8083/connectors/radar-fitbit-source/status) || exit 1; echo "$resp" | grep -o '\"state\":\"[^\"]*\"' | tr '\\n' ',' | grep -vq "RUNNING" && exit 1|| exit 0
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
