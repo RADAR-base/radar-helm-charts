@@ -17,9 +17,15 @@ metrics:
   # -- Values for Prometheus JMX Exporter attached to Kafka pods
   # ref: https://strimzi.io/docs/operators/latest/deploying#proc-metrics-kafka-deploy-options-str
   kafkaExporter:
+    # -- Regex that selects consumer groups for KafkaExporter errors/warnings.
     groupRegex: ".*"
+    # --
     topicRegex: ".*"
     enableSaramaLogging: true
+  # -- Custom parameters to selected prometheus rules
+  prometheusRules:
+    # -- Threshold of backpressure (number of messages not handled by consumer group) warning for consumer groups.
+    consumerGroupLagDelta: 20000
 
 # -- Values for kafka operator
 # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-operators-str
@@ -37,8 +43,7 @@ strimzi-registry-operator:
   # -- Keep in sync with namespace used by deployment
   operatorNamespace: default
 
-# -- Values for strimzi-registry-operator
-# ref: https://strimzi.io/docs/operators/latest/deploying#proc-registry-deploy-options-str
+# -- Values for Kafka cluster deployed by Strimzi kafka operator
 kafka:
 
   # -- Number of Kafka brokers
@@ -57,6 +62,12 @@ kafka:
   # -- Storage size for Kafka pods
   storage:
     size: 10Gi
+
+  # -- Resource requests for Kafka pods
+  resources:
+    requests:
+      cpu: 100m
+      memory: 1Gi
 
   # -- Security Context for Kafka pods
   # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str

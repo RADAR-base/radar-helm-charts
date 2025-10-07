@@ -249,7 +249,7 @@ spec:
         summary: 'Topic has under-replicated partitions'
         description: 'Topic  {{  printf "$labels.topic" }} has {{  printf "$value" }} under-replicated partition {{  printf "$labels.partition" }}'
     - alert: TooLargeConsumerGroupLag
-      expr: kafka_consumergroup_lag > 1000
+      expr: kafka_consumergroup_lag > {{ .Values.metrics.prometheusRules.consumerGroupLagDelta }}
       for: 10s
       labels:
         severity: warning
