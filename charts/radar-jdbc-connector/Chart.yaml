@@ -30,7 +30,7 @@ dependencies:
   version: 2.x.x
 - alias: timescaledb
   name: radar-cloudnative-timescaledb
-  condition: radar-cloudnative-timescaledb.enabled
+  condition: timescaledb.enabled
   repository: file://../radar-cloudnative-timescaledb
   tags:
     - timescaledb
