@@ -312,6 +312,8 @@ timescaledb:
       s3:
         bucket: "cloudnative-timescaledb"
         path: "/"
+        accessKey: secret
+        secretKey: secret
       # TODO: Currently compression and encryption are not used as this would result in an error when trying to create the backup.
       wal:
         compression:
