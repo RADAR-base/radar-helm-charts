@@ -1,0 +1,20 @@
+apiVersion: v2
+appVersion: "v8.8.2"
+description: Redis charts for Radar-base
+name: radar-redis
+home: "https://radar-base.org"
+version: 0.0.1
+maintainers:
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
+type: application
+dependencies:
+  - name: common
+    repository: https://radar-base.github.io/radar-helm-charts
+    tags:
+      - bitnami-common
+    version: 2.x.x
+  - name: redis-cluster
+    version: 0.17.1
+    repository: file://../../external/redis-cluster
