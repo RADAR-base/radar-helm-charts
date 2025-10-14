@@ -138,7 +138,7 @@ deployment:
   #   value: BAR
   extraEnv:
     - name: HYDRA_ADMIN_URL
-      value: http://hydra-admin
+      value: http://radar-hydra-admin
   # -- If you want to mount external volume
   # For example, mount a secret containing Certificate root CA to verify database
   # TLS connection.
@@ -294,10 +294,10 @@ kratosPublicUrl: "https://localhost/kratos"
 kratosBrowserUrl: "https://localhost/kratos"
 
 # -- Set this to ORY Hydra's Admin URL
-hydraAdminUrl: "http://hydra-admin"
+hydraAdminUrl: "http://radar-hydra-admin"
 
 # -- Set this to ORY Hydra's public URL
-hydraPublicUrl: "http://hydra-public:4444"
+hydraPublicUrl: "http://radar-hydra-public:4444"
 
 # -- Set this to the REST source backend service URL
 restSourceBackendUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend"
