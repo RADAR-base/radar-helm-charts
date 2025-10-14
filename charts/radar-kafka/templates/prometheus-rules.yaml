@@ -178,16 +178,6 @@ spec:
       annotations:
         summary: 'Kafka Connect Task Failure'
         description: 'One or more tasks have been in failed state for 5 minutes.'
-  - name: bridge
-    rules:
-    - alert: BridgeContainersDown
-      expr: absent(container_last_seen{container=~".+-bridge",pod=~".+-bridge-.+"})
-      for: 3m
-      labels:
-        severity: major
-      annotations:
-        summary: 'All Kafka Bridge containers down or in CrashLookBackOff status'
-        description: 'All Kafka Bridge containers have been down or in CrashLookBackOff status for 3 minutes'
     - alert: AvgProducerLatency
       expr: strimzi_bridge_kafka_producer_request_latency_avg > 10
       for: 10s
