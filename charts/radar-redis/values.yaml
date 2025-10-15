@@ -7,13 +7,11 @@ redis-cluster:
     image: quay.io/opstree/redis
     tag: v8.2.2
 
-    clusterSize: 3
+    clusterSize: 1
     leader:
       replicas: 1
     follower:
       replicas: 1
-    redisExporter:
-      enabled: false
   env:
     - name: REDIS_EXPORTER_INCL_SYSTEM_METRICS
       value: "true"

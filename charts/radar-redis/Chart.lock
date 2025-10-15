@@ -6,4 +6,4 @@ dependencies:
   repository: file://../../external/redis-cluster
   version: 0.17.1
 digest: sha256:bdbe9198a52e7c7611443c64292b7659d1942b3763c25bb480fe4ad5563c64bb
-generated: "2025-10-14T13:48:03.712326888+02:00"
+generated: "2025-10-15T10:26:12.430090333+02:00"
