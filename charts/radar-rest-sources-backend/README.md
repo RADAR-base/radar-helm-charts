@@ -98,7 +98,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
-| redis.uri | string | `"redis://radar-redis-follower-headless:6379"` | URI of the redis database |
+| redis.uri | string | `"redis://radar-redis-leader-headless:6379"` | URI of the redis database |
 | serverName | string | `"localhost"` | Resolvable server name, needed to find the advertised URL and callback URL |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | client_secret | string | `"secret"` | OAuth2 client secret of the radar-rest-sources-backend client from Management Portal |

@@ -209,7 +209,7 @@ target:
 
 redis:
   # -- URL of the redis database
-  uri: redis://redis-master:6379
+  uri: redis://radar-redis-leader-headless:6379
 
 worker:
   # -- Scanning interval (seconds)
