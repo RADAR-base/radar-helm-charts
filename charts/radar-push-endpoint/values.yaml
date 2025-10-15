@@ -332,4 +332,4 @@ garmin:
 
 redis:
   # -- The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties.
-  url: "redis://localhost:6379"
+  url: "redis://radar-redis-follower-headless:6379"
