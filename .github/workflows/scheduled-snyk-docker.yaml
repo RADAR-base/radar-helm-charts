@@ -53,12 +53,14 @@ jobs:
             charts/radar-kratos
             charts/radar-s3-proxy
             charts/radar-nifi
+            charts/radar-redis
             external/cloudnativepg-operator
             external/fluent-bit
             external/graylog
             external/ingress-nginx
             external/strimzi-kafka-operator
             external/strimzi-registry-operator
+            external/redis-operator
           # Any image that matches any of these patterns will be included for scanning.
           # Reasons:
           # - ghcr.io/cloudnative-pg/postgresql:16: deployed via operator so image tag not specifies in the chart in this repo.
