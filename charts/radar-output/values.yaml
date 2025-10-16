@@ -238,8 +238,10 @@ paths:
   output: output
   # -- Output path construction factory
   factory: org.radarbase.output.path.FormattedPathFactory
-  # -- Additional properties. For details see https://github.com/RADAR-base/radar-output-restructure/blob/master/restructure.yml
-  properties: {}
+  # -- Additional path configuration. For details see https://github.com/RADAR-base/radar-output-restructure/blob/master/restructure.yml
+  pathProperties:
+    format: ${projectId}/${userId}/${topic}/${filename}
+    plugins: fixed time key value
 
 # -- Individual topic configuration
 topics:
