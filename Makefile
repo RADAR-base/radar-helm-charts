@@ -122,11 +122,16 @@ update-postgresql:
 	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
 	@echo ""
 
-update-redis:
-	@echo "Updating redis"
-	@helm repo add bitnami https://charts.bitnami.com/bitnami
+update-redis-operator:
+	@echo "Updating redis-operator"
 	@rm -rf external/$(patsubst update-%,%,$@)
-	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
+	@helm pull -d external --untar ot-container-kit/$(patsubst update-%,%,$@)
+	@echo ""
+
+update-redis-cluster:
+	@echo "Updating redis-cluster"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm pull -d external --untar ot-container-kit/$(patsubst update-%,%,$@)
 	@echo ""
 
 update-strimzi-kafka-operator:

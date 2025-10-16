@@ -1,0 +1,34 @@
+# -- redis-cluster Helm Chart configuration
+# @default -- check 'values.yaml'
+redis-cluster:
+
+  redisCluster:
+
+    image: quay.io/opstree/redis
+    tag: v8.2.2
+
+    clusterSize: 1
+    leader:
+      replicas: 1
+    follower:
+      replicas: 1
+  env:
+    - name: REDIS_EXPORTER_INCL_SYSTEM_METRICS
+      value: "true"
+  storageSpec:
+    volumeClaimTemplate:
+      spec:
+        resources:
+          requests:
+            storage: 1Gi
+    nodeConfVolumeClaimTemplate:
+      spec:
+        resources:
+          requests:
+            storage: 1Gi
+
+  redisExporter:
+    enabled: false
+
+  serviceMonitor:
+    enabled: false
