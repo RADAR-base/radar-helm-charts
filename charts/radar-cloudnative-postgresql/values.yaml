@@ -146,11 +146,12 @@ cluster:
   backups:
     enabled: true
     endpointURL: http://minio:9000
-
     provider: s3
     s3:
       bucket: "cloudnative-postgresql"
       path: "/"
+      accessKey: secret
+      secretKey: secret
     # TODO: Currently compression and encryption are not used as this would result in an error when trying to create the backup.
     wal:
       compression:
