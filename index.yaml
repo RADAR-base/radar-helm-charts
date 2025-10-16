@@ -20766,6 +20766,58 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/redis-16.8.7/redis-16.8.7.tgz
     version: 16.8.7
+  redis-cluster:
+  - apiVersion: v2
+    appVersion: 0.17.1
+    created: "2025-10-16T12:18:57.940372889Z"
+    description: Provides easy redis setup definitions for Kubernetes services, and
+      deployment.
+    digest: cfed94a471c5eae4dd018a92c1c04643345e8256059e47efb1439f91b906f70d
+    home: https://github.com/ot-container-kit/redis-operator
+    icon: https://github.com/OT-CONTAINER-KIT/redis-operator/raw/main/static/redis-operator-logo.svg
+    keywords:
+    - operator
+    - redis
+    - opstree
+    - kubernetes
+    - openshift
+    - redis-exporter
+    maintainers:
+    - name: iamabhishek-dubey
+    - name: sandy724
+    - name: shubham-cmyk
+    name: redis-cluster
+    sources:
+    - https://github.com/ot-container-kit/redis-operator
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/redis-cluster-0.17.1/redis-cluster-0.17.1.tgz
+    version: 0.17.1
+  redis-operator:
+  - apiVersion: v2
+    appVersion: 0.22.1
+    created: "2025-10-16T12:18:58.113895002Z"
+    description: Provides easy redis setup definitions for Kubernetes services, and
+      deployment.
+    digest: fcb63371af7100ab6df7ea19979bc86da571a03ca5c593d352d747b16b0f2f96
+    home: https://github.com/OT-CONTAINER-KIT/redis-operator
+    icon: https://github.com/OT-CONTAINER-KIT/redis-operator/raw/main/static/redis-operator-logo.svg
+    keywords:
+    - operator
+    - redis
+    - opstree
+    - kubernetes
+    - openshift
+    maintainers:
+    - name: iamabhishek-dubey
+    - name: sandy724
+    - name: shubham-cmyk
+    name: redis-operator
+    sources:
+    - https://github.com/OT-CONTAINER-KIT/redis-operator
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/redis-operator-0.1.0/redis-operator-0.1.0.tgz
+    version: 0.1.0
   s3-proxy:
   - apiVersion: v2
     appVersion: 2.3.0
@@ -21737,4 +21789,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-10-16T12:18:53.543594637Z"
+generated: "2025-10-16T12:18:58.11491191Z"
