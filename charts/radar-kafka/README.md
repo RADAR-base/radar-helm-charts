@@ -3,7 +3,7 @@
 # radar-kafka
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-kafka)](https://artifacthub.io/packages/helm/radar-base/radar-kafka)
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
+![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
 
 Apache Kafka for RADAR-base using the Strimzi Operator
 
@@ -49,10 +49,11 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | dev_deployment | bool | `false` | Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode) |
 | nameOverride | string | `""` | String to partially override radar-kafka.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-kafka.fullname template with a string |
-| metrics | object | `{"enabled":true,"kafkaExporter":{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"},"prometheusRules":{"consumerGroupLagDelta":20000}}` | Enable metrics to be collected via Prometheus-operator |
+| metrics | object | `{"enabled":true,"kafkaExporter":{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"},"podMonitor":{"interval":"30s","scrapeTimeout":"30s"},"prometheusRules":{"consumerGroupLagDelta":20000}}` | Enable metrics to be collected via Prometheus-operator |
 | metrics.enabled | bool | `true` | Enable monitoring of metrics |
 | metrics.kafkaExporter | object | `{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"}` | Values for Prometheus JMX Exporter attached to Kafka pods ref: https://strimzi.io/docs/operators/latest/deploying#proc-metrics-kafka-deploy-options-str |
 | metrics.kafkaExporter.groupRegex | string | `".*"` | Regex that selects consumer groups for KafkaExporter errors/warnings. |
+| metrics.podMonitor | object | `{"interval":"30s","scrapeTimeout":"30s"}` | Prometheus scrap config for Kafka pods. These settings do not affect scrape of Strimzi operators. |
 | metrics.prometheusRules | object | `{"consumerGroupLagDelta":20000}` | Custom parameters to selected prometheus rules |
 | metrics.prometheusRules.consumerGroupLagDelta | int | `20000` | Threshold of backpressure (number of messages not handled by consumer group) warning for consumer groups. |
 | strimzi-kafka-operator | object | check `values.yaml` | Values for kafka operator ref: https://strimzi.io/docs/operators/latest/deploying#assembly-operators-str |
