@@ -62,6 +62,16 @@ spec:
         configMapKeyRef:
           name: {{ template "common.names.fullname" . }}-kafka-metrics
           key: kafka-metrics-config.yml
+  {{- if .Values.kafka.cruiseControl.enabled }}
+  cruiseControl:
+    autoRebalance:
+      - mode: add-brokers
+        template:
+          name: {{ template "common.names.fullname" . }}-rebalance-template
+      - mode: remove-brokers
+        template:
+          name: {{ template "common.names.fullname" . }}-rebalance-template
+  {{- end }}
   kafkaExporter:
     {{- toYaml .Values.metrics.kafkaExporter | nindent 4 }}
   {{- end }}
