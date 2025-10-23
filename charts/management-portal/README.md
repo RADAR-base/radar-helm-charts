@@ -3,7 +3,7 @@
 # management-portal
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 1.6.2](https://img.shields.io/badge/Version-1.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.12](https://img.shields.io/badge/AppVersion-2.1.12-informational?style=flat-square)
+![Version: 1.6.3](https://img.shields.io/badge/Version-1.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.13](https://img.shields.io/badge/AppVersion-2.1.13-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 

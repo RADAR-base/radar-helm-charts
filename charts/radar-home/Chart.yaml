@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: "0.1.6"
+appVersion: "0.1.7"
 description: RADAR-base home page.
 name: radar-home
-version: 0.5.2
+version: 0.5.3
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-home
