@@ -10125,6 +10125,33 @@ entries:
   radar-grafana:
   - apiVersion: v2
     appVersion: 11.2.2-security-01
+    created: "2025-10-23T09:37:06.475183185Z"
+    dependencies:
+    - name: grafana
+      repository: file://../../external/grafana
+      version: 8.11.3
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Grafana dashboard used by RADAR-base
+    digest: 6674c7ed16fd9f13950ada761dbbd89cc09c18244728185a2ed60f184b3f642c
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-grafana
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-grafana
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-grafana-0.1.2/radar-grafana-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 11.2.2-security-01
     created: "2025-04-14T15:30:57.378156228Z"
     dependencies:
     - name: grafana
@@ -21880,4 +21907,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-10-23T09:36:43.176849014Z"
+generated: "2025-10-23T09:37:06.47606742Z"
