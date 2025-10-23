@@ -70,7 +70,7 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | kafka.cruiseControl | object | `{"addRebalanceTemplate":true,"enabled":false,"goals":[],"skipHardGoalCheck":true}` | Config for the Cruise Control rebalancer (https://github.com/linkedin/cruise-control) |
 | kafka.cruiseControl.enabled | bool | `false` | Deploy the Cruise Control rebalancer operator. |
 | kafka.cruiseControl.addRebalanceTemplate | bool | `true` | Add a KafkaRebalance template CRD. Note that this does not automatically rebalance the cluster. For rebalancing, you need to create a KafkaRebalance resource using the template. |
-| kafka.cruiseControl.goals | list | `[]` | Goals for the Cruise Control rebalancer. If left empty, the default goals are used. |
+| kafka.cruiseControl.goals | list | `[]` | Goals for the Cruise Control rebalancer. If left empty, the default goals are used (see: https://github.com/linkedin/cruise-control#goals). |
 | kafka.cruiseControl.skipHardGoalCheck | bool | `true` | Skip hard goal check by Cruise Control rebalancer. |
 | kafka.podSecurityContext | object | `{}` | Security Context for Kafka pods ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str |
 | kafka.securityContext | object | `{}` | Security Context for Kafka containers ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str |

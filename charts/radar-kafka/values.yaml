@@ -81,7 +81,7 @@ kafka:
     # For rebalancing, you need to create a KafkaRebalance resource using the template.
     addRebalanceTemplate: true
     # -- Goals for the Cruise Control rebalancer.
-    # If left empty, the default goals are used.
+    # If left empty, the default goals are used (see: https://github.com/linkedin/cruise-control#goals).
     goals: []
     # -- Skip hard goal check by Cruise Control rebalancer.
     skipHardGoalCheck: true
