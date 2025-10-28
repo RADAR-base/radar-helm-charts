@@ -36,7 +36,7 @@ jobs:
           # - linuxserver/yq: init container
           EXCLUDE_IMAGE_PATTERNS:  bats
             busybox
-            docker.io/alpine
+            alpine
             linuxserver/yq
           # In this action we only scan 'external' dependencies of the RADAR-base deployment.
           # RADAR-base services are scanned in the respective GitHub repositories.
@@ -74,7 +74,6 @@ jobs:
             quay.io/strimzi/kafka:0.46.0-kafka-3.9.0
             confluentinc/cp-schema-registry:7.2.1
             docker.io/bitnamilegacy/minio:2024.8.3-debian-12-r0
-            docker.io/bitnamilegacy/mongodb:7.0.12-debian-12-r4
         run: .github/bin/external_docker_image_matrix
 
       # Disabled for now because it conflicts with the protection rule on main branch.
