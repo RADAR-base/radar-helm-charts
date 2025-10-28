@@ -73,34 +73,20 @@ Print external URI
 {{- end -}}
 
 {{/*
-Create a default fully qualified elasticsearch name or use the `graylog.elasticsearch.hosts` value if defined.
+Create a default fully qualified opensearch name or use the `graylog.opensearch.hosts` value if defined.
 Or use chart dependencies with release name
 */}}
-{{- define "graylog.elasticsearch.hosts" -}}
-{{- if .Values.graylog.elasticsearch.uriSecretKey }}
-    {{- if .Values.graylog.elasticsearch.uriSSL }}
+{{- define "graylog.opensearch.hosts" -}}
+{{- if .Values.graylog.opensearch.uriSecretKey }}
+    {{- if .Values.graylog.opensearch.uriSSL }}
         {{- printf "https://${GRAYLOG_ELASTICSEARCH_HOSTS}" -}}
     {{- else }}
         {{- printf "http://${GRAYLOG_ELASTICSEARCH_HOSTS}" -}}
     {{- end }}
-{{- else if .Values.graylog.elasticsearch.hosts }}
-    {{- .Values.graylog.elasticsearch.hosts -}}
+{{- else if .Values.graylog.opensearch.hosts }}
+    {{- .Values.graylog.opensearch.hosts -}}
 {{- else }}
-    {{- printf "http://elasticsearch-master.%s.svc.cluster.local:9200" .Release.Namespace -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified mongodb name or use the `graylog.mongodb.uri` value if defined.
-Or use chart dependencies with release name
-*/}}
-{{- define "graylog.mongodb.uri" -}}
-{{- if .Values.graylog.mongodb.uriSecretKey }}
-    {{- printf "${GRAYLOG_MONGODB_URI}" -}}
-{{- else if .Values.graylog.mongodb.uri }}
-    {{- .Values.graylog.mongodb.uri -}}
-{{- else }}
-    {{- printf "mongodb://%s-mongodb-headless.%s.svc.cluster.local:27017/graylog?replicaSet=rs0" .Release.Name .Release.Namespace -}}
+    {{- printf "http://opensearch-cluster-master-headless.%s.svc.cluster.local:9200" .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
 
@@ -146,4 +132,47 @@ Set's the affinity for pod placement when running in standalone and HA modes.
           {{- toYaml .Values.graylog.affinity | nindent 8 }}
         {{- end }}
   {{ end }}
+{{- end -}}
+
+{{/*
+Generate graylog root password if not set
+*/}}
+{{- define "graylog.password" -}}
+  {{- if .Values.graylog.rootPassword }}
+    {{- .Values.graylog.rootPassword -}}
+  {{- else -}}
+    {{- $secretName := (include "graylog.fullname" .) -}}
+    {{- $namespace := .Release.Namespace -}}
+    {{- $existingSecret := lookup "v1" "Secret" $namespace $secretName -}}
+    {{- if $existingSecret -}}
+        {{- (index $existingSecret.data "graylog-password-secret") | b64dec -}}
+    {{- else -}}
+        {{- randAlphaNum 16 -}}
+    {{- end }}
+  {{- end }}
+{{- end -}}
+
+{{/*
+Generate mongodb password if not set
+*/}}
+{{- define "graylog.mongodb.auth.password" -}}
+  {{- if .Values.mongodb.community.auth.password }}
+    {{- .Values.mongodb.community.auth.password -}}
+  {{- else -}}
+    {{- $secretName := (include "graylog.mongodb.name" .) -}}
+    {{- $namespace := .Release.Namespace -}}
+    {{- $existingSecret := lookup "v1" "Secret" $namespace $secretName -}}
+    {{- if $existingSecret -}}
+      {{- index $existingSecret.data "password" | b64dec -}}
+    {{- else -}}
+      {{- randAlphaNum 20 -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Generate mongodb name if not set
+*/}}
+{{- define "graylog.mongodb.name" -}}
+{{- printf "%s-mongodb" (include "graylog.fullname" $) }}
 {{- end -}}
