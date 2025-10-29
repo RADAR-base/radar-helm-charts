@@ -1,32 +1,86 @@
+# Single user authentication configuration
+singleUser:
+  username: admin
+  password: changemechangeme # Make sure it's at least 12 characters long.
+
 nifi-cluster:
   cluster:
+    nodeUserIdentityTemplate: node-%d-nifikop
     image:
-      tag: "2.3.0"
+      tag: "2.5.0"
     manager: kubernetes
     nifiProperties:
       # TODO passing the sensitive key in this manner is not good. But I do not see another way ATM.
       overrideConfigs: |
-        nifi.web.proxy.context.path=/nifi-cluster
+        nifi.web.proxy.context.path=/nifi
         nifi.sensitive.props.key=thisIsABadSensitiveKeyPassword
+        nifi.web.http.network.interface.default: eth0
+        nifi.web.http.network.interface.lo=lo
+        nifi.nar.library.autoload.directory=../extensions
+#nifi.security.keystore=/opt/nifi/nifi-current/conf/keystore.jks
+#nifi.security.keystoreType=JKS
+#nifi.security.keystorePasswd=test123
+#nifi.security.keyPasswd=test123
+#nifi.security.truststore=/opt/nifi/nifi-current/conf/truststore.jks
+#nifi.security.truststoreType=JKS
+#nifi.security.truststorePasswd=ta123
+      webProxyHosts:
+        - localhost:8443
+    singleUserConfiguration:
+      enabled: true
+      authorizerEnabled: true
+      secretRef:
+        name: single-user-credentials
+        namespace: default
+    listenersConfig:
+      internalListeners:
+        - type: "https"
+          name: "https"
+          containerPort: 8443
+        - type: "cluster"
+          name: "cluster"
+          containerPort: 6007
+        - type: "s2s"
+          name: "s2s"
+          containerPort: 10000
+      sslSecrets:
+        tlsSecretName: nifikop-tls
+        create: true
+
+    externalServices:
+      - name: nifikop
+        spec:
+          portConfigs:
+            - internalListenerName: https
+              port: 8443
+            - internalListenerName: s2s
+              port: 10000
+          type: LoadBalancer
+
   serviceAccount:
-    # This must be present and empty.
-    name:
+      # This must be present and empty.
+      name:
 
   ingress:
     enabled: true
     className: nginx
     annotations:
-      manager.io/issuer: letsencrypt-prod
-      nginx.ingress.kubernetes.io/enable-cors: "true"
-      nginx.ingress.kubernetes.io/cors-allow-headers: DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Request-Token
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      nginx.ingress.kubernetes.io/affinity: "cookie"
+      nginx.ingress.kubernetes.io/session-cookie-name: "route"
+      nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
     hosts:
-      - host: nifi.localhost
+      - host: localhost
         paths:
           - path: /
             pathType: ImplementationSpecific
             backend:
               service:
                 # TODO Can I template this service name?
-                name: cbio-nifi-nifi-cluster-headless
+                name: nifikop
                 port:
-                  number: 8080
+                  number: 8443
+    tls:
+      - secretName: nifikop-tls
+        hosts:
+          - localhost
