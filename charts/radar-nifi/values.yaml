@@ -1,7 +1,7 @@
 # Single user authentication configuration
 singleUser:
   username: admin
-  password: changemechangeme # Make sure it's at least 12 characters long.
+  password: changemechangeme  # Make sure it's at least 12 characters long.
 
 nifi-cluster:
   cluster:
@@ -17,13 +17,6 @@ nifi-cluster:
         nifi.web.http.network.interface.default: eth0
         nifi.web.http.network.interface.lo=lo
         nifi.nar.library.autoload.directory=../extensions
-#nifi.security.keystore=/opt/nifi/nifi-current/conf/keystore.jks
-#nifi.security.keystoreType=JKS
-#nifi.security.keystorePasswd=test123
-#nifi.security.keyPasswd=test123
-#nifi.security.truststore=/opt/nifi/nifi-current/conf/truststore.jks
-#nifi.security.truststoreType=JKS
-#nifi.security.truststorePasswd=ta123
       webProxyHosts:
         - localhost:8443
     singleUserConfiguration:
@@ -58,8 +51,7 @@ nifi-cluster:
           type: LoadBalancer
 
   serviceAccount:
-      # This must be present and empty.
-      name:
+    name:  # This must be present and empty.
 
   ingress:
     enabled: true
