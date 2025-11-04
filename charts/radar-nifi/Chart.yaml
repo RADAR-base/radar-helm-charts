@@ -23,6 +23,11 @@ version: 3.0.0
 # It is recommended to use it with quotes.
 appVersion: "1.16.0"
 dependencies:
+  - name: common
+    repository: https://radar-base.github.io/radar-helm-charts
+    tags:
+      - bitnami-common
+    version: 2.x.x
   - name: nifi-cluster
     version: 1.14.1
     repository: file://../../external/nifi-cluster

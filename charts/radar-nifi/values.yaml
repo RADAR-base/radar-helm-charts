@@ -23,7 +23,7 @@ nifi-cluster:
       enabled: true
       authorizerEnabled: true
       secretRef:
-        name: single-user-credentials
+        name: nifi-single-user-credentials
         namespace: default
     listenersConfig:
       internalListeners:

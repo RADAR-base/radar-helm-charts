@@ -11,6 +11,7 @@ A Helm chart for Kubernetes
 | Repository | Name | Version |
 |------------|------|---------|
 | file://../../external/nifi-cluster | nifi-cluster | 1.14.1 |
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
 
@@ -25,7 +26,7 @@ A Helm chart for Kubernetes
 | nifi-cluster.cluster.nifiProperties.webProxyHosts[0] | string | `"localhost:8443"` |  |
 | nifi-cluster.cluster.singleUserConfiguration.enabled | bool | `true` |  |
 | nifi-cluster.cluster.singleUserConfiguration.authorizerEnabled | bool | `true` |  |
-| nifi-cluster.cluster.singleUserConfiguration.secretRef.name | string | `"single-user-credentials"` |  |
+| nifi-cluster.cluster.singleUserConfiguration.secretRef.name | string | `"nifi-single-user-credentials"` |  |
 | nifi-cluster.cluster.singleUserConfiguration.secretRef.namespace | string | `"default"` |  |
 | nifi-cluster.cluster.listenersConfig.internalListeners[0].type | string | `"https"` |  |
 | nifi-cluster.cluster.listenersConfig.internalListeners[0].name | string | `"https"` |  |

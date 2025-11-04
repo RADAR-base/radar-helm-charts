@@ -1,6 +1,9 @@
 dependencies:
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  version: 2.27.0
 - name: nifi-cluster
   repository: file://../../external/nifi-cluster
   version: 1.14.1
-digest: sha256:93046787aa8ca1cd7f7b26d671f6a19806f685346d8091f01ce47389788082fe
-generated: "2025-07-21T10:35:35.756186189+02:00"
+digest: sha256:06c4d55b085818aa585c2101f36840230bae848f2b9dec2625e01aaeaa7d0e4a
+generated: "2025-11-04T10:27:46.97038415+01:00"
