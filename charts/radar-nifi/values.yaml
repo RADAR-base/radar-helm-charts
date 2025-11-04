@@ -1,8 +1,27 @@
-# Single user authentication configuration
-singleUser:
-  username: admin
-  password: changemechangeme  # Make sure it's at least 12 characters long.
+serverName: localhost
 
+auth:
+  # -- OpenID Connect configuration (not functional at the moment, included for reference).
+  oidc:
+    enabled: false
+    wellKnownConfigUrl: http://idp/.well-known/openid-configuration
+    #    redirectUrl: '{{ printf "%s://nifi.%s/*" .Values.advertised_protocol .Values.serverName }}'
+    scopes: openid,profile,email
+    clientIdSecret:
+      name: radar-keycloak-broker-nifi
+      key: clientId
+    clientSecretSecret:
+      name: radar-keycloak-broker-nifi
+      key: clientSecret
+  # -- Single user authentication configuration
+  singleUser:
+    username: admin
+    # -- Password for the single admin user.
+    # Make sure it's at least 12 characters long.'
+    password: secret
+
+# -- Nifi Cluster configuration
+# @default -- check `values.yaml`
 nifi-cluster:
   cluster:
     nodeUserIdentityTemplate: node-%d-nifikop
@@ -10,13 +29,9 @@ nifi-cluster:
       tag: "2.5.0"
     manager: kubernetes
     nifiProperties:
-      # TODO passing the sensitive key in this manner is not good. But I do not see another way ATM.
-      overrideConfigs: |
-        nifi.web.proxy.context.path=/nifi
-        nifi.sensitive.props.key=thisIsABadSensitiveKeyPassword
-        nifi.web.http.network.interface.default: eth0
-        nifi.web.http.network.interface.lo=lo
-        nifi.nar.library.autoload.directory=../extensions
+      overrideConfigMap:
+        name: radar-nifi-properties
+        data: nifi.properties
       webProxyHosts:
         - localhost:8443
     singleUserConfiguration:
@@ -51,28 +66,25 @@ nifi-cluster:
           type: LoadBalancer
 
   serviceAccount:
-    name:  # This must be present and empty.
+    # -- This must be present and empty.
+    name:
 
   ingress:
-    enabled: true
-    className: nginx
-    annotations:
+    # The built-in ingress is not enabled by default; we deploy a custom ingress.
+    enabled: false
+
+ingress:
+  enabled: true
+  annotations:
       nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
       nginx.ingress.kubernetes.io/affinity: "cookie"
       nginx.ingress.kubernetes.io/session-cookie-name: "route"
       nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
-    hosts:
-      - host: localhost
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                # TODO Can I template this service name?
-                name: nifikop
-                port:
-                  number: 8443
-    tls:
-      - secretName: nifikop-tls
-        hosts:
-          - localhost
+      nginx.ingress.kubernetes.io/enable-cors: "true"
+      nginx.ingress.kubernetes.io/cors-allow-headers: DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Request-Token
+  hostname: 'nifi.{{ .Values.serverName }}'
+  ingressClassName: nginx
+  path: /
+  pathType: ImplementationSpecific
+  backend: '{{ include "common.names.fullname" . }}-nifi-cluster-headless'
+  tls: false
