@@ -11,6 +11,7 @@ A Helm chart for Kubernetes
 | Repository | Name | Version |
 |------------|------|---------|
 | file://../../external/nifi-cluster | nifi-cluster | 1.14.1 |
+| file://../../external/nifikop | nifikop | 1.14.1 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
@@ -18,6 +19,7 @@ A Helm chart for Kubernetes
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | serverName | string | `"localhost"` |  |
+| nifikop.enabled | bool | `true` | Deployt the nifikop operator. |
 | auth.oidc | object | `{"clientIdSecret":{"key":"clientId","name":"radar-keycloak-broker-nifi"},"clientSecretSecret":{"key":"clientSecret","name":"radar-keycloak-broker-nifi"},"enabled":false,"scopes":"openid,profile,email","wellKnownConfigUrl":"http://idp/.well-known/openid-configuration"}` | OpenID Connect configuration (not functional at the moment, included for reference). |
 | auth.singleUser | object | `{"password":"secret","username":"admin"}` | Single user authentication configuration |
 | auth.singleUser.password | string | `"secret"` | Password for the single admin user. Make sure it's at least 12 characters long.' |

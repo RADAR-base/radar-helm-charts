@@ -31,3 +31,7 @@ dependencies:
   - name: nifi-cluster
     version: 1.14.1
     repository: file://../../external/nifi-cluster
+  - name: nifikop
+    repository: file://../../external/nifikop
+    version: 1.14.1
+    condition: nifikop.enabled

@@ -1,5 +1,9 @@
 serverName: localhost
 
+nifikop:
+  # -- Deployt the nifikop operator.
+  enabled: true
+
 auth:
   # -- OpenID Connect configuration (not functional at the moment, included for reference).
   oidc:
