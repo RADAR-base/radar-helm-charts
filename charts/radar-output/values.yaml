@@ -97,7 +97,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'redis'
+          app.kubernetes.io/name: 'radar-redis'
   - to:
     - namespaceSelector:
         matchLabels:

@@ -3,7 +3,7 @@
 # radar-redis
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-redis)](https://artifacthub.io/packages/helm/radar-base/radar-redis)
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.2.2](https://img.shields.io/badge/AppVersion-8.2.2-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.2.2](https://img.shields.io/badge/AppVersion-8.2.2-informational?style=flat-square)
 
 Redis charts for Radar-base
 
@@ -32,3 +32,4 @@ Redis charts for Radar-base
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redis-cluster | object | check 'values.yaml' | redis-cluster Helm Chart configuration |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |

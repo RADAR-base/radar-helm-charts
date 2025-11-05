@@ -3,7 +3,7 @@ appVersion: "8.2.2"
 description: Redis charts for Radar-base
 name: radar-redis
 home: "https://radar-base.org"
-version: 0.0.1
+version: 0.1.0
 maintainers:
   - email: pim@thehyve.nl
     name: Pim van Nierop
