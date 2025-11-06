@@ -21,10 +21,35 @@ A Helm chart for Kubernetes
 | serverName | string | `"localhost"` |  |
 | nifikop.enabled | bool | `true` | Deploy the nifikop operator. |
 | auth.oidc | object | `{"clientIdSecret":{"key":"clientId","name":"radar-keycloak-broker-nifi"},"clientSecretSecret":{"key":"clientSecret","name":"radar-keycloak-broker-nifi"},"enabled":false,"scopes":"openid,profile,email","wellKnownConfigUrl":"http://idp/.well-known/openid-configuration"}` | OpenID Connect configuration (not functional at the moment, included for reference). |
-| auth.singleUser | object | `{"password":"secret","username":"admin"}` | Single user authentication configuration |
-| auth.singleUser.password | string | `"secret"` | Password for the single admin user. Make sure it's at least 12 characters long.' |
-| nifi-cluster | object | check `values.yaml` | Nifi Cluster configuration |
+| auth.singleUser | object | `{"password":"changemechangeme","username":"admin"}` | Single user authentication configuration |
+| auth.singleUser.password | string | `"changemechangeme"` | Password for the single admin user. Make sure it's at least 12 characters long.' |
+| nifi-secret-properties | object | check `values.yaml` | Nifi Cluster configuration |
+| nifi-properties."nifi.web.proxy.context.path" | string | `"/nifi"` |  |
+| nifi-properties."nifi.web.http.network.interface.default" | string | `"eth0"` |  |
+| nifi-properties."nifi.web.http.network.interface.lo" | string | `"lo"` |  |
+| nifi-properties."nifi.nar.library.autoload.directory" | string | `"../extensions"` |  |
+| nifi-cluster.cluster.nodeUserIdentityTemplate | string | `"node-%d-nifikop"` |  |
+| nifi-cluster.cluster.image.tag | string | `"2.5.0"` |  |
+| nifi-cluster.cluster.manager | string | `"kubernetes"` |  |
+| nifi-cluster.cluster.nifiProperties.overrideConfigMap.name | string | `"radar-nifi-properties"` |  |
+| nifi-cluster.cluster.nifiProperties.overrideConfigMap.data | string | `"nifi.properties"` |  |
+| nifi-cluster.cluster.nifiProperties.overrideSecretConfig.name | string | `"radar-nifi-secret-properties"` |  |
+| nifi-cluster.cluster.nifiProperties.overrideSecretConfig.data | string | `"nifi-secret.properties"` |  |
+| nifi-cluster.cluster.nifiProperties.webProxyHosts[0] | string | `"localhost:8443"` |  |
+| nifi-cluster.cluster.singleUserConfiguration.enabled | bool | `true` |  |
+| nifi-cluster.cluster.singleUserConfiguration.authorizerEnabled | bool | `true` |  |
+| nifi-cluster.cluster.singleUserConfiguration.secretRef.name | string | `"nifi-single-user-credentials"` |  |
+| nifi-cluster.cluster.singleUserConfiguration.secretRef.namespace | string | `"default"` |  |
+| nifi-cluster.cluster.singleUserConfiguration.sslSecrets.tlsSecretName | string | `"nifikop-tls"` |  |
+| nifi-cluster.cluster.singleUserConfiguration.sslSecrets.create | bool | `true` |  |
+| nifi-cluster.cluster.externalServices[0].name | string | `"nifikop"` |  |
+| nifi-cluster.cluster.externalServices[0].spec.portConfigs[0].internalListenerName | string | `"https"` |  |
+| nifi-cluster.cluster.externalServices[0].spec.portConfigs[0].port | int | `8443` |  |
+| nifi-cluster.cluster.externalServices[0].spec.portConfigs[1].internalListenerName | string | `"s2s"` |  |
+| nifi-cluster.cluster.externalServices[0].spec.portConfigs[1].port | int | `10000` |  |
+| nifi-cluster.cluster.externalServices[0].spec.type | string | `"LoadBalancer"` |  |
 | nifi-cluster.serviceAccount.name | string | `nil` | This must be present and empty. |
+| nifi-cluster.ingress.enabled | bool | `false` |  |
 | ingress.enabled | bool | `true` |  |
 | ingress.annotations."nginx.ingress.kubernetes.io/backend-protocol" | string | `"HTTPS"` |  |
 | ingress.annotations."nginx.ingress.kubernetes.io/affinity" | string | `"cookie"` |  |
