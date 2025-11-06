@@ -5,5 +5,8 @@ dependencies:
 - name: nifi-cluster
   repository: file://../../external/nifi-cluster
   version: 1.14.1
-digest: sha256:06c4d55b085818aa585c2101f36840230bae848f2b9dec2625e01aaeaa7d0e4a
-generated: "2025-11-04T10:27:46.97038415+01:00"
+- name: nifikop
+  repository: file://../../external/nifikop
+  version: 1.14.1
+digest: sha256:1dd5ea92012d42dd996abb603890298ecba2e06486f2ed12eb58eb5e7f6fc957
+generated: "2025-11-05T13:41:54.715231113+01:00"

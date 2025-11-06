@@ -44,17 +44,17 @@ nifi-cluster:
       secretRef:
         name: nifi-single-user-credentials
         namespace: default
-    listenersConfig:
-      internalListeners:
-        - type: "https"
-          name: "https"
-          containerPort: 8443
-        - type: "cluster"
-          name: "cluster"
-          containerPort: 6007
-        - type: "s2s"
-          name: "s2s"
-          containerPort: 10000
+#    listenersConfig:
+#      internalListeners:
+#        - type: "https"
+#          name: "https"
+#          containerPort: 8443
+#        - type: "cluster"
+#          name: "cluster"
+#          containerPort: 6007
+#        - type: "s2s"
+#          name: "s2s"
+#          containerPort: 10000
       sslSecrets:
         tlsSecretName: nifikop-tls
         create: true
