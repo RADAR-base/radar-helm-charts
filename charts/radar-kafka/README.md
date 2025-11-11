@@ -3,7 +3,7 @@
 # radar-kafka
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-kafka)](https://artifacthub.io/packages/helm/radar-base/radar-kafka)
 
-![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
 
 Apache Kafka for RADAR-base using the Strimzi Operator
 
@@ -49,17 +49,18 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | dev_deployment | bool | `false` | Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode) |
 | nameOverride | string | `""` | String to partially override radar-kafka.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-kafka.fullname template with a string |
-| metrics | object | `{"enabled":true,"kafkaExporter":{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"},"prometheusRules":{"consumerGroupLagDelta":20000}}` | Enable metrics to be collected via Prometheus-operator |
+| metrics | object | `{"enabled":true,"kafkaExporter":{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"},"podMonitor":{"interval":"30s","scrapeTimeout":"30s"},"prometheusRules":{"consumerGroupLagDelta":20000}}` | Enable metrics to be collected via Prometheus-operator |
 | metrics.enabled | bool | `true` | Enable monitoring of metrics |
 | metrics.kafkaExporter | object | `{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"}` | Values for Prometheus JMX Exporter attached to Kafka pods ref: https://strimzi.io/docs/operators/latest/deploying#proc-metrics-kafka-deploy-options-str |
 | metrics.kafkaExporter.groupRegex | string | `".*"` | Regex that selects consumer groups for KafkaExporter errors/warnings. |
+| metrics.podMonitor | object | `{"interval":"30s","scrapeTimeout":"30s"}` | Prometheus scrap config for Kafka pods. These settings do not affect scrape of Strimzi operators. |
 | metrics.prometheusRules | object | `{"consumerGroupLagDelta":20000}` | Custom parameters to selected prometheus rules |
 | metrics.prometheusRules.consumerGroupLagDelta | int | `20000` | Threshold of backpressure (number of messages not handled by consumer group) warning for consumer groups. |
 | strimzi-kafka-operator | object | check `values.yaml` | Values for kafka operator ref: https://strimzi.io/docs/operators/latest/deploying#assembly-operators-str |
 | strimzi-registry-operator | object | `{"clusterName":"radar","operatorNamespace":"default"}` | Values for schema registry operator ref: https://github.com/lsst-sqre/strimzi-registry-operator |
 | strimzi-registry-operator.clusterName | string | `"radar"` | Keep in sync with 'fullnameOverride' |
 | strimzi-registry-operator.operatorNamespace | string | `"default"` | Keep in sync with namespace used by deployment |
-| kafka | object | `{"insyncReplicas":2,"metadataVersion":"3.9-IV0","partitions":9,"podSecurityContext":{},"replicas":3,"replicationFactor":3,"resources":{"requests":{"cpu":"100m","memory":"1Gi"}},"securityContext":{},"storage":{"size":"10Gi"}}` | Values for Kafka cluster deployed by Strimzi kafka operator |
+| kafka | object | `{"cruiseControl":{"addRebalanceTemplate":true,"enabled":false,"goals":[],"skipHardGoalCheck":true},"insyncReplicas":2,"metadataVersion":"3.9-IV0","partitions":9,"podSecurityContext":{},"replicas":3,"replicationFactor":3,"resources":{"requests":{"cpu":"100m","memory":"1Gi"}},"securityContext":{},"storage":{"size":"10Gi"}}` | Values for Kafka cluster deployed by Strimzi kafka operator |
 | kafka.replicas | int | `3` | Number of Kafka brokers |
 | kafka.replicationFactor | int | `3` | Number of replicas for Kafka topics |
 | kafka.insyncReplicas | int | `2` | Number of in-sync kafka broker replicas |
