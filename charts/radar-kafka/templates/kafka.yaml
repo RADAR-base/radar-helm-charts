@@ -25,6 +25,12 @@ spec:
       default.replication.factor: {{ $topicReplicationFactor }}
       min.insync.replicas: {{ $insyncReplicas }}
       num.partitions: {{ $topicPartitions }}
+    {{- if .Values.kafka.jvmOptions }}
+    jvmOptions: {{ .Values.kafka.jvmOptions | toYaml | nindent 6 }}
+    {{- end }}
+    {{- if .Values.kafka.resources }}
+    resources: {{ .Values.kafka.resources | toYaml | nindent 6 }}
+    {{- end }}
     listeners:
       - name: plain
         port: 9092
@@ -62,6 +68,7 @@ spec:
         configMapKeyRef:
           name: {{ template "common.names.fullname" . }}-kafka-metrics
           key: kafka-metrics-config.yml
+  {{- end }}
   {{- if .Values.kafka.cruiseControl.enabled }}
   cruiseControl:
     autoRebalance:
@@ -71,10 +78,33 @@ spec:
       - mode: remove-brokers
         template:
           name: {{ template "common.names.fullname" . }}-rebalance-template
+    {{- with .Values.kafka.cruiseControl.javaOptions }}
+    jvmOptions: {{ toYaml . | nindent 6 | trim }}
+    {{- end }}
+    {{- with .Values.kafka.cruiseControl.resources }}
+    resources: {{ toYaml . | nindent 6 | trim }}
+    {{- end }}
   {{- end }}
+  {{ if .Values.metrics.enabled }}
   kafkaExporter:
     {{- toYaml .Values.metrics.kafkaExporter | nindent 4 }}
   {{- end }}
   entityOperator:
-    topicOperator: {}
-    userOperator: {}
+    topicOperator:
+      {{- if .Values.kafka.topicOperator.jvmOptions }}
+      jvmOptions: {{ .Values.kafka.topicOperator.jvmOptions | toYaml | nindent 8 }}
+      {{- else }}
+      {}
+      {{- end }}
+      {{- with .Values.kafka.topicOperator.resources }}
+      resources: {{ . | toYaml | nindent 8 }}
+      {{- end }}
+    userOperator:
+      {{- if .Values.kafka.userOperator.jvmOptions }}
+      jvmOptions: {{ .Values.kafka.userOperator.jvmOptions | toYaml | nindent 8 }}
+      {{- else }}
+      {}
+      {{- end }}
+      {{- with .Values.kafka.userOperator.resources }}
+      resources: {{ . | toYaml | nindent 8 }}
+      {{- end }}
