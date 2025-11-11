@@ -3,7 +3,7 @@
 # radar-kafka
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-kafka)](https://artifacthub.io/packages/helm/radar-base/radar-kafka)
 
-![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
 
 Apache Kafka for RADAR-base using the Strimzi Operator
 
@@ -60,7 +60,7 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | strimzi-registry-operator | object | `{"clusterName":"radar","operatorNamespace":"default"}` | Values for schema registry operator ref: https://github.com/lsst-sqre/strimzi-registry-operator |
 | strimzi-registry-operator.clusterName | string | `"radar"` | Keep in sync with 'fullnameOverride' |
 | strimzi-registry-operator.operatorNamespace | string | `"default"` | Keep in sync with namespace used by deployment |
-| kafka | object | `{"insyncReplicas":2,"metadataVersion":"3.9-IV0","partitions":9,"podSecurityContext":{},"replicas":3,"replicationFactor":3,"resources":{"requests":{"cpu":"100m","memory":"1Gi"}},"securityContext":{},"storage":{"size":"10Gi"}}` | Values for Kafka cluster deployed by Strimzi kafka operator |
+| kafka | object | `{"cruiseControl":{"addRebalanceTemplate":true,"enabled":false,"goals":[],"skipHardGoalCheck":true},"insyncReplicas":2,"metadataVersion":"3.9-IV0","partitions":9,"podSecurityContext":{},"replicas":3,"replicationFactor":3,"resources":{"requests":{"cpu":"100m","memory":"1Gi"}},"securityContext":{},"storage":{"size":"10Gi"}}` | Values for Kafka cluster deployed by Strimzi kafka operator |
 | kafka.replicas | int | `3` | Number of Kafka brokers |
 | kafka.replicationFactor | int | `3` | Number of replicas for Kafka topics |
 | kafka.insyncReplicas | int | `2` | Number of in-sync kafka broker replicas |
@@ -68,6 +68,11 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | kafka.metadataVersion | string | `"3.9-IV0"` | Metadata API version. Keep in sync with appVersion |
 | kafka.storage | object | `{"size":"10Gi"}` | Storage size for Kafka pods |
 | kafka.resources | object | `{"requests":{"cpu":"100m","memory":"1Gi"}}` | Resource requests for Kafka pods |
+| kafka.cruiseControl | object | `{"addRebalanceTemplate":true,"enabled":false,"goals":[],"skipHardGoalCheck":true}` | Config for the Cruise Control rebalancer (https://github.com/linkedin/cruise-control) |
+| kafka.cruiseControl.enabled | bool | `false` | Deploy the Cruise Control rebalancer operator. |
+| kafka.cruiseControl.addRebalanceTemplate | bool | `true` | Add a KafkaRebalance template CRD. Note that this does not automatically rebalance the cluster. For rebalancing, you need to create a KafkaRebalance resource using the template. |
+| kafka.cruiseControl.goals | list | `[]` | Goals for the Cruise Control rebalancer. If left empty, the default goals are used (see: https://github.com/linkedin/cruise-control#goals). |
+| kafka.cruiseControl.skipHardGoalCheck | bool | `true` | Skip hard goal check by Cruise Control rebalancer. |
 | kafka.podSecurityContext | object | `{}` | Security Context for Kafka pods ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str |
 | kafka.securityContext | object | `{}` | Security Context for Kafka containers ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str |
 | schema-registry | object | check `values.yaml` | Values for schema registry deployed by strimzi-registry-operator ref: https://github.com/lsst-sqre/strimzi-registry-operator |
