@@ -77,6 +77,11 @@ kafka:
       cpu: 1
       memory: 2Gi
 
+  # -- JVM options for Kafka pods
+  javaOptions:
+    Xms: 512m
+    Xmx: 512m
+
   # -- Security Context for Kafka pods
   # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str
   podSecurityContext: {}

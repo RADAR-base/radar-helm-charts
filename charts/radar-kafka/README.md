@@ -60,7 +60,7 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | strimzi-registry-operator | object | `{"clusterName":"radar","operatorNamespace":"default"}` | Values for schema registry operator ref: https://github.com/lsst-sqre/strimzi-registry-operator |
 | strimzi-registry-operator.clusterName | string | `"radar"` | Keep in sync with 'fullnameOverride' |
 | strimzi-registry-operator.operatorNamespace | string | `"default"` | Keep in sync with namespace used by deployment |
-| kafka | object | `{"insyncReplicas":2,"metadataVersion":"3.9-IV0","partitions":9,"podSecurityContext":{},"replicas":3,"replicationFactor":3,"resources":{"limits":{"cpu":1,"memory":"2Gi"},"requests":{"cpu":"100m","memory":"1Gi"}},"securityContext":{},"storage":{"size":"10Gi"}}` | Values for Kafka cluster deployed by Strimzi kafka operator |
+| kafka | object | `{"insyncReplicas":2,"javaOptions":{"Xms":"512m","Xmx":"512m"},"metadataVersion":"3.9-IV0","partitions":9,"podSecurityContext":{},"replicas":3,"replicationFactor":3,"resources":{"limits":{"cpu":1,"memory":"2Gi"},"requests":{"cpu":"100m","memory":"1Gi"}},"securityContext":{},"storage":{"size":"10Gi"}}` | Values for Kafka cluster deployed by Strimzi kafka operator |
 | kafka.replicas | int | `3` | Number of Kafka brokers |
 | kafka.replicationFactor | int | `3` | Number of replicas for Kafka topics |
 | kafka.insyncReplicas | int | `2` | Number of in-sync kafka broker replicas |
@@ -69,6 +69,7 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | kafka.storage | object | `{"size":"10Gi"}` | Storage size for Kafka pods |
 | kafka.resources.requests | object | `{"cpu":"100m","memory":"1Gi"}` | Resource requests for Kafka pods |
 | kafka.resources.limits | object | `{"cpu":1,"memory":"2Gi"}` | Resource limits for Kafka pods |
+| kafka.javaOptions | object | `{"Xms":"512m","Xmx":"512m"}` | JVM options for Kafka pods |
 | kafka.podSecurityContext | object | `{}` | Security Context for Kafka pods ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str |
 | kafka.securityContext | object | `{}` | Security Context for Kafka containers ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str |
 | schema-registry | object | check `values.yaml` | Values for schema registry deployed by strimzi-registry-operator ref: https://github.com/lsst-sqre/strimzi-registry-operator |
