@@ -25,6 +25,9 @@ spec:
       default.replication.factor: {{ $topicReplicationFactor }}
       min.insync.replicas: {{ $insyncReplicas }}
       num.partitions: {{ $topicPartitions }}
+    {{- if .Values.kafka.javaOptions }}
+    jvmOptions: {{ .Values.kafka.javaOptions | toYaml | nindent 6 }}
+    {{- end }}
     listeners:
       - name: plain
         port: 9092
