@@ -67,11 +67,15 @@ kafka:
   storage:
     size: 10Gi
 
-  # -- Resource requests for Kafka pods
   resources:
+    # -- Resource requests for Kafka pods
     requests:
       cpu: 100m
       memory: 1Gi
+    # -- Resource limits for Kafka pods
+    limits:
+      cpu: 1
+      memory: 2Gi
 
   # -- Security Context for Kafka pods
   # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str
