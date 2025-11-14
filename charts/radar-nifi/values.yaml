@@ -2,7 +2,7 @@ serverName: localhost
 
 nifikop:
   # -- Deploy the nifikop operator.
-  enabled: true
+  enabled: false
 
 auth:
   # -- OpenID Connect configuration (not functional at the moment, included for reference).
@@ -29,11 +29,6 @@ auth:
 nifi-secret-properties:
   nifi.sensitive.props.key: thisIsABadSensitiveKeyPasswordv2
 
-nifi-properties:
-  nifi.web.proxy.context.path: /nifi
-  nifi.web.http.network.interface.default: eth0
-  nifi.web.http.network.interface.lo: lo
-  nifi.nar.library.autoload.directory: ../extensions
 
 nifi-cluster:
   cluster:
@@ -42,9 +37,11 @@ nifi-cluster:
       tag: "2.5.0"
     manager: kubernetes
     nifiProperties:
-      overrideConfigMap:
-        name: radar-nifi-properties
-        data: nifi.properties
+      overrideConfigs: |
+        nifi.web.proxy.context.path=/nifi
+        nifi.web.http.network.interface.default: eth0
+        nifi.web.http.network.interface.lo=lo
+        nifi.nar.library.autoload.directory=../extensions
       overrideSecretConfig:
         name: radar-nifi-secret-properties
         data: nifi-secret.properties
@@ -56,37 +53,25 @@ nifi-cluster:
       secretRef:
         name: nifi-single-user-credentials
         namespace: default
-#    listenersConfig:
-#      internalListeners:
-#        - type: "https"
-#          name: "https"
-#          containerPort: 8443
-#        - type: "cluster"
-#          name: "cluster"
-#          containerPort: 6007
-#        - type: "s2s"
-#          name: "s2s"
-#          containerPort: 10000
+    listenersConfig:
+      internalListeners:
+        - type: "https"
+          name: "https"
+          containerPort: 8443
+        - type: "cluster"
+          name: "cluster"
+          containerPort: 6007
+        - type: "s2s"
+          name: "s2s"
+          containerPort: 10000
       sslSecrets:
         tlsSecretName: nifikop-tls
         create: true
 
-    externalServices:
-      - name: nifikop
-        spec:
-          portConfigs:
-            - internalListenerName: https
-              port: 8443
-            - internalListenerName: s2s
-              port: 10000
-          type: LoadBalancer
-
   serviceAccount:
-    # -- This must be present and empty.
-    name:
+    name:  # This must be present and empty.
 
   ingress:
-    # The built-in ingress is not enabled by default; we deploy a custom ingress.
     enabled: false
 
 ingress:
@@ -96,11 +81,11 @@ ingress:
     nginx.ingress.kubernetes.io/affinity: "cookie"
     nginx.ingress.kubernetes.io/session-cookie-name: "route"
     nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
-    nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-headers: DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Request-Token
-  hostname: 'nifi.{{ .Values.serverName }}'
+    cert-manager.io/cluster-issuer: self-signed-issuer
+  hostname: localhost
   ingressClassName: nginx
   path: /
   pathType: ImplementationSpecific
   backend: '{{ include "common.names.fullname" . }}-nifi-cluster-headless'
-  tls: false
+  tls: true
+  existingSecret: nifikop-tls

@@ -19,20 +19,15 @@ A Helm chart for Kubernetes
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | serverName | string | `"localhost"` |  |
-| nifikop.enabled | bool | `true` | Deploy the nifikop operator. |
+| nifikop.enabled | bool | `false` | Deploy the nifikop operator. |
 | auth.oidc | object | `{"clientIdSecret":{"key":"clientId","name":"radar-keycloak-broker-nifi"},"clientSecretSecret":{"key":"clientSecret","name":"radar-keycloak-broker-nifi"},"enabled":false,"scopes":"openid,profile,email","wellKnownConfigUrl":"http://idp/.well-known/openid-configuration"}` | OpenID Connect configuration (not functional at the moment, included for reference). |
 | auth.singleUser | object | `{"password":"changemechangeme","username":"admin"}` | Single user authentication configuration |
 | auth.singleUser.password | string | `"changemechangeme"` | Password for the single admin user. Make sure it's at least 12 characters long.' |
 | nifi-secret-properties | object | check `values.yaml` | Nifi Cluster configuration |
-| nifi-properties."nifi.web.proxy.context.path" | string | `"/nifi"` |  |
-| nifi-properties."nifi.web.http.network.interface.default" | string | `"eth0"` |  |
-| nifi-properties."nifi.web.http.network.interface.lo" | string | `"lo"` |  |
-| nifi-properties."nifi.nar.library.autoload.directory" | string | `"../extensions"` |  |
 | nifi-cluster.cluster.nodeUserIdentityTemplate | string | `"node-%d-nifikop"` |  |
 | nifi-cluster.cluster.image.tag | string | `"2.5.0"` |  |
 | nifi-cluster.cluster.manager | string | `"kubernetes"` |  |
-| nifi-cluster.cluster.nifiProperties.overrideConfigMap.name | string | `"radar-nifi-properties"` |  |
-| nifi-cluster.cluster.nifiProperties.overrideConfigMap.data | string | `"nifi.properties"` |  |
+| nifi-cluster.cluster.nifiProperties.overrideConfigs | string | `"nifi.web.proxy.context.path=/nifi\nnifi.web.http.network.interface.default: eth0\nnifi.web.http.network.interface.lo=lo\nnifi.nar.library.autoload.directory=../extensions\n"` |  |
 | nifi-cluster.cluster.nifiProperties.overrideSecretConfig.name | string | `"radar-nifi-secret-properties"` |  |
 | nifi-cluster.cluster.nifiProperties.overrideSecretConfig.data | string | `"nifi-secret.properties"` |  |
 | nifi-cluster.cluster.nifiProperties.webProxyHosts[0] | string | `"localhost:8443"` |  |
@@ -40,29 +35,32 @@ A Helm chart for Kubernetes
 | nifi-cluster.cluster.singleUserConfiguration.authorizerEnabled | bool | `true` |  |
 | nifi-cluster.cluster.singleUserConfiguration.secretRef.name | string | `"nifi-single-user-credentials"` |  |
 | nifi-cluster.cluster.singleUserConfiguration.secretRef.namespace | string | `"default"` |  |
-| nifi-cluster.cluster.singleUserConfiguration.sslSecrets.tlsSecretName | string | `"nifikop-tls"` |  |
-| nifi-cluster.cluster.singleUserConfiguration.sslSecrets.create | bool | `true` |  |
-| nifi-cluster.cluster.externalServices[0].name | string | `"nifikop"` |  |
-| nifi-cluster.cluster.externalServices[0].spec.portConfigs[0].internalListenerName | string | `"https"` |  |
-| nifi-cluster.cluster.externalServices[0].spec.portConfigs[0].port | int | `8443` |  |
-| nifi-cluster.cluster.externalServices[0].spec.portConfigs[1].internalListenerName | string | `"s2s"` |  |
-| nifi-cluster.cluster.externalServices[0].spec.portConfigs[1].port | int | `10000` |  |
-| nifi-cluster.cluster.externalServices[0].spec.type | string | `"LoadBalancer"` |  |
-| nifi-cluster.serviceAccount.name | string | `nil` | This must be present and empty. |
+| nifi-cluster.cluster.listenersConfig.internalListeners[0].type | string | `"https"` |  |
+| nifi-cluster.cluster.listenersConfig.internalListeners[0].name | string | `"https"` |  |
+| nifi-cluster.cluster.listenersConfig.internalListeners[0].containerPort | int | `8443` |  |
+| nifi-cluster.cluster.listenersConfig.internalListeners[1].type | string | `"cluster"` |  |
+| nifi-cluster.cluster.listenersConfig.internalListeners[1].name | string | `"cluster"` |  |
+| nifi-cluster.cluster.listenersConfig.internalListeners[1].containerPort | int | `6007` |  |
+| nifi-cluster.cluster.listenersConfig.internalListeners[2].type | string | `"s2s"` |  |
+| nifi-cluster.cluster.listenersConfig.internalListeners[2].name | string | `"s2s"` |  |
+| nifi-cluster.cluster.listenersConfig.internalListeners[2].containerPort | int | `10000` |  |
+| nifi-cluster.cluster.listenersConfig.sslSecrets.tlsSecretName | string | `"nifikop-tls"` |  |
+| nifi-cluster.cluster.listenersConfig.sslSecrets.create | bool | `true` |  |
+| nifi-cluster.serviceAccount.name | string | `nil` |  |
 | nifi-cluster.ingress.enabled | bool | `false` |  |
 | ingress.enabled | bool | `true` |  |
 | ingress.annotations."nginx.ingress.kubernetes.io/backend-protocol" | string | `"HTTPS"` |  |
 | ingress.annotations."nginx.ingress.kubernetes.io/affinity" | string | `"cookie"` |  |
 | ingress.annotations."nginx.ingress.kubernetes.io/session-cookie-name" | string | `"route"` |  |
 | ingress.annotations."nginx.ingress.kubernetes.io/session-cookie-hash" | string | `"sha1"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/enable-cors" | string | `"true"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/cors-allow-headers" | string | `"DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Request-Token"` |  |
-| ingress.hostname | string | `"nifi.{{ .Values.serverName }}"` |  |
+| ingress.annotations."cert-manager.io/cluster-issuer" | string | `"self-signed-issuer"` |  |
+| ingress.hostname | string | `"localhost"` |  |
 | ingress.ingressClassName | string | `"nginx"` |  |
 | ingress.path | string | `"/"` |  |
 | ingress.pathType | string | `"ImplementationSpecific"` |  |
 | ingress.backend | string | `"{{ include \"common.names.fullname\" . }}-nifi-cluster-headless"` |  |
-| ingress.tls | bool | `false` |  |
+| ingress.tls | bool | `true` |  |
+| ingress.existingSecret | string | `"nifikop-tls"` |  |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
