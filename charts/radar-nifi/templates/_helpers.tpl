@@ -1,9 +1,21 @@
+{{/*
+Set value from existing secret if defined
+I tried using "common.secrets.password.manage" but it gives errors on helm upgrades.
+Arguments (dict):
+- secret: the name of the secret
+- key: the key in the secret
+- contxt: global/root helm context
+*/}}
+{{- define "radar-nifi.secret.value" -}}
+{{- $secretObj := (lookup "v1" "Secret" .context.Release.Namespace .secret) | default dict }}
+{{- $secretData := (get $secretObj "data") | default dict }}
+{{- get $secretData .key | b64dec }}
+{{- end -}}
 {{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
 */}}
-
-{{- define "apache-nifi.name" -}}
+{{- define "radar-nifi.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -12,7 +24,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "apache-nifi.fullname" -}}
+{{- define "radar-nifi.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -28,60 +40,26 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "apache-nifi.chart" -}}
+{{- define "radar-nifi.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-
 {{/*
-Set the service account name
+Common labels
 */}}
-{{- define "apache-nifi.serviceAccountName" -}}
-{{- if or .Values.sts.serviceAccount.create (eq .Values.properties.clusterStateProvider "kubernetes-provider")}}
-{{- default (include "apache-nifi.fullname" .) .Values.sts.serviceAccount.name }}-sa
-{{- else }}
-{{- default "default" .Values.sts.serviceAccount.name }}
+{{- define "radar-nifi.labels" -}}
+helm.sh/chart: {{ include "radar-nifi.chart" . }}
+{{ include "radar-nifi.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
-{{- define "registry.url" }}
-{{- $port := .Values.registry.port | toString }}
-{{- if .Values.registry.enabled -}}
-{{- printf "http://%s-registry:%s" .Release.Name $port }}
-{{- else -}}
-{{- printf "http://%s:%s" .Values.registry.url $port }}
-{{- end -}}
-{{- end -}}
-
-
-{{- define "zookeeper.url" }}
-{{- $port := .Values.zookeeper.port | toString }}
-{{- if .Values.zookeeper.enabled -}}
-{{- printf "%s-zookeeper:%s" .Release.Name $port }}
-{{- else -}}
-{{- printf "%s:%s" .Values.zookeeper.url $port }}
-{{- end -}}
-{{- end -}}
-
 {{/*
-Form the Zookeeper Server part of the URL. If zookeeper is installed as part of this chart, use k8s service discovery,
-else use user-provided server name
+Selector labels
 */}}
-{{- define "zookeeper.server" }}
-{{- if .Values.zookeeper.enabled -}}
-{{- printf "%s-zookeeper" .Release.Name }}
-{{- else -}}
-{{- printf "%s" .Values.zookeeper.url }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create ca.server
-*/}}
-{{- define "ca.server" }}
-{{- if .Values.ca.enabled -}}
-{{- printf "%s-ca" .Release.Name }}
-{{- else -}}
-{{- printf "%s" .Values.ca.server }}
-{{- end -}}
-{{- end -}}
+{{- define "radar-nifi.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "radar-nifi.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

@@ -1,0 +1,164 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "nifikop.fullname" . }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app: {{ template "nifikop.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    operator: nifi
+    release: {{ .Release.Name }}
+    control-plane: nifikop
+    {{- include "userdefined.labels" . }}
+  annotations:
+    {{- include "userdefined.annotations" . }}
+spec:
+  selector:
+    matchLabels:
+      control-plane: nifikop
+      name: {{ template "nifikop.name" . }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        control-plane: nifikop
+        name: {{ template "nifikop.name" . }}
+        app: {{ template "nifikop.name" . }}
+        operator: nifi
+        release: {{ .Release.Name }}
+        {{- include "userdefined.labels" . | indent 4 }}
+      annotations:
+        {{- include "userdefined.annotations" . | indent 4 }}
+    spec:
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      {{- if .Values.image.imagePullSecrets.enabled }}
+      imagePullSecrets:
+        - name: {{ .Values.image.imagePullSecrets.name }}
+      {{- end }}
+      {{- if .Values.rbacEnable }}
+      {{- if and .Values.serviceAccount .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}      
+      {{- else }}
+      serviceAccountName: {{ template "nifikop.name" . }}
+      {{- end }}
+      {{- end }}
+      volumes:
+        {{- if .Values.vaultSecret }}
+        - name: {{ .Values.vaultSecret }}
+          secret:
+            secretName: {{ .Values.vaultSecret }}
+        {{- end }}
+        {{- if .Values.webhook.enabled }}
+        - name: cert
+          secret:
+            defaultMode: 420
+            secretName: {{ template "webhook.secret.name" . }}
+        {{- end }}
+      {{- if .Values.podSecurityContext }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- else }}
+      securityContext:
+        runAsUser: 1000
+      {{- end }}
+      {{- if .Values.hostAliases }}
+      {{- with .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      containers:
+        - command:
+            - /manager
+          args:
+            - -metrics-bind-address=:{{ .Values.metrics.port }}
+            - -leader-elect
+            - -cert-manager-enabled={{ .Values.certManager.enabled }}
+            - -webhook-enabled={{ .Values.webhook.enabled }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          name: {{ template "nifikop.name" . }}
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
+              protocol: TCP
+            {{- if .Values.webhook.enabled }}
+            - containerPort: 9443
+              name: webhook-server
+              protocol: TCP
+            {{- end }}
+          {{- if .Values.securityContext }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
+          env:
+            - name: WATCH_NAMESPACE
+              {{- if .Values.namespaces }}
+              value: {{ join "," .Values.namespaces }}
+              {{- else }}
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+              {{- end }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "nifikop"
+            {{- if .Values.vaultAddress }}
+            - name: VAULT_ADDR
+              value: {{ .Values.vaultAddress }}
+            {{- end }}
+            {{- if .Values.vaultSecret }}
+            - name: VAULT_CACERT
+              value: /etc/vault/certs/ca.crt
+            {{- end }}
+            - name: LOG_LEVEL
+              value: {{ default "Info" .Values.logLevel }}
+            - name: LOG_ENCODING
+              value: {{ default "json" .Values.logEncoding }}
+            {{- if .Values.additionalEnvs }}
+              {{- toYaml .Values.additionalEnvs | nindent 12 }}
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          volumeMounts:
+          {{- if .Values.vaultSecret }}
+          - mountPath: /etc/vault/certs
+            name: {{ .Values.vaultSecret }}
+            readOnly: true
+          {{- end }}
+          {{- if .Values.webhook.enabled }}
+          - mountPath: /tmp/k8s-webhook-server/serving-certs
+            name: cert
+            readOnly: true
+          {{- end }}
+      terminationGracePeriodSeconds: 10
+
