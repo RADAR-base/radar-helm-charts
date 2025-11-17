@@ -3,7 +3,7 @@
 # catalog-server
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/catalog-server)](https://artifacthub.io/packages/helm/radar-base/catalog-server)
 
-![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.11](https://img.shields.io/badge/AppVersion-0.8.11-informational?style=flat-square)
+![Version: 0.9.1](https://img.shields.io/badge/Version-0.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.8.14](https://img.shields.io/badge/AppVersion-0.8.14-informational?style=flat-square)
 
 A Helm chart for RADAR-base catalogue server. This application creates RADAR-base topics in Kafka, registers schemas in Schema Registry and keeps a catalog of available source types.
 
@@ -38,8 +38,8 @@ A Helm chart for RADAR-base catalogue server. This application creates RADAR-bas
 |-----|------|---------|-------------|
 | dev_deployment | bool | `false` | Deploy with settings for development (e.g., num_brokers = 1) |
 | replicaCount | int | `1` | Number of catalog-server replicas to deploy |
-| image.registry | string | `"docker.io"` | Image registry |
-| image.repository | string | `"radarbase/radar-schemas-tools"` | Image repository |
+| image.registry | string | `"ghcr.io"` | Image registry |
+| image.repository | string | `"radar-base/radar-schemas/radar-schemas-tools"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |

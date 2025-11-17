@@ -1,0 +1,6 @@
+dependencies:
+- name: fluent-bit
+  repository: file://../../external/fluent-bit
+  version: 0.50.0
+digest: sha256:295cf92c7f98783887f13f21a625a90f824b0ebf46620984f814636e0419aa50
+generated: "2025-09-09T12:23:38.40539882+02:00"

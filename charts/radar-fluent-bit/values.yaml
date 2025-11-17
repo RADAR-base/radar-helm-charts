@@ -1,0 +1,39 @@
+fluent-bit:
+  config:
+
+    filters: |
+      [FILTER]
+          Name grep
+          match *
+          Exclude log Elasticsearch built-in security features are not enabled
+
+      [FILTER]
+          Name kubernetes
+          Match kube.*
+          Merge_Log On
+          Keep_Log On
+          Annotations On
+          Labels On
+          K8S-Logging.Parser On
+          K8S-Logging.Exclude On
+
+    outputs: |
+      [OUTPUT]
+          Name gelf
+          Match kube.*
+          Host graylog-tcp
+          Port 12222
+          Mode tcp
+          gelf_short_message_key log
+          gelf_host_key stream
+          Retry_Limit False
+
+      [OUTPUT]
+          Name gelf
+          Match host.*
+          Host graylog-tcp
+          Port 12222
+          Mode tcp
+          Gelf_Short_Message_Key MESSAGE
+          gelf_host_key stream
+          Retry_Limit False

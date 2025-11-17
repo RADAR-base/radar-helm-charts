@@ -3,7 +3,7 @@
 # radar-fitbit-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-fitbit-connector)](https://artifacthub.io/packages/helm/radar-base/radar-fitbit-connector)
 
-![Version: 0.9.2](https://img.shields.io/badge/Version-0.9.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.0](https://img.shields.io/badge/AppVersion-0.7.0-informational?style=flat-square)
+![Version: 0.10.2](https://img.shields.io/badge/Version-0.10.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.7.1](https://img.shields.io/badge/AppVersion-0.7.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base fitbit connector. This application collects data from participants via the Fitbit Web API.
 
@@ -37,8 +37,8 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-fitbit-connector replicas to deploy |
-| image.registry | string | `"docker.io"` | Image registry |
-| image.repository | string | `"radarbase/kafka-connect-rest-fitbit-source"` | Image repository |
+| image.registry | string | `"ghcr.io"` | Image registry |
+| image.repository | string | `"radar-base/radar-rest-connector/kafka-connect-fitbit-source"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
@@ -100,9 +100,11 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | auth_url | string | `"http://management-portal:8080/managementportal/oauth/token"` | OAuth2 Auth URL for connector client to get access tokens |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of Management Portal. This will be used to create URLs to access Management Portal |
 | includeIntradayData | bool | `true` | Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties. |
-| user_repository_class | string | `"ServiceUserRepositoryLegacy"` | Class of the user repository to use. This should be a class that implements the UserRepository interface. |
+| user_repository_class | string | `"ServiceUserRepository"` | Class of the user repository to use. This should be a class that implements the UserRepository interface. |
 | rest_source_poll_interval_ms | int | `60000` | How often to poll the source URL. Only use to speed up processing times during e2e testing. |
-| fitbit_user_poll_interval | int | `5000` | Polling interval per Fitbit user per request route in seconds. Only use to speed up processing times during e2e testing. |
+| fitbit_user_poll_interval | int | `150` | Polling interval per Fitbit user per request route in seconds. Only use to speed up processing times during e2e testing. |
 | application_loop_interval_ms | int | `300000` | How often to perform the main application loop (only controls how often to poll for new user registrations). Only use to speed up processing times during e2e testing. |
 | user_cache_refresh_interval_ms | int | `3600000` | How often to invalidate the cache and poll for new user registrations. Only use to speed up processing times during e2e testing. |
 | routes | object | `{"activityLog":{"enabled":true,"topic":"connect_fitbit_activity_log"},"breathingRate":{"enabled":true,"topic":"connect_fitbit_breathing_rate"},"intradayCalories":{"enabled":true,"topic":"connect_fitbit_intraday_calories"},"intradayHeartRate":{"enabled":true,"topic":"connect_fitbit_intraday_heart_rate"},"intradayHeartRateVariability":{"enabled":true,"topic":"connect_fitbit_intraday_heart_rate_variability"},"intradaySpo2":{"enabled":true,"topic":"connect_fitbit_intraday_spo2"},"intradaySteps":{"enabled":true,"topic":"connect_fitbit_intraday_steps"},"restingHeartRate":{"enabled":true,"topic":"connect_fitbit_resting_heart_rate"},"skinTemperature":{"enabled":true,"topic":"connect_fitbit_skin_temperature"},"sleepClassic":{"enabled":true,"topic":"connect_fitbit_sleep_classic"},"sleepStages":{"enabled":true,"topic":"connect_fitbit_sleep_stages"},"timezone":{"enabled":true,"topic":"connect_fitbit_timezone"}}` | Whether to include the specific routes and to specify the topics to use for each route. |
+| usersFile | object | `{"users":[]}` | Only used when user_repository_class is YamlUserRepository |
+| usersFile.users | list | `[]` | Users to be included in the users yaml file. |
