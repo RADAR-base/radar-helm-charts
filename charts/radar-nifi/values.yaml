@@ -2,7 +2,7 @@ serverName: localhost
 
 nifikop:
   # -- Deploy the nifikop operator.
-  enabled: false
+  enabled: true
 
 auth:
   # -- OpenID Connect configuration (not functional at the moment, included for reference).
@@ -28,7 +28,6 @@ auth:
 # @default -- check `values.yaml`
 nifi-secret-properties:
   nifi.sensitive.props.key: thisIsABadSensitiveKeyPasswordv2
-
 
 nifi-cluster:
   cluster:
@@ -67,9 +66,71 @@ nifi-cluster:
       sslSecrets:
         tlsSecretName: nifikop-tls
         create: true
-
-  serviceAccount:
-    name:  # This must be present and empty.
+    nifiClusterTaskSpec:
+      retryDurationMinutes: 10
+    nodeConfigGroups:
+      default_group:
+        fsGroup: 1337
+        isNode: true
+        resourcesRequirements:
+          limits:
+            cpu: 2
+            memory: 2Gi
+          requests:
+            cpu: 1
+            memory: 1Gi
+        # Must reference managerServiceAccount (defaults to fullname)
+        serviceAccountName: radar-nifi-nifi-cluster
+        storageConfigs:
+          - mountPath: /opt/nifi/flowfile_repository
+            name: flowfile-repository
+            pvcSpec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 10Gi
+          - mountPath: /opt/nifi/nifi-current/conf
+            name: conf
+            pvcSpec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 5Gi
+          - mountPath: /opt/nifi/content_repository
+            name: content-repository-default
+            pvcSpec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 10Gi
+          - mountPath: /opt/nifi/provenance_repository
+            name: provenance-repository-default
+            pvcSpec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 10Gi
+          - mountPath: /opt/nifi/nifi-current/database_repository
+            name: database-repository-default
+            pvcSpec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 5Gi
+    nodes:
+      - id: 0
+        labels:
+          nifi_node_group: default_group
+        nodeConfigGroup: default_group
+    propagateLabels: false
+    service:
+      headlessEnabled: true
+    maximumTimerDrivenThreadCount: 40
 
   ingress:
     enabled: false
