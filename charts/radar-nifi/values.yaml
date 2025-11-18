@@ -158,7 +158,7 @@ ingress:
     nginx.ingress.kubernetes.io/session-cookie-name: "route"
     nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
     cert-manager.io/cluster-issuer: self-signed-issuer
-  hostname: nifi.localhost
+  hostname: 'nifi.{{ $.Values.serverName }}'
   ingressClassName: nginx
   path: /
   pathType: ImplementationSpecific
