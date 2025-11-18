@@ -27,7 +27,12 @@ auth:
 # -- Nifi Cluster configuration
 # @default -- check `values.yaml`
 nifi-secret-properties:
-  nifi.sensitive.props.key: thisIsABadSensitiveKeyPasswordv2
+nifi-properties:
+  nifi.web.proxy.context.path: /
+  nifi.web.proxy.scheme: https
+  nifi.web.http.network.interface.default: eth0
+  nifi.web.http.network.interface.lo: lo
+  nifi.nar.library.autoload.directory: ../extensions
 
 nifi-cluster:
   cluster:
@@ -35,12 +40,21 @@ nifi-cluster:
     image:
       tag: "2.5.0"
     manager: kubernetes
-    nifiProperties:
+    # Defaults to the fullname.
+    # managerServiceAccount:
+    #  name: radar-nifi-nifi-cluster
+    bootstrapProperties:
       overrideConfigs: |
-        nifi.web.proxy.context.path=/
-        nifi.web.http.network.interface.default: eth0
-        nifi.web.http.network.interface.lo=lo
-        nifi.nar.library.autoload.directory=../extensions
+        java.arg.4=-Djava.net.preferIPv4Stack=true
+        java.arg.log4shell=-Dlog4j2.formatMsgNoLookups=true
+        # Java 8 Tuning see https://community.hortonworks.com/articles/7882/hdfnifi-best-practices-for-setting-up-a-high-perfo.html for references
+        java.arg.7=-XX:ReservedCodeCacheSize=256m
+        java.arg.8=-XX:+UseCodeCacheFlushing
+      nifiJvmMemory: 2g
+    nifiProperties:
+      overrideConfigMap:
+        name: radar-nifi-properties
+        data: nifi.properties
       overrideSecretConfig:
         name: radar-nifi-secret-properties
         data: nifi-secret.properties
@@ -55,14 +69,14 @@ nifi-cluster:
         namespace: default
     listenersConfig:
       internalListeners:
-        - type: "https"
-          name: "https"
+        - type: https
+          name: https
           containerPort: 8443
-        - type: "cluster"
-          name: "cluster"
+        - type: cluster
+          name: cluster
           containerPort: 6007
-        - type: "s2s"
-          name: "s2s"
+        - type: s2s
+          name: s2s
           containerPort: 10000
       sslSecrets:
         tlsSecretName: radar-nifi-tls
