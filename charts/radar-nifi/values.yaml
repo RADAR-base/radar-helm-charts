@@ -37,15 +37,16 @@ nifi-cluster:
     manager: kubernetes
     nifiProperties:
       overrideConfigs: |
-        nifi.web.proxy.context.path=/nifi
+        nifi.web.proxy.context.path=/
         nifi.web.http.network.interface.default: eth0
         nifi.web.http.network.interface.lo=lo
         nifi.nar.library.autoload.directory=../extensions
       overrideSecretConfig:
         name: radar-nifi-secret-properties
         data: nifi-secret.properties
+      # -- Must follow the full public address of the Nifi cluster, including port and context path.
       webProxyHosts:
-        - localhost:8443
+        - nifi.localhost:8443
     singleUserConfiguration:
       enabled: true
       authorizerEnabled: true
@@ -64,7 +65,7 @@ nifi-cluster:
           name: "s2s"
           containerPort: 10000
       sslSecrets:
-        tlsSecretName: nifikop-tls
+        tlsSecretName: radar-nifi-tls
         create: true
     nifiClusterTaskSpec:
       retryDurationMinutes: 10
@@ -143,10 +144,10 @@ ingress:
     nginx.ingress.kubernetes.io/session-cookie-name: "route"
     nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
     cert-manager.io/cluster-issuer: self-signed-issuer
-  hostname: localhost
+  hostname: nifi.localhost
   ingressClassName: nginx
   path: /
   pathType: ImplementationSpecific
   backend: '{{ include "common.names.fullname" . }}-nifi-cluster-headless'
   tls: true
-  existingSecret: nifikop-tls
+  existingSecret: radar-nifi-tls
