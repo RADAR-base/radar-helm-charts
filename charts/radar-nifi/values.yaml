@@ -12,10 +12,10 @@ auth:
     #    redirectUrl: '{{ printf "%s://nifi.%s/*" .Values.advertised_protocol .Values.serverName }}'
     scopes: openid,profile,email
     clientIdSecret:
-      name: radar-keycloak-broker-nifi
+      name: nifi-oauth-client-secret
       key: clientId
     clientSecretSecret:
-      name: radar-keycloak-broker-nifi
+      name: nifi-oauth-client-secret
       key: clientSecret
   # -- Single user authentication configuration
   singleUser:
