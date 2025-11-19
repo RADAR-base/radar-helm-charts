@@ -1,0 +1,130 @@
+{{- if and .Values.flowLoader.enabled (eq (tpl .Values.flowLoader.method .) "c") }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "common.names.fullname" . }}-flow-loader
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+spec:
+  backoffLimit: 6
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: load-versioned-flow-snapshot
+          image: curlimages/curl:8.10.1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NIFI_BASE_URL
+              value: {{ .Values.flowLoader.nifiBaseUrl | quote }}
+            - name: INSECURE
+              value: {{ ternary "--insecure" "" .Values.flowLoader.insecureSkipTlsVerify | quote }}
+            - name: TARGET_PG
+              value: {{ .Values.flowLoader.targetProcessGroupId | default "root" | quote }}
+            - name: WAIT_SECONDS
+              value: {{ .Values.flowLoader.c.waitSeconds | default 300 | quote }}
+            - name: B64_SNAPSHOT
+              value: {{ .Values.flowLoader.c.base64Snapshot | quote }}
+            - name: EXPECTED_NAME
+              value: {{ .Values.flowLoader.c.expectedName | default "" | quote }}
+            {{- if .Values.flowLoader.c.useConfigMap }}
+            - name: SNAPSHOT_FILE
+              value: "/snapshot/{{ default "flow-snapshot.json" .Values.flowLoader.c.configMap.key }}"
+            {{- end }}
+          {{- if and .Values.flowLoader.auth .Values.flowLoader.auth.singleUser.enabled }}
+            - name: NIFI_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.flowLoader.auth.singleUser.secretName }}
+                  key: {{ .Values.flowLoader.auth.singleUser.usernameKey }}
+            - name: NIFI_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.flowLoader.auth.singleUser.secretName }}
+                  key: {{ .Values.flowLoader.auth.singleUser.passwordKey }}
+          {{- end }}
+          {{- if .Values.flowLoader.c.useConfigMap }}
+          volumeMounts:
+            - name: flow-snapshot
+              mountPath: /snapshot
+              readOnly: true
+          {{- end }}
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              set -euo pipefail
+
+              FLOW_FILE=""
+              # Prefer ConfigMap-mounted file if provided
+              if [ -n "${SNAPSHOT_FILE:-}" ] && [ -s "${SNAPSHOT_FILE}" ]; then
+                echo "Using snapshot from mounted ConfigMap file: ${SNAPSHOT_FILE}"
+                FLOW_FILE="${SNAPSHOT_FILE}"
+              else
+                if [ -n "${B64_SNAPSHOT:-}" ]; then
+                  echo "Decoding VersionedFlowSnapshot payload from base64 env into /tmp/flow-snapshot.json..."
+                  echo "$B64_SNAPSHOT" | base64 -d > /tmp/flow-snapshot.json
+                  FLOW_FILE="/tmp/flow-snapshot.json"
+                else
+                  echo "No snapshot provided. Set flowLoader.c.useConfigMap=true with a mounted file or provide flowLoader.c.base64Snapshot. Exiting."
+                  exit 0
+                fi
+              fi
+
+              token=""
+              if [ -n "${NIFI_USERNAME:-}" ] && [ -n "${NIFI_PASSWORD:-}" ]; then
+                echo "Obtaining NiFi access token..."
+                token=$(curl -sS ${INSECURE} -X POST \
+                  -H 'Content-Type: application/x-www-form-urlencoded' \
+                  --data-urlencode "username=${NIFI_USERNAME}" \
+                  --data-urlencode "password=${NIFI_PASSWORD}" \
+                  "${NIFI_BASE_URL}/nifi-api/access/token")
+              fi
+
+              echo "Waiting for NiFi API to become ready..."
+              end=$(( $(date +%s) + ${WAIT_SECONDS} ))
+              until curl -sS ${INSECURE} -H "Authorization: Bearer ${token}" "${NIFI_BASE_URL}/nifi-api/flow/status" >/dev/null; do
+                if [ $(date +%s) -ge $end ]; then
+                  echo "Timed out waiting for NiFi after ${WAIT_SECONDS}s" >&2
+                  exit 1
+                fi
+                sleep 5
+              done
+
+              if [ "${TARGET_PG}" = "root" ]; then
+                echo "Resolving root process group id..."
+                TARGET_PG=$(curl -sS ${INSECURE} -H "Authorization: Bearer ${token}" "${NIFI_BASE_URL}/nifi-api/process-groups/root" \
+                  | sed -n 's/.*"id":"\([a-f0-9-]\+\)".*/\1/p' | head -n1)
+              fi
+              echo "Target PG: ${TARGET_PG}"
+
+              # Optional idempotency check at the API level by name
+              if [ -n "${EXPECTED_NAME}" ]; then
+                echo "Checking if a child Process Group named '${EXPECTED_NAME}' already exists under PG ${TARGET_PG}..."
+                if curl -sS ${INSECURE} -H "Authorization: Bearer ${token}" \
+                    "${NIFI_BASE_URL}/nifi-api/flow/process-groups/${TARGET_PG}" \
+                    | grep -F '"name":"'"${EXPECTED_NAME}"'"' >/dev/null; then
+                  echo "Child PG '${EXPECTED_NAME}' already exists. Skipping import."
+                  exit 0
+                fi
+              fi
+
+              echo "Importing VersionedFlowSnapshot to NiFi..."
+              # POST /nifi-api/flows/process-groups/{pgId}
+              # Accepts VersionedFlowSnapshot JSON to create a new PG with the contents
+              curl -sS ${INSECURE} -X POST \
+                -H "Authorization: Bearer ${token}" \
+                -H "Content-Type: application/json" \
+                --data-binary @"${FLOW_FILE}" \
+                "${NIFI_BASE_URL}/nifi-api/flows/process-groups/${TARGET_PG}" \
+                | tee /tmp/import-response.json >/dev/null
+
+              echo "Import finished. Response saved at /tmp/import-response.json"
+      {{- if .Values.flowLoader.c.useConfigMap }}
+      volumes:
+        - name: flow-snapshot
+          configMap:
+            name: {{ include "common.names.fullname" . }}-properties
+      {{- end }}
+{{- end }}

@@ -11,4 +11,13 @@ data:
     {{- range $key, $value := $userProps }}
     {{ printf "%s=%s" $key $value }}
     {{- end }}
+    {{- if .Values.flowLoader.c.configMap.create }}
+  {{- $flowJson := default "flow-snapshot.json" .Values.flowLoader.c.configMap.key -}}
+  {{ $flowJson }}: |
+    {{- if .Values.flowLoader.c.configMap.data }}
+    {{- .Values.flowLoader.c.configMap.data | nindent 4 }}
+    {{- else }}
+  {}
+    {{- end }}
+    {{- end }}
 {{- end }}
