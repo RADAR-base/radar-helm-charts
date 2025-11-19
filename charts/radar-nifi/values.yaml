@@ -90,10 +90,10 @@ nifi-cluster:
         resourcesRequirements:
           limits:
             cpu: 2
-            memory: 2Gi
+            memory: 3Gi
           requests:
             cpu: 1
-            memory: 1Gi
+            memory: 2Gi
         # Must reference managerServiceAccount (defaults to fullname)
         serviceAccountName: radar-nifi-nifi-cluster
         storageConfigs:
@@ -137,6 +137,15 @@ nifi-cluster:
               resources:
                 requests:
                   storage: 5Gi
+          # In nifi 2.x this is the new path for persistent storage.
+          - mountPath: /opt/nifi/data
+            name: data
+            pvcSpec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 5Gi
     nodes:
       - id: 0
         labels:
@@ -168,10 +177,8 @@ ingress:
 
 # Flow loader Job configuration
 # Set enabled=true to run a one-shot Job that loads a flow into NiFi after startup.
-# method: "c" implements posting a VersionedFlowSnapshot JSON directly to NiFi.
 flowLoader:
   enabled: false
-  method: "c"
   nifiBaseUrl: https://radar-nifi-nifi-cluster-headless:8443
   insecureSkipTlsVerify: true
   auth:
@@ -183,25 +190,28 @@ flowLoader:
       passwordKey: password
   # Where to import the flow. Use "root" to resolve the root PG id at runtime.
   targetProcessGroupId: root
-  c:
-    # Base64-encoded VersionedFlowSnapshot JSON content to import.
-    # You can supply it from a file like:  base64Snapshot: "{{ .Files.Get \"flows/my-flow-snapshot.json\" | b64enc }}"
-    base64Snapshot: ""
-    # Optional maximum wait time (seconds) for NiFi readiness
-    waitSeconds: 300
-    # Optional: expected name of the child Process Group created by the snapshot under the target PG.
-    # When set, the Job will query the NiFi API and skip import if a child PG with this exact name exists.
-    expectedName: ""
-    # Use a ConfigMap-mounted file instead of an env var to provide the snapshot (recommended for large files)
-    useConfigMap: false
-    configMap:
-      # Create a ConfigMap with the snapshot content from values (data). If false, reference an existing ConfigMap by name.
-      create: false
-      # Name of the ConfigMap that contains the snapshot. Defaults to <release>-flow-snapshot when empty and create=true
-      name: ""
-      # Key inside the ConfigMap that holds the snapshot JSON
-      key: flow-snapshot.json
-      # Inline snapshot content for the ConfigMap when create=true. Example:
-      # data: |-
-      #   {{ .Files.Get "flows/my-flow-snapshot.json" | nindent 6 }}
-      data: ""
+  # Optional maximum wait time (seconds) for NiFi readiness
+  waitSeconds: 300
+  # Optional: expected name of the child Process Group created by the snapshot under the target PG.
+  # When set, the Job will query the NiFi API and skip import if a child PG with this exact name exists.
+  expectedName: ""
+  # Optional: Name to give to the created Process Group (defaults to expectedName when empty)
+  groupName: ""
+  # Optional: Canvas position of the imported Process Group (used by multipart upload)
+  positionX: 0
+  positionY: 0
+  # Whether to acknowledge disconnected node operations (recommended true in K8s)
+  disconnectedNodeAcknowledged: true
+  # Optional: Client ID to pass to NiFi UI upload endpoint
+  clientId: ""
+  # Base64-encoded VersionedFlowSnapshot JSON (used when no ConfigMap is provided)
+  base64Snapshot: ""
+  configMap:
+    # Name of the ConfigMap that contains the snapshot. Defaults to <release>-flow-snapshot when empty and create=true
+    name: ""
+    # Key inside the ConfigMap that holds the snapshot JSON
+    key: flow-snapshot.json
+    # Inline snapshot content for the ConfigMap when create=true. Example:
+    # data: |-
+    #   {{ .Files.Get "flows/my-flow-snapshot.json" | nindent 6 }}
+    data: ""
