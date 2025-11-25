@@ -1,0 +1,82 @@
+serverName: localhost
+
+# Templates are defined with Helmet.
+# For values accepted by Helmet (and 'bitnami common' standard) see:
+# https://github.com/companyinfo/helm-charts/blob/main/charts/helmet/README.md
+image:
+  registry: ghcr.io
+  repository: peymanm/management-portal
+  tag: unified-ui-0.0.68
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: 8080
+  initialDelaySeconds: 180
+  timeoutSeconds: 1
+  periodSeconds: 12
+  failureThreshold: 5
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 8080
+  initialDelaySeconds: 45
+  timeoutSeconds: 1
+  periodSeconds: 5
+  failureThreshold: 3
+
+envVars: []
+
+ports:
+  - name: http
+    containerPort: 8080
+    protocol: TCP
+
+configMap:
+  mounted: true
+  mountPath: /app/config
+  data:
+    frontend-config.json: {}
+
+ingress:
+  enabled: true
+  hostname: '{{ .Values.serverName }}'
+  path: /
+  ingressClassName: nginx
+  tls: true
+  existingSecret: radar-base-tls
+
+service:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+
+# End of Helmet values
+
+networkpolicy:
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
