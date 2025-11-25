@@ -3,7 +3,7 @@
 # radar-appserver
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-appserver)](https://artifacthub.io/packages/helm/radar-base/radar-appserver)
 
-![Version: 0.10.1](https://img.shields.io/badge/Version-0.10.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.5](https://img.shields.io/badge/AppVersion-2.4.5-informational?style=flat-square)
+![Version: 0.10.2](https://img.shields.io/badge/Version-0.10.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.5](https://img.shields.io/badge/AppVersion-2.4.5-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Appserver
 
@@ -101,7 +101,7 @@ A Helm chart for the backend application of RADAR-base Appserver
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | serverName | string | `"localhost"` |  |
 | managementportal_resource_name | string | `"res_AppServer"` | radar_is.yml config for token verification |
-| public_key_endpoints | string | `nil` |  |
+| public_key_endpoints | list | `["http://management-portal:8080/managementportal/oauth/token_key"]` | List of OAuth2 authentication server public key endpoints for token verification |
 | google_application_credentials | string | `""` | Google credentials containing FCM server key, etc. |
 | github_client_token | string | `""` | Github client token which is used for authenticating requests |
 | smtp.enabled | bool | `false` | set to true, if sending of notifications via email should be enabled. |
