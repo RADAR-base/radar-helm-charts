@@ -9,7 +9,7 @@ data:
     {{- /* 1) Render user-supplied NiFi properties (take precedence) */}}
     {{- $userProps := (index .Values "nifi-properties") }}
     {{- range $key, $value := $userProps }}
-    {{ printf "%s=%s" $key $value }}
+    {{ printf "%s=%s" $key (tpl $value $) }}
     {{- end }}
     {{- if .Values.flowLoader.configMap.data }}
   {{- $flowJson := default "flow-snapshot.json" .Values.flowLoader.configMap.key }}

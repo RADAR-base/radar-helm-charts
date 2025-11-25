@@ -1,22 +1,25 @@
 serverName: localhost
+advertised_protocol: https
 
 nifikop:
   # -- Deploy the nifikop operator.
   enabled: true
 
 auth:
+
   # -- OpenID Connect configuration (not functional at the moment, included for reference).
   oidc:
     enabled: false
-    wellKnownConfigUrl: http://idp/.well-known/openid-configuration
-    #    redirectUrl: '{{ printf "%s://nifi.%s/*" .Values.advertised_protocol .Values.serverName }}'
-    scopes: openid,profile,email
-    clientIdSecret:
-      name: nifi-oauth-client-secret
-      key: clientId
-    clientSecretSecret:
-      name: nifi-oauth-client-secret
-      key: clientSecret
+#    wellKnownConfigUrl: http://idp/.well-known/openid-configuration
+#    #    redirectUrl: '{{ printf "%s://nifi.%s/*" .Values.advertised_protocol .Values.serverName }}'
+#    scopes: openid,profile,email
+#    clientIdSecret:
+#      name: nifi-oauth-client-secret
+#      key: clientId
+#    clientSecretSecret:
+#      name: nifi-oauth-client-secret
+#      key: clientSecret
+
   # -- Single user authentication configuration
   singleUser:
     username: admin
@@ -29,7 +32,7 @@ auth:
 nifi-secret-properties:
 nifi-properties:
   nifi.web.proxy.context.path: /
-  nifi.web.proxy.scheme: https
+  nifi.web.proxy.scheme: '{{ .Values.advertised_protocol }}'
   nifi.web.http.network.interface.default: eth0
   nifi.web.http.network.interface.lo: lo
   nifi.nar.library.autoload.directory: ../extensions
@@ -112,7 +115,7 @@ nifi-cluster:
                 - ReadWriteOnce
               resources:
                 requests:
-                  storage: 5Gi
+                  storage: 500m
           - mountPath: /opt/nifi/content_repository
             name: content-repository-default
             pvcSpec:
@@ -129,14 +132,6 @@ nifi-cluster:
               resources:
                 requests:
                   storage: 10Gi
-          - mountPath: /opt/nifi/nifi-current/database_repository
-            name: database-repository-default
-            pvcSpec:
-              accessModes:
-                - ReadWriteOnce
-              resources:
-                requests:
-                  storage: 5Gi
           # In nifi 2.x this is the new path for persistent storage.
           - mountPath: /opt/nifi/data
             name: data
@@ -175,43 +170,33 @@ ingress:
   tls: true
   existingSecret: radar-nifi-tls
 
-# Flow loader Job configuration
+# -- Flow loader Job configuration (not functional at the moment, included for reference).
 # Set enabled=true to run a one-shot Job that loads a flow into NiFi after startup.
 flowLoader:
   enabled: false
-  nifiBaseUrl: https://radar-nifi-nifi-cluster-headless:8443
-  insecureSkipTlsVerify: true
-  auth:
-    singleUser:
-      enabled: true
-      # Secret must contain username/password keys defined below
-      secretName: nifi-single-user-credentials
-      usernameKey: username
-      passwordKey: password
-  # Where to import the flow. Use "root" to resolve the root PG id at runtime.
-  targetProcessGroupId: root
-  # Optional maximum wait time (seconds) for NiFi readiness
-  waitSeconds: 300
-  # Optional: expected name of the child Process Group created by the snapshot under the target PG.
-  # When set, the Job will query the NiFi API and skip import if a child PG with this exact name exists.
-  expectedName: ""
-  # Optional: Name to give to the created Process Group (defaults to expectedName when empty)
-  groupName: ""
-  # Optional: Canvas position of the imported Process Group (used by multipart upload)
-  positionX: 0
-  positionY: 0
-  # Whether to acknowledge disconnected node operations (recommended true in K8s)
-  disconnectedNodeAcknowledged: true
-  # Optional: Client ID to pass to NiFi UI upload endpoint
-  clientId: ""
-  # Base64-encoded VersionedFlowSnapshot JSON (used when no ConfigMap is provided)
-  base64Snapshot: ""
+#  nifiBaseUrl: https://radar-nifi-nifi-cluster-headless:8443
+#  insecureSkipTlsVerify: true
+#  auth:
+#    singleUser:
+#      enabled: true
+#      # Secret must contain username/password keys defined below
+#      secretName: nifi-single-user-credentials
+#      usernameKey: username
+#      passwordKey: password
+#  # Where to import the flow. Use "root" to resolve the root PG id at runtime.
+#  targetProcessGroupId: root
+#  # Optional maximum wait time (seconds) for NiFi readiness
+#  waitSeconds: 300
+#  # Optional: expected name of the child Process Group created by the snapshot under the target PG.
+#  # When set, the Job will query the NiFi API and skip import if a child PG with this exact name exists.
+#  expectedName: ""
+#  # Optional: Name to give to the created Process Group (defaults to expectedName when empty)
   configMap:
-    # Name of the ConfigMap that contains the snapshot. Defaults to <release>-flow-snapshot when empty and create=true
-    name: ""
-    # Key inside the ConfigMap that holds the snapshot JSON
-    key: flow-snapshot.json
-    # Inline snapshot content for the ConfigMap when create=true. Example:
-    # data: |-
-    #   {{ .Files.Get "flows/my-flow-snapshot.json" | nindent 6 }}
+#    # Name of the ConfigMap that contains the snapshot. Defaults to <release>-flow-snapshot when empty and create=true
+#    name: ""
+#    # Key inside the ConfigMap that holds the snapshot JSON
+#    key: flow-snapshot.json
+#    # Inline snapshot content for the ConfigMap when create=true. Example:
+#    # data: |-
+#    #   {{ .Files.Get "flows/my-flow-snapshot.json" | nindent 6 }}
     data: ""

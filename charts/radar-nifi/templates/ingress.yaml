@@ -26,7 +26,7 @@ spec:
             {{- if eq "true" (include "common.ingress.supportsPathType" .) }}
             pathType: {{ .Values.ingress.pathType }}
             {{- end }}
-            backend: {{- include "common.ingress.backend" (dict "serviceName" (tpl .Values.ingress.backend .) "servicePort" "https" "context" $)  | nindent 14 }}
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (tpl .Values.ingress.backend .) "servicePort" .Values.advertised_protocol "context" $)  | nindent 14 }}
     {{- end }}
     {{- range .Values.ingress.extraHosts }}
     - host: {{ include "common.tplvalues.render" (dict "value" .name "context" $) | quote }}

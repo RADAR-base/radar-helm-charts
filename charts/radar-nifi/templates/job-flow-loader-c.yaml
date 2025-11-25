@@ -1,4 +1,4 @@
-{{- if and .Values.flowLoader.enabled (eq (tpl .Values.flowLoader.method .) "c") }}
+{{- if .Values.flowLoader.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -24,14 +24,24 @@ spec:
             - name: TARGET_PG
               value: {{ .Values.flowLoader.targetProcessGroupId | default "root" | quote }}
             - name: WAIT_SECONDS
-              value: {{ .Values.flowLoader.c.waitSeconds | default 300 | quote }}
-            - name: B64_SNAPSHOT
-              value: {{ .Values.flowLoader.c.base64Snapshot | quote }}
+              value: {{ .Values.flowLoader.waitSeconds | default 300 | quote }}
             - name: EXPECTED_NAME
-              value: {{ .Values.flowLoader.c.expectedName | default "" | quote }}
-            {{- if .Values.flowLoader.c.useConfigMap }}
+              value: {{ .Values.flowLoader.expectedName | default "" | quote }}
+            - name: GROUP_NAME
+              value: {{ default .Values.flowLoader.expectedName .Values.flowLoader.groupName | default "" | quote }}
+            - name: POSITION_X
+              value: {{ (index .Values.flowLoader "positionX") | default 0 | quote }}
+            - name: POSITION_Y
+              value: {{ (index .Values.flowLoader "positionY") | default 0 | quote }}
+            - name: DISCONNECTED_ACK
+              value: {{ .Values.flowLoader.disconnectedNodeAcknowledged | default true | quote }}
+            - name: CLIENT_ID
+              value: {{ .Values.flowLoader.clientId | default "" | quote }}
+            - name: B64_SNAPSHOT
+              value: {{ .Values.flowLoader.base64Snapshot | default "" | quote }}
+            {{- if or .Values.flowLoader.configMap.data .Values.flowLoader.configMap.name }}
             - name: SNAPSHOT_FILE
-              value: "/snapshot/{{ default "flow-snapshot.json" .Values.flowLoader.c.configMap.key }}"
+              value: "/snapshot/{{ default "flow-snapshot.json" .Values.flowLoader.configMap.key }}"
             {{- end }}
           {{- if and .Values.flowLoader.auth .Values.flowLoader.auth.singleUser.enabled }}
             - name: NIFI_USERNAME
@@ -45,7 +55,7 @@ spec:
                   name: {{ .Values.flowLoader.auth.singleUser.secretName }}
                   key: {{ .Values.flowLoader.auth.singleUser.passwordKey }}
           {{- end }}
-          {{- if .Values.flowLoader.c.useConfigMap }}
+          {{- if .Values.flowLoader.configMap.data }}
           volumeMounts:
             - name: flow-snapshot
               mountPath: /snapshot
@@ -67,7 +77,7 @@ spec:
                   echo "$B64_SNAPSHOT" | base64 -d > /tmp/flow-snapshot.json
                   FLOW_FILE="/tmp/flow-snapshot.json"
                 else
-                  echo "No snapshot provided. Set flowLoader.c.useConfigMap=true with a mounted file or provide flowLoader.c.base64Snapshot. Exiting."
+                  echo "No snapshot provided. Supply flowLoader.base64Snapshot or mount via flowLoader.configMap.data. Exiting."
                   exit 0
                 fi
               fi
@@ -110,18 +120,33 @@ spec:
                 fi
               fi
 
-              echo "Importing VersionedFlowSnapshot to NiFi..."
-              # POST /nifi-api/flows/process-groups/{pgId}
-              # Accepts VersionedFlowSnapshot JSON to create a new PG with the contents
-              curl -sS ${INSECURE} -X POST \
+              echo "Importing flow via multipart upload to NiFi..."
+              # Use the same endpoint and form-data format as the NiFi UI
+              # POST /nifi-api/process-groups/{pgId}/process-groups/upload (multipart/form-data)
+              filename="${GROUP_NAME:-flow}.json"
+              # Perform request, capture HTTP status and response body
+              echo curl
+              http_code=$(curl -sS ${INSECURE} -X POST \
                 -H "Authorization: Bearer ${token}" \
-                -H "Content-Type: application/json" \
-                --data-binary @"${FLOW_FILE}" \
-                "${NIFI_BASE_URL}/nifi-api/flows/process-groups/${TARGET_PG}" \
-                | tee /tmp/import-response.json >/dev/null
+                -F groupName="${GROUP_NAME}" \
+                -F positionX="${POSITION_X}" \
+                -F positionY="${POSITION_Y}" \
+                -F disconnectedNodeAcknowledged="${DISCONNECTED_ACK}" \
+                -F file=@"${FLOW_FILE}"\;type=application/json\;filename="${filename}" \
+                -w "%{http_code}" \
+                -o /tmp/import-response.json \
+                "${NIFI_BASE_URL}/nifi-api/process-groups/${TARGET_PG}/process-groups/upload")
 
-              echo "Import finished. Response saved at /tmp/import-response.json"
-      {{- if .Values.flowLoader.c.useConfigMap }}
+              echo "NiFi upload HTTP status: ${http_code}"
+              if [ "${http_code}" != "201" ]; then
+                echo "Flow upload failed (expected 201). Response body:" >&2
+                cat /tmp/import-response.json >&2 || true
+                exit 1
+              fi
+
+              echo "Flow upload succeeded (201 Created)."
+              exit 0
+      {{- if .Values.flowLoader.configMap.data }}
       volumes:
         - name: flow-snapshot
           configMap:
