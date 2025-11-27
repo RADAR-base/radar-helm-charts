@@ -1,0 +1,23 @@
+{{- if eq "standalone" .Values.mode }}
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: Redis
+metadata:
+  name: {{ include "common.names.fullname" . }}
+spec:
+  {{- if .Values.securityContext }}
+  securityContext: {{ .Values.securityContext | toYaml | nindent 4 }}
+  {{- end }}
+  kubernetesConfig:
+    image: {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global "chart" .Chart ) }}
+    imagePullPolicy: {{ .Values.image.pullPolicy }}
+    {{- if .Values.replication.resources }}
+    resources: {{ .Values.replication.resources | toYaml | nindent 6 }}
+    {{- end }}
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes: {{ .Values.storage.accessModes | toYaml | nindent 10 }}
+        resources:
+          requests:
+            storage: {{ .Values.storage.size }}
+{{- end }}

@@ -1,60 +1,58 @@
-# -- redis-cluster Helm Chart configuration
-# @default -- check 'values.yaml'
-redis-cluster:
+image:
+  # -- Image registry
+  registry: quay.io
+  # -- Image repository
+  repository: opstree/redis
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
 
-  redisCluster:
+# -- Can be 'standalone' or 'replication'
+mode: standalone
 
-    image: quay.io/opstree/redis
-    tag: v8.2.2
+replication:
+  # -- Number of replicated redis nodes
+  replicates: 3
+  resources:
+    # -- resource requests for redis pods
+    requests:
+      cpu: 101m
+      memory: 128Mi
+    # -- resource limits for redis pods
+    limits:
+      cpu: 101m
+      memory: 128Mi
 
-    clusterSize: 1
-    leader:
-      replicas: 1
-    follower:
-      replicas: 1
-  env:
-    - name: REDIS_EXPORTER_INCL_SYSTEM_METRICS
-      value: "true"
-  storageSpec:
-    volumeClaimTemplate:
-      spec:
-        resources:
-          requests:
-            storage: 1Gi
-    nodeConfVolumeClaimTemplate:
-      spec:
-        resources:
-          requests:
-            storage: 1Gi
+standalone:
+  resources:
+    # -- resource requests for redis pods
+    requests:
+      cpu: 101m
+      memory: 128Mi
+    # -- resource limits for redis pods
+    limits:
+      cpu: 101m
+      memory: 128Mi
 
-  redisExporter:
-    enabled: false
+storage:
+  # -- Access mode for PVC
+  accessModes:
+    - ReadWriteOnce
+  # -- Size of PVC
+  size: 1Gi
 
-  serviceMonitor:
-    enabled: false
-
-# -- Network policy defines who can access this application and who this applications has access to
-# @default -- check `values.yaml`
-networkpolicy:
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: radar-output
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: radar-push-endpoint
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: radar-rest-sources-backend
+# -- Security context for redis pods
+securityContext:
+  runAsUser: 1000
+  fsGroup: 1000
