@@ -12,9 +12,12 @@ spec:
   roles:
     - controller
     - broker
-  {{- if .Values.kafka.resources }}
+  {{- if .Values.kafka.nodePool.javaOptions }}
+  jvmOptions: {{ .Values.kafka.nodePool.javaOptions | toYaml | nindent 6 }}
+  {{- end }}
+  {{- if .Values.kafka.nodePool.resources }}
   resources:
-    {{ .Values.kafka.resources | toYaml | indent 4 | trim }}
+    {{ .Values.kafka.nodePool.resources | toYaml | indent 4 | trim }}
   {{- end }}
   storage:
     type: jbod
