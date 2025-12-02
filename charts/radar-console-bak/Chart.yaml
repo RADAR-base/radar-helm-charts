@@ -1,19 +1,19 @@
 apiVersion: v2
+appVersion: "0.0.1"
+description: RADAR-base console web application.
 name: radar-console
 version: 0.0.1
-appVersion: "0.0.1"
-description: A Helm chart for the frontend application of RADAR-base console application.
-type: application
-home: "https://radar-base.org"
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-console
-- https://github.com/RADAR-base/radar-app-config
+- https://github.com/RADAR-base/radar-console
 keywords:
   - radar-base
   - remote-trial
 annotations:
   artifacthub.io/license: Apache-2.0
+type: application
+home: "https://radar-base.org"
 maintainers:
   - email: pim@thehyve.nl
     name: Pim van Nierop
