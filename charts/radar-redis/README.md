@@ -24,12 +24,14 @@ Redis charts for Radar-base
 
 | Repository | Name | Version |
 |------------|------|---------|
+| file://../../external/redis-operator | redis-operator | 0.22.2 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| redis-operator.enabled | bool | `true` |  |
 | fullnameOverride | string | `"redis-radar"` |  |
 | image.registry | string | `"quay.io"` | Image registry |
 | image.repository | string | `"opstree/redis"` | Image repository |

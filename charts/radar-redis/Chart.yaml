@@ -15,3 +15,7 @@ dependencies:
     tags:
       - bitnami-common
     version: 2.x.x
+  - name: redis-operator
+    repository: file://../../external/redis-operator
+    version: 0.22.2
+    condition: redis-operator.enabled

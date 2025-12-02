@@ -1,3 +1,9 @@
+redis-operator:
+  enabled: true
+  # -- Values passed to the redis-operator chart
+  # @default -- check `values.yaml`
+  # redisOperator: {}
+
 fullnameOverride: redis-radar
 
 image:
