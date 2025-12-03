@@ -21516,6 +21516,30 @@ entries:
     version: 0.17.1
   redis-operator:
   - apiVersion: v2
+    appVersion: 0.22.2
+    created: "2025-12-03T14:35:54.425474497Z"
+    description: Provides easy redis setup definitions for Kubernetes services, and
+      deployment.
+    digest: cc0a8b70cb1187196deb44dd2fc289c1047790ed8baf870778fc309e99d6929c
+    home: https://github.com/OT-CONTAINER-KIT/redis-operator
+    icon: https://github.com/OT-CONTAINER-KIT/redis-operator/raw/main/static/redis-operator-logo.svg
+    keywords:
+    - operator
+    - redis
+    - opstree
+    - kubernetes
+    - openshift
+    maintainers:
+    - name: iamabhishek-dubey
+    - name: sandy724
+    - name: shubham-cmyk
+    name: redis-operator
+    sources:
+    - https://github.com/OT-CONTAINER-KIT/redis-operator
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/redis-operator-0.22.2/redis-operator-0.22.2.tgz
+    version: 0.22.2
+  - apiVersion: v2
     appVersion: 0.22.1
     created: "2025-10-16T12:18:58.113895002Z"
     description: Provides easy redis setup definitions for Kubernetes services, and
@@ -22510,4 +22534,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-12-03T14:35:50.872134135Z"
+generated: "2025-12-03T14:35:54.426287738Z"
