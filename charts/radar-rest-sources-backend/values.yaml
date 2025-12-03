@@ -276,7 +276,7 @@ postgres:
 # Redis synchronization configuration
 redis:
   # -- URI of the redis database
-  uri: redis://radar-redis-leader-headless:6379
+  uri: redis://radar-redis-replication-headless:6379
 
 # -- Resolvable server name, needed to find the advertised URL and callback URL
 serverName: localhost

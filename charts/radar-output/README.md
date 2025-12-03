@@ -3,7 +3,7 @@
 # radar-output
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-output)](https://artifacthub.io/packages/helm/radar-base/radar-output)
 
-![Version: 1.2.6](https://img.shields.io/badge/Version-1.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.5](https://img.shields.io/badge/AppVersion-3.0.5-informational?style=flat-square)
+![Version: 1.2.7](https://img.shields.io/badge/Version-1.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.5](https://img.shields.io/badge/AppVersion-3.0.5-informational?style=flat-square)
 
 A Helm chart for RADAR-base output restructure service. This application reads data from intermediate storage and restructure the data into project-> subject-id-> data topic -> data split per hour. This service offers few options to choose the source and target of the pipeline.
 
@@ -95,7 +95,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | target.azure.responseTimeout | string | `nil` | Azure HTTP response timeout in seconds |
 | target.azure.writeTimeout | string | `nil` | Azure HTTP write timeout in seconds |
 | target.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
-| redis.uri | string | `"redis://radar-redis-leader-headless:6379"` | URL of the redis database |
+| redis.uri | string | `"redis://radar-redis-replication-master:6379"` | URL of the redis database |
 | worker.interval | int | `90` | Scanning interval (seconds) |
 | worker.cacheSize | int | `300` | Maximum number of files and converters to keep open while processing |
 | worker.cacheOffsetsSize | int | `500000` | Maximum number of offsets in cache. |

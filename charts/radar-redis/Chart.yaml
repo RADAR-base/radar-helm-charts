@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: "8.2.2"
+appVersion: "v8.2.2"
 description: Redis charts for Radar-base
 name: radar-redis
 home: "https://radar-base.org"
-version: 0.1.0
+version: 1.1.0
 maintainers:
   - email: pim@thehyve.nl
     name: Pim van Nierop
@@ -15,6 +15,7 @@ dependencies:
     tags:
       - bitnami-common
     version: 2.x.x
-  - name: redis-cluster
-    version: 0.17.1
-    repository: file://../../external/redis-cluster
+  - name: redis-operator
+    repository: file://../../external/redis-operator
+    version: 0.22.2
+    condition: redis-operator.enabled
