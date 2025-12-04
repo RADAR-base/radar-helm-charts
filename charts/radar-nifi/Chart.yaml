@@ -1,34 +1,37 @@
----
 apiVersion: v2
 name: radar-nifi
-version: 2.0.1
-appVersion: 2.3.0
-description: Apache NiFi is a software project from the Apache Software Foundation designed to automate the flow of data between software systems.
-keywords:
-  - nifi
-  - data
-  - process
-home: https://nifi.apache.org/
-icon: https://svn.apache.org/repos/asf/nifi/site/trunk/images/niFi-logo-horizontal-scaled.png
-maintainers:
-  - name: Heet
-    email: heet.sankesara@kcl.ac.uk
-    url: https://github.com/Hsankesara
+description: A Helm chart for Kubernetes
+
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+#
+# Library charts provide useful utilities or functions for the chart developer. They're included as
+# a dependency of application charts to inject those utilities and functions into the rendering
+# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 3.0.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+appVersion: "1.16.0"
 dependencies:
-- condition: zookeeper.enabled
-  name: zookeeper
-  repository: https://charts.bitnami.com/bitnami
-  version: 9.2.7
-- alias: registry
-  condition: registry.enabled
-  name: nifi-registry
-  repository: https://dysnix.github.io/charts/
-  version: 1.0.0
-- condition: ca.enabled
-  name: ca
-  repository: ""
-  version: 1.0.1
-- condition: openldap.enabled
-  name: openldap
-  repository: https://charts.helm.sh/stable
-  version: ~1.2.4
+  - name: common
+    repository: https://radar-base.github.io/radar-helm-charts
+    tags:
+      - bitnami-common
+    version: 2.x.x
+  - name: nifi-cluster
+    version: 1.14.1
+    repository: file://../../external/nifi-cluster
+  - name: nifikop
+    repository: file://../../external/nifikop
+    version: 1.14.1
+    condition: nifikop.enabled

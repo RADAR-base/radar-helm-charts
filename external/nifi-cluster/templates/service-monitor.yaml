@@ -1,0 +1,43 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "nifi-cluster.fullname" . }}
+  labels:
+    {{- include "nifi-cluster.labels" . | nindent 4 }}
+spec:
+  endpoints:
+  {{- range $internalListener := .Values.cluster.listenersConfig.internalListeners }}
+  {{- if eq $internalListener.type $.Values.monitoring.internalListenersType }}
+  - path: {{ $.Values.monitoring.path }}
+    port: {{ $internalListener.name }}
+    {{- if $.Values.monitoring.tlsConfig }}
+    tlsConfig:
+      {{- with $.Values.monitoring.tlsConfig.caFile }}
+      caFile: {{ . }}
+      {{- end }}
+      {{- with $.Values.monitoring.tlsConfig.certFile }}
+      certFile: {{ . }}
+      {{- end }}
+      {{- with $.Values.monitoring.tlsConfig.keyFile }}
+      keyFile: {{ . }}
+      {{- end }}
+      {{- with $.Values.monitoring.tlsConfig.insecureSkipVerify }}
+      insecureSkipVerify: {{ . }}
+      {{- end }}
+      {{- with $.Values.monitoring.tlsConfig.serverName }}
+      serverName: {{ . }}
+      {{- end }}
+    {{- end }}
+    {{- with $.Values.monitoring.interval }}
+    interval: {{ . }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      nifi_cr: {{ include "nifi-cluster.fullname" . }}
+{{- end }}
