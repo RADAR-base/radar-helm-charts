@@ -6334,6 +6334,53 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/nifi-1.2.1/nifi-1.2.1.tgz
     version: 1.2.1
+  nifi-cluster:
+  - apiVersion: v2
+    appVersion: 1.28.0
+    created: "2025-12-04T11:17:36.88257234Z"
+    dependencies:
+    - condition: zookeeper.enabled
+      name: zookeeper
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.4.0
+    description: A Helm chart for deploying NiFi clusters in Kubernetes
+    digest: 8142fcc28033dd7d5523b841ca0dc7dc2b24c9e5c6a0a0f1f08cd9d2985dcaa5
+    home: https://github.com/konpyutaika/nifikop
+    icon: https://konpyutaika.github.io/nifikop/img/nifikop.png
+    keywords:
+    - nifi
+    - nifikop
+    - data
+    - nifi-cluster
+    name: nifi-cluster
+    sources:
+    - https://github.com/konpyutaika/nifikop
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/nifi-cluster-1.14.1/nifi-cluster-1.14.1.tgz
+    version: 1.14.1
+  nifikop:
+  - apiVersion: v1
+    appVersion: 1.14.1-release
+    created: "2025-12-04T11:17:37.072101183Z"
+    description: A Helm chart for NiFiKop - the Konpyūtāika NiFi Kubernetes operator
+    digest: 25e343876185ea8fe5ff11b851bf26512b0b00587f67fb87ec218fa87a365570
+    home: https://github.com/konpyutaika/nifikop
+    icon: https://konpyutaika.github.io/nifikop/img/nifikop.png
+    keywords:
+    - operator
+    - nifi
+    - nifikop
+    - data
+    maintainers:
+    - email: guittonalexandre@outlook.fr
+      name: erdrix
+    name: nifikop
+    sources:
+    - https://github.com/konpyutaika/nifikop
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/nifikop-1.14.1/nifikop-1.14.1.tgz
+    version: 1.14.1
   ory-commons:
   - apiVersion: v2
     appVersion: 0.0.0
@@ -22557,4 +22604,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-12-04T11:17:20.505052897Z"
+generated: "2025-12-04T11:17:37.072992788Z"
