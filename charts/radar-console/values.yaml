@@ -12,12 +12,12 @@ replicaCount: 2
 
 image:
   # -- Image registry
-  registry: ghcr.io
+  registry: docker.io
   # -- Image repository
-  repository: radar-base/radar-app-config/radar-radar-console
+  repository: peymanm/management-portal
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag:
+  tag: unified-ui-0.0.68
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy
