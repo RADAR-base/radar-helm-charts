@@ -8,16 +8,16 @@ disable_tls: false
 advertised_protocol: https
 
 # -- Number of Appconfig frontend replicas to deploy
-replicaCount: 2
+replicaCount: 1
 
 image:
   # -- Image registry
   registry: docker.io
   # -- Image repository
-  repository: peymanm/management-portal
+  repository: peymanm/radarbase-console
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: unified-ui-0.0.68
+  tag: 0.0.5
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy
@@ -67,18 +67,17 @@ ingress:
   # @default -- check values.yaml
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+  hostname: localhost
   # -- Path within the url structure
-  path: /console
+  path: /radarbase-console
   # -- Ingress Path type
   pathType: ImplementationSpecific
   # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
   ingressClassName: nginx
   # -- Hosts to accept requests from
-  hosts:
-    - localhost
-  tls:
+  tls: true
     # -- TLS Secret Name
-    secretName: radar-base-tls
+  existingSecret: radar-base-tls
 
 configMap:
   mounted: true
@@ -126,6 +125,9 @@ livenessProbe:
   successThreshold: 1
   # -- Failure threshold for livenessProbe
   failureThreshold: 3
+  httpGet:
+    path: /
+    port: http
 
 # -- Custom readinessProbe that overrides the default one
 customReadinessProbe: {}
@@ -143,6 +145,9 @@ readinessProbe:
   successThreshold: 1
   # -- Failure threshold for readinessProbe
   failureThreshold: 3
+  httpGet:
+    path: /
+    port: http
 
 # -- Custom startupProbe that overrides the default one
 customStartupProbe: {}
@@ -160,6 +165,9 @@ startupProbe:
   successThreshold: 1
   # -- Failure threshold for startupProbe
   failureThreshold: 30
+  httpGet:
+    path: /
+    port: http
 
 # -- Network policy defines who can access this application and who this applications has access to
 # @default -- check `values.yaml`
