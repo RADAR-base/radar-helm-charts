@@ -36,10 +36,7 @@ A Helm chart for the frontend application of RADAR-base console application.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| serverName | string | `"localhost"` | Resolvable server name, needed to find the advertised URL and callback URL |
-| disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
-| advertised_protocol | string | `"https"` | The protocol in advertised URIs (https, http) |
-| replicaCount | int | `1` | Number of Appconfig frontend replicas to deploy |
+| replicaCount | int | `1` | Number of radar-console frontend replicas to deploy |
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"peymanm/radarbase-console"` | Image repository |
 | image.tag | string | `"0.0.5"` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
@@ -65,7 +62,7 @@ A Helm chart for the frontend application of RADAR-base console application.
 | ingress.tls | bool | `true` | Hosts to accept requests from |
 | ingress.existingSecret | string | `"radar-base-tls"` | TLS Secret Name |
 | configMap.mounted | bool | `true` |  |
-| configMap.mountPath | string | `"/app/config"` |  |
+| configMap.mountPath | string | `"/usr/share/nginx/html/assets"` |  |
 | configMap.data."frontend-config.json" | object | `{}` |  |
 | resources.limits | object | `{"cpu":"200m","memory":"512Mi"}` | CPU/Memory resource limits |
 | resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |

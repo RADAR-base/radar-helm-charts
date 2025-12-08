@@ -1,13 +1,4 @@
-# Default values for radar-console.
-
-# -- Resolvable server name, needed to find the advertised URL and callback URL
-serverName: localhost
-# -- Reconfigure Ingress to not force TLS
-disable_tls: false
-# -- The protocol in advertised URIs (https, http)
-advertised_protocol: https
-
-# -- Number of Appconfig frontend replicas to deploy
+# -- Number of radar-console frontend replicas to deploy
 replicaCount: 1
 
 image:
@@ -81,7 +72,7 @@ ingress:
 
 configMap:
   mounted: true
-  mountPath: /app/config
+  mountPath: /usr/share/nginx/html/assets
   data:
     frontend-config.json: {}
 
