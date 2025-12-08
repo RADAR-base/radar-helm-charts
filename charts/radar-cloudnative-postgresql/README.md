@@ -3,7 +3,7 @@
 # radar-cloudnative-postgresql
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-cloudnative-postgresql)](https://artifacthub.io/packages/helm/radar-base/radar-cloudnative-postgresql)
 
-![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square)
 
 CloudNativePG Postgresql helm chart for RADAR-base
 
@@ -47,3 +47,4 @@ for additional information on how to configure the operator if needed.
 | secret.secretAnnotations | object | `{"helm.sh/hook":"pre-install, pre-upgrade","helm.sh/hook-delete-policy":"before-hook-creation","helm.sh/hook-weight":"0","helm.sh/resource-policy":"keep"}` | Annotations to be added to secret. Annotations are added only when secret is being created. Existing secret will not be modified. |
 | secret.users | list | check values.yaml | Random database password secrets will be created for these users. |
 | cluster | object | check `values.yaml` | CloudNativePG configuration |
+| cluster.cluster.postgresql.parameters.wal_keep_size | string | `"1GB"` | Can be decreased to save disk space. 1GB default was chosen to prevent missing wal files during recovery. |

@@ -91,6 +91,11 @@ cluster:
         - CREATE DATABASE appserver OWNER appserver
         - CREATE DATABASE uploadconnector OWNER uploadconnector
 
+    postgresql:
+      parameters:
+        # -- Can be decreased to save disk space. 1GB default was chosen to prevent missing wal files during recovery.
+        wal_keep_size: 1GB
+
     # These users will be imported from the generated secrets (see: '.users')
     roles:
       - name: managementportal
