@@ -304,6 +304,11 @@ timescaledb:
         database: database_name
         owner: database_name
 
+    postgresql:
+      parameters:
+        # -- Can be decreased to save disk space. 1GB default was chosen to prevent missing wal files during recovery.
+        wal_keep_size: 1GB
+
     backups:
       enabled: true
       endpointURL: http://minio:9000
