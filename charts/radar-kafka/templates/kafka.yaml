@@ -25,6 +25,13 @@ spec:
       default.replication.factor: {{ $topicReplicationFactor }}
       min.insync.replicas: {{ $insyncReplicas }}
       num.partitions: {{ $topicPartitions }}
+    {{- if .Values.kafka.javaOptions }}
+    jvmOptions: {{ .Values.kafka.javaOptions | toYaml | nindent 6 }}
+    {{- end }}
+    {{- if .Values.kafka.resources }}
+    resources:
+      {{ .Values.kafka.resources | toYaml | indent 4 | trim }}
+    {{- end }}
     listeners:
       - name: plain
         port: 9092
@@ -71,10 +78,23 @@ spec:
       - mode: remove-brokers
         template:
           name: {{ template "common.names.fullname" . }}-rebalance-template
+    {{- if .values.kafka.cruiseControl.javaOptions }}
+    jvmOptions: {{ .values.kafka.cruiseControl.javaOptions | toYaml | nindent 6 }}
+    {{- end }}
   {{- end }}
   kafkaExporter:
     {{- toYaml .Values.metrics.kafkaExporter | nindent 4 }}
   {{- end }}
   entityOperator:
-    topicOperator: {}
-    userOperator: {}
+    topicOperator:
+      {{- if .Values.kafka.topicOperator.jvmOptions }}
+      jvmOptions: {{ .Values.kafka.topicOperator.jvmOptions | toYaml | nindent 8 }}
+      {{- else }}
+      {}
+      {{- end }}
+    userOperator:
+      {{- if .Values.kafka.userOperator.jvmOptions }}
+      jvmOptions: {{ .Values.kafka.userOperator.jvmOptions | toYaml | nindent 8 }}
+      {{- else }}
+      {}
+      {{- end }}

@@ -67,11 +67,44 @@ kafka:
   storage:
     size: 10Gi
 
-  # -- Resource requests for Kafka pods
   resources:
+    # -- Resource requests for Kafka pods
     requests:
       cpu: 100m
       memory: 1Gi
+    # -- Resource limits for Kafka pods
+    limits:
+      cpu: 1
+      memory: 2Gi
+
+  # -- JVM options for Kafka pods
+  javaOptions:
+    Xms: 512m
+    Xmx: 1G
+
+  nodePool:
+    jvmOptions:
+      Xms: 512m
+      Xmx: 1G
+    resources:
+      # -- Resource requests for Kafka pods
+      requests:
+        cpu: 100m
+        memory: 1Gi
+      # -- Resource limits for Kafka pods
+      limits:
+        cpu: 1
+        memory: 2Gi
+
+  userOperator:
+    jvmOptions:
+      Xms: 64m
+      Xmx: 128m
+
+  topicOperator:
+    jvmOptions:
+      Xms: 64m
+      Xmx: 128m
 
   # -- Config for the Cruise Control rebalancer (https://github.com/linkedin/cruise-control)
   cruiseControl:
@@ -85,6 +118,10 @@ kafka:
     goals: []
     # -- Skip hard goal check by Cruise Control rebalancer.
     skipHardGoalCheck: true
+    # -- JVM options for Cruise Control pods
+    javaOptions:
+      Xms: 128m
+      Xmx: 256m
 
   # -- Security Context for Kafka pods
   # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str
