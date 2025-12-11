@@ -15571,6 +15571,31 @@ entries:
   radar-redis:
   - apiVersion: v2
     appVersion: v8.2.2
+    created: "2025-12-11T09:56:11.264942309Z"
+    dependencies:
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    - condition: redis-operator.enabled
+      name: redis-operator
+      repository: file://../../external/redis-operator
+      version: 0.22.2
+    description: Redis charts for Radar-base
+    digest: 12d52d6d7c997243a32f1893fc33056999d93a6f9e1354009437b32117be7568
+    home: https://radar-base.org
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-redis
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-redis-1.2.0/radar-redis-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
+    appVersion: v8.2.2
     created: "2025-12-03T14:35:50.693309603Z"
     dependencies:
     - name: common
@@ -22672,4 +22697,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2025-12-08T12:45:48.774529165Z"
+generated: "2025-12-11T09:56:11.265858502Z"
