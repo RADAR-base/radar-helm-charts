@@ -41,6 +41,9 @@ spec:
         resources:
           requests:
             storage: {{ .Values.storage.size }}
+  {{- if .Values.initContainer.enabled }}
+  initContainer: {{ .Values.initContainer | toYaml | nindent 4 }}
+  {{- end }}
   redisExporter:
     enabled: {{ .Values.metrics.enabled }}
     image: {{ include "common.images.image" (dict "imageRoot" .Values.redisExporter.image "global" .Values.global "chart" .Chart ) }}
