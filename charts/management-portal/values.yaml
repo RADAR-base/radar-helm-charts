@@ -640,3 +640,65 @@ oauth_clients:
     authorized_grant_types:
       - client_credentials
     access_token_validity: 900
+
+  nifi:
+    enable: false
+    resource_ids:
+      - res_AppServer
+    client_secret: ""
+    scope:
+      - SUBJECT.READ
+      - SUBJECT.CREATE
+      - SUBJECT.UPDATE
+    authorized_grant_types:
+      - client_credentials
+    access_token_validity: 43200
+    refresh_token_validity: 7948800
+
+  protocol_service:
+    enable: false
+    resource_ids:
+      - res_appconfig
+    client_secret: ""
+    scope:
+      - PROJECT.READ
+      - PROJECT.CREATE
+      - PROJECT.UPDATE
+      - SUBJECT.READ
+      - SUBJECT.CREATE
+      - SUBJECT.UPDATE
+    authorized_grant_types:
+      - client_credentials
+    access_token_validity: 43200
+    refresh_token_validity: 7948800
+
+  questionnaire_service:
+    enable: false
+    resource_ids:
+      - res_appconfig
+    client_secret: ""
+    scope:
+      - PROJECT.READ
+      - PROJECT.CREATE
+      - PROJECT.UPDATE
+      - SUBJECT.READ
+      - SUBJECT.CREATE
+      - SUBJECT.UPDATE
+    authorized_grant_types:
+      - client_credentials
+    access_token_validity: 43200
+    refresh_token_validity: 7948800
+
+  public_config_service:
+    enable: false
+    resource_ids:
+      - res_appconfig
+    client_secret: ""
+    scope:
+      - PROJECT.READ
+      - PROJECT.CREATE
+      - PROJECT.UPDATE
+    authorized_grant_types:
+      - client_credentials
+    access_token_validity: 43200
+    refresh_token_validity: 7948800
