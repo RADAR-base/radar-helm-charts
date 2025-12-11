@@ -3,7 +3,7 @@
 # radar-redis
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-redis)](https://artifacthub.io/packages/helm/radar-base/radar-redis)
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v8.2.2](https://img.shields.io/badge/AppVersion-v8.2.2-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v8.2.2](https://img.shields.io/badge/AppVersion-v8.2.2-informational?style=flat-square)
 
 Redis charts for Radar-base
 
@@ -48,6 +48,7 @@ Redis charts for Radar-base
 | storage.accessModes | list | `["ReadWriteOnce"]` | Access mode for PVC |
 | storage.size | string | `"1Gi"` | Size of PVC |
 | securityContext | object | `{"fsGroup":1000,"runAsUser":1000}` | Security context for redis pods |
+| initContainer | object | `{"command":["sh","-c","chown -R 1000:1000 /data && chmod -R g+rwX /data"],"enabled":false,"image":"busybox:1.36"}` | When encountering fs permission errors, you can use this initContainer to change the ownership of the data directory. |
 | redisExporter.image.registry | string | `"quay.io"` |  |
 | redisExporter.image.repository | string | `"opstree/redis-exporter"` |  |
 | redisExporter.image.tag | string | `"v1.44.0"` |  |
