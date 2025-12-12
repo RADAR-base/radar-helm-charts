@@ -1,0 +1,65 @@
+
+
+# radar-seaweedfs
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-seaweedfs)](https://artifacthub.io/packages/helm/radar-base/radar-seaweedfs)
+
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.8](https://img.shields.io/badge/AppVersion-1.0.8-informational?style=flat-square)
+
+Seaweedfs charts for Radar-base
+
+**Homepage:** <https://radar-base.org>
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Pim van Nierop | <pim@thehyve.nl> | <https://www.thehyve.nl/experts/pim-van-nierop> |
+
+## Prerequisites
+* Kubernetes 1.28+
+* Kubectl 1.28+
+* Helm 3.1.0+
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| file://../../external/seaweedfs-operator | operator(seaweedfs-operator) | 0.1.9 |
+| https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
+
+## Values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| serverName | string | `"localhost"` |  |
+| operator.enabled | bool | `true` |  |
+| operator.serviceMonitor.enabled | bool | `true` |  |
+| operator.grafanaDashboard.enabled | bool | `true` |  |
+| image.registry | string | `"docker.io"` | Image registry |
+| image.repository | string | `"chrislusf/seaweedfs"` | Image repository |
+| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
+| master.replicas | int | `3` |  |
+| master.volumeSizeLimitMB | string | `nil` | Max size of a single volume in MB. Default is ~30Gb. When full, new volumes will be created with this size. |
+| master.resources | string | `nil` |  |
+| volume.replicas | int | `2` |  |
+| volume.storage.size | string | `"2Gi"` | Size of PVC for volume server. Note that PVC size must take into account replication factor (see 'replication'). e.g. 2Gi * 2 replicas in the server rack = 4Gi |
+| volume.resources | string | `nil` |  |
+| filer.replicas | int | `2` |  |
+| filer.resources | string | `nil` |  |
+| affinity | string | `nil` |  |
+| replication | string | `"000"` | Replication factor for data volumes in format "XYZ" where X, Y and Z are the number of data replicates in the data center, rack and server, respectively. For instance, "001" adds one replica on each server. |
+| metrics.enabled | bool | `true` |  |
+| s3Config.identities[0].name | string | `"admin"` |  |
+| s3Config.identities[0].actions[0] | string | `"Admin"` |  |
+| s3Config.identities[0].credentials[0].accessKey | string | `"secret"` |  |
+| s3Config.identities[0].credentials[0].secretKey | string | `"secret"` |  |
+| s3Config.identities[1].name | string | `"user"` |  |
+| s3Config.identities[1].actions[0] | string | `"Read"` |  |
+| s3Config.identities[1].actions[1] | string | `"Write"` |  |
+| s3Config.identities[1].actions[2] | string | `"List"` |  |
+| s3Config.identities[1].credentials[0].accessKey | string | `"secret"` |  |
+| s3Config.identities[1].credentials[0].secretKey | string | `"secret"` |  |
+| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
