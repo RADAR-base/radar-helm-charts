@@ -50,16 +50,14 @@ Seaweedfs charts for Radar-base
 | filer.replicas | int | `2` |  |
 | filer.resources | string | `nil` |  |
 | affinity | string | `nil` |  |
-| replication | string | `"000"` | Replication factor for data volumes in format "XYZ" where X, Y and Z are the number of data replicates in the data center, rack and server, respectively. For instance, "001" adds one replica on each server. |
+| replication | string | `"000"` | Replication factor for data volumes in format "XYZ" where X, Y and Z are the number of data replicates across data centers, racks and servers in a rack, respectively. X, Y and Z can be 0, 1 or 2 signifying the number of replicates at the corresponding level. For instance, "001" adds one replica on the servers in the same rack. Important: the RADAR-base volume servers are hard-coded to run in the same rack; the X and Y positions are not in effect, therefore. |
 | metrics.enabled | bool | `true` |  |
-| s3Config.identities[0].name | string | `"admin"` |  |
-| s3Config.identities[0].actions[0] | string | `"Admin"` |  |
-| s3Config.identities[0].credentials[0].accessKey | string | `"secret"` |  |
-| s3Config.identities[0].credentials[0].secretKey | string | `"secret"` |  |
-| s3Config.identities[1].name | string | `"user"` |  |
-| s3Config.identities[1].actions[0] | string | `"Read"` |  |
-| s3Config.identities[1].actions[1] | string | `"Write"` |  |
-| s3Config.identities[1].actions[2] | string | `"List"` |  |
-| s3Config.identities[1].credentials[0].accessKey | string | `"secret"` |  |
-| s3Config.identities[1].credentials[0].secretKey | string | `"secret"` |  |
+| s3Config.identities.admin.actions[0] | string | `"Admin"` |  |
+| s3Config.identities.admin.credentials.accessKey | string | `"secret"` |  |
+| s3Config.identities.admin.credentials.secretKey | string | `"secret"` |  |
+| s3Config.identities.user.actions[0] | string | `"Read"` |  |
+| s3Config.identities.user.actions[1] | string | `"Write"` |  |
+| s3Config.identities.user.actions[2] | string | `"List"` |  |
+| s3Config.identities.user.credentials.accessKey | string | `"secret"` |  |
+| s3Config.identities.user.credentials.secretKey | string | `"secret"` |  |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
