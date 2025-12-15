@@ -9,7 +9,7 @@ metadata:
   {{- end }}
 data:
   source-fitbit.properties: |
-    name=radar-fitbit-source
+    name={{ default "radar-fitbit-source" .Values.connector_group }}
     connector.class=org.radarbase.connect.rest.fitbit.FitbitSourceConnector
     tasks.max={{ .Values.connector_num_tasks }}
     rest.source.base.url={{ .Values.fitbit_api_url }}

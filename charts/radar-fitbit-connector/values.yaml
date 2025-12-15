@@ -235,6 +235,8 @@ kafka_wait:
 
 # -- Base URL of the rest-sources-authorizer-backend service
 radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
+# -- Name of the connector group
+connector_group: radar-fitbit-source
 # -- Number of connector tasks to be used in connector.properties
 connector_num_tasks: "5"
 
