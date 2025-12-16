@@ -304,9 +304,9 @@ cc:
 # -- Enables config of public key endpoints for token verification
 # This config option is implemented to fix a compatibility issue with radar-gateway.
 # It can be removed when the publicKeyUrls config option is merged to master.
-public_key_endpoints_enabled: false
+public_key_endpoints_enabled: true
 # -- List of public key endpoints for token verification
-public_key_endpoints: []
+public_key_endpoints: ["http://radar-hydra-public:4444/.well-known/jwks.json"]
 
 # -- Resolvable server name, needed to find the advertised URL and callback URL
 serverName: localhost

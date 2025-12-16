@@ -277,6 +277,12 @@ keystore: ""
 # or with SOPS
 #   keystore: {{ exec "sops" (list "-d" "keystore.p12") | b64enc | quote }}
 
+# The public keys used for JWT signing in radar-kratos
+public_jwks: ""
+# With helmfile, this can be set in a production.yaml.gotmpl
+# file by setting
+#  public_jwks: {{ readFile "../etc/management-portal/public-jwks.json" | b64enc | quote }}
+
 # Configuration of the Postgres database to store data from Management Portal
 postgres:
   # -- host name of the postgres db
@@ -334,6 +340,10 @@ identity_server:
   server_admin_url: http://radar-kratos-admin
   # -- The publicly accessible login URL for the IDP; needed when deviating from http(s)://server_name/kratos-ui
   login_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui'
+  # -- The user activation flow type to use for Management Portal (e.g., recovery, verification)
+  user_activation_flow_type: "recovery"
+  # -- The user activation method to use for Management Portal (e.g., link, code)
+  user_activation_method: "link"
 
 authserver:
   # -- The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth
@@ -342,6 +352,7 @@ authserver:
   server_admin_url: http://radar-hydra-admin:4445
   # -- The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login
   login_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra'
+  client_secret: ""
 
 managementportal:
   # -- set to true, if automatic source-type import from catalogue server should be enabled
@@ -358,6 +369,10 @@ managementportal:
   frontend_client_secret: xxx
   # -- Admin password of the default admin user created by the system
   common_admin_password: xxx
+   # -- The file where the OAuth2 client details are stored
+  oauth_clients_file: /secrets/oauth_client_details.csv
+  # -- Base URL managementportal calls from inside the application container
+  base_url: http://localhost/managementportal
 
 # Configurations of the SMTP server to send activation emails from Management Portal
 smtp:

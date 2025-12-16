@@ -61,7 +61,6 @@ data:
       checkSourceId: {{ .Values.checkSourceId }}
       {{- if or .Values.public_key_endpoints_enabled .Values.public_key_endpoints }}
       publicKeyUrls:
-        - {{ printf "%s://%s/managementportal/oauth/token_key" .Values.advertised_protocol .Values.serverName | quote }}
         {{- range .Values.public_key_endpoints }}
         - {{ . | quote }}
         {{ end -}}

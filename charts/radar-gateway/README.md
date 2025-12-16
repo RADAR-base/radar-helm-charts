@@ -117,8 +117,8 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | cc.apiSecret | string | `"ccApiSecret"` | Confluent Cloud cluster API secret |
 | cc.schemaRegistryApiKey | string | `"srApiKey"` | Confluent Cloud schema registry API key |
 | cc.schemaRegistryApiSecret | string | `"srApiSecret"` | Confluent Cloud schema registry API secret |
-| public_key_endpoints_enabled | bool | `false` | Enables config of public key endpoints for token verification This config option is implemented to fix a compatibility issue with radar-gateway. It can be removed when the publicKeyUrls config option is merged to master. |
-| public_key_endpoints | list | `[]` | List of public key endpoints for token verification |
+| public_key_endpoints_enabled | bool | `true` | Enables config of public key endpoints for token verification This config option is implemented to fix a compatibility issue with radar-gateway. It can be removed when the publicKeyUrls config option is merged to master. |
+| public_key_endpoints | list | `["http://radar-hydra-public:4444/.well-known/jwks.json"]` | List of public key endpoints for token verification |
 | serverName | string | `"localhost"` | Resolvable server name, needed to find the advertised URL and callback URL |
 | sentry.dsn | string | `nil` | DSN (Data Source Name) of the sentry server |
 | sentry.level | string | `"ERROR"` | Log level for sentry (TRACE, DEBUG, INFO, WARN, or ERROR) |

@@ -172,6 +172,19 @@ kratos:
         cookie:
           ## -- If false, cookie is removed when the browser is closed --##
           persistent: false
+        whoami:
+          # -- Session-to-JWT token exchange configuration
+          # This enables Kratos to convert session tokens to JWT tokens for ManagementPortal integration
+          tokenizer:
+            enabled: true
+            templates:
+              mp_jwt_template:
+#                # -- JSON keystore file path for JWT signing keys
+                jwks_url: "file:///etc/kratos/jwks.json"
+                # -- JWT token time-to-live
+                ttl: 1h
+                # -- JWT claims mapper URL pointing to JsonNet template
+                claims_mapper_url: "file:///etc/kratos/claims-mapper.jsonnet"
 
       courier:
         smtp:
@@ -181,9 +194,24 @@ kratos:
             valid:
               email:
                 body:
-                  html: base64://SGksPGJyPjxicj5QbGVhc2XCoHZlcmlmecKgeW91csKgYWNjb3VudMKgYnnCoGVudGVyaW5nwqB0aGXCoGZvbGxvd2luZ8KgY29kZTo8YnI+PGgyPnt7IC5WZXJpZmljYXRpb25Db2RlIH19PC9oMj4=
-                  plaintext: base64://SGksIFBsZWFzZcKgdmVyaWZ5wqB5b3VywqBhY2NvdW50wqBiecKgZW50ZXJpbmfCoHRoZcKgZm9sbG93aW5nwqBjb2RlOiB7eyAuVmVyaWZpY2F0aW9uQ29kZSB9fQ==
-
+                  html: base64://SGksPGJyPjxicj5QbGVhc2XCoHZlcmlmecKgeW91csKgYWNjb3VudMKgYnnCoGVudGVyaW5nwqB0aGXCoGZvbGxvd2luZ8KgY29kZTo8YnI+PGgyPnt7IC5WZXJpZmljYXRpb25Db2RlIH19PC9oMj48YnI+PGEgaHJlZj17eyAuVmVyaWZpY2F0aW9uVVJMIH19Pnt7IC5WZXJpZmljYXRpb25VUkwgfX08L2E+
+                  plaintext: base64://SGksIFBsZWFzZcKgdmVyaWZ5wqB5b3VywqBhY2NvdW50wqBiecKgZW50ZXJpbmfCoHRoZcKgZm9sbG93aW5nwqBjb2RlOiB7eyAuVmVyaWZpY2F0aW9uQ29kZSB9fSB7eyAuVmVyaWZpY2F0aW9uVVJMIH19
+          recovery:
+            valid:
+              email:
+                body:
+                  # HTML Body: "Hi,<br><br>Please click the link below to set your password:<br><br><a href="{{ .RecoveryURL }}">Set Password</a>"
+                  html: base64://SGksPGJyPjxicj5QbGVhc2UgY2xpY2sgdGhlIGxpbmsgYmVsb3cgdG8gc2V0IHlvdXIgcGFzc3dvcmQ6PGJyPjxicj48YSBocmVmPSJ7eyAuUmVjb3ZlcnlVUkwgfX0iPlNldCBQYXNzd29yZDwvYT4=
+                  # Plain Text Body: "Hi, Please click the following link to set your password: {{ .RecoveryURL }}"
+                  plaintext: base64://SGksLCBQbGVhc2UgY2xpY2sgdGhlIGZvbGxvd2luZyBsaW5rIHRvIHNldCB5b3VyIHBhc3N3b3JkOiB7eyAuUmVjb3ZlcnlVUkwgfX0=
+          recovery_code:
+            valid:
+              email:
+                body:
+                  # HTML Body: "Hi,<br><br>Please click the link below to set your password:<br><br><a href="{{ .RecoveryURL }}">Set Password</a>"
+                  html: base64://SGksPGJyPjxicj5QbGVhc2UgY2xpY2sgdGhlIGxpbmsgYmVsb3cgdG8gc2V0IHlvdXIgcGFzc3dvcmQ6PGJyPjxicj48YSBocmVmPSJ7eyAuUmVjb3ZlcnlVUkwgfX0iPlNldCBQYXNzd29yZDwvYT4=
+                  # Plain Text Body: "Hi, Please click the following link to set your password: {{ .RecoveryURL }}"
+                  plaintext: base64://SGksLCBQbGVhc2UgY2xpY2sgdGhlIGZvbGxvd2luZyBsaW5rIHRvIHNldCB5b3VyIHBhc3N3b3JkOiB7eyAuUmVjb3ZlcnlVUkwgfX0=
       serve:
         public:
           base_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos/'
@@ -230,6 +258,12 @@ kratos:
               issuer: Radar
             enabled: true
           link:
+            config:
+              lifespan: 1h
+            enabled: true
+          code:
+            config:
+              lifespan: 1h
             enabled: true
 
         flows:
@@ -237,54 +271,63 @@ kratos:
             ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/error'
 
           settings:
-            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/settings'
+            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/account/settings'
             required_aal: highest_available
 
           recovery:
             enabled: true
-            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/recovery'
+            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/recovery'
             use: link
+            after:
+              default_browser_return_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/login'
+#              hooks: # TODO this breaks the ui flow!!!
+#                - hook: web_hook
+#                  config:
+#                    method: POST
+#                    url: http://management-portal:8080/managementportal/api/kratos/subjects/activate
+#                    body: base64://ZnVuY3Rpb24oY3R4KSB7CiAgICBpZGVudGl0eTogaWYgc3RkLm9iamVjdEhhcyhjdHgsICJpZGVudGl0eSIpIHRoZW4gY3R4LmlkZW50aXR5IGVsc2UgbnVsbCwKICAgIHBheWxvYWQ6IGlmIHN0ZC5vYmplY3RIYXMoY3R4LCAiZmxvdyIpICYmIHN0ZC5vYmplY3RIYXMoY3R4LmZsb3csICJ0cmFuc2llbnRfcGF5bG9hZCIpIHRoZW4gY3R4LmZsb3cudHJhbnNpZW50X3BheWxvYWQgZWxzZSBudWxsLAogICAgY29va2llczogY3R4LnJlcXVlc3RfY29va2llcwp9Cg==
+#                    response:
+#                      ignore: false
 
           verification:
             # our current flow necessitates that users reset their password after they activate an account in managementportal,
             # this works as verification
-            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/verification'
-            enabled: false
+            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/verification'
+            enabled: true
             use: code
-            after:
-              default_browser_return_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui'
-              hooks:
-                - hook: web_hook
-                  config:
-                    method: POST
-                    url: http://management-portal:8080/managementportal/api/kratos/subjects/activate
-                    body: base64://ZnVuY3Rpb24oY3R4KSB7CiAgICBpZGVudGl0eTogaWYgc3RkLm9iamVjdEhhcyhjdHgsICJpZGVudGl0eSIpIHRoZW4gY3R4LmlkZW50aXR5IGVsc2UgbnVsbCwKICAgIHBheWxvYWQ6IGlmIHN0ZC5vYmplY3RIYXMoY3R4LCAiZmxvdyIpICYmIHN0ZC5vYmplY3RIYXMoY3R4LmZsb3csICJ0cmFuc2llbnRfcGF5bG9hZCIpIHRoZW4gY3R4LmZsb3cudHJhbnNpZW50X3BheWxvYWQgZWxzZSBudWxsLAogICAgY29va2llczogY3R4LnJlcXVlc3RfY29va2llcwp9Cg==
-                    response:
-                      ignore: true
+#            after: # TODO this breaks the ui flow!!!
+#              hooks:
+#                - hook: web_hook
+#                  config:
+#                    method: POST
+#                    url: http://management-portal:8080/managementportal/api/kratos/subjects/activate
+#                    body: base64://ZnVuY3Rpb24oY3R4KSB7CiAgICBpZGVudGl0eTogaWYgc3RkLm9iamVjdEhhcyhjdHgsICJpZGVudGl0eSIpIHRoZW4gY3R4LmlkZW50aXR5IGVsc2UgbnVsbCwKICAgIHBheWxvYWQ6IGlmIHN0ZC5vYmplY3RIYXMoY3R4LCAiZmxvdyIpICYmIHN0ZC5vYmplY3RIYXMoY3R4LmZsb3csICJ0cmFuc2llbnRfcGF5bG9hZCIpIHRoZW4gY3R4LmZsb3cudHJhbnNpZW50X3BheWxvYWQgZWxzZSBudWxsLAogICAgY29va2llczogY3R4LnJlcXVlc3RfY29va2llcwp9Cg==
+#                    response:
+#                      ignore: true
 
           logout:
             after:
-              default_browser_return_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/login'
+              default_browser_return_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/login'
 
           login:
-            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/login'
+            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/login'
 
           registration:
-            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/registration'
-            after:
-              password:
-                hooks:
-                  - hook: web_hook
-                    config:
-                      method: POST
-                      url: http://management-portal:8080/managementportal/api/kratos/subjects
-                      body: base64://ZnVuY3Rpb24oY3R4KSB7CiAgICBpZGVudGl0eTogaWYgc3RkLm9iamVjdEhhcyhjdHgsICJpZGVudGl0eSIpIHRoZW4gY3R4LmlkZW50aXR5IGVsc2UgbnVsbCwKICAgIHBheWxvYWQ6IGlmIHN0ZC5vYmplY3RIYXMoY3R4LCAiZmxvdyIpICYmIHN0ZC5vYmplY3RIYXMoY3R4LmZsb3csICJ0cmFuc2llbnRfcGF5bG9hZCIpIHRoZW4gY3R4LmZsb3cudHJhbnNpZW50X3BheWxvYWQgZWxzZSBudWxsLAogICAgY29va2llczogY3R4LnJlcXVlc3RfY29va2llcwp9Cg==
-                      response:
-                        ignore: true
-                  - hook: session
-              oidc:
-                hooks:
-                  - hook: session
+            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/registration'
+#            after: # TODO this breaks the ui flow!!!
+#              password:
+#                hooks:
+#                  - hook: web_hook
+#                    config:
+#                      method: POST
+#                      url: http://management-portal:8080/managementportal/api/kratos/subjects
+#                      body: base64://ZnVuY3Rpb24oY3R4KSB7CiAgICBpZGVudGl0eTogaWYgc3RkLm9iamVjdEhhcyhjdHgsICJpZGVudGl0eSIpIHRoZW4gY3R4LmlkZW50aXR5IGVsc2UgbnVsbCwKICAgIHBheWxvYWQ6IGlmIHN0ZC5vYmplY3RIYXMoY3R4LCAiZmxvdyIpICYmIHN0ZC5vYmplY3RIYXMoY3R4LmZsb3csICJ0cmFuc2llbnRfcGF5bG9hZCIpIHRoZW4gY3R4LmZsb3cudHJhbnNpZW50X3BheWxvYWQgZWxzZSBudWxsLAogICAgY29va2llczogY3R4LnJlcXVlc3RfY29va2llcwp9Cg==
+#                      response:
+#                        ignore: true
+#                  - hook: session
+#              oidc:
+#                hooks:
+#                  - hook: session
 
       identity:
         default_schema_id: subject
@@ -307,30 +350,72 @@ kratos:
   # Register cloudnativepg secret to be used by Kratos.
   deployment:
     extraEnv:
-      - name: DSN
+      - name: POSTGRES_URI
         valueFrom:
           secretKeyRef:
             name: radar-cloudnative-postgresql-kratos
             key: uri
+      - name: DSN
+        value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
+    extraVolumes:
+      - name: keystore
+        secret:
+          secretName: radar-kratos-keystore
+      - name: claims-mapper
+        configMap:
+          name: radar-kratos-claims-mapper
+    extraVolumeMounts:
+      - name: keystore
+        mountPath: /etc/kratos/jwks.json
+        subPath: jwks.json
+      - name: claims-mapper
+        mountPath: /etc/kratos/claims-mapper.jsonnet
+        subPath: claims-mapper.jsonnet
   statefulSet:
     extraEnv:
-      - name: DSN
+      - name: POSTGRES_URI
         valueFrom:
           secretKeyRef:
             name: radar-cloudnative-postgresql-kratos
             key: uri
+      - name: DSN
+        value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
+    extraVolumes:
+      - name: keystore
+        secret:
+          secretName: radar-kratos-keystore
+      - name: claims-mapper
+        configMap:
+          name: radar-kratos-claims-mapper
+    extraVolumeMounts:
+      - name: keystore
+        mountPath: /etc/kratos/keystore.jks
+        subPath: keystore.jks
+      - name: claims-mapper
+        mountPath: /etc/kratos/claims-mapper.jsonnet
+        subPath: claims-mapper.jsonnet
   job:
     extraEnv:
-      - name: DSN
+      - name: POSTGRES_URI
         valueFrom:
           secretKeyRef:
             name: radar-cloudnative-postgresql-kratos
             key: uri
+      - name: DSN
+        value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
   cronjob:
     cleanup:
       extraEnv:
-        - name: DSN
+        - name: POSTGRES_URI
           valueFrom:
             secretKeyRef:
               name: radar-cloudnative-postgresql-kratos
               key: uri
+        - name: DSN
+          value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
+
+# -- Keystore for JWT signing
+keystore: ""
+# With helmfile, this can be set in a production.yaml.gotmpl
+# file by setting
+#   keystore: {{ readFile "../etc/radar-kratos/jwks.json" }}
