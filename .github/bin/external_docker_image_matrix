@@ -2,7 +2,7 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-output_file=${OUTPUT_FILE:-"workflows/docker_images_external.json"}
+output_file=${OUTPUT_FILE:-"workflows/docker-images-matrix.json"}
 
 cleanup() {
   rm -f charts.tmp
@@ -27,21 +27,25 @@ shorten_image_ref() {
 
 cleanup
 
-# Collect images from internal and external charts.
-for location in charts
+# Collect docker image references from charts.
+for chart in $INCLUDE_CHARTS
 do
-  for chart in `ls -1 ../$location`
-  do
-    # skip when the chart is present in the EXCLUDE_CHARTS environment variable
-    echo $EXCLUDE_CHARTS | grep -qw $chart && continue
-    echo Analyzing chart $chart ...
-    helm template ../$location/$chart 2> /dev/null | grep -oP "(?<=image: ).*" | tr -d \" >> $location.tmp
-  done
+  echo Analyzing chart $chart ...
+  helm template ../$chart 2> /dev/null | grep -oP "(?<=image: ).*" | tr -d \" >> images.tmp
+done
+
+echo
+
+# Add the images that derived by the INCLUDE_IMAGES environment variable.
+for image in $INCLUDE_IMAGES
+do
+  echo Adding hard coded image $image ...
+  echo $image >> images.tmp
 done
 
 # Add a docker.io prefix to images without a registry.
-cat charts.tmp | grep ".*\/.*\/.*" > images.tmp2
-cat charts.tmp | grep -v ".*\/.*\/.*" | sed "s/^/docker.io\//g" > images.tmp3
+cat images.tmp | grep ".*/.*/.*" > images.tmp2
+cat images.tmp | grep -v ".*/.*/.*" | sed "s/^/docker.io\//g" > images.tmp3
 cat images.tmp2 images.tmp3 | sort | uniq > images.txt
 
 # Exclude images refs that match any of the patterns passed in with the EXCLUDE_IMAGE_PATTERNS environment variable.

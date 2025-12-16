@@ -75,8 +75,10 @@ data:
     transforms.extractField.field = {{ .keyField }}
     {{- end }}
     {{- end }}
-    topic.creation.default.replication.factor = 2
-    topic.creation.default.partitions = 3
+    {{/*-1 means use default configured by the kafka broker.
+     Ref: https://docs.confluent.io/platform/7.9/connect/references/allconfigs.html#distributed-worker-configuration*/}}
+    topic.creation.default.replication.factor = -1
+    topic.creation.default.partitions = -1
     {{- end }}
 
     key.converter = io.confluent.connect.avro.AvroConverter

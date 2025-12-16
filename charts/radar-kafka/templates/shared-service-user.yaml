@@ -1,0 +1,51 @@
+# Service account used by all services (e.g. schema registry, ksql server) to access Kafka cluster.
+# Also see https://github.com/strimzi/strimzi-kafka-operator/issues/2141
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: shared-service-user
+  labels:
+    strimzi.io/cluster: {{ include "common.names.fullname" . }}
+spec:
+  authentication:
+    # Sets up this user for username/password authentication. This way we do not need to register and manage certificates.
+    type: scram-sha-512
+  authorization:
+    # Official docs on authorizations required for the Schema Registry:
+    # https://docs.confluent.io/current/schema-registry/security/index.html#authorizing-access-to-the-schemas-topic
+    type: simple
+    acls:
+      # Allow CRUD operations on all topics for catalog-server.
+      - type: allow
+        resource:
+          type: topic
+          name: '*'
+          patternType: literal
+        operations:
+          - Read
+          - Write
+          - Alter
+          - Create
+          - Describe
+          # Needed by ksql server
+          - DescribeConfigs
+      - type: allow
+        resource:
+          type: group
+          name: '*'
+          patternType: literal
+        operations:
+          - Read
+          - Write
+          - Alter
+          - Create
+          - Describe
+      # Needed by ksql server
+      - type: allow
+        resource:
+          type: cluster
+          name: {{ include "common.names.fullname" . }}
+          patternType: literal
+        operations:
+          - Describe
+          - DescribeConfigs

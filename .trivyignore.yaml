@@ -18,3 +18,7 @@ misconfigurations:
     statement: Don't scan third-party charts
     paths:
       - velero-s3-deployment/charts/velero/templates/role.yaml
+  - id: AVD-KSV-0041
+    statement: Operator needs permissions to manage cluster roles.
+    paths:
+      - radar-kafka/charts/strimzi-kafka-operator/templates/031-ClusterRole-strimzi-entity-operator.yaml

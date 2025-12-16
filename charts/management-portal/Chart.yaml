@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: "2.1.8"
+appVersion: "2.1.13"
 description: A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 name: management-portal
 version: 1.7.0

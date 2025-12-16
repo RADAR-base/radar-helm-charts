@@ -1,0 +1,19 @@
+{{- if .Values.kafka.cruiseControl.enabled }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaRebalance
+metadata:
+  name: {{ template "common.names.fullname" . }}-rebalance-template
+  annotations:
+    # Specifies that this KafkaRebalance is a rebalance configuration template and does not trigger a rebalance.
+    strimzi.io/rebalance-template: "true"
+  labels:
+    strimzi.io/cluster: {{ template "common.names.fullname" . }}
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+spec:
+  # NOTE: mode and brokers fields, if set, will be just ignored because they are
+  #       automatically set on the corresponding KafkaRebalance by the operator
+  {{- if .Values.kafka.cruiseControl.goals }}
+  goals: {{ toYaml .Values.kafka.cruiseControl.goals | nindent 4 }}
+  {{- end }}
+  skipHardGoalCheck: {{ .Values.kafka.cruiseControl.skipHardGoalCheck }}
+{{- end }}

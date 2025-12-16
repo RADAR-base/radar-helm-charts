@@ -80,7 +80,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Get the name of the secret object.
 */}}
-{{- define "radar-jdbc-connector.secretName" -}}
+{{- define "radar-jdbc-connector.secretName" }}
 {{- $useCloudnative := .context.Values.timescaledb.enabled }}
 {{- $suffix := ternary "-app" "" $useCloudnative }}
 {{- $fullName := ternary (.context.Values.timescaledb.cluster.fullnameOverride) (include "radar-jdbc-connector.fullname" .context) $useCloudnative }}
@@ -89,36 +89,24 @@ Get the name of the secret object.
     {{- .context.Values.jdbc.userSecret.name | default $fullSecretName }}
 {{- else if (eq .type "password") }}
     {{- .context.Values.jdbc.passwordSecret.name | default $fullSecretName }}
-{{- else if (eq .type "url") }}
+{{- else }}
     {{- .context.Values.jdbc.urlSecret.name | default $fullSecretName }}
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}
 
 {{/*
 Get the key for the secret object.
 */}}
-{{- define "radar-jdbc-connector.secretKey" -}}
+{{- define "radar-jdbc-connector.secretKey" }}
 {{- $useCloudnative := .context.Values.timescaledb.enabled }}
 {{- if (eq .type "user") }}
-    {{- if $useCloudnative }}
-        {{- "username" }}
-    {{- else }}
-        {{ .context.Values.jdbc.userSecret.key | default "databaseUser" }}
-    {{- end }}
+  {{- ternary "username" (default "databaseUser" .context.Values.jdbc.userSecret.key) $useCloudnative }}
 {{- else if (eq .type "password") }}
-    {{- if $useCloudnative }}
-        {{- "password" }}
-    {{- else }}
-        {{ .context.Values.jdbc.passwordSecret.key | default "databasePassword" }}
-    {{- end }}
+  {{- ternary "password" (default "databasePassword" .context.Values.jdbc.passwordSecret.key) $useCloudnative }}
 {{- else if (eq .type "url") }}
-    {{- if $useCloudnative }}
-        {{- "jdbc-uri" }}
-    {{- else }}
-        {{ .context.Values.jdbc.urlSecret.key | default "databaseUrl" }}
-    {{- end }}
+  {{- ternary "jdbc-uri" (default "databaseUrl" .context.Values.jdbc.urlSecret.key) $useCloudnative }}
 {{- end }}
-{{- end -}}
+{{- end }}
 
 {{/*
 Get the database url. Has to be created before the secret is created.
@@ -129,7 +117,7 @@ Get the database url. Has to be created before the secret is created.
 {{- if $useCloudnative -}}
     {{- include "radar-jdbc-connector.cloudnativeDatabaseUrl" . -}}
 {{- else if .Values.jdbc.urlSecret.name -}}
-   {{- print include "common.secrets.lookup" (dict "secret" .Values.jdbc.urlSecret.name "key" .Values.jdbc.urlSecret.key "default") -}}
+   {{- print (include "common.secrets.lookup" (dict "secret" .Values.jdbc.urlSecret.name "key" .Values.jdbc.urlSecret.key "defaultValue" "secret-not-found" "context" $)) }}
 {{- else -}}
     {{- .Values.jdbc.url -}}
 {{- end -}}

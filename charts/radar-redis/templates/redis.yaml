@@ -1,0 +1,56 @@
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+{{- if eq "standalone" .Values.mode }}
+kind: Redis
+{{- else if eq "replication" .Values.mode }}
+kind: RedisReplication
+{{- else }}
+kind: RedisCluster
+{{- end }}
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.mode }}
+  labels:
+    {{/* Somehow bitnami-provided labels do not result it the cluster to become ready.*/}}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: redis-radar
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: {{ .Release.Name }}-{{ .Chart.Version }}
+spec:
+  clusterVersion: {{ .Values.clusterVersion }}
+  {{- if or (eq "replication" .Values.mode) (eq "cluster" .Values.mode) }}
+  clusterSize: {{ .Values.multi.replicates }}
+  persistenceEnabled: true
+  {{- end }}
+  {{- if .Values.securityContext }}
+  securityContext: {{ .Values.securityContext | toYaml | nindent 4 }}
+  {{- end }}
+  kubernetesConfig:
+    image: {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global "chart" .Chart ) }}
+    imagePullPolicy: {{ .Values.image.pullPolicy }}
+    {{- if .Values.resources }}
+    resources: {{ .Values.resources | toYaml | nindent 6 }}
+    {{- end }}
+  storage:
+    {{- if or (eq "replication" .Values.mode) (eq "cluster" .Values.mode) }}
+    nodeConfVolume: {{ .Values.multi.nodeConfVolume }}
+    nodeConfVolumeClaimTemplate: {{ .Values.multi.nodeConfVolumeClaimTemplate | toYaml | nindent 6 }}
+    {{- end }}
+    volumeClaimTemplate:
+      spec:
+        accessModes: {{ .Values.storage.accessModes | toYaml | nindent 10 }}
+        resources:
+          requests:
+            storage: {{ .Values.storage.size }}
+  {{- if .Values.initContainer.enabled }}
+  initContainer: {{ .Values.initContainer | toYaml | nindent 4 }}
+  {{- end }}
+  redisExporter:
+    enabled: {{ .Values.metrics.enabled }}
+    image: {{ include "common.images.image" (dict "imageRoot" .Values.redisExporter.image "global" .Values.global "chart" .Chart ) }}
+    imagePullPolicy: {{ .Values.image.pullPolicy }}
+    {{- if .Values.redisExporter.securityContext }}
+    securityContext: {{ .Values.redisExporter.securityContext | toYaml | nindent 6 }}
+    {{- end }}
+  env:
+    - name: REDIS_EXPORTER_INCL_SYSTEM_METRICS
+      value: {{ .Values.metrics.enabled | quote }}

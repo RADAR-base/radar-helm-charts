@@ -1,0 +1,7 @@
+apiVersion: roundtable.lsst.codes/v1beta1
+kind: StrimziSchemaRegistry
+metadata:
+  name: {{ template "common.names.fullname" . }}-schema-registry
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+spec:
+  {{- toYaml (index .Values "schema-registry" "registry" "spec") | nindent 2 }}

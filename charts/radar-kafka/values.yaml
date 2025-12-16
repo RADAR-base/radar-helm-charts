@@ -1,0 +1,134 @@
+# -- domain name of the server
+server_name: localhost
+disable_tls: false
+
+# -- Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode)
+dev_deployment: false
+
+# -- String to partially override radar-kafka.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override radar-kafka.fullname template with a string
+fullnameOverride: ""
+
+# -- Enable metrics to be collected via Prometheus-operator
+metrics:
+  # -- Enable monitoring of metrics
+  enabled: true
+  # -- Values for Prometheus JMX Exporter attached to Kafka pods
+  # ref: https://strimzi.io/docs/operators/latest/deploying#proc-metrics-kafka-deploy-options-str
+  kafkaExporter:
+    # -- Regex that selects consumer groups for KafkaExporter errors/warnings.
+    groupRegex: ".*"
+    # --
+    topicRegex: ".*"
+    enableSaramaLogging: true
+  # -- Prometheus scrap config for Kafka pods. These settings do not affect scrape of Strimzi operators.
+  podMonitor:
+    interval: 30s
+    scrapeTimeout: 30s
+  # -- Custom parameters to selected prometheus rules
+  prometheusRules:
+    # -- Threshold of backpressure (number of messages not handled by consumer group) warning for consumer groups.
+    consumerGroupLagDelta: 20000
+
+# -- Values for kafka operator
+# ref: https://strimzi.io/docs/operators/latest/deploying#assembly-operators-str
+# @default -- check `values.yaml`
+strimzi-kafka-operator:
+  resources:
+    limits:
+      memory: 512Mi
+
+# -- Values for schema registry operator
+# ref: https://github.com/lsst-sqre/strimzi-registry-operator
+strimzi-registry-operator:
+  # -- Keep in sync with 'fullnameOverride'
+  clusterName: radar
+  # -- Keep in sync with namespace used by deployment
+  operatorNamespace: default
+
+# -- Values for Kafka cluster deployed by Strimzi kafka operator
+kafka:
+
+  # -- Number of Kafka brokers
+  replicas: 3
+  # -- Number of replicas for Kafka topics
+  replicationFactor: 3
+  # -- Number of in-sync kafka broker replicas
+  insyncReplicas: 2
+  # -- Number of topic data partitions. Rule of thumb: 3 times the number of brokers. Headroom is used for future upscale of brokers.
+  # ref: https://learn.conduktor.io/kafka/kafka-topics-choosing-the-replication-factor-and-partitions-count/
+  partitions: 9
+
+  # -- Metadata API version. Keep in sync with appVersion
+  metadataVersion: 3.9-IV0
+
+  # -- Storage size for Kafka pods
+  storage:
+    size: 10Gi
+
+  # -- Resource requests for Kafka pods
+  resources:
+    requests:
+      cpu: 100m
+      memory: 1Gi
+
+  # -- Config for the Cruise Control rebalancer (https://github.com/linkedin/cruise-control)
+  cruiseControl:
+    # -- Deploy the Cruise Control rebalancer operator.
+    enabled: false
+    # -- Add a KafkaRebalance template CRD. Note that this does not automatically rebalance the cluster.
+    # For rebalancing, you need to create a KafkaRebalance resource using the template.
+    addRebalanceTemplate: true
+    # -- Goals for the Cruise Control rebalancer.
+    # If left empty, the default goals are used (see: https://github.com/linkedin/cruise-control#goals).
+    goals: []
+    # -- Skip hard goal check by Cruise Control rebalancer.
+    skipHardGoalCheck: true
+
+  # -- Security Context for Kafka pods
+  # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str
+  podSecurityContext: {}
+
+  # -- Security Context for Kafka containers
+  # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str
+  securityContext: {}
+
+# -- Values for schema registry deployed by strimzi-registry-operator
+# ref: https://github.com/lsst-sqre/strimzi-registry-operator
+# @default -- check `values.yaml`
+schema-registry:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/enable-cors: "true"
+      nginx.ingress.kubernetes.io/rewrite-target: /$1
+      nginx.ingress.kubernetes.io/configuration-snippet: |
+        limit_except GET {
+          deny all;
+        }
+    hosts:
+      - host: '{{ $.Values.server_name }}'
+        paths: ["/schema/?(.*)"]
+    pathType: ImplementationSpecific
+    tls:
+      - secretName: radar-base-tls
+        hosts:
+          - '{{ $.Values.server_name }}'
+
+  topic:
+    replicationFactor: 3
+    config:
+      cleanup.policy: compact
+
+  registry:
+    spec:
+      strimziVersion: v1beta2
+      listener: tls
+      # Different from other services, we use TLS connection to the kafka brokers for the schema registry.
+      # This is because I could not find information on how to pass JAAS secrets to schema registry to work with SASL_PLAINTEXT.
+      securityProtocol: SSL
+      # 'none' compatibility level for schema registry was taken from legacy schema registry chart.
+      compatibilityLevel: none

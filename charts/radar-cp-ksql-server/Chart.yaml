@@ -1,0 +1,27 @@
+apiVersion: v2
+# Version of Kafka release
+# When upgrading, make sure to also update `kafka.metadataVersion` in values.yaml
+appVersion: 7.6.0
+description: "ConfluentInc Ksql Server for RADAR-base"
+name: radar-cp-ksql-server
+version: 0.0.1
+keywords:
+  - kafka
+  - queue
+  - stream
+  - event
+  - messaging
+  - datastore
+  - topic
+home: "https://radar-base.org"
+sources:
+  - https://github.com/RADAR-base/radar-helm-charts
+maintainers:
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
+dependencies:
+  - name: cp-ksql-server
+    repository: https://radar-base.github.io/cp-helm-charts
+    version: 0.4.1
+    alias: ksql

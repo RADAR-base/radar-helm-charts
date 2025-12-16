@@ -1,0 +1,31 @@
+{{- $replicas := ternary 1 .Values.kafka.replicas .Values.dev_deployment }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: node-pool
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    strimzi.io/cluster: {{ template "common.names.fullname" . }}
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+spec:
+  replicas: {{ $replicas }}
+  roles:
+    - controller
+    - broker
+  {{- if .Values.kafka.resources }}
+  resources:
+    {{ .Values.kafka.resources | toYaml | indent 4 | trim }}
+  {{- end }}
+  storage:
+    type: jbod
+    volumes:
+      - id: 0
+        {{- if .Values.dev_deployment }}
+        type: ephemeral
+        kraftMetadata: shared
+        {{- else }}
+        type: persistent-claim
+        size: {{ .Values.kafka.storage.size }}
+        deleteClaim: false
+        kraftMetadata: shared
+        {{- end }}

@@ -7,9 +7,9 @@ replicaCount: 2
 
 image:
   # -- Image registry
-  registry: docker.io
+  registry: ghcr.io
   # -- Image repository
-  repository: radarbase/radar-gateway
+  repository: radar-base/radar-gateway/radar-gateway
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:
@@ -206,13 +206,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-kafka'
+          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-schema-registry'
+          app.kubernetes.io/name: 'radar-kafka-schema-registry'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -247,20 +247,40 @@ hpa:
 # -- URL of the management portal application
 managementportal_url: http://management-portal:8080/managementportal
 # -- Schema Registry URL
-schemaRegistry: http://cp-schema-registry:8081
+schemaRegistry: http://radar-kafka-schema-registry:8081
 # -- Not used. To be confirmed
 max_requests: 1000
 # -- Kafka broker URLs
-bootstrapServers: cp-kafka-headless:9092
+bootstrapServers: radar-kafka-kafka-bootstrap:9094
 # -- set to true, if sources in access token should be validated
 checkSourceId: true
 # -- Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs.
-adminProperties: {}
+adminProperties:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  security.protocol: SASL_PLAINTEXT
+  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  sasl.mechanism: SCRAM-SHA-512
 # -- Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs.
 producerProperties:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  security.protocol: SASL_PLAINTEXT
+  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  sasl.mechanism: SCRAM-SHA-512
   compression.type: lz4
 # -- Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSetDeConfig].
 serializationProperties: {}
+
+secret:
+  admin:
+    # -- Secret for the Kafka SASL JAAS configuration
+    jaas:
+      name: shared-service-user
+      key: sasl.jaas.config
+  producer:
+    # -- Secret for the Kafka SASL JAAS configuration
+    jaas:
+      name: shared-service-user
+      key: sasl.jaas.config
 
 # -- Additional gateway server properties
 serverProperties:

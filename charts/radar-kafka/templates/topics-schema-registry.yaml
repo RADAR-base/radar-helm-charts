@@ -1,0 +1,17 @@
+{{- $context := index .Values "schema-registry" "topic" }}
+{{/*use 3 as max replication factor; use 1 when in dev mode*/}}
+{{- $topicReplicationFactor := min 3 (ternary 1 $context.replicationFactor .Values.dev_deployment) }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  # IMPORTANT: do not rename, must be named 'registry-schemas'
+  name: registry-schemas
+  labels:
+    strimzi.io/cluster: {{ template "common.names.fullname" . }}
+spec:
+  {{/*  This topics can have only a single partition*/}}
+  {{/*  see: https://stackoverflow.com/questions/74775392/why-schema-registry-internal-topic-schemas-has-only-single-partition*/}}
+  partitions: 1
+  replicas: {{ $topicReplicationFactor }}
+  config:
+    {{- toYaml $context.config | nindent 4 }}

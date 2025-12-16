@@ -5,5 +5,5 @@ dependencies:
 - name: radar-cloudnative-timescaledb
   repository: file://../radar-cloudnative-timescaledb
   version: 0.2.0
-digest: sha256:981cd25bb9d292f14c113b34c6dcef00e92843f35372e6818dc235acd5743ba2
-generated: "2025-05-26T13:15:22.905213777+02:00"
+digest: sha256:9eaf32c52672d2e879888d6b5a37170ee5053c930e92b906ecba50064c74f7c9
+generated: "2025-10-16T13:59:43.342766965+02:00"
