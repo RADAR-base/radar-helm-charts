@@ -20,10 +20,9 @@ kratos:
             - path: "/admin/kratos(/|$)(.*)"
               pathType: ImplementationSpecific
       tls:
-        - hosts:
+        - secretName: radar-base-tls
+          hosts:
             - '{{ .Values.server_name }}'
-          secretName: radar-base-tls
-
     public:
       enabled: true
       className: "nginx"
@@ -36,9 +35,9 @@ kratos:
             - path: "/kratos/?(.*)"
               pathType: ImplementationSpecific
       tls:
-        - hosts:
+        - secretName: kratos-public-tls
+          hosts:
             - '{{ .Values.server_name }}'
-          secretName: kratos-public-tls
 
   kratos:
     # -- Enables database migration
@@ -88,8 +87,8 @@ kratos:
       "identity.schema.researcher.json": |
         {
           "$schema": "http://json-schema.org/draft-07/schema#",
-          "$id": "user",
-          "title": "user",
+          "$id": "researcher",
+          "title": "researcher",
           "type": "object",
           "properties": {
             "traits": {
@@ -218,7 +217,7 @@ kratos:
           cors:
             enabled: true
             allowed_origins:
-              - '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/'
+              - '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/'
             allowed_methods:
               - POST
               - GET
@@ -268,66 +267,57 @@ kratos:
 
         flows:
           error:
-            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/error'
+            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/error'
 
           settings:
-            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/account/settings'
+            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/account/settings'
             required_aal: highest_available
 
           recovery:
             enabled: true
-            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/recovery'
-            use: link
-            after:
-              default_browser_return_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/login'
-#              hooks: # TODO this breaks the ui flow!!!
-#                - hook: web_hook
-#                  config:
-#                    method: POST
-#                    url: http://management-portal:8080/managementportal/api/kratos/subjects/activate
-#                    body: base64://ZnVuY3Rpb24oY3R4KSB7CiAgICBpZGVudGl0eTogaWYgc3RkLm9iamVjdEhhcyhjdHgsICJpZGVudGl0eSIpIHRoZW4gY3R4LmlkZW50aXR5IGVsc2UgbnVsbCwKICAgIHBheWxvYWQ6IGlmIHN0ZC5vYmplY3RIYXMoY3R4LCAiZmxvdyIpICYmIHN0ZC5vYmplY3RIYXMoY3R4LmZsb3csICJ0cmFuc2llbnRfcGF5bG9hZCIpIHRoZW4gY3R4LmZsb3cudHJhbnNpZW50X3BheWxvYWQgZWxzZSBudWxsLAogICAgY29va2llczogY3R4LnJlcXVlc3RfY29va2llcwp9Cg==
-#                    response:
-#                      ignore: false
+            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/recovery'
+            use: code
 
           verification:
             # our current flow necessitates that users reset their password after they activate an account in managementportal,
             # this works as verification
-            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/verification'
+            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/auth/verification'
             enabled: true
             use: code
-#            after: # TODO this breaks the ui flow!!!
-#              hooks:
-#                - hook: web_hook
-#                  config:
-#                    method: POST
-#                    url: http://management-portal:8080/managementportal/api/kratos/subjects/activate
-#                    body: base64://ZnVuY3Rpb24oY3R4KSB7CiAgICBpZGVudGl0eTogaWYgc3RkLm9iamVjdEhhcyhjdHgsICJpZGVudGl0eSIpIHRoZW4gY3R4LmlkZW50aXR5IGVsc2UgbnVsbCwKICAgIHBheWxvYWQ6IGlmIHN0ZC5vYmplY3RIYXMoY3R4LCAiZmxvdyIpICYmIHN0ZC5vYmplY3RIYXMoY3R4LmZsb3csICJ0cmFuc2llbnRfcGF5bG9hZCIpIHRoZW4gY3R4LmZsb3cudHJhbnNpZW50X3BheWxvYWQgZWxzZSBudWxsLAogICAgY29va2llczogY3R4LnJlcXVlc3RfY29va2llcwp9Cg==
-#                    response:
-#                      ignore: true
+            after:
+              default_browser_return_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/auth/login'
+              hooks:
+                - hook: web_hook
+                  config:
+                    method: POST
+                    url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/managementportal/api/webhook/kratos/subjects/activate'
+                    body: base64://ZnVuY3Rpb24oY3R4KSB7CiAgICBpZGVudGl0eTogaWYgc3RkLm9iamVjdEhhcyhjdHgsICJpZGVudGl0eSIpIHRoZW4gY3R4LmlkZW50aXR5IGVsc2UgbnVsbCwKICAgIHBheWxvYWQ6IGlmIHN0ZC5vYmplY3RIYXMoY3R4LCAiZmxvdyIpICYmIHN0ZC5vYmplY3RIYXMoY3R4LmZsb3csICJ0cmFuc2llbnRfcGF5bG9hZCIpIHRoZW4gY3R4LmZsb3cudHJhbnNpZW50X3BheWxvYWQgZWxzZSBudWxsLAogICAgY29va2llczogY3R4LnJlcXVlc3RfY29va2llcwp9Cg==
+                    response:
+                      ignore: true
 
           logout:
             after:
-              default_browser_return_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/login'
+              default_browser_return_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/auth/login'
 
           login:
-            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/login'
+            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/auth/login'
 
           registration:
-            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/registration'
-#            after: # TODO this breaks the ui flow!!!
-#              password:
-#                hooks:
-#                  - hook: web_hook
-#                    config:
-#                      method: POST
-#                      url: http://management-portal:8080/managementportal/api/kratos/subjects
-#                      body: base64://ZnVuY3Rpb24oY3R4KSB7CiAgICBpZGVudGl0eTogaWYgc3RkLm9iamVjdEhhcyhjdHgsICJpZGVudGl0eSIpIHRoZW4gY3R4LmlkZW50aXR5IGVsc2UgbnVsbCwKICAgIHBheWxvYWQ6IGlmIHN0ZC5vYmplY3RIYXMoY3R4LCAiZmxvdyIpICYmIHN0ZC5vYmplY3RIYXMoY3R4LmZsb3csICJ0cmFuc2llbnRfcGF5bG9hZCIpIHRoZW4gY3R4LmZsb3cudHJhbnNpZW50X3BheWxvYWQgZWxzZSBudWxsLAogICAgY29va2llczogY3R4LnJlcXVlc3RfY29va2llcwp9Cg==
-#                      response:
-#                        ignore: true
-#                  - hook: session
-#              oidc:
-#                hooks:
-#                  - hook: session
+            ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/auth/registration'
+            after:
+              password:
+                hooks:
+                  - hook: web_hook
+                    config:
+                      method: POST
+                      url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/managementportal/api/webhook/kratos/subjects'
+                      body: base64://ZnVuY3Rpb24oY3R4KSB7CiAgICBpZGVudGl0eTogaWYgc3RkLm9iamVjdEhhcyhjdHgsICJpZGVudGl0eSIpIHRoZW4gY3R4LmlkZW50aXR5IGVsc2UgbnVsbCwKICAgIHBheWxvYWQ6IGlmIHN0ZC5vYmplY3RIYXMoY3R4LCAiZmxvdyIpICYmIHN0ZC5vYmplY3RIYXMoY3R4LmZsb3csICJ0cmFuc2llbnRfcGF5bG9hZCIpIHRoZW4gY3R4LmZsb3cudHJhbnNpZW50X3BheWxvYWQgZWxzZSBudWxsLAogICAgY29va2llczogY3R4LnJlcXVlc3RfY29va2llcwp9Cg==
+                      response:
+                        ignore: true
+                  - hook: session
+              oidc:
+                hooks:
+                  - hook: session
 
       identity:
         default_schema_id: subject
@@ -345,7 +335,7 @@ kratos:
         leak_sensitive_values: true
 
       oauth2_provider:
-        url: http://radar-hydra-admin:4445
+        url: http://hydra-admin
 
   # Register cloudnativepg secret to be used by Kratos.
   deployment:
