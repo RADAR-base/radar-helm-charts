@@ -46,9 +46,12 @@ hydra:
       dsn:
       urls:
         self:
+          admin: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/admin/hydra/'
           issuer: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra/'
-        login: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/oauth-login'
-        consent: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui/auth/consent'
+          public: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra/'
+        login: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/auth/oauth-login'
+        consent: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/auth/consent'
+        logout: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/auth/logout'
 
       log:
         level: debug
@@ -67,8 +70,7 @@ hydra:
           default_grant_allowed_scope: true
         grant:
           refresh_token:
-            # Set grace period. Omit this line to disable.
-            rotation_grace_period: 60s
+            rotation_grace_period: 300s # Set grace period. Omit this line to disable.
 
       serve:
         public:
