@@ -332,8 +332,11 @@ catalogue_server: catalog-server
 
 # Settings pertaining to the identity provider (IDP)
 identity_server:
-  # -- The admin email to link to the admin service account. This account should only be used to set up admin-users
-  admin_email: admin@example.com
+  # -- Whether the IDP is the MP's internal IDP
+  internal: true
+
+  # Set the following values if the IDP is external to the cluster (i.e. Ory Kratos)
+
   # -- The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos
   server_url: http://radar-kratos-public
   # -- The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
@@ -341,18 +344,24 @@ identity_server:
   # -- The publicly accessible login URL for the IDP; needed when deviating from http(s)://server_name/kratos-ui
   login_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui'
   # -- The user activation flow type to use for Management Portal (e.g., recovery, verification)
-  user_activation_flow_type: "recovery"
+  user_activation_flow_type: "verification"
   # -- The user activation method to use for Management Portal (e.g., link, code)
   user_activation_method: "link"
+  # -- The admin email to link to the admin service account. This account should only be used to set up admin-users
+  admin_email: admin@example.com
 
 authserver:
+  # -- Whether the authserver is the MP's internal authserver
+  internal: true
+
+  # Set the following values if the authserver is external to the cluster (i.e. Ory Hydra)
+
   # -- The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth
   server_url: http://radar-hydra-public:4444
   # -- The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
   server_admin_url: http://radar-hydra-admin:4445
   # -- The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login
   login_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra'
-  client_secret: ""
 
 managementportal:
   # -- set to true, if automatic source-type import from catalogue server should be enabled
