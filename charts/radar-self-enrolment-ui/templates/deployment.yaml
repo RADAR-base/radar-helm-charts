@@ -38,36 +38,61 @@ spec:
           image: {{ template "radar-self-enrolment-ui.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           env:
+          # Kratos configuration
           - name: KRATOS_INTERNAL_URL
-            value: {{ tpl .Values.kratosPublicUrl . | quote }}
+            value: {{ .Values.kratos.internalUrl | quote }}
           - name: KRATOS_ADMIN_URL
-            value: {{ .Values.kratosAdminUrl | quote }}
+            value: {{ .Values.kratos.adminUrl | quote }}
+
+          # Hydra configuration
           - name: HYDRA_ADMIN_URL
-            value: {{ .Values.hydraAdminUrl | quote }}
+            value: {{ .Values.hydra.adminUrl | quote }}
           - name: HYDRA_PUBLIC_URL
-            value: {{ tpl .Values.hydraPublicUrl . | quote }}
+            value: {{ .Values.hydra.internalUrl | quote }}
+          - name: NEXT_PUBLIC_HYDRA_PUBLIC_URL
+            value: {{ tpl .Values.hydra.browserUrl . | quote }}
+
+          # REST source authorizer
           - name: RSA_BACKEND_URL
-            value: {{ .Values.restSourceBackendUrl | quote }}
-          - name: BASE_PATH
-            value: /{{ .Values.basePath | quote }}
-          - name: SECURITY_MODE
-            value: {{ .Values.securityMode | quote }}
+            value: {{ .Values.rest_sources_auth.backendUrl | quote }}
+          - name: RSA_FRONTEND_URL
+            value: {{ tpl .Values.rest_sources_auth.frontendUrl . | quote }}
+
+          # Base path configuration
+          - name: BASEPATH
+            value: {{ .Values.basePath | quote }}
+
+          # Authentication clients (ARMT, PRMT, SEP)
           - name: ARMT_CLIENT_ID
-            value: {{ .Values.armtClientId | quote }}
+            value: {{ .Values.auth.armt.clientId | quote }}
           - name: ARMT_CLIENT_SECRET
-            value: {{ .Values.armtClientSecret | quote }}
+            value: {{ .Values.auth.armt.clientSecret | quote }}
+          - name: PRMT_CLIENT_ID
+            value: {{ .Values.auth.prmt.clientId | quote }}
+          - name: PRMT_CLIENT_SECRET
+            value: {{ .Values.auth.prmt.clientSecret | quote }}
           - name: SEP_CLIENT_ID
-            value: {{ .Values.sepClientId | quote }}
+            value: {{ .Values.auth.sep.clientId | quote }}
           - name: SEP_CLIENT_SECRET
-            value: {{ .Values.sepClientSecret | quote }}
+            value: {{ .Values.auth.sep.clientSecret | quote }}
+
+          # Public redirect URIs
           - name: NEXT_PUBLIC_ARMT_REDIRECT_URI
-            value: {{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/armt
+            value: {{ tpl .Values.auth.armt.redirectUri . | quote }}
+          - name: NEXT_PUBLIC_PRMT_REDIRECT_URI
+            value: {{ tpl .Values.auth.prmt.redirectUri . | quote }}
           - name: NEXT_PUBLIC_SEP_REDIRECT_URI
-            value: {{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/sep
+            value: {{ tpl .Values.auth.sep.redirectUri . | quote }}
+
+          # GitHub and backend configuration
           - name: GITHUB_AUTH_TOKEN
-            value: {{ .Values.githubAuthToken | quote }}
+            value: {{ .Values.github.authToken | quote }}
           - name: GATEWAY_URL
             value: {{ .Values.gatewayUrl | quote }}
+          - name: STUDY_DEFINITION_REPOSITORY
+            value: {{ .Values.studyDefinitionRepository | quote }}
+          - name: MP_CONFIG_BASE_URL
+            value: {{ .Values.managementportal_url | quote }}
           - name: COOKIE_SECRET
             valueFrom:
               secretKeyRef:
