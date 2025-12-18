@@ -306,13 +306,13 @@ auth:
 
 kratos:
   # Kratos urls
-  internalUrl: "http://kratos-public:80"
-  adminUrl: "http://kratos-admin/admin"
+  internalUrl: "http://radar-kratos-public:80"
+  adminUrl: "http://radar-kratos-admin/admin"
 
 hydra:
   # Hydra urls
-  internalUrl: "http://hydra-public:4444"
-  adminUrl: "http://hydra-admin:4445/admin"
+  internalUrl: "http://radar-hydra-public:4444"
+  adminUrl: "http://radar-hydra-admin:4445/admin"
   browserUrl: "{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra"
 
 rest_sources_auth:

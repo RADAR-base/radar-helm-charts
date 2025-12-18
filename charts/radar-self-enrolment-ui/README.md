@@ -120,10 +120,10 @@ A Helm chart for RADAR-base Self Enrolment UI
 | auth.sep.clientId | string | `"SEP"` |  |
 | auth.sep.clientSecret | string | `""` |  |
 | auth.sep.redirectUri | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/sep"` |  |
-| kratos.internalUrl | string | `"http://kratos-public:80"` |  |
-| kratos.adminUrl | string | `"http://kratos-admin/admin"` |  |
-| hydra.internalUrl | string | `"http://hydra-public:4444"` |  |
-| hydra.adminUrl | string | `"http://hydra-admin:4445/admin"` |  |
+| kratos.internalUrl | string | `"http://radar-kratos-public:80"` |  |
+| kratos.adminUrl | string | `"http://radar-kratos-admin/admin"` |  |
+| hydra.internalUrl | string | `"http://radar-hydra-public:4444"` |  |
+| hydra.adminUrl | string | `"http://radar-hydra-admin:4445/admin"` |  |
 | hydra.browserUrl | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra"` |  |
 | rest_sources_auth.backendUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend"` |  |
 | rest_sources_auth.frontendUrl | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/rest-sources/authorizer/"` |  |

@@ -335,7 +335,7 @@ kratos:
         leak_sensitive_values: true
 
       oauth2_provider:
-        url: http://hydra-admin
+        url: http://radar-hydra-admin
 
   # Register cloudnativepg secret to be used by Kratos.
   deployment:
