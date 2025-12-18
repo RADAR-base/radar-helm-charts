@@ -58,18 +58,33 @@ spec:
           - name: SPRING_DATASOURCE_URL
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.postgres.urlSecret.name | default $secretName }}
-                key: {{ .Values.postgres.urlSecret.key | default "databaseUrl" }}
+{{- if .Values.postgres.urlSecret.name }}
+                name: {{ .Values.postgres.urlSecret.name }}
+                key: {{ .Values.postgres.urlSecret.key | default "jdbc-uri" }}
+{{- else }}
+                name: {{ $secretName }}
+                key: postgres_url
+{{- end }}
           - name: SPRING_DATASOURCE_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.postgres.userSecret.name | default $secretName }}
-                key: {{ .Values.postgres.userSecret.key | default "databaseUser" }}
+{{- if .Values.postgres.userSecret.name }}
+                name: {{ .Values.postgres.userSecret.name }}
+                key: {{ .Values.postgres.userSecret.key | default "username" }}
+{{- else }}
+                name: {{ $secretName }}
+                key: postgresql_user
+{{- end }}
           - name: SPRING_DATASOURCE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.postgres.passwordSecret.name | default $secretName }}
-                key: {{ .Values.postgres.passwordSecret.key | default "databasePassword" }}
+{{- if .Values.postgres.passwordSecret.name }}
+                name: {{ .Values.postgres.passwordSecret.name }}
+                key: {{ .Values.postgres.passwordSecret.key | default "password" }}
+{{- else }}
+                name: {{ $secretName }}
+                key: postgresql_password
+{{- end }}
           - name: SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT
             value: "15000"
           - name: SPRING_DATASOURCE_HIKARI_VALIDATION_TIMEOUT
@@ -81,22 +96,18 @@ spec:
           - name: MANAGEMENTPORTAL_COMMON_BASEURL
             value: {{ printf "%s://%s" .Values.advertised_protocol .Values.server_name }}
           - name: MANAGEMENTPORTAL_COMMON_MANAGEMENT_PORTAL_BASE_URL
+          {{- if .Values.managementportal.base_url }}
             value: {{ .Values.managementportal.base_url }}
-{{/* TODO for now secret with client_id and client_secret replaced with job creating clients with fixed client names*/}}
-{{/*          - name: MANAGEMENTPORTAL_FRONTEND_CLIENTID*/}}
-{{/*            valueFrom:*/}}
-{{/*              secretKeyRef:*/}}
-{{/*                name: managementportalapp-oauth-client*/}}
-{{/*                key: CLIENT_ID*/}}
-{{/*          - name: MANAGEMENTPORTAL_FRONTEND_CLIENT_SECRET*/}}
-{{/*            valueFrom:*/}}
-{{/*              secretKeyRef:*/}}
-{{/*                name: managementportalapp-oauth-client*/}}
-{{/*                key: CLIENT_SECRET*/}}
+          {{- else }}
+            value: {{ printf "%s://%s/managementportal" .Values.advertised_protocol .Values.server_name }}
+          {{- end }}
           - name: MANAGEMENTPORTAL_FRONTEND_CLIENTID
             value: "ManagementPortalapp"
           - name: MANAGEMENTPORTAL_FRONTEND_CLIENT_SECRET
-            value: "{{ .Values.authserver.client_secret }}"
+            valueFrom:
+              secretKeyRef:
+                name: {{ $secretName }}
+                key: managementportal_frontend_client_secret
           - name: MANAGEMENTPORTAL_CATALOGUE_SERVER_ENABLE_AUTO_IMPORT
             value: "{{ .Values.managementportal.catalogue_server_enable_auto_import }}"
           - name: MANAGEMENTPORTAL_OAUTH_CLIENTS_FILE
@@ -109,12 +120,10 @@ spec:
             value: {{ .Values.identity_server.admin_email }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_URL
             value: {{ tpl .Values.identity_server.server_url . }}
-          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_LOGIN_URL
-            value: {{ tpl .Values.identity_server.login_url . }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_ADMIN_URL
             value: {{ tpl .Values.identity_server.server_admin_url . }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_INTERNAL
-            value: "false"
+            value: {{ .Values.identity_server.internal | quote }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_USER_ACTIVATION_FLOW_TYPE
             value: {{ .Values.identity_server.user_activation_flow_type | quote }}
           - name: MANAGEMENTPORTAL_IDENTITY_SERVER_USER_ACTIVATION_METHOD
@@ -124,7 +133,7 @@ spec:
           - name: MANAGEMENTPORTAL_AUTHSERVER_LOGINURL
             value: {{ tpl .Values.authserver.login_url . }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_INTERNAL
-            value: "false"
+            value: {{ .Values.authserver.internal | quote }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERADMINURL
             value: {{ tpl .Values.authserver.server_admin_url . }}
           - name: MANAGEMENTPORTAL_COMMON_ADMIN_PASSWORD

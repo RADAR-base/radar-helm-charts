@@ -293,22 +293,28 @@ postgres:
   database:
   # -- Kubernetes secret containing the database JDBC Connection url
   # (disables use of 'host', 'port' and 'database' values).
+  # Set to empty/null to use chart's own secret created from postgres.url value
+  # Otherwise e.g. name: radar-cloudnative-postgresql-managementportal
   urlSecret:
-    name: radar-cloudnative-postgresql-managementportal
+    name:
     key: jdbc-uri
   # -- database user
   user:
   # -- Kubernetes secret containing the database username
   # (disables use of 'user' value).
+  # Set to empty/null to use chart's own secret created from postgres.user value
+  # Otherwise e.g. name: radar-cloudnative-postgresql-managementportal
   userSecret:
-    name: radar-cloudnative-postgresql-managementportal
+    name:
     key: username
   # -- password of the database user
   password:
   # -- Kubernetes secret containing the database password
   # (disables use of 'password' value).
+  # Set to empty/null to use chart's own secret created from postgres.password value
+  # Otherwise e.g. name: radar-cloudnative-postgresql-managementportal
   passwordSecret:
-    name: radar-cloudnative-postgresql-managementportal
+    name:
     key: password
 
   # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
@@ -341,8 +347,6 @@ identity_server:
   server_url: http://radar-kratos-public
   # -- The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
   server_admin_url: http://radar-kratos-admin
-  # -- The publicly accessible login URL for the IDP; needed when deviating from http(s)://server_name/kratos-ui
-  login_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/kratos-ui'
   # -- The user activation flow type to use for Management Portal (e.g., recovery, verification)
   user_activation_flow_type: "verification"
   # -- The user activation method to use for Management Portal (e.g., link, code)
@@ -381,7 +385,7 @@ managementportal:
    # -- The file where the OAuth2 client details are stored
   oauth_clients_file: /secrets/oauth_client_details.csv
   # -- Base URL managementportal calls from inside the application container
-  base_url: http://localhost/managementportal
+  base_url: ''
 
 # Configurations of the SMTP server to send activation emails from Management Portal
 smtp:
