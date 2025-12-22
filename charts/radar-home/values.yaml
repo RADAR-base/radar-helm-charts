@@ -61,7 +61,7 @@ ingress:
   ingressClassName: nginx
   # -- Hosts to accept requests from
   hosts:
-    - '{{ .Values.server_name | quote }}'
+    - '{{ .Values.server_name }}'
   tls:
     # -- TLS Secret Name
     secretName: radar-base-tls
