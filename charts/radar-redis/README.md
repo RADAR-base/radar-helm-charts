@@ -3,7 +3,7 @@
 # radar-redis
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-redis)](https://artifacthub.io/packages/helm/radar-base/radar-redis)
 
-![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v8.2.2](https://img.shields.io/badge/AppVersion-v8.2.2-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v8.2.2](https://img.shields.io/badge/AppVersion-v8.2.2-informational?style=flat-square)
 
 Redis charts for Radar-base
 
@@ -54,5 +54,6 @@ Redis charts for Radar-base
 | redisExporter.image.tag | string | `"v1.44.0"` |  |
 | redisExporter.image.pullPolicy | string | `"IfNotPresent"` |  |
 | redisExporter.securityContext | object | `{"fsGroup":1000,"runAsUser":1000}` | Security context for redis node exporter pods |
+| redisExporter.resources | object | `{}` |  |
 | metrics.enabled | bool | `true` |  |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
