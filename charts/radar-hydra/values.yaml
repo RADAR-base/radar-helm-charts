@@ -71,7 +71,8 @@ hydra:
           default_grant_allowed_scope: true
         grant:
           refresh_token:
-            rotation_grace_period: 300s # Set grace period. Omit this line to disable.
+            # Set grace period. Omit the line below to disable.
+            rotation_grace_period: 300s
 
       serve:
         public:
@@ -289,14 +290,10 @@ oauth_clients:
     audience:
       - res_ManagementPortal
       - res_upload
-      - res_restAuthorizer
-      # TODO the last aud was added to make e2e tests passing - double-check if it is acceptable (change due to new way of fetching token with client_credentials)
     client_secret: ""
     scope:
       - PROJECT.READ
       - SUBJECT.READ
-      - SUBJECT.UPDATE
-      # TODO the last scope was added to make e2e tests passing - double-check if it is acceptable (change due to new way of fetching token with client_credentials)
     grantTypes:
       - client_credentials
     access_token_validity: 900
