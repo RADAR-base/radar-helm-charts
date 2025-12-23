@@ -38,6 +38,7 @@ hydra:
         - secretName: radar-base-tls
           hosts:
             - '{{ .Values.server_name }}'
+
   hydra:
     automigration:
       enabled: true
@@ -88,6 +89,9 @@ hydra:
         secretKeyRef:
           name: radar-cloudnative-postgresql-hydra
           key: uri
+
+  maester:
+    enabled: false
 
 hydra_server_url: "http://radar-hydra-public:4444"
 hydra_admin_url: "http://radar-hydra-admin:4445/admin"
