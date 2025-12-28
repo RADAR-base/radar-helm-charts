@@ -98,6 +98,9 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+# -- Standard JAVA_OPTS that should be passed to this service
+javaOpts: "-XX:GCTimeRatio=19 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=30 --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.management/javax.management.openmbean=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.management/javax.management=ALL-UNNAMED -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
+
 # -- Extra environment variables
 extraEnvVars: []
 #  - name: BEARER_AUTH
@@ -108,7 +111,7 @@ customLivenessProbe: {}
 
 livenessProbe:
   # -- Enable livenessProbe
-  enabled: true
+  enabled: false
   # -- Initial delay seconds for livenessProbe
   initialDelaySeconds: 5
   # -- Period seconds for livenessProbe
@@ -125,7 +128,7 @@ customReadinessProbe: {}
 
 readinessProbe:
   # -- Enable readinessProbe
-  enabled: true
+  enabled: false
   # -- Initial delay seconds for readinessProbe
   initialDelaySeconds: 5
   # -- Period seconds for readinessProbe
@@ -142,7 +145,7 @@ customStartupProbe: {}
 
 startupProbe:
   # -- Enable startupProbe
-  enabled: true
+  enabled: false
   # -- Initial delay seconds for startupProbe
   initialDelaySeconds: 5
   # -- Period seconds for startupProbe
@@ -229,6 +232,9 @@ postgres:
   passwordSecret:
     name: radar-cloudnative-postgresql-appserver
     key: password
+
+  hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+  jdbcDriver: org.postgresql.Driver
 
   # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
   # Ignored when using 'urlSecret'.

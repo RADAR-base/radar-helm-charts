@@ -47,26 +47,31 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ template "radar-appserver.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          command: [ "appserver-jersey", "/etc/radar-appserver/appserver.yml" ]
           {{- $secretName := include "radar-appserver.fullname" . }}
           env:
-          - name: RADAR_IS_CONFIG_LOCATION
-            value: /etc/radar-appserver/radar_is.yml
-          - name: SPRING_DATASOURCE_URL
+          - name: JAVA_OPTS
+            value: {{ include "radar-appserver.javaOpts" }}
+          - name: APPSERVER_JDBC_URL
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.postgres.urlSecret.name | default $secretName }}
                 key: {{ .Values.postgres.urlSecret.key | default "databaseUrl" }}
-          - name: SPRING_DATASOURCE_USERNAME
+          - name: APPSERVER_JDBC_USERNAME
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.postgres.userSecret.name | default $secretName }}
                 key: {{ .Values.postgres.userSecret.key | default "databaseUser" }}
-          - name: SPRING_DATASOURCE_PASSWORD
+          - name: APPSERVER_JDBC_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.postgres.passwordSecret.name | default $secretName }}
                 key: {{ .Values.postgres.passwordSecret.key | default "databasePassword" }}
-          - name: SECURITY_RADAR_MANAGEMENTPORTAL_URL
+          - name: APPSERVER_HIBERNATE_DIALECT
+            value: {{ .Values.postgres.hibernateDialect }}
+          - name: APPSERVER_JDBC_DRIVER
+            value: {{ .Values.postgres.jdbcDriver }}
+          - name: MANAGEMENTPORTAL_BASE_URL
             value: "{{ .Values.managementportal_url }}"
           - name: GOOGLE_APPLICATION_CREDENTIALS
             value: /etc/google/firebase-adminsdk.json
@@ -110,41 +115,6 @@ spec:
                 name: {{ $secretName }}
                 key: smtpPassword
             {{- end }}
-          {{- end }}
-          {{- if .Values.upload.enabled }}
-          - name: RADAR_FILE_UPLOAD_ENABLED
-            value: {{ .Values.upload.enabled | quote }}
-          - name: SPRING_SERVLET_MULTIPART_ENABLED
-            value: "true"
-          - name: SPRING_SERVLET_MULTIPART_MAXFILESIZE
-            value: {{ .Values.upload.max_file_size | quote }}
-          - name: SPRING_SERVLET_MULTIPART_MAXREQUESTSIZE
-            value: {{ .Values.upload.max_file_size | quote }}
-          - name: RADAR_STORAGE_TYPE
-            value: {{ .Values.upload.storage.type | quote }}
-            {{- if eq .Values.upload.storage.type "s3" }}
-          - name: RADAR_STORAGE_S3_URL
-            value: {{ .Values.upload.storage.url | quote }}
-          - name: RADAR_STORAGE_S3_BUCKETNAME
-            value: {{ .Values.upload.storage.bucket_name | quote }}
-          - name: RADAR_STORAGE_S3_PATH_PREFIX
-            value: {{ .Values.upload.storage.path.prefix | quote }}
-          - name: RADAR_STORAGE_S3_PATH_COLLECTPERDAY
-            value: {{ .Values.upload.storage.path.collection_per_day | quote }}
-          - name: RADAR_STORAGE_S3_ACCESSKEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secretName }}
-                key: s3AccessKey
-          - name: RADAR_STORAGE_S3_SECRETKEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secretName }}
-                key: s3SecretKey
-            {{- end }}
-          {{- end }}
-          {{- with .Values.extraEnvVars }}
-            {{- toYaml . | nindent 10 }}
           {{- end }}
           imagePullPolicy: Always
           ports:

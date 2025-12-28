@@ -64,3 +64,11 @@ Selector labels
 app.kubernetes.io/name: {{ include "radar-appserver.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Create JavaOpts string
+*/}}
+{{- define "radar-appserver.javaOpts" -}}
+{{- .Values.javaOpts -}}
+{{- end -}}
+
