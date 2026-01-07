@@ -116,17 +116,17 @@ spec:
             value: "{{ .Values.managementportal.oauth_require_aal2 }}"
           - name: MANAGEMENTPORTAL_CATALOGUE_SERVER_SERVER_URL
             value: http://{{ .Values.catalogue_server }}:9010/source-types
-          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_ADMIN_EMAIL
+          - name: MANAGEMENTPORTAL_IDENTITYSERVER_ADMINEMAIL
             value: {{ .Values.identity_server.admin_email }}
-          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_URL
+          - name: MANAGEMENTPORTAL_IDENTITYSERVER_SERVERURL
             value: {{ tpl .Values.identity_server.server_url . }}
-          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_SERVER_ADMIN_URL
+          - name: MANAGEMENTPORTAL_IDENTITYSERVER_SERVERADMINURL
             value: {{ tpl .Values.identity_server.server_admin_url . }}
-          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_INTERNAL
+          - name: MANAGEMENTPORTAL_IDENTITYSERVER_INTERNAL
             value: {{ .Values.identity_server.internal | quote }}
-          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_USER_ACTIVATION_FLOW_TYPE
+          - name: MANAGEMENTPORTAL_IDENTITYSERVER_USER_ACTIVATION_FLOW_TYPE
             value: {{ .Values.identity_server.user_activation_flow_type | quote }}
-          - name: MANAGEMENTPORTAL_IDENTITY_SERVER_USER_ACTIVATION_METHOD
+          - name: MANAGEMENTPORTAL_IDENTITYSERVER_USER_ACTIVATION_METHOD
             value: {{ .Values.identity_server.user_activation_method | quote }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERURL
             value:  {{ tpl .Values.authserver.server_url . }}
