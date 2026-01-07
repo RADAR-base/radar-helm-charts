@@ -227,9 +227,11 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config/
+            {{- if .Values.authserver.internal }}
             - name: secrets-config
               mountPath: /secrets/
               # Otherwise: Unable to read header from OAuth clients file: java.nio.file.NoSuchFileException: /mp-includes/config/oauth_client_details.csv
+            {{ end }}
             - name: keystore
               mountPath: /mp-includes/config/
             {{- if .Values.postgres.ssl.enabled }}
@@ -240,9 +242,11 @@ spec:
         - name: config
           configMap:
             name: {{ include "management-portal.fullname" . }}
+        {{- if .Values.authserver.internal }}
         - name: secrets-config
           secret:
             secretName: {{ include "management-portal.fullname" . }}-config
+        {{ end }}
         - name: keystore
           secret:
             secretName: {{ include "management-portal.fullname" . }}-keystore
