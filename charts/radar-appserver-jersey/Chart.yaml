@@ -22,6 +22,8 @@ maintainers:
   - email: pauline.conde@kcl.ac.uk
     name: Pauline Conde
     url: https://www.kcl.ac.uk/people/pauline-conde
+  - email: aditya.mishra@kcl.ac.uk
+    name: Aditya Mishra
 dependencies:
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts

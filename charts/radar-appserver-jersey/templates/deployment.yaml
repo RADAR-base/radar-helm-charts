@@ -51,7 +51,7 @@ spec:
           {{- $secretName := include "radar-appserver.fullname" . }}
           env:
           - name: JAVA_OPTS
-            value: {{ include "radar-appserver.javaOpts" }}
+            value: {{ include "radar-appserver.javaOpts" . }}
           - name: APPSERVER_JDBC_URL
             valueFrom:
               secretKeyRef:
