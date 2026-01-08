@@ -91,25 +91,27 @@ spec:
                 name: {{ $secretName }}
                 key: githubClientToken
           {{- if .Values.smtp.enabled }}
-          - name: RADAR_NOTIFICATION_EMAIL_ENABLED
+          - name: RADAR_APPSERVER_NOTIFICATION_EMAIL_ENABLED
             value: {{ .Values.smtp.enabled | quote }}
-          - name: RADAR_NOTIFICATION_EMAIL_FROM
+          - name: RADAR_APPSERVER_NOTIFICATION_EMAIL_FROM
             value: {{ .Values.smtp.from }}
-          - name: SPRING_MAIL_HOST
+          - name: RADAR_APPSERVER_EMAIL_SMTP_HOST
             value: "{{ .Values.smtp.host }}"
-          - name: SPRING_MAIL_PORT
+          - name: RADAR_APPSERVER_EMAIL_SMTP_PORT
             value: {{ .Values.smtp.port | quote }}
-          - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
+          - name: RADAR_APPSERVER_EMAIL_TLS_ENABLED
             value: {{ .Values.smtp.starttls | quote }}
-          - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
-            value: {{ .Values.smtp.auth | quote }}
+          - name: RADAR_APPSERVER_EMAIL_CONNECT_TIMEOUT
+            value: {{ .Values.smtp.connect_timeout }}
+          - name: RADAR_APPSERVER_EMAIL_READ_TIMEOUT
+            value: {{ .Values.smtp.read_timeout }}
             {{ if .Values.smtp.auth }}
-          - name: SPRING_MAIL_USERNAME
+          - name: RADAR_APPSERVER_EMAIL_SMTP_USERNAME
             valueFrom:
               secretKeyRef:
                 name: {{ $secretName }}
                 key: smtpUsername
-          - name: SPRING_MAIL_PASSWORD
+          - name: RADAR_APPSERVER_EMAIL_SMTP_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ $secretName }}

@@ -284,6 +284,10 @@ smtp:
   starttls: false
   # -- set to true, if the account should be authenticated before sending emails
   auth: true
+  # -- Timeout (ms) for establishing TCP connection to server
+  connect_timeout: 10000
+  # -- Timeout (ms) for read operations (socket read timeout), waiting for server responses
+  read_timeout: 10000
 
 upload:
   # -- if set to true, file upload endpoint will be enabled
