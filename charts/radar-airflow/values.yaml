@@ -12,10 +12,8 @@ airflow:
 
       annotations:
         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-        # redirect nginx to port 8080
         nginx.ingress.kubernetes.io/backend-port: "8080"
-        #nginx.ingress.kubernetes.io/affinity: "cookie"
-        cert-manager.io/cluster-issuer: self-signed-issuer
+        cert-manager.io/cluster-issuer: letsencrypt-prod
 
       # The path for the API Server Ingress
       path: "/"
@@ -1979,19 +1977,6 @@ airflow:
       #   memory: 128Mi
       sslmode: "disable"
 
-      # supply the name of existing secret with PGBouncer connection URI containing
-      # stats user and password.
-      # you can load them to a k8s secret like the one below
-      #  apiVersion: v1
-      #  kind: Secret
-      #  metadata:
-      #    name: pgbouncer-stats-secret
-      #  data:
-      #     connection: postgresql://<stats user>:<password>@127.0.0.1:6543/pgbouncer?<connection params>
-      #  type: Opaque
-      #
-      #  statsSecretName: pgbouncer-stats-secret
-      #
       statsSecretName: ~
 
       # Key containing the PGBouncer connection URI, defaults to `connection` if not defined

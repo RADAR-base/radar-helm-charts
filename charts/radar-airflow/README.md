@@ -37,7 +37,7 @@ A Helm chart for Airflow used by RADAR-base
 | airflow.ingress.apiServer.enabled | bool | `true` |  |
 | airflow.ingress.apiServer.annotations."nginx.ingress.kubernetes.io/backend-protocol" | string | `"HTTP"` |  |
 | airflow.ingress.apiServer.annotations."nginx.ingress.kubernetes.io/backend-port" | string | `"8080"` |  |
-| airflow.ingress.apiServer.annotations."cert-manager.io/cluster-issuer" | string | `"self-signed-issuer"` |  |
+| airflow.ingress.apiServer.annotations."cert-manager.io/cluster-issuer" | string | `"letsencrypt-prod"` |  |
 | airflow.ingress.apiServer.path | string | `"/"` |  |
 | airflow.ingress.apiServer.pathType | string | `"ImplementationSpecific"` |  |
 | airflow.ingress.apiServer.host | string | `""` |  |
