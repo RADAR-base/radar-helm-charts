@@ -3,23 +3,23 @@
 # radar-appserver
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-appserver)](https://artifacthub.io/packages/helm/radar-base/radar-appserver)
 
-![Version: 0.10.2](https://img.shields.io/badge/Version-0.10.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.5](https://img.shields.io/badge/AppVersion-2.4.5-informational?style=flat-square)
+![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.7](https://img.shields.io/badge/AppVersion-2.4.7-informational?style=flat-square)
 
-A Helm chart for the backend application of RADAR-base Appserver Jersey
+A Helm chart for the backend application of RADAR-base Appserver
 
 **Homepage:** <https://radar-base.org>
 
 ## Maintainers
 
-| Name            | Email                       | Url                                            |
-|-----------------|-----------------------------|------------------------------------------------|
+| Name | Email | Url |
+| ---- | ------ | --- |
 | Yatharth Ranjan | <yatharth.ranjan@kcl.ac.uk> | <https://www.kcl.ac.uk/people/yatharth-ranjan> |
-| Pauline Conde   | <pauline.conde@kcl.ac.uk>   | <https://www.kcl.ac.uk/people/pauline-conde>   |
-| Aditya Mishra   | <aditya.mishra@kcl.ac.uk>   |                                                |
+| Pauline Conde | <pauline.conde@kcl.ac.uk> | <https://www.kcl.ac.uk/people/pauline-conde> |
+| Aditya Mishra | <aditya.mishra@kcl.ac.uk> |  |
 
 ## Source Code
 
-* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-appserver-jersey>
+* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-appserver>
 * <https://github.com/RADAR-base/RADAR-Appserver>
 
 ## Prerequisites
@@ -63,6 +63,7 @@ A Helm chart for the backend application of RADAR-base Appserver Jersey
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
+| javaOpts | string | `"-XX:GCTimeRatio=19 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=30 --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.management/javax.management.openmbean=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.management/javax.management=ALL-UNNAMED -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"` | Standard JAVA_OPTS that should be passed to this service |
 | extraEnvVars | list | `[]` | Extra environment variables |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
@@ -94,6 +95,8 @@ A Helm chart for the backend application of RADAR-base Appserver Jersey
 | postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database user (disables use of 'user' value). |
 | postgres.password | string | `nil` | password of the postgres user |
 | postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| postgres.hibernateDialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` |  |
+| postgres.jdbcDriver | string | `"org.postgresql.Driver"` |  |
 | postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
@@ -113,8 +116,8 @@ A Helm chart for the backend application of RADAR-base Appserver Jersey
 | smtp.from | string | `"noreply@example.com"` | Email address which should be used to send activation emails |
 | smtp.starttls | bool | `false` | set to true,if TTLS should be enabled |
 | smtp.auth | bool | `true` | set to true, if the account should be authenticated before sending emails |
-| smtp.connect_timeout                  | int | `10000`                                                              | Timeout (ms) for establishing TCP connection to server                                                                                            |
-| smtp.read_timeout                     | int | `10000`                                                              | Timeout (ms) for read operations (socket read timeout), waiting for server responses.                                                             |
+| smtp.connect_timeout | int | `10000` | Timeout (ms) for establishing TCP connection to server |
+| smtp.read_timeout | int | `10000` | Timeout (ms) for read operations (socket read timeout), waiting for server responses |
 | upload.enabled | bool | `false` | if set to true, file upload endpoint will be enabled |
 | upload.max_file_size | string | `"20MB"` | Maximum file size for upload. Can be any number followed by MB or GB. |
 | upload.storage.type | string | `"s3"` | Type of storage to use for file upload (s3) |

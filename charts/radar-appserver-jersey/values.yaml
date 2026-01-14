@@ -111,7 +111,7 @@ customLivenessProbe: {}
 
 livenessProbe:
   # -- Enable livenessProbe
-  enabled: false
+  enabled: true
   # -- Initial delay seconds for livenessProbe
   initialDelaySeconds: 5
   # -- Period seconds for livenessProbe
@@ -128,7 +128,7 @@ customReadinessProbe: {}
 
 readinessProbe:
   # -- Enable readinessProbe
-  enabled: false
+  enabled: true
   # -- Initial delay seconds for readinessProbe
   initialDelaySeconds: 5
   # -- Period seconds for readinessProbe
@@ -145,7 +145,7 @@ customStartupProbe: {}
 
 startupProbe:
   # -- Enable startupProbe
-  enabled: false
+  enabled: true
   # -- Initial delay seconds for startupProbe
   initialDelaySeconds: 5
   # -- Period seconds for startupProbe

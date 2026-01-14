@@ -71,4 +71,3 @@ Create JavaOpts string
 {{- define "radar-appserver.javaOpts" -}}
 {{- .Values.javaOpts -}}
 {{- end -}}
-
