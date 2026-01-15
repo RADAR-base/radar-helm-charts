@@ -75,21 +75,19 @@ spec:
             value: "{{ .Values.managementportal_url }}"
           - name: GOOGLE_APPLICATION_CREDENTIALS
             value: /etc/google/firebase-adminsdk.json
-          - name: RADAR_ADMIN_USER
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secretName }}
-                key: managementPortalClientId
-          - name: RADAR_ADMIN_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secretName }}
-                key: managementPortalClientSecret
           - name: SECURITY_GITHUB_CLIENT_TOKEN
             valueFrom:
               secretKeyRef:
                 name: {{ $secretName }}
                 key: githubClientToken
+          - name: RADAR_APPSERVER_RESOURCE_NAME
+            value: {{ .Values.managementportal_resource_name }}
+          - name: APPSERVER_ARMT_PROTOCOL_REPO
+            value: {{ .Values.protocol.githubProtocolRepo }}
+          - name: APPSERVER_ARMT_PROTOCOL_FILE_NAME
+            value: {{ .Values.protocol.protocolFileName }}
+          - name: APPSERVER_ARMT_PROTOCOL_BRANCH
+            value: {{ .Values.protocol.githubBranch }}
           {{- if .Values.smtp.enabled }}
           - name: RADAR_APPSERVER_NOTIFICATION_EMAIL_ENABLED
             value: {{ .Values.smtp.enabled | quote }}

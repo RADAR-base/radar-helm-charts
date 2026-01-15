@@ -100,8 +100,9 @@ A Helm chart for the backend application of RADAR-base Appserver
 | postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
-| radar_admin_user | string | `"radar"` |  |
-| radar_admin_password | string | `"radar"` |  |
+| protocol.githubProtocolRepo | string | `"RADAR-base/RADAR-aRMT-protocols"` |  |
+| protocol.protocolFileName | string | `"protocol.json"` |  |
+| protocol.githubBranch | string | `"master"` |  |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | serverName | string | `"localhost"` |  |
 | managementportal_resource_name | string | `"res_AppServer"` | radar_is.yml config for token verification |

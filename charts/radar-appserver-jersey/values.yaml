@@ -244,8 +244,10 @@ postgres:
     enabled: false
     keystorepassword: keystorepassword
 
-radar_admin_user: radar
-radar_admin_password: radar
+protocol:
+  githubProtocolRepo: RADAR-base/RADAR-aRMT-protocols
+  protocolFileName: protocol.json
+  githubBranch: master
 
 # -- URL of the Management Portal
 managementportal_url: http://management-portal:8080/managementportal
