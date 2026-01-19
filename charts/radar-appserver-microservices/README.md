@@ -36,15 +36,18 @@ A Helm chart for the backend application of RADAR-base Appserver
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| replicaCount | int | `2` | Number of radar-appserver replicas to deploy |
+| global.nameOverride | string | `""` | String to partially override appserver-microservices.fullname template with a string (will prepend the release name) |
+| global.fullnameOverride | string | `""` | String to fully override appserver-microservices.fullname template with a string |
+| global.replicaCount | int | `1` | Number of radar-appserver replicas to deploy |
+| global.imagePullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
+| global.nodeSelector | object | `{}` | Node labels for pod assignment |
+| global.tolerations | list | `[]` | Toleration labels for pod assignment |
+| global.affinity | object | `{}` | Affinity labels for pod assignment |
 | image.registry | string | `"ghcr.io"` | Image registry |
 | image.repository | string | `"radar-base/radar-appserver/radar-appserver"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
-| nameOverride | string | `""` | String to partially override radar-appserver.fullname template with a string (will prepend the release name) |
-| fullnameOverride | string | `""` | String to fully override radar-appserver.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure radar-appserver pods' Security Context |
 | securityContext | object | `{}` | Configure radar-appserver containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
@@ -59,9 +62,6 @@ A Helm chart for the backend application of RADAR-base Appserver
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
-| nodeSelector | object | `{}` | Node labels for pod assignment |
-| tolerations | list | `[]` | Toleration labels for pod assignment |
-| affinity | object | `{}` | Affinity labels for pod assignment |
 | extraEnvVars | list | `[]` | Extra environment variables |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |

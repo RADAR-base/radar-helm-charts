@@ -1,9 +1,25 @@
-# Default values for radar-appserver.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+global:
+  # -- String to partially override appserver-microservices.fullname template with a string (will prepend the release name)
+  nameOverride: ""
+  # -- String to fully override appserver-microservices.fullname template with a string
+  fullnameOverride: ""
+  # -- Number of radar-appserver replicas to deploy
+  replicaCount: 1
 
-# -- Number of radar-appserver replicas to deploy
-replicaCount: 2
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  imagePullSecrets: []
+
+  # -- Node labels for pod assignment
+  nodeSelector: { }
+  # -- Toleration labels for pod assignment
+  tolerations: [ ]
+  # -- Affinity labels for pod assignment
+  affinity: { }
 
 image:
   # -- Image registry
@@ -17,18 +33,6 @@ image:
   digest: ""
   # -- Image pull policy
   pullPolicy: IfNotPresent
-  # -- Optionally specify an array of imagePullSecrets.
-  # Secrets must be manually created in the namespace.
-  # e.g:
-  # pullSecrets:
-  #   - myRegistryKeySecretName
-  #
-  pullSecrets: []
-
-# -- String to partially override radar-appserver.fullname template with a string (will prepend the release name)
-nameOverride: ""
-# -- String to fully override radar-appserver.fullname template with a string
-fullnameOverride: ""
 
 # -- Configure radar-appserver pods' Security Context
 podSecurityContext: {}
@@ -88,15 +92,6 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
-
-# -- Node labels for pod assignment
-nodeSelector: {}
-
-# -- Toleration labels for pod assignment
-tolerations: []
-
-# -- Affinity labels for pod assignment
-affinity: {}
 
 # -- Extra environment variables
 extraEnvVars: []
