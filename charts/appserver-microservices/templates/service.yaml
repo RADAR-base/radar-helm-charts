@@ -1,3 +1,6 @@
+{{- $root := . -}}
+{{- range $name, $svc := $root.Values.services }}
+{{- if $svc.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -16,3 +19,6 @@ spec:
       name: http
   {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.podLabels .Values.commonLabels ) "context" . ) }}
   selector: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
+---
+{{- end }}
+{{- end }}

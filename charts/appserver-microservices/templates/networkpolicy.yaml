@@ -1,16 +1,20 @@
-{{- if .Values.networkpolicy }}
+{{- $root := . -}}
+{{- range $name, $svc := $root.Values.services }}
+{{- if and $svc.enabled $svc.networkpolicy }}
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: {{ template "common.names.fullname" . }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
-  {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  name: {{ include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
+  namespace: {{ include "common.names.namespace" $root | quote }}
+  labels: {{- include "appserver-microservices.labels" ( dict "root" $root "serviceName" $name ) | nindent 4 }}
+  {{- if $root.Values.global.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $root.Values.global.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
   podSelector:
     matchLabels:
-{{ include "radar-appserver.labels" . | indent 6 }}
-    {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
-{{- end -}}
+{{ include "appserver-microservices.labels" ( dict "root" $root "serviceName" $name ) | indent 6 }}
+{{- tpl (toYaml $svc.networkpolicy) .  | nindent 2 }}
+---
+{{- end }}
+{{- end }}
