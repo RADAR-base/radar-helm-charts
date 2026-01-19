@@ -52,7 +52,19 @@ spec:
             {{- toYaml $svc.securityContext | nindent 12 }}
           image: "{{ $svc.image.repository }}:{{ default $root.Chart.AppVersion $svc.image.tag }}"
           imagePullPolicy: {{ $svc.image.pullPolicy | quote }}
-          command: [ "gateway-service", "/etc/radar-appserver/gateway-service.yml" ]
+          {{- if $svc.command }}
+          command:
+          {{- toYaml $svc.command | nindent 10 }}
+          {{- end }}
+          {{- if or $svc.args (and $svc.config $svc.config.enabled) }}
+          args:
+          {{- if $svc.args }}
+          {{- toYaml $svc.args | nindent 10 }}
+          {{- end }}
+          {{- if and $svc.config $svc.config.enabled }}
+            - {{ default "/etc/radar-appserver/appserver.yaml" $svc.config.mountPath }}
+          {{- end }}
+          {{- end }}
           {{- $secretName := include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
           {{- with $svc.envMap }}
           env:
@@ -73,7 +85,7 @@ spec:
           {{- end }}
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: {{ default 8080 $svc.ports.containerPort }}
               protocol: TCP
           {{- if $svc.customLivenessProbe }}
           livenessProbe: {{- $svc.customLivenessProbe | toYaml | nindent 12 }}
@@ -119,19 +131,24 @@ spec:
           {{- end }}
           resources:
             {{- toYaml $svc.resources | nindent 12 }}
+          {{- with $svc.volumeMounts }}
           volumeMounts:
-            - name: config
-              mountPath: /etc/radar-appserver/
-            - name: secrets
-              mountPath: /etc/google/firebase-adminsdk.json
-              subPath: firebaseAdminSdkKey
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- if $svc.volumes }}
       volumes:
-        - name: config
+        {{- range $vol := $svc.volumes }}
+        - name: {{ $vol.name }}
+          {{- if $vol.configMap }}
           configMap:
-            name: {{ include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
-        - name: secrets
+            name: {{ include "appserver-microservices.serviceFullname" (dict "root" $root "serviceName" $name) }}
+          {{- end }}
+          {{- if $vol.secret }}
           secret:
-            secretName: {{ include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
+            secretName: {{ include "appserver-microservices.serviceFullname" (dict "root" $root "serviceName" $name) }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
       {{- with $svc.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

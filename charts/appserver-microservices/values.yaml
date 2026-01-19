@@ -54,6 +54,8 @@ services:
     ports:
       # -- appserver-microservices container port
       containerPort: 8080
+    # -- Command to run when starting the container.
+    command: "gateway-service"
     # -- Reconfigure Ingress to not force TLS
     disable_tls: false
     # -- The protocol in advertised URIs (https, http)
@@ -158,81 +160,44 @@ services:
       successThreshold: 1
       # -- Failure threshold for startupProbe
       failureThreshold: 30
-
-    # Configuration of the Postgres data base to store data from Appserver
-    postgres:
-      # -- host name of the postgres db
-      host:
-      # -- port of the postgres db
-      port:
-      # -- database name
-      database:
-      # -- Kubernetes secret containing the database JDBC Connection url
-      # (disables use of 'host', 'port' and 'database' values).
-      urlSecret:
-        name: radar-cloudnative-postgresql-appserver
-        key: jdbc-uri
-      # -- postgres user
-      user:
-      # -- Kubernetes secret containing the database user
-      # (disables use of 'user' value).
-      userSecret:
-        name: radar-cloudnative-postgresql-appserver
-        key: username
-      # -- password of the postgres user
-      password:
-      # -- Kubernetes secret containing the database password
-      # (disables use of 'password' value).
-      passwordSecret:
-        name: radar-cloudnative-postgresql-appserver
-        key: password
-
-      hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
-      jdbcDriver: org.postgresql.Driver
-
-      # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
-      # Ignored when using 'urlSecret'.
-      connection_parameters: ""
-      ssl:
-        # -- set to true of the connecting to postgres using SSL
-        enabled: false
-        keystorepassword: keystorepassword
-
     # -- URL of the Management Portal
     managementportal_url: http://management-portal:8080/managementportal
 
     # -- Contents of a gateway-service.yml configuration file
     # @default -- check `values.yaml`
     config:
-      resourceConfig: org.radarbase.appserver.microservices.gateway.enhancer.factory.GatewayServiceResourceEnhancerFactory
-      auth:
-        managementPortalUrl: http://management-portal:8081/managementportal
-        resourceName: res_AppServer
-      routes:
-        - name: project
-          path: projects
-          baseUrl: http://radar-appserver-project-service:9010/
-        - name: user
-          path:
-          baseUrl: http://radar-appserver-user-service:9013/
-        - name: github
-          path: github/content
-          baseUrl: http://radar-appserver-github-service:9011/
-        - name: protocol
-          path:
-          baseUrl: http://radar-appserver-protocol-service:9012/
-        - name: task
-          path:
-          baseUrl: http://radar-appserver-task-service:9014/
-        - name: messaging
-          path:
-          baseUrl: http://radar-appserver-messaging-service:9015/
-      server:
-        # Base URI of the application.
-        baseUri: http://localhost:8080
-        # Timeout for requests to the application.
-        requestTimeout: 30
-        isJmxEnabled: false
+      enabled: true
+      mouthPath: "/etc/radar-appserver/gateway-service.yml"
+      values:
+        resourceConfig: org.radarbase.appserver.microservices.gateway.enhancer.factory.GatewayServiceResourceEnhancerFactory
+        auth:
+          managementPortalUrl: http://management-portal:8081/managementportal
+          resourceName: res_AppServer
+        routes:
+          - name: project
+            path: projects
+            baseUrl: http://radar-appserver-project-service:9010/
+          - name: user
+            path:
+            baseUrl: http://radar-appserver-user-service:9013/
+          - name: github
+            path: github/content
+            baseUrl: http://radar-appserver-github-service:9011/
+          - name: protocol
+            path:
+            baseUrl: http://radar-appserver-protocol-service:9012/
+          - name: task
+            path:
+            baseUrl: http://radar-appserver-task-service:9014/
+          - name: messaging
+            path:
+            baseUrl: http://radar-appserver-messaging-service:9015/
+        server:
+          # Base URI of the application.
+          baseUri: http://localhost:8080
+          # Timeout for requests to the application.
+          requestTimeout: 30
+          isJmxEnabled: false
 
     # envMap = map of ENV_NAME -> { value: "..." }  OR -> { valueFrom: { secretKeyRef: {...} } }
     # @ignore
@@ -251,6 +216,16 @@ services:
         value: "http://radar-appserver-cloud-messaging-service:9015/"
       APPSERVER_MANAGEMENTPORTAL_BASE_URL:
         value: "http://management-portal:8080/managementportal"
+
+    # @ignore
+    volumes:
+      - name: config
+        configMap:
+          nameTemplate: serviceFullname
+    # @ignore
+    volumeMounts:
+      - name: config
+        mountPath: /etc/radar-appserver/
 
     # -- Network policy defines who can access this application and who this applications has access to
     # @default -- check `values.yaml`
@@ -371,3 +346,41 @@ services:
 #      value: {{ .Values.postgres.hibernateDialect }}
 #    - name: APPSERVER_JDBC_DRIVER
 #      value: {{ .Values.postgres.jdbcDriver }}
+    # Configuration of the Postgres data base to store data from Appserver
+    postgres:
+      # -- host name of the postgres db
+      host:
+      # -- port of the postgres db
+      port:
+      # -- database name
+      database:
+      # -- Kubernetes secret containing the database JDBC Connection url
+      # (disables use of 'host', 'port' and 'database' values).
+      urlSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: jdbc-uri
+      # -- postgres user
+      user:
+      # -- Kubernetes secret containing the database user
+      # (disables use of 'user' value).
+      userSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: username
+      # -- password of the postgres user
+      password:
+      # -- Kubernetes secret containing the database password
+      # (disables use of 'password' value).
+      passwordSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: password
+
+      hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbcDriver: org.postgresql.Driver
+
+      # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
+      # Ignored when using 'urlSecret'.
+      connection_parameters: ""
+      ssl:
+        # -- set to true of the connecting to postgres using SSL
+        enabled: false
+        keystorepassword: keystorepassword

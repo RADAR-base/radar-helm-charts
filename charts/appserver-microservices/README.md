@@ -54,6 +54,7 @@ A Helm chart for the backend application of RADAR-base Appserver
 | services.gateway-service.service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | services.gateway-service.service.port | int | `8080` | appserver-microservices service port |
 | services.gateway-service.ports.containerPort | int | `8080` | appserver-microservices container port |
+| services.gateway-service.command | string | `"gateway-service"` | Command to run when starting the container. |
 | services.gateway-service.disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
 | services.gateway-service.advertised_protocol | string | `"https"` | The protocol in advertised URIs (https, http) |
 | services.gateway-service.ingress.enabled | bool | `true` | Enable ingress controller resource |
@@ -90,6 +91,9 @@ A Helm chart for the backend application of RADAR-base Appserver
 | services.gateway-service.startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
 | services.gateway-service.startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
 | services.gateway-service.startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
+| services.gateway-service.managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
+| services.gateway-service.config | object | check `values.yaml` | Contents of a gateway-service.yml configuration file |
+| services.gateway-service.networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | services.gateway-service.postgres.host | string | `nil` | host name of the postgres db |
 | services.gateway-service.postgres.port | string | `nil` | port of the postgres db |
 | services.gateway-service.postgres.database | string | `nil` | database name |
@@ -103,6 +107,3 @@ A Helm chart for the backend application of RADAR-base Appserver
 | services.gateway-service.postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | services.gateway-service.postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | services.gateway-service.postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
-| services.gateway-service.managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
-| services.gateway-service.config | object | check `values.yaml` | Contents of a gateway-service.yml configuration file |
-| services.gateway-service.networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |

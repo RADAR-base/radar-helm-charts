@@ -1,3 +1,6 @@
+{{- $root := . -}}
+{{- range $name, $svc := .Values.services }}
+{{- if and $svc.enabled $svc.config (default true $svc.config.enabled) (or $svc.config.values $svc.config.data) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,17 +11,8 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data:
-  healthcheck.sh: |
-    #!/bin/sh
-    STATUS=$(curl -s --max-time 4 localhost:8080/actuator/health)
-    if ! (echo "$STATUS" | grep -Fq 'db":{"status":"UP'); then
-      exit 1
-    fi
-  radar_is.yml: |
-    resourceName: {{ .Values.managementportal_resource_name }}
-
-    # Set of supported public key endpoints for authentication
-    publicKeyEndpoints:
-        {{- range .Values.public_key_endpoints }}
-        - {{ . | quote }}
-        {{ end -}}
+  {{ $name }}.yml: |
+  {{ toYaml $svc.config.values | nindent 4 }}
+---
+{{- end }}
+{{- end }}
