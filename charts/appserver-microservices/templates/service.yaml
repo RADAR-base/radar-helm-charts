@@ -4,21 +4,21 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "common.names.fullname" . }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
-  {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  name: {{ include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
+  namespace: {{ include "common.names.namespace" $root | quote }}
+  labels: {{- include "appserver-microservices.labels" ( dict "root" $root "serviceName" $name ) | nindent 4 }}
+  {{- if $root.Values.global.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $root.Values.global.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ $svc.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
+    - port: {{ $svc.service.port }}
       targetPort: http
       protocol: TCP
       name: http
-  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.podLabels .Values.commonLabels ) "context" . ) }}
-  selector: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list $svc.podLabels $svc.commonLabels ) "context" . ) }}
+  selector: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $root ) | nindent 4 }}
 ---
 {{- end }}
 {{- end }}
