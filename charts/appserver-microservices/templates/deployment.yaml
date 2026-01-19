@@ -1,30 +1,35 @@
+{{- $root := . -}}
+{{- range $name, $svc := $root.Values.services }}
+{{- if $svc.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "common.names.fullname" . }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
-  {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  name: {{ include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
+  namespace: {{ include "common.names.namespace" $root | quote }}
+  labels: {{- include "appserver-microservices.labels" ( dict "root" $root "serviceName" $name ) | nindent 4 }}
+  {{- if $root.Values.global.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $root.Values.global.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas:  {{ default (default 1 $root.Values.global.replicaCount) $svc.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "radar-appserver.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "appserver-microservices.selectorLabels" (dict "root" $root "serviceName" $name) | nindent 6 }}
   template:
     metadata:
       annotations:
-        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+        checksum/configmap: {{ include (print $root.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $root.Template.BasePath "/secrets.yaml") . | sha256sum }}
       labels:
-        app.kubernetes.io/name: {{ include "radar-appserver.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "appserver-microservices.selectorLabels" (dict "root" $root "serviceName" $name) | nindent 8 }}
+        app.kubernetes.io/component: {{ $name }}
     spec:
-      {{- include "radar-appserver.imagePullSecrets" . | nindent 6 }}
+      {{- with $root.Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml $svc.podSecurityContext | nindent 8 }}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -35,166 +40,85 @@ spec:
                   - key: "app.kubernetes.io/name"
                     operator: In
                     values:
-                    - {{ template "radar-appserver.name" . }}
+                    - {{ include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
                   - key: "app.kubernetes.io/instance"
                     operator: In
                     values:
-                    - {{ .Release.Name }}
+                    - {{ $root.Release.Name }}
               topologyKey: "kubernetes.io/hostname"
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ $root.Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ template "radar-appserver.image" . }}
-          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
-          {{- $secretName := include "radar-appserver.fullname" . }}
+            {{- toYaml $svc.securityContext | nindent 12 }}
+          image: "{{ $svc.image.repository }}:{{ default $root.Chart.AppVersion $svc.image.tag }}"
+          imagePullPolicy: {{ $svc.image.pullPolicy | quote }}
+          command: [ "gateway-service", "/etc/radar-appserver/gateway-service.yml" ]
+          {{- $secretName := include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
+          {{- with $svc.envMap }}
           env:
-          - name: RADAR_IS_CONFIG_LOCATION
-            value: /etc/radar-appserver/radar_is.yml
-          - name: SPRING_DATASOURCE_URL
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.postgres.urlSecret.name | default $secretName }}
-                key: {{ .Values.postgres.urlSecret.key | default "databaseUrl" }}
-          - name: SPRING_DATASOURCE_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.postgres.userSecret.name | default $secretName }}
-                key: {{ .Values.postgres.userSecret.key | default "databaseUser" }}
-          - name: SPRING_DATASOURCE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.postgres.passwordSecret.name | default $secretName }}
-                key: {{ .Values.postgres.passwordSecret.key | default "databasePassword" }}
-          - name: SECURITY_RADAR_MANAGEMENTPORTAL_URL
-            value: "{{ .Values.managementportal_url }}"
-          - name: GOOGLE_APPLICATION_CREDENTIALS
-            value: /etc/google/firebase-adminsdk.json
-          - name: RADAR_ADMIN_USER
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secretName }}
-                key: managementPortalClientId
-          - name: RADAR_ADMIN_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secretName }}
-                key: managementPortalClientSecret
-          - name: SECURITY_GITHUB_CLIENT_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secretName }}
-                key: githubClientToken
-          {{- if .Values.smtp.enabled }}
-          - name: RADAR_NOTIFICATION_EMAIL_ENABLED
-            value: {{ .Values.smtp.enabled | quote }}
-          - name: RADAR_NOTIFICATION_EMAIL_FROM
-            value: {{ .Values.smtp.from }}
-          - name: SPRING_MAIL_HOST
-            value: "{{ .Values.smtp.host }}"
-          - name: SPRING_MAIL_PORT
-            value: {{ .Values.smtp.port | quote }}
-          - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
-            value: {{ .Values.smtp.starttls | quote }}
-          - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
-            value: {{ .Values.smtp.auth | quote }}
-            {{ if .Values.smtp.auth }}
-          - name: SPRING_MAIL_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secretName }}
-                key: smtpUsername
-          - name: SPRING_MAIL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secretName }}
-                key: smtpPassword
+            {{- if $svc.injectJavaOpts }}
+            - name: JAVA_OPTS
+              value: {{ include "appserver-microservices.javaOpts" $root | quote }}
+            {{- end }}
+            {{ range $key, $val := . }}
+            - name: {{ $key | quote}}
+              {{- if $val.value }}
+              value: {{ $val.value | quote }}
+              {{- else if $val.valueFrom }}
+              valueFrom: {{- $val.valueFrom | toYaml | nindent 14 }}
+              {{- else }}
+              value: ""
+              {{- end }}
             {{- end }}
           {{- end }}
-          {{- if .Values.upload.enabled }}
-          - name: RADAR_FILE_UPLOAD_ENABLED
-            value: {{ .Values.upload.enabled | quote }}
-          - name: SPRING_SERVLET_MULTIPART_ENABLED
-            value: "true"
-          - name: SPRING_SERVLET_MULTIPART_MAXFILESIZE
-            value: {{ .Values.upload.max_file_size | quote }}
-          - name: SPRING_SERVLET_MULTIPART_MAXREQUESTSIZE
-            value: {{ .Values.upload.max_file_size | quote }}
-          - name: RADAR_STORAGE_TYPE
-            value: {{ .Values.upload.storage.type | quote }}
-            {{- if eq .Values.upload.storage.type "s3" }}
-          - name: RADAR_STORAGE_S3_URL
-            value: {{ .Values.upload.storage.url | quote }}
-          - name: RADAR_STORAGE_S3_BUCKETNAME
-            value: {{ .Values.upload.storage.bucket_name | quote }}
-          - name: RADAR_STORAGE_S3_PATH_PREFIX
-            value: {{ .Values.upload.storage.path.prefix | quote }}
-          - name: RADAR_STORAGE_S3_PATH_COLLECTPERDAY
-            value: {{ .Values.upload.storage.path.collection_per_day | quote }}
-          - name: RADAR_STORAGE_S3_ACCESSKEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secretName }}
-                key: s3AccessKey
-          - name: RADAR_STORAGE_S3_SECRETKEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secretName }}
-                key: s3SecretKey
-            {{- end }}
-          {{- end }}
-          {{- with .Values.extraEnvVars }}
-            {{- toYaml . | nindent 10 }}
-          {{- end }}
-          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
-          {{- if .Values.customLivenessProbe }}
-          livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
-          {{- else if .Values.livenessProbe.enabled }}
+          {{- if $svc.customLivenessProbe }}
+          livenessProbe: {{- $svc.customLivenessProbe | toYaml | nindent 12 }}
+          {{- else if $svc.livenessProbe.enabled }}
           livenessProbe:
             exec:
               command:
               - /bin/sh
               - /etc/radar-appserver/healthcheck.sh
-            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-            successThreshold: {{ .Values.livenessProbe.successThreshold }}
-            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            initialDelaySeconds: {{ $svc.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $svc.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ $svc.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ $svc.livenessProbe.successThreshold }}
+            failureThreshold: {{ $svc.livenessProbe.failureThreshold }}
           {{- end }}
-          {{- if .Values.customReadinessProbe }}
-          readinessProbe: {{- .Values.customReadinessProbe | toYaml | nindent 12 }}
-          {{- else if .Values.readinessProbe.enabled }}
+          {{- if $svc.customReadinessProbe }}
+          readinessProbe: {{- $svc.customReadinessProbe | toYaml | nindent 12 }}
+          {{- else if $svc.readinessProbe.enabled }}
           readinessProbe:
             exec:
               command:
               - /bin/sh
               - /etc/radar-appserver/healthcheck.sh
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-            successThreshold: {{ .Values.readinessProbe.successThreshold }}
-            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ $svc.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $svc.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ $svc.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ $svc.readinessProbe.successThreshold }}
+            failureThreshold: {{ $svc.readinessProbe.failureThreshold }}
           {{- end }}
-          {{- if .Values.customStartupProbe }}
-          startupProbe: {{- .Values.customStartupProbe | toYaml | nindent 12 }}
-          {{- else if .Values.startupProbe.enabled }}
+          {{- if $svc.customStartupProbe }}
+          startupProbe: {{- $svc.customStartupProbe | toYaml | nindent 12 }}
+          {{- else if $svc.startupProbe.enabled }}
           startupProbe:
             exec:
               command:
               - /bin/sh
               - /etc/radar-appserver/healthcheck.sh
-            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
-            successThreshold: {{ .Values.startupProbe.successThreshold }}
-            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            initialDelaySeconds: {{ $svc.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ $svc.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ $svc.startupProbe.timeoutSeconds }}
+            successThreshold: {{ $svc.startupProbe.successThreshold }}
+            failureThreshold: {{ $svc.startupProbe.failureThreshold }}
           {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml $svc.resources | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /etc/radar-appserver/
@@ -204,19 +128,22 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "radar-appserver.fullname" . }}
+            name: {{ include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
         - name: secrets
           secret:
-            secretName: {{ include "radar-appserver.fullname" . }}
-      {{- with .Values.nodeSelector }}
+            secretName: {{ include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
+      {{- with $svc.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+    {{- with $svc.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with $svc.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+---
+{{- end }}
+{{- end }}

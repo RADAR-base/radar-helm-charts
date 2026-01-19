@@ -24,7 +24,7 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
-{{ /*
+{{/*
 Compute a name for a specific microservice.
 Usage:
   {{ include "appserver-microservices.serviceFullname" (dict "root" $root "serviceName" "api") }}
@@ -50,7 +50,7 @@ This helper expects a dict with keys "root" (the Helm root context) and "service
 */}}
 {{- define "appserver-microservices.labels" -}}
 helm.sh/chart: {{ include "appserver-microservices.chart" .root | quote }}
-{{ include "radar-appserver.selectorLabels" . }}
+{{ include "appserver-microservices.selectorLabels" . }}
 {{- with .root }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
@@ -67,7 +67,14 @@ Usage:
   {{ include "radar-appserver.selectorLabels" (dict "root" $root "serviceName" "api") }}
 This helper expects the same dict structure used by the labels helper.
 */}}
-{{- define "radar-appserver.selectorLabels" -}}
+{{- define "appserver-microservices.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "appserver-microservices.serviceFullname" . | quote }}
 app.kubernetes.io/instance: {{ .root.Release.Name | quote }}
 {{- end }}
+
+{{/*
+Create JavaOpts string
+*/}}
+{{- define "appserver-microservices.javaOpts" -}}
+{{- .Values.global.javaOpts -}}
+{{- end -}}

@@ -38,86 +38,71 @@ A Helm chart for the backend application of RADAR-base Appserver
 |-----|------|---------|-------------|
 | global.nameOverride | string | `""` | String to partially override appserver-microservices.fullname template with a string (will prepend the release name) |
 | global.fullnameOverride | string | `""` | String to fully override appserver-microservices.fullname template with a string |
-| global.replicaCount | int | `1` | Number of radar-appserver replicas to deploy |
+| global.replicaCount | int | `1` | Number of appserver microservices replicas to deploy |
+| global.javaOpts | string | `"-XX:GCTimeRatio=19 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=30 --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.management/javax.management.openmbean=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.management/javax.management=ALL-UNNAMED -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"` | Standard JAVA_OPTS that should be passed to this service |
 | global.imagePullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | global.nodeSelector | object | `{}` | Node labels for pod assignment |
 | global.tolerations | list | `[]` | Toleration labels for pod assignment |
 | global.affinity | object | `{}` | Affinity labels for pod assignment |
-| image.registry | string | `"ghcr.io"` | Image registry |
-| image.repository | string | `"radar-base/radar-appserver/radar-appserver"` | Image repository |
-| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
-| image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
-| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
-| podSecurityContext | object | `{}` | Configure radar-appserver pods' Security Context |
-| securityContext | object | `{}` | Configure radar-appserver containers' Security Context |
-| service.type | string | `"ClusterIP"` | Kubernetes Service type |
-| service.port | int | `8080` | radar-appserver port |
-| disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
-| advertised_protocol | string | `"https"` | The protocol in advertised URIs (https, http) |
-| ingress.enabled | bool | `true` | Enable ingress controller resource |
-| ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and session configuration |
-| ingress.path | string | `"/appserver/?(.*)"` | Path within the url structure |
-| ingress.pathType | string | `"ImplementationSpecific"` | Ingress path type |
-| ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
-| ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
-| ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
-| resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
-| extraEnvVars | list | `[]` | Extra environment variables |
-| customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
-| livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
-| livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
-| livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
-| livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
-| livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
-| customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
-| readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
-| readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
-| readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
-| readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
-| readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
-| customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
-| startupProbe.enabled | bool | `true` | Enable startupProbe |
-| startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
-| startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
-| startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
-| startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
-| startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
-| networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
-| postgres.host | string | `nil` | host name of the postgres db |
-| postgres.port | string | `nil` | port of the postgres db |
-| postgres.database | string | `nil` | database name |
-| postgres.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'host', 'port' and 'database' values). |
-| postgres.user | string | `nil` | postgres user |
-| postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database user (disables use of 'user' value). |
-| postgres.password | string | `nil` | password of the postgres user |
-| postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
-| postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
-| postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
-| postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
-| radar_admin_user | string | `"radar"` |  |
-| radar_admin_password | string | `"radar"` |  |
-| managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
-| serverName | string | `"localhost"` |  |
-| managementportal_resource_name | string | `"res_AppServer"` | radar_is.yml config for token verification |
-| public_key_endpoints | list | `["http://management-portal:8080/managementportal/oauth/token_key"]` | List of OAuth2 authentication server public key endpoints for token verification |
-| google_application_credentials | string | `""` | Google credentials containing FCM server key, etc. |
-| github_client_token | string | `""` | Github client token which is used for authenticating requests |
-| smtp.enabled | bool | `false` | set to true, if sending of notifications via email should be enabled. |
-| smtp.host | string | `"smtp"` | Hostname of the SMTP server |
-| smtp.port | int | `25` | Port of the SMTP server |
-| smtp.username | string | `"username"` | Username of the SMTP server |
-| smtp.password | string | `"secret"` | Password of the SMTP server |
-| smtp.from | string | `"noreply@example.com"` | Email address which should be used to send activation emails |
-| smtp.starttls | bool | `false` | set to true,if TTLS should be enabled |
-| smtp.auth | bool | `true` | set to true, if the account should be authenticated before sending emails |
-| upload.enabled | bool | `false` | if set to true, file upload endpoint will be enabled |
-| upload.max_file_size | string | `"20MB"` | Maximum file size for upload. Can be any number followed by MB or GB. |
-| upload.storage.type | string | `"s3"` | Type of storage to use for file upload (s3) |
-| upload.storage.url | string | `"http://minio-headless:9000"` | Internal url to storage |
-| upload.storage.bucket_name | string | `"radar-output-storage"` | Bucket name of the S3 storage |
-| upload.storage.access_key | string | `"secret"` | Access key of the S3 storage |
-| upload.storage.secret_key | string | `"secret"` | Secret key of the S3 storage |
-| upload.storage.path.prefix | string | `"output"` | Prefix for the path in the storage; will become <bucket>/<prefix>/<project>/<subject>/<topic> |
-| upload.storage.path.collection_per_day | bool | `false` | if set to true, a new folder will be created for each day |
+| services.gateway-service.enabled | bool | `true` |  |
+| services.gateway-service.replicaCount | int | `1` | Number of appserver microservices replicas to deploy |
+| services.gateway-service.image.repository | string | `"ghcr.io/radar-base/radar-appserver/gateway-service"` | Image repository |
+| services.gateway-service.image.tag | string | `nil` | Image tag (immutable tags are recommended) |
+| services.gateway-service.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| services.gateway-service.podSecurityContext | object | `{}` | Configure radar-appserver pods' Security Context |
+| services.gateway-service.securityContext | object | `{}` | Configure radar-appserver containers' Security Context |
+| services.gateway-service.service.type | string | `"ClusterIP"` | Kubernetes Service type |
+| services.gateway-service.service.port | int | `8080` | appserver-microservices service port |
+| services.gateway-service.ports.containerPort | int | `8080` | appserver-microservices container port |
+| services.gateway-service.disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
+| services.gateway-service.advertised_protocol | string | `"https"` | The protocol in advertised URIs (https, http) |
+| services.gateway-service.ingress.enabled | bool | `true` | Enable ingress controller resource |
+| services.gateway-service.ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and session configuration |
+| services.gateway-service.ingress.path | string | `"/appserver/?(.*)"` | Path within the url structure |
+| services.gateway-service.ingress.pathType | string | `"ImplementationSpecific"` | Ingress path type |
+| services.gateway-service.ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
+| services.gateway-service.ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
+| services.gateway-service.ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
+| services.gateway-service.resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
+| services.gateway-service.nodeSelector | object | `{}` | Node labels for pod assignment |
+| services.gateway-service.tolerations | list | `[]` | Toleration labels for pod assignment |
+| services.gateway-service.affinity | object | `{}` | Affinity labels for pod assignment |
+| services.gateway-service.extraEnvVars | list | `[]` | Extra environment variables |
+| services.gateway-service.injectJavaOpts | bool | `true` |  |
+| services.gateway-service.customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
+| services.gateway-service.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| services.gateway-service.livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
+| services.gateway-service.livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
+| services.gateway-service.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| services.gateway-service.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| services.gateway-service.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| services.gateway-service.customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
+| services.gateway-service.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| services.gateway-service.readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
+| services.gateway-service.readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
+| services.gateway-service.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| services.gateway-service.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| services.gateway-service.readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| services.gateway-service.customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
+| services.gateway-service.startupProbe.enabled | bool | `true` | Enable startupProbe |
+| services.gateway-service.startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
+| services.gateway-service.startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
+| services.gateway-service.startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
+| services.gateway-service.startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
+| services.gateway-service.startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
+| services.gateway-service.postgres.host | string | `nil` | host name of the postgres db |
+| services.gateway-service.postgres.port | string | `nil` | port of the postgres db |
+| services.gateway-service.postgres.database | string | `nil` | database name |
+| services.gateway-service.postgres.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'host', 'port' and 'database' values). |
+| services.gateway-service.postgres.user | string | `nil` | postgres user |
+| services.gateway-service.postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database user (disables use of 'user' value). |
+| services.gateway-service.postgres.password | string | `nil` | password of the postgres user |
+| services.gateway-service.postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| services.gateway-service.postgres.hibernateDialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` |  |
+| services.gateway-service.postgres.jdbcDriver | string | `"org.postgresql.Driver"` |  |
+| services.gateway-service.postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
+| services.gateway-service.postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
+| services.gateway-service.postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
+| services.gateway-service.managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
+| services.gateway-service.config | object | check `values.yaml` | Contents of a gateway-service.yml configuration file |
+| services.gateway-service.networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
