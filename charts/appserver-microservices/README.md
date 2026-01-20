@@ -265,3 +265,159 @@ A Helm chart for the backend application of RADAR-base Appserver
 | services.task-service.managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | services.task-service.config | object | check `values.yaml` | Contents of a gateway-service.yml configuration file |
 | services.task-service.networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
+| services.cloud-mesaging-service.enabled | bool | `true` |  |
+| services.cloud-mesaging-service.replicaCount | int | `1` | Number of appserver microservices replicas to deploy |
+| services.cloud-mesaging-service.image.repository | string | `"ghcr.io/radar-base/radar-appserver/cloud-messaging-service"` | Image repository |
+| services.cloud-mesaging-service.image.tag | string | `nil` | Image tag (immutable tags are recommended) |
+| services.cloud-mesaging-service.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| services.cloud-mesaging-service.podSecurityContext | object | `{}` | Configure radar-appserver pods' Security Context |
+| services.cloud-mesaging-service.securityContext | object | `{}` | Configure radar-appserver containers' Security Context |
+| services.cloud-mesaging-service.service.type | string | `"ClusterIP"` | Kubernetes Service type |
+| services.cloud-mesaging-service.service.port | int | `9015` | appserver-microservices service port |
+| services.cloud-mesaging-service.ports.containerPort | int | `9015` | appserver-microservices container port |
+| services.cloud-mesaging-service.command | string | `"cloud-messaging-service"` | Command to run when starting the container. |
+| services.cloud-mesaging-service.disable_tls | bool | `true` | Reconfigure Ingress to not force TLS |
+| services.cloud-mesaging-service.advertised_protocol | string | `"http"` | The protocol in advertised URIs (https, http) |
+| services.cloud-mesaging-service.ingress.enabled | bool | `false` | Enable ingress controller resource |
+| services.cloud-mesaging-service.resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
+| services.cloud-mesaging-service.nodeSelector | object | `{}` | Node labels for pod assignment |
+| services.cloud-mesaging-service.tolerations | list | `[]` | Toleration labels for pod assignment |
+| services.cloud-mesaging-service.affinity | object | `{}` | Affinity labels for pod assignment |
+| services.cloud-mesaging-service.extraEnvVars | list | `[]` | Extra environment variables |
+| services.cloud-mesaging-service.postgres.host | string | `nil` | host name of the postgres db |
+| services.cloud-mesaging-service.postgres.port | string | `nil` | port of the postgres db |
+| services.cloud-mesaging-service.postgres.database | string | `nil` | database name |
+| services.cloud-mesaging-service.postgres.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'host', 'port' and 'database' values). |
+| services.cloud-mesaging-service.postgres.user | string | `nil` | postgres user |
+| services.cloud-mesaging-service.postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database user (disables use of 'user' value). |
+| services.cloud-mesaging-service.postgres.password | string | `nil` | password of the postgres user |
+| services.cloud-mesaging-service.postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| services.cloud-mesaging-service.postgres.hibernateDialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` |  |
+| services.cloud-mesaging-service.postgres.jdbcDriver | string | `"org.postgresql.Driver"` |  |
+| services.cloud-mesaging-service.postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
+| services.cloud-mesaging-service.postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
+| services.cloud-mesaging-service.postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
+| services.cloud-mesaging-service.injectJavaOpts | bool | `true` |  |
+| services.cloud-mesaging-service.google_application_credentials | string | `""` | Google credentials containing FCM server key, etc. |
+| services.cloud-mesaging-service.smtp.enabled | bool | `false` | set to true, if sending of notifications via email should be enabled. |
+| services.cloud-mesaging-service.smtp.host | string | `"smtp"` | Hostname of the SMTP server |
+| services.cloud-mesaging-service.smtp.port | int | `25` | Port of the SMTP server |
+| services.cloud-mesaging-service.smtp.username | string | `"username"` | Username of the SMTP server |
+| services.cloud-mesaging-service.smtp.password | string | `"secret"` | Password of the SMTP server |
+| services.cloud-mesaging-service.smtp.from | string | `"noreply@example.com"` | Email address which should be used to send activation emails |
+| services.cloud-mesaging-service.smtp.starttls | bool | `false` | set to true,if TTLS should be enabled |
+| services.cloud-mesaging-service.smtp.auth | bool | `true` | set to true, if the account should be authenticated before sending emails |
+| services.cloud-mesaging-service.smtp.connect_timeout | int | `10000` | Timeout (ms) for establishing TCP connection to server |
+| services.cloud-mesaging-service.smtp.read_timeout | int | `10000` | Timeout (ms) for read operations (socket read timeout), waiting for server responses |
+| services.cloud-mesaging-service.customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
+| services.cloud-mesaging-service.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| services.cloud-mesaging-service.livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
+| services.cloud-mesaging-service.livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
+| services.cloud-mesaging-service.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| services.cloud-mesaging-service.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| services.cloud-mesaging-service.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| services.cloud-mesaging-service.customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
+| services.cloud-mesaging-service.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| services.cloud-mesaging-service.readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
+| services.cloud-mesaging-service.readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
+| services.cloud-mesaging-service.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| services.cloud-mesaging-service.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| services.cloud-mesaging-service.readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| services.cloud-mesaging-service.customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
+| services.cloud-mesaging-service.startupProbe.enabled | bool | `true` | Enable startupProbe |
+| services.cloud-mesaging-service.startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
+| services.cloud-mesaging-service.startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
+| services.cloud-mesaging-service.startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
+| services.cloud-mesaging-service.startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
+| services.cloud-mesaging-service.startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
+| services.cloud-mesaging-service.managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
+| services.cloud-mesaging-service.config | object | check `values.yaml` | Contents of a gateway-service.yml configuration file |
+| services.cloud-mesaging-service.networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
+| services.github-service.enabled | bool | `true` |  |
+| services.github-service.replicaCount | int | `1` | Number of appserver microservices replicas to deploy |
+| services.github-service.image.repository | string | `"ghcr.io/radar-base/radar-appserver/github-service"` | Image repository |
+| services.github-service.image.tag | string | `nil` | Image tag (immutable tags are recommended) |
+| services.github-service.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| services.github-service.podSecurityContext | object | `{}` | Configure radar-appserver pods' Security Context |
+| services.github-service.securityContext | object | `{}` | Configure radar-appserver containers' Security Context |
+| services.github-service.service.type | string | `"ClusterIP"` | Kubernetes Service type |
+| services.github-service.service.port | int | `9011` | appserver-microservices service port |
+| services.github-service.ports.containerPort | int | `9011` | appserver-microservices container port |
+| services.github-service.command | string | `"github-service"` | Command to run when starting the container. |
+| services.github-service.disable_tls | bool | `true` | Reconfigure Ingress to not force TLS |
+| services.github-service.advertised_protocol | string | `"http"` | The protocol in advertised URIs (https, http) |
+| services.github-service.ingress.enabled | bool | `false` | Enable ingress controller resource |
+| services.github-service.resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
+| services.github-service.nodeSelector | object | `{}` | Node labels for pod assignment |
+| services.github-service.tolerations | list | `[]` | Toleration labels for pod assignment |
+| services.github-service.affinity | object | `{}` | Affinity labels for pod assignment |
+| services.github-service.extraEnvVars | list | `[]` | Extra environment variables |
+| services.github-service.injectJavaOpts | bool | `true` |  |
+| services.github-service.customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
+| services.github-service.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| services.github-service.livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
+| services.github-service.livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
+| services.github-service.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| services.github-service.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| services.github-service.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| services.github-service.customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
+| services.github-service.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| services.github-service.readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
+| services.github-service.readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
+| services.github-service.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| services.github-service.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| services.github-service.readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| services.github-service.customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
+| services.github-service.startupProbe.enabled | bool | `true` | Enable startupProbe |
+| services.github-service.startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
+| services.github-service.startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
+| services.github-service.startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
+| services.github-service.startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
+| services.github-service.startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
+| services.github-service.managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
+| services.github-service.config | object | check `values.yaml` | Contents of a gateway-service.yml configuration file |
+| services.github-service.networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
+| services.protocol-service.enabled | bool | `true` |  |
+| services.protocol-service.replicaCount | int | `1` | Number of appserver microservices replicas to deploy |
+| services.protocol-service.image.repository | string | `"ghcr.io/radar-base/radar-appserver/protocol-service"` | Image repository |
+| services.protocol-service.image.tag | string | `nil` | Image tag (immutable tags are recommended) |
+| services.protocol-service.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| services.protocol-service.podSecurityContext | object | `{}` | Configure radar-appserver pods' Security Context |
+| services.protocol-service.securityContext | object | `{}` | Configure radar-appserver containers' Security Context |
+| services.protocol-service.service.type | string | `"ClusterIP"` | Kubernetes Service type |
+| services.protocol-service.service.port | int | `9012` | appserver-microservices service port |
+| services.protocol-service.ports.containerPort | int | `9012` | appserver-microservices container port |
+| services.protocol-service.command | string | `"protocol-service"` | Command to run when starting the container. |
+| services.protocol-service.disable_tls | bool | `true` | Reconfigure Ingress to not force TLS |
+| services.protocol-service.advertised_protocol | string | `"http"` | The protocol in advertised URIs (https, http) |
+| services.protocol-service.ingress.enabled | bool | `false` | Enable ingress controller resource |
+| services.protocol-service.resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
+| services.protocol-service.nodeSelector | object | `{}` | Node labels for pod assignment |
+| services.protocol-service.tolerations | list | `[]` | Toleration labels for pod assignment |
+| services.protocol-service.affinity | object | `{}` | Affinity labels for pod assignment |
+| services.protocol-service.extraEnvVars | list | `[]` | Extra environment variables |
+| services.protocol-service.injectJavaOpts | bool | `true` |  |
+| services.protocol-service.customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
+| services.protocol-service.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
+| services.protocol-service.livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
+| services.protocol-service.livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
+| services.protocol-service.livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| services.protocol-service.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
+| services.protocol-service.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
+| services.protocol-service.customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
+| services.protocol-service.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
+| services.protocol-service.readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
+| services.protocol-service.readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
+| services.protocol-service.readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| services.protocol-service.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
+| services.protocol-service.readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| services.protocol-service.customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
+| services.protocol-service.startupProbe.enabled | bool | `true` | Enable startupProbe |
+| services.protocol-service.startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
+| services.protocol-service.startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
+| services.protocol-service.startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
+| services.protocol-service.startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
+| services.protocol-service.startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
+| services.protocol-service.managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
+| services.protocol-service.config | object | check `values.yaml` | Contents of a gateway-service.yml configuration file |
+| services.protocol-service.networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
