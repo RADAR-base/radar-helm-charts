@@ -1,0 +1,75 @@
+# AWS/ATHENA CONFIGURATION
+kubecostProductConfigs:
+  athenaBucketName: s3://aws-athena-query-results-phidatalab
+  athenaDatabase: athenacurcfn_phidatalab
+  athenaProjectID: "030783174579"
+  athenaRegion: eu-west-2
+  athenaTable: phidatalab
+  athenaWorkgroup: primary
+  awsSpotDataBucket: phidatalab-spot-instance-data-feed
+  awsSpotDataRegion: eu-west-2
+  clusters:
+    - address: http://127.0.0.1:9090
+      name: dev-cluster-1
+  serviceKeySecretName: cloud-service-key
+  spotLabel: eks.amazonaws.com/capacityType
+  spotLabelValue: SPOT
+
+# Grafana component
+grafana:
+  enabled: false  # Using this setting but pod still exists
+  resources:
+    requests:
+      cpu: 10m
+      memory: 164Mi  
+    limits:
+      cpu: 100m       
+      memory: 256Mi   
+
+# NETWORK COSTS CONFIGURATION
+networkCosts:
+  enabled: true
+  replicas: 4
+  resources:
+    requests:
+      cpu: 50m        
+      memory: 20Mi    
+    limits:
+      cpu: 100m       
+      memory: 256Mi   
+
+# PROMETHEUS SERVER CONFIGURATION
+prometheus:
+  server:
+    global:
+      external_labels:
+        cluster_id: dev-cluster-1
+    resources:
+      requests:
+        cpu: 50m
+        memory: 181Mi   
+      limits:
+        cpu: 100m       
+        memory: 256Mi   
+
+# COST ANALYZER CONFIGURATION
+kubecostModel:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 2500Mi  
+    limits:
+      cpu: 200m      
+      memory: 3072Mi  
+
+# FORECASTING CONFIGURATION
+forecasting:
+  enabled: true
+  resources:
+    requests:
+      cpu: 10m
+      memory: 150Mi  
+    limits:
+      cpu: 200m       
+      memory: 512Mi   
+
