@@ -7,9 +7,9 @@ replicaCount: 2
 
 image:
   # -- Image registry
-  registry: docker.io
+  registry: ghcr.io
   # -- Image repository
-  repository: radarbase/radar-gateway
+  repository: radar-base/radar-gateway/radar-gateway
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:
@@ -141,7 +141,7 @@ livenessProbe:
   # -- Enable livenessProbe
   enabled: true
   # -- Initial delay seconds for livenessProbe
-  initialDelaySeconds: 10
+  initialDelaySeconds: 5
   # -- Period seconds for livenessProbe
   periodSeconds: 30
   # -- Timeout seconds for livenessProbe
@@ -158,7 +158,7 @@ readinessProbe:
   # -- Enable readinessProbe
   enabled: true
   # -- Initial delay seconds for readinessProbe
-  initialDelaySeconds: 10
+  initialDelaySeconds: 5
   # -- Period seconds for readinessProbe
   periodSeconds: 30
   # -- Timeout seconds for readinessProbe
@@ -167,6 +167,23 @@ readinessProbe:
   successThreshold: 1
   # -- Failure threshold for readinessProbe
   failureThreshold: 3
+
+# -- Custom startupProbe that overrides the default one
+customStartupProbe: {}
+
+startupProbe:
+  # -- Enable startupProbe
+  enabled: true
+  # -- Initial delay seconds for startupProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for startupProbe
+  periodSeconds: 10
+  # -- Timeout seconds for startupProbe
+  timeoutSeconds: 10
+  # -- Success threshold for startupProbe
+  successThreshold: 1
+  # -- Failure threshold for startupProbe
+  failureThreshold: 30
 
 # -- Network policy defines who can access this application and who this applications has access to
 # @default -- check `values.yaml`
@@ -189,13 +206,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-kafka'
+          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-schema-registry'
+          app.kubernetes.io/name: 'radar-kafka-schema-registry'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -219,6 +236,15 @@ serviceMonitor:
   # -- Enable metrics to be collected via Prometheus-operator
   enabled: true
 
+jmxExporter:
+  resources: {}
+#    requests:
+#      cpu: 100m
+#      memory: 64Mi
+#    limits: {}
+#      cpu: 200m
+#      memory: 256Mi
+
 hpa:
   # -- Enable HPA
   enabled: true
@@ -230,20 +256,40 @@ hpa:
 # -- URL of the management portal application
 managementportal_url: http://management-portal:8080/managementportal
 # -- Schema Registry URL
-schemaRegistry: http://cp-schema-registry:8081
+schemaRegistry: http://radar-kafka-schema-registry:8081
 # -- Not used. To be confirmed
 max_requests: 1000
 # -- Kafka broker URLs
-bootstrapServers: cp-kafka-headless:9092
+bootstrapServers: radar-kafka-kafka-bootstrap:9094
 # -- set to true, if sources in access token should be validated
 checkSourceId: true
 # -- Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs.
-adminProperties: {}
+adminProperties:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  security.protocol: SASL_PLAINTEXT
+  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  sasl.mechanism: SCRAM-SHA-512
 # -- Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs.
 producerProperties:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  security.protocol: SASL_PLAINTEXT
+  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  sasl.mechanism: SCRAM-SHA-512
   compression.type: lz4
 # -- Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSetDeConfig].
 serializationProperties: {}
+
+secret:
+  admin:
+    # -- Secret for the Kafka SASL JAAS configuration
+    jaas:
+      name: shared-service-user
+      key: sasl.jaas.config
+  producer:
+    # -- Secret for the Kafka SASL JAAS configuration
+    jaas:
+      name: shared-service-user
+      key: sasl.jaas.config
 
 # -- Additional gateway server properties
 serverProperties:

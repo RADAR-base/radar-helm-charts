@@ -168,6 +168,7 @@ kratos:
         default_browser_return_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/managementportal'
         allowed_return_urls:
           - '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/'
+          - 'http://{{ .Values.server_name }}/'
 
         methods:
           password:

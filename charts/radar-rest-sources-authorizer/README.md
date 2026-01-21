@@ -3,7 +3,7 @@
 # radar-rest-sources-authorizer
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-authorizer)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-authorizer)
 
-![Version: 2.2.3](https://img.shields.io/badge/Version-2.2.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.8](https://img.shields.io/badge/AppVersion-4.4.8-informational?style=flat-square)
+![Version: 2.3.1](https://img.shields.io/badge/Version-2.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.11](https://img.shields.io/badge/AppVersion-4.4.11-informational?style=flat-square)
 
 A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer which is a portal to authorize the Fitbit connector to read data from Fitbit accounts.
 
@@ -36,8 +36,8 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-rest-sources-authorizer replicas to deploy |
-| image.registry | string | `"docker.io"` | Image registry |
-| image.repository | string | `"radarbase/radar-rest-source-authorizer"` | Image repository |
+| image.registry | string | `"ghcr.io"` | Image registry |
+| image.repository | string | `"radar-base/radar-rest-source-auth/radar-rest-source-authorizer"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
@@ -76,6 +76,13 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 | readinessProbe.timeoutSeconds | int | `3` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
+| startupProbe.enabled | bool | `true` | Enable startupProbe |
+| startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
+| startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
+| startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
+| startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
+| startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | clientId | string | `"radar_rest_sources_authorizer"` | OAuth2 client id of the application registered in Management Portal. It is assumed that this is a public client with empty client secret. |
 | serverName | string | `"localhost"` | Domain name of the server |

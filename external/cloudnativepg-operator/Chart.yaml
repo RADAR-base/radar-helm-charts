@@ -1,39 +1,25 @@
-#
-# Copyright The CloudNativePG Contributors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 apiVersion: v2
-name: cloudnative-pg
+appVersion: 1.26.0
+dependencies:
+- alias: monitoring
+  condition: monitoring.grafanaDashboard.create
+  name: cluster
+  repository: https://cloudnative-pg.github.io/grafana-dashboards
+  version: "0.0"
 description: CloudNativePG Operator Helm Chart
-icon: https://raw.githubusercontent.com/cloudnative-pg/artwork/main/cloudnativepg-logo.svg
-type: application
-version: "0.23.2"
-# This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application. Versions are not expected to
-# follow Semantic Versioning, they should reflect the version the application is using.
-# It is recommended to use it with quotes.
-appVersion: "1.25.1"
-sources:
-  - https://github.com/cloudnative-pg/charts
-keywords:
-  - operator
-  - controller
-  - postgresql
-  - postgres
-  - database
 home: https://cloudnative-pg.io
+icon: https://raw.githubusercontent.com/cloudnative-pg/artwork/main/cloudnativepg-logo.svg
+keywords:
+- operator
+- controller
+- postgresql
+- postgres
+- database
 maintainers:
-  - name: phisco
-    email: p.scorsolini@gmail.com
-
+- email: p.scorsolini@gmail.com
+  name: phisco
+name: cloudnative-pg
+sources:
+- https://github.com/cloudnative-pg/charts
+type: application
+version: 0.24.0

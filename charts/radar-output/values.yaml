@@ -7,9 +7,9 @@ replicaCount: 1
 
 image:
   # -- Image registry
-  registry: docker.io
+  registry: ghcr.io
   # -- Image repository
-  repository: radarbase/radar-output-restructure
+  repository: radar-base/radar-output-restructure/radar-output-restructure
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:
@@ -97,7 +97,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'redis'
+          app.kubernetes.io/name: 'radar-redis'
   - to:
     - namespaceSelector:
         matchLabels:
@@ -209,7 +209,7 @@ target:
 
 redis:
   # -- URL of the redis database
-  uri: redis://redis-master:6379
+  uri: redis://radar-redis-replication-master:6379
 
 worker:
   # -- Scanning interval (seconds)

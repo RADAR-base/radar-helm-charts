@@ -19,7 +19,6 @@ data:
 
     # Set of supported public key endpoints for authentication
     publicKeyEndpoints:
-        - {{ printf "%s://%s/managementportal/oauth/token_key" .Values.advertised_protocol .Values.serverName | quote }}
         {{- range .Values.public_key_endpoints }}
         - {{ . | quote }}
         {{ end -}}

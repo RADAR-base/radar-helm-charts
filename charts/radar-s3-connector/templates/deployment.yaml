@@ -122,6 +122,27 @@ spec:
               secretKeyRef:
                 name: {{ template "radar-s3-connector.fullname" . }}
                 key: schemaRegistryCredential
+          {{- else }}
+            {{- with .Values.kafka.security.env }}
+              {{- toYaml . | nindent 10 }}
+            {{- end }}
+              {{- if .Values.kafka.security.jaasSecret.name }}
+          - name: CONNECT_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.kafka.security.jaasSecret.name }}
+                key: {{ .Values.kafka.security.jaasSecret.key }}
+          - name: CONNECT_PRODUCER_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.kafka.security.jaasSecret.name }}
+                key: {{ .Values.kafka.security.jaasSecret.key }}
+          - name: CONNECT_CONSUMER_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.kafka.security.jaasSecret.name }}
+                key: {{ .Values.kafka.security.jaasSecret.key }}
+              {{- end }}
           {{- end }}
           - name: CONNECT_PRODUCER_REQUEST_TIMEOUT_MS
             value: "20000"
@@ -227,6 +248,20 @@ spec:
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.customStartupProbe }}
+          startupProbe: {{- .Values.customStartupProbe | toYaml | nindent 12 }}
+          {{- else if .Values.startupProbe.enabled }}
+          startupProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /etc/kafka-connect/sink-s3/original/healthcheck.sh
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

@@ -3,7 +3,7 @@
 # management-portal
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 1.5.1](https://img.shields.io/badge/Version-1.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.8](https://img.shields.io/badge/AppVersion-2.1.8-informational?style=flat-square)
+![Version: 1.6.3](https://img.shields.io/badge/Version-1.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.13](https://img.shields.io/badge/AppVersion-2.1.13-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -38,8 +38,8 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of Management Portal replicas to deploy |
-| image.registry | string | `"docker.io"` | Image registry |
-| image.repository | string | `"radarbase/management-portal"` | Image repository |
+| image.registry | string | `"ghcr.io"` | Image registry |
+| image.repository | string | `"radar-base/managementportal/management-portal"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
@@ -67,18 +67,25 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | extraEnvVars | list | `[]` | Extra environment variables |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| livenessProbe.initialDelaySeconds | int | `60` | Initial delay seconds for livenessProbe |
-| livenessProbe.periodSeconds | int | `90` | Period seconds for livenessProbe |
+| livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
+| livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
 | livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
 | livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
 | readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| readinessProbe.initialDelaySeconds | int | `60` | Initial delay seconds for readinessProbe |
-| readinessProbe.periodSeconds | int | `90` | Period seconds for readinessProbe |
+| readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
+| readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
 | readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
+| startupProbe.enabled | bool | `true` | Enable startupProbe |
+| startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
+| startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
+| startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
+| startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
+| startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | keystore | string | `""` | base 64 encoded binary p12 keystore containing a ECDSA certificate with alias `radarbase-managementportal-ec` and a RSA certificate with alias `selfsigned`. |
 | postgres.host | string | `nil` | host name of the postgres db |
@@ -96,10 +103,10 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | catalogue_server | string | `"catalog-server"` | Hostname of the catalogue-server |
 | identity_server.admin_email | string | `"admin@example.com"` | The admin email to link to the admin service account. This account should only be used to set up admin-users |
 | identity_server.server_url | string | `nil` | The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos |
-| identity_server.server_admin_url | string | `"http://kratos-admin"` | The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
+| identity_server.server_admin_url | string | `"http://radar-kratos-admin"` | The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
 | identity_server.login_url | string | `nil` | The publicly accessible login URL for the IDP; needed when deviating from http(s)://server_name/kratos-ui |
-| authserver.server_url | string | `"http://hydra:4444"` | The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth |
-| authserver.server_admin_url | string | `"http://hydra:4445"` | The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
+| authserver.server_url | string | `"http://radar-hydra:4444"` | The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth |
+| authserver.server_admin_url | string | `"http://radar-hydra:4445"` | The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
 | authserver.login_url | string | `"http://localhost:4444"` | The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login |
 | managementportal.catalogue_server_enable_auto_import | bool | `false` | set to true, if automatic source-type import from catalogue server should be enabled |
 | managementportal.common_privacy_policy_url | string | `"http://info.thehyve.nl/radar-cns-privacy-policy"` | Override with a publicly resolvable url of the privacy-policy url for your set-up. This can be overridden on a project basis as well. |

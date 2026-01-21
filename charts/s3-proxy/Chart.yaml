@@ -5,7 +5,7 @@ sources: ["https://github.com/gaul/s3proxy"]
 type: application
 home: "https://radar-base.org"
 name: s3-proxy
-version: 0.5.2
+version: 0.6.0
 maintainers:
   - email: pim@thehyve.nl
     name: Pim van Nierop

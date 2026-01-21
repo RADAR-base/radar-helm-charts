@@ -20,6 +20,7 @@ update-cloudnativepg-operator:
 	@rm -rf external/$(patsubst update-%,%,$@)
 	@helm repo add $(patsubst update-%,%,$@) https://cloudnative-pg.github.io/charts
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/cloudnative-pg
+	@mv external/cloudnative-pg external/$(patsubst update-%,%,$@)
 	@echo ""
 
 update-cloudnativepg-cluster:
@@ -27,6 +28,7 @@ update-cloudnativepg-cluster:
 	@rm -rf external/$(patsubst update-%,%,$@)
 	@helm repo add $(patsubst update-%,%,$@) https://cloudnative-pg.github.io/charts
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/cluster
+	@mv external/cluster external/$(patsubst update-%,%,$@)
 	@echo ""
 
 update-common:
@@ -113,6 +115,26 @@ update-mongodb:
 	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-nifi-cluster:
+	@echo "Updating NiFi Cluster"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@mkdir -p /tmp/nifikop
+	@git clone https://github.com/konpyutaika/nifikop.git /tmp/nifikop
+	@mkdir -p external/$(patsubst update-%,%,$@)
+	@cp -r /tmp/nifikop/helm/nifi-cluster/* external/$(patsubst update-%,%,$@)/
+	@rm -rf /tmp/nifikop
+	@echo ""
+
+update-nifikop:
+	@echo "Updating NiFiKop"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@mkdir -p /tmp/nifikop
+	@git clone https://github.com/konpyutaika/nifikop.git /tmp/nifikop
+	@mkdir -p external/$(patsubst update-%,%,$@)
+	@cp -r /tmp/nifikop/helm/nifikop/* external/$(patsubst update-%,%,$@)/
+	@rm -rf /tmp/nifikop
+	@echo ""
+
 update-postgresql:
 	@echo "Updating postgresql"
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -120,11 +142,30 @@ update-postgresql:
 	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
 	@echo ""
 
-update-redis:
-	@echo "Updating redis"
-	@helm repo add bitnami https://charts.bitnami.com/bitnami
+update-redis-operator:
+	@echo "Updating redis-operator"
 	@rm -rf external/$(patsubst update-%,%,$@)
-	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
+	@helm pull -d external --untar ot-container-kit/$(patsubst update-%,%,$@)
+	@echo ""
+
+update-redis-cluster:
+	@echo "Updating redis-cluster"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm pull -d external --untar ot-container-kit/$(patsubst update-%,%,$@)
+	@echo ""
+
+update-strimzi-kafka-operator:
+	@echo "Updating strimzi-kafka-operator"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://strimzi.io/charts/
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
+
+update-strimzi-registry-operator:
+	@echo "Updating strimzi-registry-operator"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://lsst-sqre.github.io/charts/
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
 update-trivy:
@@ -139,12 +180,5 @@ update-velero:
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
 	@rm -rf external/$(patsubst update-%,%,$@)
 	@helm repo add $(patsubst update-%,%,$@) https://vmware-tanzu.github.io/helm-charts
-	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
-	@echo ""
-
-update-nifi:
-	@echo "Updating NiFi"
-	@rm -rf external/$(patsubst update-%,%,$@)
-	@helm repo add $(patsubst update-%,%,$@) https://cetic.github.io/helm-charts
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""

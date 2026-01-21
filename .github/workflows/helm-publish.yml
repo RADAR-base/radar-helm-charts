@@ -29,6 +29,11 @@ jobs:
         run: |
           helm repo add radar https://radar-base.github.io/radar-helm-charts
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add dysnix https://dysnix.github.io/charts/
+          helm repo add stable https://charts.helm.sh/stable
+          helm repo add cp-radar https://radar-base.github.io/cp-helm-charts
+          helm repo update
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0

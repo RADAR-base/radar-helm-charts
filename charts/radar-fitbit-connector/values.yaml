@@ -7,9 +7,9 @@ replicaCount: 1
 
 image:
   # -- Image registry
-  registry: docker.io
+  registry: ghcr.io
   # -- Image repository
-  repository: radarbase/kafka-connect-rest-fitbit-source
+  repository: radar-base/radar-rest-connector/kafka-connect-fitbit-source
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
   tag:
@@ -96,11 +96,24 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
+secret:
+  # -- Secret for the Kafka SASL JAAS configuration
+  jaas:
+    name: shared-service-user
+    key: sasl.jaas.config
+
 # -- Extra environment variables
 extraEnvVars:
   # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
   - name: CONNECT_SECURITY_PROTOCOL
-    value: PLAINTEXT
+    value: SASL_PLAINTEXT
+  - name: CONNECT_PRODUCER_SECURITY_PROTOCOL
+    value: SASL_PLAINTEXT
+  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  - name: CONNECT_SASL_MECHANISM
+    value: SCRAM-SHA-512
+  - name: CONNECT_PRODUCER_SASL_MECHANISM
+    value: SCRAM-SHA-512
 
 # -- Custom livenessProbe that overrides the default one
 customLivenessProbe: {}
@@ -111,7 +124,7 @@ livenessProbe:
   # -- Initial delay seconds for livenessProbe
   initialDelaySeconds: 5
   # -- Period seconds for livenessProbe
-  periodSeconds: 60
+  periodSeconds: 30
   # -- Timeout seconds for livenessProbe
   timeoutSeconds: 5
   # -- Success threshold for livenessProbe
@@ -128,13 +141,30 @@ readinessProbe:
   # -- Initial delay seconds for readinessProbe
   initialDelaySeconds: 5
   # -- Period seconds for readinessProbe
-  periodSeconds: 60
+  periodSeconds: 30
   # -- Timeout seconds for readinessProbe
   timeoutSeconds: 5
   # -- Success threshold for readinessProbe
   successThreshold: 1
   # -- Failure threshold for readinessProbe
   failureThreshold: 3
+
+# -- Custom startupProbe that overrides the default one
+customStartupProbe: {}
+
+startupProbe:
+  # -- Enable startupProbe
+  enabled: true
+  # -- Initial delay seconds for startupProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for startupProbe
+  periodSeconds: 10
+  # -- Timeout seconds for startupProbe
+  timeoutSeconds: 10
+  # -- Success threshold for startupProbe
+  successThreshold: 1
+  # -- Failure threshold for startupProbe
+  failureThreshold: 30
 
 # -- Network policy defines who can access this application and who this applications has access to
 # @default -- check `values.yaml`
@@ -155,19 +185,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-zookeeper'
+          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'cp-kafka'
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: 'cp-schema-registry'
+          app.kubernetes.io/name: 'radar-kafka-schema-registry'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -193,14 +217,14 @@ networkpolicy:
       - port: 53
         protocol: TCP
 
-# -- URI of Zookeeper instances of the cluster
-zookeeper: cp-zookeeper-headless:2181
+# -- URI of Zookeeper instances of the cluster. Leave unset on default RADAR-base deployment (uses Kraft).
+zookeeper:
 # -- URI of Kafka brokers of the cluster
-kafka: PLAINTEXT://cp-kafka-headless:9092
+kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
 # -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
 kafka_num_brokers: "3"
 # -- URL of the Kafka schema registry
-schema_registry: http://cp-schema-registry:8081
+schema_registry: http://radar-kafka-schema-registry:8081
 
 kafka_wait:
   # -- Whether to wait before the specified number of brokers are available.
@@ -211,6 +235,8 @@ kafka_wait:
 
 # -- Base URL of the rest-sources-authorizer-backend service
 radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
+# -- Name of the connector group
+connector_group: radar-fitbit-source
 # -- Number of connector tasks to be used in connector.properties
 connector_num_tasks: "5"
 
@@ -225,21 +251,92 @@ fitbit_api_secret: ""
 oauthClientId: radar_fitbit_connector
 # -- OAuth2 client secret from Management Portal
 oauthClientSecret: secret
+# -- OAuth2 Auth URL for connector client to get access tokens
+auth_url: http://management-portal:8080/managementportal/oauth/token
 # -- URL of Management Portal. This will be used to create URLs to access Management Portal
 managementportal_url: http://management-portal:8080/managementportal
 # -- Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties.
 includeIntradayData: true
 
+# -- Class of the user repository to use. This should be a class that implements the UserRepository interface.
+user_repository_class: ServiceUserRepository
 
 # -- How often to poll the source URL.
 # Only use to speed up processing times during e2e testing.
 rest_source_poll_interval_ms: 60000
 # -- Polling interval per Fitbit user per request route in seconds.
 # Only use to speed up processing times during e2e testing.
-fitbit_user_poll_interval: 5000
+fitbit_user_poll_interval: 150
 # -- How often to perform the main application loop (only controls how often to poll for new user registrations).
 # Only use to speed up processing times during e2e testing.
 application_loop_interval_ms: 300000
 # -- How often to invalidate the cache and poll for new user registrations.
 # Only use to speed up processing times during e2e testing.
 user_cache_refresh_interval_ms: 3600000
+
+# -- Whether to include the specific routes and to specify the topics to use for each route.
+routes:
+  intradaySteps:
+    enabled: true
+    topic: "connect_fitbit_intraday_steps"
+  intradayHeartRate:
+    enabled: true
+    topic: "connect_fitbit_intraday_heart_rate"
+  intradayHeartRateVariability:
+    enabled: true
+    topic: "connect_fitbit_intraday_heart_rate_variability"
+  restingHeartRate:
+    enabled: true
+    topic: "connect_fitbit_resting_heart_rate"
+  sleepStages:
+    enabled: true
+    topic: "connect_fitbit_sleep_stages"
+  sleepClassic:
+    enabled: true
+    topic: "connect_fitbit_sleep_classic"
+  timezone:
+    enabled: true
+    topic: "connect_fitbit_timezone"
+  activityLog:
+    enabled: true
+    topic: "connect_fitbit_activity_log"
+  intradayCalories:
+    enabled: true
+    topic: "connect_fitbit_intraday_calories"
+  intradaySpo2:
+    enabled: true
+    topic: "connect_fitbit_intraday_spo2"
+  breathingRate:
+    enabled: true
+    topic: "connect_fitbit_breathing_rate"
+  skinTemperature:
+    enabled: true
+    topic: "connect_fitbit_skin_temperature"
+
+# -- Only used when user_repository_class is YamlUserRepository
+usersFile:
+  # -- Users to be included in the users yaml file.
+  users: []
+#      # -- Unique user key
+#    - id: test
+#      # -- Project ID to be used in org.radarcns.kafka.ObservationKey record keys
+#      projectId: radar-test
+#      # -- User ID to be used in org.radarcns.kafka.ObservationKey record keys
+#      userId: test
+#      # -- Source ID to be used in org.radarcns.kafka.ObservationKey record keys
+#      sourceId: charge-2
+#      # -- Date from when to collect data.
+#      startDate: 2018-08-06T00:00:00Z
+#      # -- Date until when to collect data.
+#      endDate: 2019-01-01T00:00:00Z
+#      # --Fitbit user ID as returned by the Fitbit authentication procedure
+#      externalUserId: "?"
+#      oauth2:
+#        # -- Fitbit OAuth 2.0 access token as returned by the Fitbit authentication procedure
+#        accessToken: "?"
+#        # -- Fitbit OAuth 2.0 refresh token as returned by the Fitbit authentication procedure
+#        refreshToken: "?"
+#        # -- Optional expiry time of the access token. If absent, it will be estimated to one hour
+#        # when the source connector starts. When an authentication error occurs, a new access token will
+#        # be fetched regardless of the value in this field.
+#        expiresAt: 2018-08-06T00:00:00Z

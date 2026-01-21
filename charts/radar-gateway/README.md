@@ -3,7 +3,7 @@
 # radar-gateway
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-gateway)](https://artifacthub.io/packages/helm/radar-base/radar-gateway)
 
-![Version: 1.5.3](https://img.shields.io/badge/Version-1.5.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.9.1](https://img.shields.io/badge/AppVersion-0.9.1-informational?style=flat-square)
+![Version: 1.8.0](https://img.shields.io/badge/Version-1.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.9.2](https://img.shields.io/badge/AppVersion-0.9.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -36,8 +36,8 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `2` | Number of radar-gateway replicas to deploy |
-| image.registry | string | `"docker.io"` | Image registry |
-| image.repository | string | `"radarbase/radar-gateway"` | Image repository |
+| image.registry | string | `"ghcr.io"` | Image registry |
+| image.repository | string | `"radar-base/radar-gateway/radar-gateway"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
@@ -71,31 +71,45 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | extraEnvVars | list | `[]` | Extra environment variables |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| livenessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for livenessProbe |
+| livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
 | livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
 | livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
 | livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
 | readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
+| readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
 | readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
 | readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
+| startupProbe.enabled | bool | `true` | Enable startupProbe |
+| startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
+| startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
+| startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
+| startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
+| startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | serviceMonitor.enabled | bool | `true` | Enable metrics to be collected via Prometheus-operator |
+| jmxExporter.resources | object | `{}` |  |
 | hpa.enabled | bool | `true` | Enable HPA |
 | hpa.maxReplicas | string | `"5"` | Maximum number of replicas |
 | hpa.targetCPU | string | `"80"` | Target CPU utilization percentage |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the management portal application |
-| schemaRegistry | string | `"http://cp-schema-registry:8081"` | Schema Registry URL |
+| schemaRegistry | string | `"http://radar-kafka-schema-registry:8081"` | Schema Registry URL |
 | max_requests | int | `1000` | Not used. To be confirmed |
-| bootstrapServers | string | `"cp-kafka-headless:9092"` | Kafka broker URLs |
+| bootstrapServers | string | `"radar-kafka-kafka-bootstrap:9094"` | Kafka broker URLs |
 | checkSourceId | bool | `true` | set to true, if sources in access token should be validated |
-| adminProperties | object | `{}` | Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs. |
-| producerProperties | object | `{"compression.type":"lz4"}` | Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs. |
+| adminProperties | object | `{"sasl.mechanism":"SCRAM-SHA-512","security.protocol":"SASL_PLAINTEXT"}` | Additional Kafka Admin Client settings as key value pairs. Read from https://kafka.apache.org/documentation/#adminclientconfigs. |
+| adminProperties."security.protocol" | string | `"SASL_PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
+| adminProperties."sasl.mechanism" | string | `"SCRAM-SHA-512"` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. |
+| producerProperties | object | `{"compression.type":"lz4","sasl.mechanism":"SCRAM-SHA-512","security.protocol":"SASL_PLAINTEXT"}` | Kafka producer properties as key value pairs. Read from https://kafka.apache.org/documentation/#producerconfigs. |
+| producerProperties."security.protocol" | string | `"SASL_PLAINTEXT"` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
+| producerProperties."sasl.mechanism" | string | `"SCRAM-SHA-512"` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. |
 | serializationProperties | object | `{}` | Additional Kafka serialization settings, used in KafkaAvroSerializer. Read from [io.confluent.kafka.serializers.AbstractKafkaSchemaSetDeConfig]. |
+| secret.admin.jaas | object | `{"key":"sasl.jaas.config","name":"shared-service-user"}` | Secret for the Kafka SASL JAAS configuration |
+| secret.producer.jaas | object | `{"key":"sasl.jaas.config","name":"shared-service-user"}` | Secret for the Kafka SASL JAAS configuration |
 | serverProperties | object | `{"maxRequestSize":25165824,"requestTimeout":30}` | Additional gateway server properties |
 | serverProperties.maxRequestSize | int | `25165824` | Maximum request size, also after decompression. |
 | serverProperties.requestTimeout | int | `30` | Maximum response time in seconds. |

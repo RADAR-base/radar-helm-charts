@@ -1,3 +1,4 @@
+{{- if eq .Values.user_repository_class "YamlUserRepository" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,27 +10,22 @@ metadata:
   {{- end }}
 data:
   fitbit-user.yml: |
+  {{- range .Values.usersFile.users }}
     ---
-    # Unique user key
-    id: test
-    # Project ID to be used in org.radarcns.kafka.ObservationKey record keys
-    projectId: radar-test
-    # User ID to be used in org.radarcns.kafka.ObservationKey record keys
-    userId: test
-    # Source ID to be used in org.radarcns.kafka.ObservationKey record keys
-    sourceId: charge-2
-    # Date from when to collect data.
-    startDate: 2018-08-06T00:00:00Z
-    # Date until when to collect data.
-    endDate: 2019-01-01T00:00:00Z
-    # Fitbit user ID as returned by the Fitbit authentication procedure
-    externalUserId: ?
+    id: {{ .id }}
+    projectId: {{ .projectId }}
+    userId: {{ .userId }}
+    sourceId: {{ .sourceId }}
+    startDate: {{ .startDate }}
+    endDate: {{ .endDate }}
+    externalUserId: {{ .externalUserId }}
+    {{- with .oauth2 }}
     oauth2:
-      # Fitbit OAuth 2.0 access token as returned by the Fitbit authentication procedure
-      accessToken: ?
-      # Fitbit OAuth 2.0 refresh token as returned by the Fitbit authentication procedure
-      refreshToken: ?
-      # Optional expiry time of the access token. If absent, it will be estimated to one hour
-      # when the source connector starts. When an authentication error occurs, a new access token will
-      # be fetched regardless of the value in this field.
-      #expiresAt: 2018-08-06T00:00:00Z
+      accessToken: {{ .accessToken }}
+      refreshToken: {{ .refreshToken }}
+      {{- if .expiresAt }}
+      expiresAt: {{ .expiresAt }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}

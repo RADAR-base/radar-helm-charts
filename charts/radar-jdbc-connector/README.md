@@ -3,7 +3,7 @@
 # radar-jdbc-connector
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-jdbc-connector)](https://artifacthub.io/packages/helm/radar-base/radar-jdbc-connector)
 
-![Version: 0.7.3](https://img.shields.io/badge/Version-0.7.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.8.0](https://img.shields.io/badge/AppVersion-10.8.0-informational?style=flat-square)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.8.1](https://img.shields.io/badge/AppVersion-10.8.1-informational?style=flat-square)
 
 A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JDBC connector which allows data from topics to be imported into JDBC databases (including TimescaleDB databases which is used in the dashboard pipeline).
 
@@ -11,12 +11,12 @@ A Helm chart for RADAR-base JDBC Kafka connector. This is a fork of the Kafka JD
 
 ## CloudNativePG TimescaleDB
 
-This chart deploys the CloudNativePG TimescaleDB via the _radar-cloudnative-timescaledb_ chart. In turn,
-_radar-cloudnative-timescaledb_ uses the CloudNativePG operator chart to deploy the TimescaleDB database.
-Configuration to the _radar-cloudnative-timescaledb_ chart can be passed via the `radar-cloudnative-timescaledb:` key in
+This chart deploys the CloudNativePG TimescaleDB via the _timescaledb_ chart. In turn,
+_timescaledb_ uses the CloudNativePG operator chart to deploy the TimescaleDB database.
+Configuration to the _timescaledb_ chart can be passed via the `timescaledb:` key in
 the values.yaml file.
 
-Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: false` in the `radar-cloudnative-timescaledb:` key.
+Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: false` in the `timescaledb:` key.
 
 ## Maintainers
 
@@ -39,7 +39,7 @@ Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: fal
 
 | Repository | Name | Version |
 |------------|------|---------|
-| file://../radar-cloudnative-timescaledb | radar-cloudnative-timescaledb | 0.1.1 |
+| file://../radar-cloudnative-timescaledb | timescaledb(radar-cloudnative-timescaledb) | 0.2.0 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
@@ -47,8 +47,8 @@ Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: fal
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | replicaCount | int | `1` | Number of radar-jdbc-connector replicas to deploy |
-| image.registry | string | `"docker.io"` | Image registry |
-| image.repository | string | `"radarbase/radar-jdbc-connector"` | Image repository |
+| image.registry | string | `"ghcr.io"` | Image registry |
+| image.repository | string | `"radar-base/radar-jdbc-connector/radar-jdbc-connector"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
@@ -63,26 +63,37 @@ Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: fal
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
-| extraEnvVars | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"PLAINTEXT"}]` | Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specific [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration) |
-| extraEnvVars[0] | object | `{"name":"CONNECT_SECURITY_PROTOCOL","value":"PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
+| extraEnvVars | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_CONSUMER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_CONSUMER_SASL_MECHANISM","value":"SCRAM-SHA-512"}]` | Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specific [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration) |
+| extraEnvVars[0] | object | `{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. Needed by kafka_init script. |
+| extraEnvVars[1] | object | `{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"}` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. Needed by kafka_init script. |
+| extraEnvVars[2] | object | `{"name":"CONNECT_CONSUMER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
+| extraEnvVars[3] | object | `{"name":"CONNECT_CONSUMER_SASL_MECHANISM","value":"SCRAM-SHA-512"}` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. |
+| secret.jaas | object | `{"key":"sasl.jaas.config","name":"shared-service-user"}` | Secret name for the JAAS configuration |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| livenessProbe.initialDelaySeconds | int | `15` | Initial delay seconds for livenessProbe |
-| livenessProbe.periodSeconds | int | `60` | Period seconds for livenessProbe |
+| livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
+| livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
 | livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
 | livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
 | readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| readinessProbe.initialDelaySeconds | int | `15` | Initial delay seconds for readinessProbe |
-| readinessProbe.periodSeconds | int | `60` | Period seconds for readinessProbe |
+| readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
+| readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
 | readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
+| customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
+| startupProbe.enabled | bool | `true` | Enable startupProbe |
+| startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
+| startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
+| startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
+| startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
+| startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
-| kafka | string | `"PLAINTEXT://cp-kafka-headless:9092"` | URI of Kafka brokers of the cluster |
+| kafka | string | `"SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094"` | URI of Kafka brokers of the cluster |
 | kafka_num_brokers | string | `"3"` | Number of Kafka brokers. This is used to validate the cluster availability at connector init. |
-| schema_registry | string | `"http://cp-schema-registry:8081"` | URL of the Kafka schema registry |
+| schema_registry | string | `"http://radar-kafka-schema-registry:8081"` | URL of the Kafka schema registry |
 | maxTasks | int | `2` | Maximum number of worker threads inside a connector pod. |
 | mode | string | `"sink"` | Either source or sink |
 | logLevel.root | string | `"INFO"` | Default log level |
@@ -117,5 +128,6 @@ Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: fal
 | jdbc.password | string | `nil` | TimescaleDB database password (using a secret is recommended) |
 | jdbc.passwordSecret | object | `{"key":null,"name":null}` | Kubernetes secret name for the password |
 | jdbc.dialect | string | `"TimescaleDBDatabaseDialect"` | JDBC connect dialect that the database uses |
-| radar-cloudnative-timescaledb.enabled | bool | `true` | Use the local cloudnative timescaledb cluster |
-| radar-cloudnative-timescaledb.cluster | object | check `values.yaml` | CloudNativePG TimescaleDB configuration |
+| timescaledb.enabled | bool | `true` | Use the local cloudnativepg timescaledb cluster |
+| timescaledb.cluster | object | check `values.yaml` | CloudNativePG TimescaleDB configuration |
+| timescaledb.cluster.postgresql.parameters.wal_keep_size | string | `"1GB"` | Can be decreased to save disk space. 1GB default was chosen to prevent missing wal files during recovery. |

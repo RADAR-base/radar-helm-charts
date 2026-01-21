@@ -1,0 +1,6 @@
+dependencies:
+- name: cp-ksql-server
+  repository: https://radar-base.github.io/cp-helm-charts
+  version: 0.4.1
+digest: sha256:39b1a1cbddf81cef124db5521e82b042f87b0e0a02307bb3c9e9341ce861b704
+generated: "2025-09-11T12:16:45.928202829+02:00"

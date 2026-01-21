@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: 7.8.1
+appVersion: 7.8.4
 description: A Helm chart for RADAR-base s3 connector. This connector uses Confluent s3 connector with a custom data transformers. These configurations enable a sink connector. See full list of properties here https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options
 name: radar-s3-connector
-version: 0.5.3
+version: 0.7.1
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-s3-connector

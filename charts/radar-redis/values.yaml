@@ -1,0 +1,123 @@
+redis-operator:
+  enabled: true
+  # -- Values passed to the redis-operator chart
+  # @default -- check `values.yaml`
+  # redisOperator: {}
+
+fullnameOverride: redis-radar
+
+image:
+  # -- Image registry
+  registry: quay.io
+  # -- Image repository
+  repository: opstree/redis
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
+
+clusterVersion: v7
+
+# -- Can be either standalone, replication or cluster.
+# Standalone mode deploys a single redis instance for development purposes.
+# note: radar-output is not compatible with cluster mode
+mode: replication
+
+# -- Used when mode is cluster or replication.
+multi:
+  # -- Number of redis nodes
+  replicates: 3
+  nodeConfVolume: true
+  nodeConfVolumeClaimTemplate:
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+
+resources:
+  # -- resource requests for redis pods
+  requests:
+    cpu: 101m
+    memory: 128Mi
+  # -- resource limits for redis pods
+  limits:
+    cpu: 101m
+    memory: 128Mi
+
+storage:
+  # -- Access mode for PVC
+  accessModes:
+    - ReadWriteOnce
+  # -- Size of PVC
+  size: 1Gi
+
+# -- Security context for redis pods
+securityContext:
+  runAsUser: 1000
+  fsGroup: 1000
+
+# -- When encountering fs permission errors, you can use this initContainer to
+# change the ownership of the data directory.
+initContainer:
+  enabled: false
+  image: busybox:1.36
+  command: ["sh", "-c", "chown -R 1000:1000 /data && chmod -R g+rwX /data"]
+
+redisExporter:
+  image:
+    registry: quay.io
+    repository: opstree/redis-exporter
+    tag: v1.44.0
+    pullPolicy: IfNotPresent
+  # -- Security context for redis node exporter pods
+  securityContext:
+    runAsUser: 1000
+    fsGroup: 1000
+  resources: {}
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+metrics:
+  enabled: true
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: radar-output
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: radar-push-endpoint
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: radar-rest-sources-backend

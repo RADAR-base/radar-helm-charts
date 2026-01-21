@@ -4,7 +4,7 @@
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-postgresql)](https://artifacthub.io/packages/helm/radar-base/radar-postgresql)
 > **:exclamation: This Helm Chart is deprecated!**
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![AppVersion: 11.16.0](https://img.shields.io/badge/AppVersion-11.16.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![AppVersion: 11.16.0](https://img.shields.io/badge/AppVersion-11.16.0-informational?style=flat-square)
 
 PostgreSQL (Postgres) is an open source object-relational database known for reliability and data integrity. ACID-compliant, it supports foreign keys, joins, views, triggers and stored procedures.
 
@@ -29,7 +29,7 @@ PostgreSQL (Postgres) is an open source object-relational database known for rel
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| postgresql.image.repository | string | `"bitnami/postgresql"` |  |
+| postgresql.image.repository | string | `"bitnamilegacy/postgresql"` |  |
 | postgresql.image.tag | string | `"11.16.0"` |  |
 | postgresql.global.postgresql.auth.postgresPassword | string | `""` |  |
 | postgresql.auth.postgresPassword | string | `""` |  |

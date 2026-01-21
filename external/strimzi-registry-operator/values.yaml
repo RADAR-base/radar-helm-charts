@@ -1,0 +1,16 @@
+image:
+  # -- The repository for the container with the operator application
+  repository: ghcr.io/lsst-sqre/strimzi-registry-operator
+
+  # -- Tag of the image
+  # @default -- The appVersion of the chart
+  tag: ""
+
+# -- Name of the Strimzi Kafka cluster
+clusterName: ""
+
+# -- Namespace where the Strimzi Kafka cluster is deployed
+clusterNamespace: "default"
+
+# -- Namespace where the strimzi-registry-operator is deployed
+operatorNamespace: strimzi-registry-operator

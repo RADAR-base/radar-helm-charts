@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "1.0.6"
 description: A Helm chart for RADAR-Base REDCap survey integration application.
 name: radar-integration
-version: 0.8.2
+version: 0.9.0
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-integration

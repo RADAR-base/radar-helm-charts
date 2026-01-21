@@ -1,0 +1,19 @@
+{{- if index .Values "nifi-properties" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.names.fullname" . }}-properties
+  labels: {{ include "common.labels.standard" . | nindent 4 }}
+data:
+  nifi.properties: |-
+    {{- /* 1) Render user-supplied NiFi properties (take precedence) */}}
+    {{- $userProps := (index .Values "nifi-properties") }}
+    {{- range $key, $value := $userProps }}
+    {{ printf "%s=%s" $key (tpl $value $) }}
+    {{- end }}
+    {{- if .Values.flowLoader.configMap.data }}
+  {{- $flowJson := default "flow-snapshot.json" .Values.flowLoader.configMap.key }}
+  {{ $flowJson }}: |
+    {{- .Values.flowLoader.configMap.data | nindent 4 }}
+    {{- end }}
+{{- end }}
