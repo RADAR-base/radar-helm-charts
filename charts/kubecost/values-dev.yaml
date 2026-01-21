@@ -21,10 +21,10 @@ grafana:
   resources:
     requests:
       cpu: 10m
-      memory: 164Mi  
+      memory: 164Mi
     limits:
-      cpu: 100m       
-      memory: 256Mi   
+      cpu: 100m
+      memory: 256Mi
 
 # NETWORK COSTS CONFIGURATION
 networkCosts:
@@ -32,11 +32,11 @@ networkCosts:
   replicas: 4
   resources:
     requests:
-      cpu: 50m        
-      memory: 20Mi    
+      cpu: 50m
+      memory: 20Mi
     limits:
-      cpu: 100m       
-      memory: 256Mi   
+      cpu: 100m
+      memory: 256Mi
 
 # PROMETHEUS SERVER CONFIGURATION
 prometheus:
@@ -47,20 +47,20 @@ prometheus:
     resources:
       requests:
         cpu: 50m
-        memory: 181Mi   
+        memory: 181Mi
       limits:
-        cpu: 100m       
-        memory: 256Mi   
+        cpu: 100m
+        memory: 256Mi
 
 # COST ANALYZER CONFIGURATION
 kubecostModel:
   resources:
     requests:
       cpu: 50m
-      memory: 2500Mi  
+      memory: 2500Mi
     limits:
-      cpu: 200m      
-      memory: 3072Mi  
+      cpu: 200m
+      memory: 3072Mi
 
 # FORECASTING CONFIGURATION
 forecasting:
@@ -68,8 +68,8 @@ forecasting:
   resources:
     requests:
       cpu: 10m
-      memory: 150Mi  
+      memory: 150Mi
     limits:
-      cpu: 200m       
-      memory: 512Mi   
+      cpu: 200m
+      memory: 512Mi
 
