@@ -204,6 +204,12 @@ networkpolicy:
       podSelector:
         matchLabels:
           app.kubernetes.io/name: 'management-portal'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-hydra'
   - to:
     - namespaceSelector:
         matchLabels:
@@ -247,12 +253,12 @@ fitbit_api_client: ""
 # -- Fitbit API client secret.
 fitbit_api_secret: ""
 
-# -- OAuth2 client id from Management Portal
+# -- OAuth2 client id from Hydra
 oauthClientId: radar_fitbit_connector
-# -- OAuth2 client secret from Management Portal
+# -- OAuth2 client secret from Hydra
 oauthClientSecret: secret
 # -- OAuth2 Auth URL for connector client to get access tokens
-auth_url: http://management-portal:8080/managementportal/oauth/token
+auth_url: http://radar-hydra-public:4444/oauth2/token
 # -- URL of Management Portal. This will be used to create URLs to access Management Portal
 managementportal_url: http://management-portal:8080/managementportal
 # -- Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties.

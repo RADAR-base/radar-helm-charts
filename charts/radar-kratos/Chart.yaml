@@ -1,12 +1,12 @@
 apiVersion: v2
-appVersion: "v1.3.0"
+appVersion: "v2.2.0"
 description: A ORY Kratos Helm chart for RADAR-base. ORY Kratos is a cloud native Identity and User Management system.
 name: radar-kratos
 home: https://radar-base.org
 icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-kratos
-version: 0.1.2
+version: 0.1.3
 maintainers:
   - email: pim@thehyve.nl
     name: Pim van Nierop

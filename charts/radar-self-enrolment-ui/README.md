@@ -2,7 +2,7 @@
 
 # radar-self-enrolment-ui
 
-![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base Self Enrolment UI
 
@@ -55,7 +55,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | advertised_protocol | string | `"https"` | The protocol in URIs (https, http) |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer |
-| ingress.path | string | `"/kratos-ui(/|$)(.*)"` | Path within the url structure |
+| ingress.path | string | `"/study(/|$)(.*)"` | Path within the url structure |
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["{{ .Values.server_name }}"]` | Hosts to accept requests from |
@@ -76,7 +76,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | podSecurityContext.runAsGroup | int | `10000` |  |
 | podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | deployment.resources | object | `{}` |  |
-| deployment.extraEnv | list | `[{"name":"HYDRA_ADMIN_URL","value":"http://radar-hydra-admin"}]` | Array of extra envs to be passed to the deployment. Kubernetes format is expected - name: FOO   value: BAR |
+| deployment.extraEnv | string | `nil` | Array of extra envs to be passed to the deployment. Kubernetes format is expected - name: FOO   value: BAR |
 | deployment.extraVolumes | list | `[]` | If you want to mount external volume For example, mount a secret containing Certificate root CA to verify database TLS connection. |
 | deployment.extraVolumeMounts | list | `[]` |  |
 | deployment.nodeSelector | object | `{}` | Node labels for pod assignment. |
@@ -103,26 +103,35 @@ A Helm chart for RADAR-base Self Enrolment UI
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
-| startupProbe.enabled | bool | `true` | Enable startupProbe |
+| startupProbe.enabled | bool | `false` | Enable startupProbe |
 | startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
 | startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
 | startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
 | startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
-| kratosAdminUrl | string | `"http://kratos-admin:80/admin"` | Set this to ORY Kratos's Admin URL |
-| kratosPublicUrl | string | `"https://localhost/kratos"` | Set this to ORY Kratos's public URL |
-| kratosBrowserUrl | string | `"https://localhost/kratos"` | Set this to ORY Kratos's public URL accessible from the outside world. |
-| hydraAdminUrl | string | `"http://radar-hydra-admin"` | Set this to ORY Hydra's Admin URL |
-| hydraPublicUrl | string | `"http://radar-hydra-public:4444"` | Set this to ORY Hydra's public URL |
-| restSourceBackendUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend"` | Set this to the REST source backend service URL |
-| gatewayUrl | string | `"http://radar-gateway:8080"` | Set this to the RADAR Gateway service URL |
-| armtClientId | string | `"aRMT"` | Client ID for ARMT authentication |
-| armtClientSecret | string | `""` | Client secret for ARMT authentication |
-| sepClientId | string | `"SEP"` | Client ID for SEP authentication |
-| sepClientSecret | string | `""` | Client secret for SEP authentication |
-| githubAuthToken | string | `""` | GitHub authentication token for API access (leave empty if not used) |
-| basePath | string | `"/kratos-ui"` | The basePath |
+| basePath | string | `"study"` |  |
+| auth.armt.clientId | string | `"aRMT"` |  |
+| auth.armt.clientSecret | string | `""` |  |
+| auth.armt.redirectUri | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/armt"` |  |
+| auth.prmt.clientId | string | `"pRMT"` |  |
+| auth.prmt.clientSecret | string | `""` |  |
+| auth.prmt.redirectUri | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/prmt"` |  |
+| auth.sep.clientId | string | `"SEP"` |  |
+| auth.sep.clientSecret | string | `""` |  |
+| auth.sep.redirectUri | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/sep"` |  |
+| kratos.internalUrl | string | `"http://radar-kratos-public:80"` |  |
+| kratos.adminUrl | string | `"http://radar-kratos-admin/admin"` |  |
+| hydra.internalUrl | string | `"http://radar-hydra-public:4444"` |  |
+| hydra.adminUrl | string | `"http://radar-hydra-admin:4445/admin"` |  |
+| hydra.browserUrl | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra"` |  |
+| rest_sources_auth.backendUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend"` |  |
+| rest_sources_auth.frontendUrl | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/rest-sources/authorizer/"` |  |
+| github.authToken | string | `""` |  |
+| github.repository | string | `"radar-self-enrolment-definitions"` |  |
+| gatewayUrl | string | `"http://radar-gateway:8080"` |  |
+| studyDefinitionRepository | string | `"GITHUB"` |  |
+| managementportal_url | string | `"http://management-portal:8080/managementportal"` |  |
 | test.busybox | object | `{"repository":"busybox","tag":1}` | use a busybox image from another repository |
 
 ----------------------------------------------
