@@ -272,3 +272,4 @@ If pods are being OOMKilled or CPU throttled:
 - [Official Chart Repository](https://github.com/kubecost/cost-analyzer-helm-chart)
 - [AWS Cost & Usage Report](https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html)
 - [Kubecost AWS Integration Guide](https://docs.kubecost.com/install-and-configure/install/cloud-integration/aws-cloud-integrations)
+
