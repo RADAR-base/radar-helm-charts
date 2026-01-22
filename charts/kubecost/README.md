@@ -93,7 +93,7 @@ Create a separate configuration file (e.g., `production.yaml`) with your actual 
 
 **Store this file in:**
 - A private configuration repository
-- A secrets management system (AWS Secrets Manager, HashiCorp Vault, etc.)
+- A secrets management system (AWS Secrets Manager, HashCorp Vault, etc.)
 - A secure local directory (never commit to this public repo)
 
 ### Deployment Options
@@ -272,4 +272,3 @@ If pods are being OOMKilled or CPU throttled:
 - [Official Chart Repository](https://github.com/kubecost/cost-analyzer-helm-chart)
 - [AWS Cost & Usage Report](https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html)
 - [Kubecost AWS Integration Guide](https://docs.kubecost.com/install-and-configure/install/cloud-integration/aws-cloud-integrations)
-
