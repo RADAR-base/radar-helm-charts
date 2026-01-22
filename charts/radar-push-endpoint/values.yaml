@@ -363,4 +363,4 @@ garmin:
 
 redis:
   # -- The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties.
-  url: "redis://radar-redis-replication-headless:6379"
+  url: "redis://radar-redis-replication-master:6379"
