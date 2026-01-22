@@ -1,274 +1,77 @@
-# Kubecost
 
-Kubecost provides real-time cost visibility and insights for Kubernetes clusters.
 
-## Overview
 
-This chart is an overlay for the official [kubecost cost-analyzer](https://github.com/kubecost/cost-analyzer-helm-chart) chart with custom resource limits configured for RADAR-K8s environments.
 
-## Prerequisites
 
-- Kubernetes 1.20+
-- Helm 3.8+
-- AWS credentials configured for Cost & Usage Report (CUR) access
+# kubecost
 
-## Installation
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.3](https://img.shields.io/badge/AppVersion-2.6.3-informational?style=flat-square)
 
-### Prerequisites
-```bash
-cd charts/kubecost
-helm dependency update
-```
+A Helm chart for Kubecost cost analyzer. This chart is an overlay for the official cost-analyzer chart with custom resource limits configured for RADAR-K8s environments.
 
-### Deployment
+**Homepage:** <https://www.kubecost.com>
 
-**Important:** The `values.yaml` file contains only placeholders for sensitive values. Actual AWS configuration must be provided via a separate file stored **outside this public repository**.
-```bash
-# Deploy with production values from external file
-helm upgrade kubecost . -n kubecost --install \
-  -f values.yaml \
-  -f /path/to/private/production.yaml
-```
+## Maintainers
 
-## Configuration
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Mani Thumu | <mani.thumu@kcl.ac.uk> | <https://www.kcl.ac.uk> |
+| Yatharth Ranjan | <yatharth.ranjan@kcl.ac.uk> | <https://www.kcl.ac.uk/people/yatharth-ranjan> |
 
-### Chart Dependencies
+## Source Code
+
+* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/kubecost>
+* <https://github.com/kubecost/cost-analyzer-helm-chart>
+
+## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
 | https://kubecost.github.io/cost-analyzer/ | cost-analyzer | 2.6.3 |
 
-### Values
+## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| forecasting.enabled | bool | `true` |  |
-| forecasting.resources.limits.cpu | string | `"200m"` |  |
-| forecasting.resources.limits.memory | string | `"512Mi"` |  |
-| forecasting.resources.requests.cpu | string | `"10m"` |  |
-| forecasting.resources.requests.memory | string | `"150Mi"` |  |
-| grafana.enabled | bool | `false` |  |
-| grafana.resources.limits.cpu | string | `"100m"` |  |
-| grafana.resources.limits.memory | string | `"256Mi"` |  |
-| grafana.resources.requests.cpu | string | `"10m"` |  |
-| grafana.resources.requests.memory | string | `"164Mi"` |  |
-| kubecostModel.resources.limits.cpu | string | `"200m"` |  |
-| kubecostModel.resources.limits.memory | string | `"3072Mi"` |  |
-| kubecostModel.resources.requests.cpu | string | `"50m"` |  |
-| kubecostModel.resources.requests.memory | string | `"2500Mi"` |  |
-| kubecostProductConfigs.athenaBucketName | string | `""` |  |
-| kubecostProductConfigs.athenaDatabase | string | `""` |  |
+| kubecostProductConfigs.clusters[0].name | string | `""` |  |
+| kubecostProductConfigs.clusters[0].address | string | `"http://127.0.0.1:9090"` |  |
 | kubecostProductConfigs.athenaProjectID | string | `""` |  |
+| kubecostProductConfigs.athenaBucketName | string | `""` |  |
 | kubecostProductConfigs.athenaRegion | string | `""` |  |
+| kubecostProductConfigs.athenaDatabase | string | `""` |  |
 | kubecostProductConfigs.athenaTable | string | `""` |  |
 | kubecostProductConfigs.athenaWorkgroup | string | `"primary"` |  |
-| kubecostProductConfigs.awsSpotDataBucket | string | `""` |  |
 | kubecostProductConfigs.awsSpotDataRegion | string | `""` |  |
-| kubecostProductConfigs.clusters[0].address | string | `"http://127.0.0.1:9090"` |  |
-| kubecostProductConfigs.clusters[0].name | string | `""` |  |
-| kubecostProductConfigs.serviceKeySecretName | string | `"cloud-service-key"` |  |
+| kubecostProductConfigs.awsSpotDataBucket | string | `""` |  |
 | kubecostProductConfigs.spotLabel | string | `"eks.amazonaws.com/capacityType"` |  |
 | kubecostProductConfigs.spotLabelValue | string | `"SPOT"` |  |
-| networkCosts.config.services.amazon-web-services | bool | `true` |  |
-| networkCosts.enabled | bool | `true` |  |
-| networkCosts.replicas | int | `4` |  |
-| networkCosts.resources.limits.cpu | string | `"100m"` |  |
-| networkCosts.resources.limits.memory | string | `"256Mi"` |  |
-| networkCosts.resources.requests.cpu | string | `"50m"` |  |
-| networkCosts.resources.requests.memory | string | `"20Mi"` |  |
+| kubecostProductConfigs.serviceKeySecretName | string | `"cloud-service-key"` |  |
+| grafana.enabled | bool | `false` |  |
+| grafana.resources.requests.cpu | string | `"10m"` |  |
+| grafana.resources.requests.memory | string | `"164Mi"` |  |
+| grafana.resources.limits.cpu | string | `"100m"` |  |
+| grafana.resources.limits.memory | string | `"256Mi"` |  |
 | prometheus.server.global.external_labels.cluster_id | string | `""` |  |
-| prometheus.server.resources.limits.cpu | string | `"100m"` |  |
-| prometheus.server.resources.limits.memory | string | `"256Mi"` |  |
 | prometheus.server.resources.requests.cpu | string | `"50m"` |  |
 | prometheus.server.resources.requests.memory | string | `"181Mi"` |  |
+| prometheus.server.resources.limits.cpu | string | `"100m"` |  |
+| prometheus.server.resources.limits.memory | string | `"256Mi"` |  |
+| networkCosts.enabled | bool | `true` |  |
+| networkCosts.config.services.amazon-web-services | bool | `true` |  |
+| networkCosts.replicas | int | `4` |  |
+| networkCosts.resources.requests.cpu | string | `"50m"` |  |
+| networkCosts.resources.requests.memory | string | `"20Mi"` |  |
+| networkCosts.resources.limits.cpu | string | `"100m"` |  |
+| networkCosts.resources.limits.memory | string | `"256Mi"` |  |
+| kubecostModel.resources.requests.cpu | string | `"50m"` |  |
+| kubecostModel.resources.requests.memory | string | `"2500Mi"` |  |
+| kubecostModel.resources.limits.cpu | string | `"200m"` |  |
+| kubecostModel.resources.limits.memory | string | `"3072Mi"` |  |
+| forecasting.enabled | bool | `true` |  |
+| forecasting.resources.requests.cpu | string | `"10m"` |  |
+| forecasting.resources.requests.memory | string | `"150Mi"` |  |
+| forecasting.resources.limits.cpu | string | `"200m"` |  |
+| forecasting.resources.limits.memory | string | `"512Mi"` |  |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
-
-### AWS Integration
-
-This chart requires AWS Cost & Usage Report (CUR) integration. **Do not commit real AWS values to this repository.**
-
-Create a separate configuration file (e.g., `production.yaml`) with your actual values:
-
-**Store this file in:**
-- A private configuration repository
-- A secrets management system (AWS Secrets Manager, HashCorp Vault, etc.)
-- A secure local directory (never commit to this public repo)
-
-### Deployment Options
-
-#### Option 1: External configuration file (Recommended)
-```bash
-helm upgrade kubecost . -n kubecost --install \
-  -f values.yaml \
-  -f /path/to/private/production.yaml
-```
-
-#### Option 2: Using --set flags
-```bash
-helm upgrade kubecost . -n kubecost --install -f values.yaml \
-  --set kubecostProductConfigs.athenaBucketName="s3://your-bucket" \
-  --set kubecostProductConfigs.athenaProjectID="123456789012" \
-  --set kubecostProductConfigs.athenaRegion="eu-west-2" \
-  --set kubecostProductConfigs.athenaDatabase="your-database" \
-  --set kubecostProductConfigs.athenaTable="your-table" \
-  --set kubecostProductConfigs.clusters[0].name="your-cluster" \
-  --set prometheus.server.global.external_labels.cluster_id="your-cluster"
-```
-
-#### Option 3: Environment-specific files
-
-Create separate files for different environments:
-```bash
-# Development
-helm upgrade kubecost . -n kubecost --install -f values.yaml -f dev.yaml
-
-# Staging
-helm upgrade kubecost . -n kubecost --install -f values.yaml -f staging.yaml
-
-# Production
-helm upgrade kubecost . -n kubecost --install -f values.yaml -f production.yaml
-```
-
-### Key Parameters
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `kubecostModel.resources.limits.cpu` | CPU limit for cost analyzer | `200m` |
-| `kubecostModel.resources.limits.memory` | Memory limit for cost analyzer | `3072Mi` |
-| `prometheus.server.resources.limits.cpu` | CPU limit for Prometheus | `100m` |
-| `prometheus.server.resources.limits.memory` | Memory limit for Prometheus | `256Mi` |
-| `forecasting.resources.limits.cpu` | CPU limit for forecasting | `200m` |
-| `forecasting.resources.limits.memory` | Memory limit for forecasting | `512Mi` |
-| `networkCosts.resources.limits.cpu` | CPU limit for network costs (per pod) | `100m` |
-| `networkCosts.resources.limits.memory` | Memory limit for network costs (per pod) | `256Mi` |
-| `grafana.resources.limits.cpu` | CPU limit for Grafana | `100m` |
-| `grafana.resources.limits.memory` | Memory limit for Grafana | `256Mi` |
-
-### AWS Configuration Parameters
-
-| Parameter | Description | Example |
-|-----------|-------------|---------|
-| `kubecostProductConfigs.athenaProjectID` | AWS Account ID | `"123456789012"` |
-| `kubecostProductConfigs.athenaBucketName` | S3 bucket for AWS CUR data | `s3://aws-athena-query-results-yourorg` |
-| `kubecostProductConfigs.athenaRegion` | AWS region for Athena | `eu-west-2` |
-| `kubecostProductConfigs.athenaDatabase` | Athena database name | `athenacurcfn_yourdb` |
-| `kubecostProductConfigs.athenaTable` | Athena table name | `your_table_name` |
-| `kubecostProductConfigs.awsSpotDataBucket` | S3 bucket for spot instance data | `yourorg-spot-instance-data-feed` |
-| `kubecostProductConfigs.clusters[0].name` | Cluster identifier | `dev-cluster-1` |
-| `prometheus.server.global.external_labels.cluster_id` | Cluster ID for metrics | `dev-cluster-1` |
-
-### AWS Integration Requirements
-
-Ensure the following are configured in your AWS account:
-
-1. **AWS Cost & Usage Report (CUR)** - Exported to S3
-2. **Athena Database** - Created for querying CUR data
-3. **Kubernetes Secret** - `cloud-service-key` with AWS credentials in the kubecost namespace
-4. **EC2 Spot Instance Data Feed** - Optional, for accurate spot pricing
-5. **IAM Permissions** - Appropriate permissions for Athena queries and S3 access
-
-## Accessing Kubecost
-
-### Local Access (Port Forward)
-```bash
-kubectl port-forward -n kubecost svc/kubecost-cost-analyzer 9090:9090
-```
-
-Then visit: http://localhost:9090
-
-**Note:** Keep the terminal running while accessing the UI.
-
-### Production Access
-
-For permanent team access, configure Ingress with appropriate authentication (OAuth, SAML, etc.).
-
-## Resource Limits Rationale
-
-Resource limits are based on actual usage analysis from dev-cluster-1:
-
-| Component | Actual Usage (CPU / RAM) | Configured Limit | Rationale |
-|-----------|--------------------------|------------------|-----------|
-| **Cost Analyzer** | 8m CPU / 2370Mi RAM | 200m / 3Gi | Headroom for spikes and data processing |
-| **Prometheus** | 11m CPU / 181Mi RAM | 100m / 256Mi | Conservative limit with buffer |
-| **Forecasting** | 1m CPU / 145Mi RAM | 200m / 512Mi | Allows for model training spikes |
-| **Network Costs** | 9m CPU / 4Mi RAM | 100m / 256Mi (per pod) | Per-pod limit for DaemonSet |
-| **Grafana** | 8m CPU / 163Mi RAM | 100m / 256Mi | UI component with minimal load |
-
-**Note:** These limits prevent Karpenter from over-provisioning expensive EC2 instances while providing sufficient headroom for workload spikes.
-
-## Security Best Practices
-
-- ⚠️ **Never commit files containing real AWS account IDs, bucket names, or credentials to this public repository**
-- ✅ Use separate values files for different environments
-- ✅ Store production configuration in private repositories or secret management systems
-
-## Multi-Environment Setup
-
-This chart is designed to be environment-agnostic. You can maintain separate configuration files for different environments:
-```bash
-# Development
-helm upgrade kubecost . -n kubecost --install \
-  -f values.yaml \
-  -f /path/to/dev-config.yaml
-
-# Staging
-helm upgrade kubecost . -n kubecost --install \
-  -f values.yaml \
-  -f /path/to/staging-config.yaml
-
-# Production
-helm upgrade kubecost . -n kubecost --install \
-  -f values.yaml \
-  -f /path/to/prod-config.yaml
-```
-
-**Separation of concerns:**
-- `values.yaml` - Shared resource limits and non-sensitive defaults (in repo)
-- Environment-specific files - AWS credentials and configuration (not in repo)
-
-This approach allows teams to:
-- Version control resource limits publicly
-- Keep sensitive credentials private
-- Maintain consistent configurations across environments
-- Use different AWS accounts/regions per environment
-
-## Troubleshooting
-
-### Chart Dependencies Missing
-
-If you see errors about missing `cost-analyzer` chart:
-```bash
-cd charts/kubecost
-helm dependency update
-```
-
-This downloads the required `cost-analyzer` chart dependency.
-
-### AWS Integration Not Working
-
-Verify:
-1. AWS CUR is being exported to S3
-2. Athena database and table exist and are accessible
-3. `cloud-service-key` Kubernetes secret exists in kubecost namespace
-4. IAM permissions allow Athena queries and S3 access
-
-### Resource Limits Too Low
-
-If pods are being OOMKilled or CPU throttled:
-1. Check actual usage: `kubectl top pods -n kubecost`
-2. Adjust limits in your production.yaml file
-3. Redeploy with updated values
-
-## Maintainers
-
-- Mani Thumu (mani.thumu@kcl.ac.uk)
-- Yatharth Ranjan (yatharth.ranjan@kcl.ac.uk)
-
-## References
-
-- [Kubecost Documentation](https://docs.kubecost.com/)
-- [Official Chart Repository](https://github.com/kubecost/cost-analyzer-helm-chart)
-- [AWS Cost & Usage Report](https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html)
-- [Kubecost AWS Integration Guide](https://docs.kubecost.com/install-and-configure/install/cloud-integration/aws-cloud-integrations)
