@@ -11,7 +11,6 @@ referencing helm repository `radar` with URL <https://radar-base.github.com/rada
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [About](#about)
 - [Prerequisites](#prerequisites)
 - [Usage](#usage)
