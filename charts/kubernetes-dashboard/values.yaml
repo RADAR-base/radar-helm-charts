@@ -1,0 +1,108 @@
+kubernetes-dashboard:
+  # Auth container configuration
+  # Current: 100m/200Mi requests, 250m/400Mi limits
+  # Actual usage: 1m CPU, 7Mi memory
+  auth:
+    containers:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+
+  # API container configuration
+  # Current: 100m/200Mi requests, 250m/400Mi limits
+  # Actual usage: 1m CPU, 10Mi memory
+  api:
+    containers:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+
+  # Web UI container configuration
+  # Current: 100m/200Mi requests, 250m/400Mi limits
+  # Actual usage: 1m CPU, 7Mi memory
+  web:
+    containers:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+
+  # Metrics Scraper configuration
+  # Current: 100m/200Mi requests, 250m/400Mi limits
+  # Actual usage: 1m CPU, 14Mi memory
+  metricsScraper:
+    enabled: true
+    containers:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+
+  # Kong gateway configuration
+  # Current: NO LIMITS SET (BestEffort QoS - CRITICAL ISSUE!)
+  # Actual usage: 2m CPU, 133Mi memory (highest memory consumer)
+  # This configuration adds resource limits for the first time
+  kong:
+    enabled: true
+    env:
+      dns_order: LAST,A,CNAME,AAAA,SRV
+      plugins: 'off'
+      nginx_worker_processes: 1
+    ingressController:
+      enabled: false
+    dblessConfig:
+      configMap: kong-dbless-config
+    proxy:
+      type: ClusterIP
+      http:
+        enabled: false
+    # Resource limits for Kong proxy container
+    # Note: Kong chart uses different structure - resources at deployment level
+    deploymentAnnotations: {}
+    # Resources applied to the Kong deployment
+    resources:
+      requests:
+        cpu: 50m
+        memory: 181Mi
+      limits:
+        cpu: 100m
+        memory: 256Mi
+
+  # Disable optional components (not installed in your cluster)
+  metrics-server:
+    enabled: false
+
+  cert-manager:
+    enabled: false
+
+  nginx:
+    enabled: false
+
+  # Security context (keeping current secure defaults)
+  app:
+    security:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsUser: 1001
+        runAsGroup: 2001
+        capabilities:
+          drop: ["ALL"]
