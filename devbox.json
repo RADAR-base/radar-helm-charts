@@ -4,7 +4,7 @@
     "kubectl@latest",
     "chart-testing@latest",
     "pre-commit@latest",
-    "trivy@latest",
+    "trivy@0.57.1",
     "checkov@3.2.336",
     "kubernetes-helm@latest",
     "actionlint@latest",
