@@ -1,5 +1,8 @@
 
 
+
+
+
 # kubecost
 
 ![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.6.3](https://img.shields.io/badge/AppVersion-2.6.3-informational?style=flat-square)
@@ -30,45 +33,45 @@ A Helm chart for Kubecost cost analyzer. This chart is an overlay for the offici
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| kubecostProductConfigs.clusters[0].name | string | `""` |  |
-| kubecostProductConfigs.clusters[0].address | string | `"http://127.0.0.1:9090"` |  |
-| kubecostProductConfigs.athenaProjectID | string | `""` |  |
-| kubecostProductConfigs.athenaBucketName | string | `""` |  |
-| kubecostProductConfigs.athenaRegion | string | `""` |  |
-| kubecostProductConfigs.athenaDatabase | string | `""` |  |
-| kubecostProductConfigs.athenaTable | string | `""` |  |
-| kubecostProductConfigs.athenaWorkgroup | string | `"primary"` |  |
-| kubecostProductConfigs.awsSpotDataRegion | string | `""` |  |
-| kubecostProductConfigs.awsSpotDataBucket | string | `""` |  |
-| kubecostProductConfigs.spotLabel | string | `"eks.amazonaws.com/capacityType"` |  |
-| kubecostProductConfigs.spotLabelValue | string | `"SPOT"` |  |
-| kubecostProductConfigs.serviceKeySecretName | string | `"cloud-service-key"` |  |
-| grafana.enabled | bool | `false` |  |
-| grafana.resources.requests.cpu | string | `"10m"` |  |
-| grafana.resources.requests.memory | string | `"164Mi"` |  |
-| grafana.resources.limits.cpu | string | `"100m"` |  |
-| grafana.resources.limits.memory | string | `"256Mi"` |  |
-| prometheus.server.global.external_labels.cluster_id | string | `""` |  |
-| prometheus.server.resources.requests.cpu | string | `"50m"` |  |
-| prometheus.server.resources.requests.memory | string | `"181Mi"` |  |
-| prometheus.server.resources.limits.cpu | string | `"100m"` |  |
-| prometheus.server.resources.limits.memory | string | `"256Mi"` |  |
-| networkCosts.enabled | bool | `true` |  |
-| networkCosts.config.services.amazon-web-services | bool | `true` |  |
-| networkCosts.replicas | int | `4` |  |
-| networkCosts.resources.requests.cpu | string | `"50m"` |  |
-| networkCosts.resources.requests.memory | string | `"20Mi"` |  |
-| networkCosts.resources.limits.cpu | string | `"100m"` |  |
-| networkCosts.resources.limits.memory | string | `"256Mi"` |  |
-| kubecostModel.resources.requests.cpu | string | `"50m"` |  |
-| kubecostModel.resources.requests.memory | string | `"2500Mi"` |  |
-| kubecostModel.resources.limits.cpu | string | `"200m"` |  |
-| kubecostModel.resources.limits.memory | string | `"3072Mi"` |  |
-| forecasting.enabled | bool | `true` |  |
-| forecasting.resources.requests.cpu | string | `"10m"` |  |
-| forecasting.resources.requests.memory | string | `"150Mi"` |  |
-| forecasting.resources.limits.cpu | string | `"200m"` |  |
-| forecasting.resources.limits.memory | string | `"512Mi"` |  |
+| cost-analyzer.kubecostProductConfigs.clusters[0].name | string | `""` |  |
+| cost-analyzer.kubecostProductConfigs.clusters[0].address | string | `"http://127.0.0.1:9090"` |  |
+| cost-analyzer.kubecostProductConfigs.athenaProjectID | string | `""` |  |
+| cost-analyzer.kubecostProductConfigs.athenaBucketName | string | `""` |  |
+| cost-analyzer.kubecostProductConfigs.athenaRegion | string | `""` |  |
+| cost-analyzer.kubecostProductConfigs.athenaDatabase | string | `""` |  |
+| cost-analyzer.kubecostProductConfigs.athenaTable | string | `""` |  |
+| cost-analyzer.kubecostProductConfigs.athenaWorkgroup | string | `"primary"` |  |
+| cost-analyzer.kubecostProductConfigs.awsSpotDataRegion | string | `""` |  |
+| cost-analyzer.kubecostProductConfigs.awsSpotDataBucket | string | `""` |  |
+| cost-analyzer.kubecostProductConfigs.spotLabel | string | `"eks.amazonaws.com/capacityType"` |  |
+| cost-analyzer.kubecostProductConfigs.spotLabelValue | string | `"SPOT"` |  |
+| cost-analyzer.kubecostProductConfigs.serviceKeySecretName | string | `"cloud-service-key"` |  |
+| cost-analyzer.grafana.enabled | bool | `false` |  |
+| cost-analyzer.grafana.resources.requests.cpu | string | `"10m"` |  |
+| cost-analyzer.grafana.resources.requests.memory | string | `"164Mi"` |  |
+| cost-analyzer.grafana.resources.limits.cpu | string | `"100m"` |  |
+| cost-analyzer.grafana.resources.limits.memory | string | `"256Mi"` |  |
+| cost-analyzer.prometheus.server.global.external_labels.cluster_id | string | `""` |  |
+| cost-analyzer.prometheus.server.resources.requests.cpu | string | `"50m"` |  |
+| cost-analyzer.prometheus.server.resources.requests.memory | string | `"181Mi"` |  |
+| cost-analyzer.prometheus.server.resources.limits.cpu | string | `"100m"` |  |
+| cost-analyzer.prometheus.server.resources.limits.memory | string | `"256Mi"` |  |
+| cost-analyzer.networkCosts.enabled | bool | `true` |  |
+| cost-analyzer.networkCosts.config.services.amazon-web-services | bool | `true` |  |
+| cost-analyzer.networkCosts.replicas | int | `4` |  |
+| cost-analyzer.networkCosts.resources.requests.cpu | string | `"50m"` |  |
+| cost-analyzer.networkCosts.resources.requests.memory | string | `"20Mi"` |  |
+| cost-analyzer.networkCosts.resources.limits.cpu | string | `"100m"` |  |
+| cost-analyzer.networkCosts.resources.limits.memory | string | `"256Mi"` |  |
+| cost-analyzer.kubecostModel.resources.requests.cpu | string | `"50m"` |  |
+| cost-analyzer.kubecostModel.resources.requests.memory | string | `"2500Mi"` |  |
+| cost-analyzer.kubecostModel.resources.limits.cpu | string | `"200m"` |  |
+| cost-analyzer.kubecostModel.resources.limits.memory | string | `"3072Mi"` |  |
+| cost-analyzer.forecasting.enabled | bool | `true` |  |
+| cost-analyzer.forecasting.resources.requests.cpu | string | `"10m"` |  |
+| cost-analyzer.forecasting.resources.requests.memory | string | `"150Mi"` |  |
+| cost-analyzer.forecasting.resources.limits.cpu | string | `"200m"` |  |
+| cost-analyzer.forecasting.resources.limits.memory | string | `"512Mi"` |  |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
