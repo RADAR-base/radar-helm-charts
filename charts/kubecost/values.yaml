@@ -1,77 +1,79 @@
 # AWS/ATHENA CONFIGURATION
-kubecostProductConfigs:
-  clusters:
-    - name: ""  # Example: dev-cluster-1
-      address: http://127.0.0.1:9090
-  athenaProjectID: ""  # Example: "123456789012" (Your AWS Account ID)
-  athenaBucketName: ""  # Example: s3://aws-athena-query-results-yourorg
-  athenaRegion: ""  # Example: eu-west-2
-  athenaDatabase: ""  # Example: athenacurcfn_yourdb
-  athenaTable: ""  # Example: your_table_name
-  athenaWorkgroup: "primary"
-  awsSpotDataRegion: ""  # Example: eu-west-2
-  awsSpotDataBucket: ""  # Example: yourorg-spot-instance-data-feed
-  spotLabel: "eks.amazonaws.com/capacityType"
-  spotLabelValue: "SPOT"
-  serviceKeySecretName: "cloud-service-key"
+# Values are prefixed with 'cost-analyzer:' to pass them to the subchart dependency
+cost-analyzer:
+  kubecostProductConfigs:
+    clusters:
+      - name: ""  # Example: dev-cluster-1
+        address: http://127.0.0.1:9090
+    athenaProjectID: ""  # Example: "123456789012" (Your AWS Account ID)
+    athenaBucketName: ""  # Example: s3://aws-athena-query-results-yourorg
+    athenaRegion: ""  # Example: eu-west-2
+    athenaDatabase: ""  # Example: athenacurcfn_yourdb
+    athenaTable: ""  # Example: your_table_name
+    athenaWorkgroup: "primary"
+    awsSpotDataRegion: ""  # Example: eu-west-2
+    awsSpotDataBucket: ""  # Example: yourorg-spot-instance-data-feed
+    spotLabel: "eks.amazonaws.com/capacityType"
+    spotLabelValue: "SPOT"
+    serviceKeySecretName: "cloud-service-key"
 
-# Grafana component
-grafana:
-  enabled: false
-  resources:
-    requests:
-      cpu: 10m
-      memory: 164Mi
-    limits:
-      cpu: 100m
-      memory: 256Mi
-
-# Prometheus server configuration
-prometheus:
-  server:
-    global:
-      external_labels:
-        cluster_id: ""  # Example: dev-cluster-1
+  # Grafana component
+  grafana:
+    enabled: false
     resources:
       requests:
-        cpu: 50m
-        memory: 181Mi
+        cpu: 10m
+        memory: 164Mi
       limits:
         cpu: 100m
         memory: 256Mi
 
-# Network costs configuration
-networkCosts:
-  enabled: true
-  config:
-    services:
-      amazon-web-services: true
-  replicas: 4
-  resources:
-    requests:
-      cpu: 50m
-      memory: 20Mi
-    limits:
-      cpu: 100m
-      memory: 256Mi
+  # Prometheus server configuration
+  prometheus:
+    server:
+      global:
+        external_labels:
+          cluster_id: ""  # Example: dev-cluster-1
+      resources:
+        requests:
+          cpu: 50m
+          memory: 181Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
 
-# Cost analyzer configuration
-kubecostModel:
-  resources:
-    requests:
-      cpu: 50m
-      memory: 2500Mi
-    limits:
-      cpu: 200m
-      memory: 3072Mi
+  # Network costs configuration
+  networkCosts:
+    enabled: true
+    config:
+      services:
+        amazon-web-services: true
+    replicas: 4
+    resources:
+      requests:
+        cpu: 50m
+        memory: 20Mi
+      limits:
+        cpu: 100m
+        memory: 256Mi
 
-# Forecasting configuration
-forecasting:
-  enabled: true
-  resources:
-    requests:
-      cpu: 10m
-      memory: 150Mi
-    limits:
-      cpu: 200m
-      memory: 512Mi
+  # Cost analyzer configuration
+  kubecostModel:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 2500Mi
+      limits:
+        cpu: 200m
+        memory: 3072Mi
+
+  # Forecasting configuration
+  forecasting:
+    enabled: true
+    resources:
+      requests:
+        cpu: 10m
+        memory: 150Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
