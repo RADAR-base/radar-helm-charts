@@ -182,3 +182,10 @@ update-velero:
 	@helm repo add $(patsubst update-%,%,$@) https://vmware-tanzu.github.io/helm-charts
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
+
+update-kubecost:
+	@echo "Updating kubecost"
+	@rm -rf charts/kubecost/charts/cost-analyzer
+	@helm repo add kubecost https://kubecost.github.io/cost-analyzer/
+	@helm pull -d charts/kubecost/charts --untar kubecost/cost-analyzer --version 2.6.3
+	@echo ""
