@@ -7941,6 +7941,37 @@ entries:
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: 0.7.2
+    created: "2026-01-28T10:40:20.45376351Z"
+    dependencies:
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for RADAR-base fitbit connector. This application collects
+      data from participants via the Fitbit Web API.
+    digest: 8f08e8c6c1c0d613e84bb54235044b866c7da4341e11f9c2f103b3b61157f7aa
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-fitbit-connector
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-fitbit-connector
+    - https://github.com/RADAR-base/RADAR-REST-Connector
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-fitbit-connector-0.11.2/radar-fitbit-connector-0.11.2.tgz
+    version: 0.11.2
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 0.7.1
     created: "2026-01-28T08:16:19.135325929Z"
     dependencies:
@@ -22992,4 +23023,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-28T08:16:19.315904045Z"
+generated: "2026-01-28T10:40:20.454748143Z"
