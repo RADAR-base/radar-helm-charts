@@ -1,5 +1,5 @@
 # AWS/ATHENA CONFIGURATION
-# This Kubecost chart supports multiple cloud platforms: AWS EKS, GCP GKE, and Azure AKS
+# This Kubecost chart supports multiple cloud platforms: AWS EKS, GCP GKE, and Azure Kubernetes Service
 # For GCP and Azure deployments, refer to: https://docs.kubecost.com/
 # Values are prefixed with 'cost-analyzer:' to pass them to the subchart dependency
 cost-analyzer:
