@@ -1,0 +1,192 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "radar-appserver.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+      labels:
+        app.kubernetes.io/name: {{ include "radar-appserver.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- include "radar-appserver.imagePullSecrets" . | nindent 6 }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                  - key: "app.kubernetes.io/name"
+                    operator: In
+                    values:
+                    - {{ template "radar-appserver.name" . }}
+                  - key: "app.kubernetes.io/instance"
+                    operator: In
+                    values:
+                    - {{ .Release.Name }}
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "radar-appserver.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          command: [ "appserver-jersey", "/etc/radar-appserver/appserver.yml" ]
+          {{- $secretName := include "radar-appserver.fullname" . }}
+          env:
+          - name: JAVA_OPTS
+            value: {{ include "radar-appserver.javaOpts" . }}
+          - name: APPSERVER_JDBC_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.urlSecret.name | default $secretName }}
+                key: {{ .Values.postgres.urlSecret.key | default "databaseUrl" }}
+          - name: APPSERVER_JDBC_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.userSecret.name | default $secretName }}
+                key: {{ .Values.postgres.userSecret.key | default "databaseUser" }}
+          - name: APPSERVER_JDBC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.postgres.passwordSecret.name | default $secretName }}
+                key: {{ .Values.postgres.passwordSecret.key | default "databasePassword" }}
+          - name: APPSERVER_HIBERNATE_DIALECT
+            value: {{ .Values.postgres.hibernateDialect }}
+          - name: APPSERVER_JDBC_DRIVER
+            value: {{ .Values.postgres.jdbcDriver }}
+          - name: MANAGEMENTPORTAL_BASE_URL
+            value: "{{ .Values.managementportal_url }}"
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: /etc/google/firebase-adminsdk.json
+          - name: SECURITY_GITHUB_CLIENT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ $secretName }}
+                key: githubClientToken
+          - name: RADAR_APPSERVER_RESOURCE_NAME
+            value: {{ .Values.managementportal_resource_name }}
+          - name: APPSERVER_ARMT_PROTOCOL_REPO
+            value: {{ .Values.protocol.githubProtocolRepo }}
+          - name: APPSERVER_ARMT_PROTOCOL_FILE_NAME
+            value: {{ .Values.protocol.protocolFileName }}
+          - name: APPSERVER_ARMT_PROTOCOL_BRANCH
+            value: {{ .Values.protocol.githubBranch }}
+          {{- if .Values.smtp.enabled }}
+          - name: RADAR_APPSERVER_NOTIFICATION_EMAIL_ENABLED
+            value: {{ .Values.smtp.enabled | quote }}
+          - name: RADAR_APPSERVER_NOTIFICATION_EMAIL_FROM
+            value: {{ .Values.smtp.from }}
+          - name: RADAR_APPSERVER_EMAIL_SMTP_HOST
+            value: "{{ .Values.smtp.host }}"
+          - name: RADAR_APPSERVER_EMAIL_SMTP_PORT
+            value: {{ .Values.smtp.port | quote }}
+          - name: RADAR_APPSERVER_EMAIL_TLS_ENABLED
+            value: {{ .Values.smtp.starttls | quote }}
+          - name: RADAR_APPSERVER_EMAIL_CONNECT_TIMEOUT
+            value: {{ .Values.smtp.connect_timeout }}
+          - name: RADAR_APPSERVER_EMAIL_READ_TIMEOUT
+            value: {{ .Values.smtp.read_timeout }}
+            {{ if .Values.smtp.auth }}
+          - name: RADAR_APPSERVER_EMAIL_SMTP_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ $secretName }}
+                key: smtpUsername
+          - name: RADAR_APPSERVER_EMAIL_SMTP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ $secretName }}
+                key: smtpPassword
+            {{- end }}
+          {{- end }}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          {{- if .Values.customLivenessProbe }}
+          livenessProbe: {{- .Values.customLivenessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /etc/radar-appserver/healthcheck.sh
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.customReadinessProbe }}
+          readinessProbe: {{- .Values.customReadinessProbe | toYaml | nindent 12 }}
+          {{- else if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /etc/radar-appserver/healthcheck.sh
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.customStartupProbe }}
+          startupProbe: {{- .Values.customStartupProbe | toYaml | nindent 12 }}
+          {{- else if .Values.startupProbe.enabled }}
+          startupProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /etc/radar-appserver/healthcheck.sh
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/radar-appserver/
+            - name: secrets
+              mountPath: /etc/google/firebase-adminsdk.json
+              subPath: firebaseAdminSdkKey
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "radar-appserver.fullname" . }}
+        - name: secrets
+          secret:
+            secretName: {{ include "radar-appserver.fullname" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
