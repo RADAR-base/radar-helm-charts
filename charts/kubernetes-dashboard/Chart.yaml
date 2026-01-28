@@ -1,0 +1,28 @@
+apiVersion: v2
+appVersion: "7.3.2"
+description: A Helm chart for Kubernetes Dashboard. This chart is an overlay for the official kubernetes-dashboard chart with custom resource limits configured for RADAR-K8s environments.
+name: kubernetes-dashboard
+version: 1.0.0
+sources:
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/kubernetes-dashboard
+- https://github.com/kubernetes/dashboard
+keywords:
+  - kubernetes
+  - dashboard
+  - monitoring
+  - radar-base
+  - ui
+annotations:
+  artifacthub.io/license: Apache-2.0
+deprecated: false
+type: application
+home: "https://github.com/kubernetes/dashboard"
+maintainers:
+  - email: mani.thumu@kcl.ac.uk
+    name: Mani Thumu
+  - email: yatharth.ranjan@kcl.ac.uk
+    name: Yatharth Ranjan
+dependencies:
+- name: kubernetes-dashboard
+  repository: https://kubernetes.github.io/dashboard/
+  version: 7.3.2
