@@ -1,0 +1,166 @@
+{{- $root := . -}}
+{{- range $name, $svc := $root.Values.services }}
+{{- if $svc.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
+  namespace: {{ include "common.names.namespace" $root | quote }}
+  labels: {{- include "appserver-microservices.labels" ( dict "root" $root "serviceName" $name ) | nindent 4 }}
+  {{- if $root.Values.global.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $root.Values.global.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas:  {{ default (default 1 $root.Values.global.replicaCount) $svc.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appserver-microservices.selectorLabels" (dict "root" $root "serviceName" $name) | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/configmap: {{ include (print $root.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $root.Template.BasePath "/secrets.yaml") . | sha256sum }}
+      labels:
+        {{- include "appserver-microservices.selectorLabels" (dict "root" $root "serviceName" $name) | nindent 8 }}
+        app.kubernetes.io/component: {{ $name }}
+    spec:
+      {{- with $root.Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml $svc.podSecurityContext | nindent 8 }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                  - key: "app.kubernetes.io/name"
+                    operator: In
+                    values:
+                    - {{ include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
+                  - key: "app.kubernetes.io/instance"
+                    operator: In
+                    values:
+                    - {{ $root.Release.Name }}
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: {{ $root.Chart.Name }}
+          securityContext:
+            {{- toYaml $svc.securityContext | nindent 12 }}
+          image: "{{ $svc.image.repository }}:{{ default $root.Chart.AppVersion $svc.image.tag }}"
+          imagePullPolicy: {{ $svc.image.pullPolicy | quote }}
+          {{- if $svc.command }}
+          command:
+          {{- toYaml $svc.command | nindent 10 }}
+          {{- end }}
+          {{- if or $svc.args (and $svc.config $svc.config.enabled) }}
+          args:
+          {{- if $svc.args }}
+          {{- toYaml $svc.args | nindent 10 }}
+          {{- end }}
+          {{- if and $svc.config $svc.config.enabled }}
+            - {{ default "/etc/radar-appserver/appserver.yaml" $svc.config.mountPath }}
+          {{- end }}
+          {{- end }}
+          {{- $secretName := include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
+          {{- with $svc.envMap }}
+          env:
+            {{- if $svc.injectJavaOpts }}
+            - name: JAVA_OPTS
+              value: {{ include "appserver-microservices.javaOpts" $root | quote }}
+            {{- end }}
+            {{ range $key, $val := . }}
+            - name: {{ $key | quote}}
+              {{- if $val.value }}
+              value: {{ $val.value | quote }}
+              {{- else if $val.valueFrom }}
+              valueFrom: {{- $val.valueFrom | toYaml | nindent 14 }}
+              {{- else }}
+              value: ""
+              {{- end }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ default 8080 $svc.ports.containerPort }}
+              protocol: TCP
+          {{- if $svc.customLivenessProbe }}
+          livenessProbe: {{- $svc.customLivenessProbe | toYaml | nindent 12 }}
+          {{- else if $svc.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /etc/radar-appserver/healthcheck.sh
+            initialDelaySeconds: {{ $svc.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $svc.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ $svc.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ $svc.livenessProbe.successThreshold }}
+            failureThreshold: {{ $svc.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if $svc.customReadinessProbe }}
+          readinessProbe: {{- $svc.customReadinessProbe | toYaml | nindent 12 }}
+          {{- else if $svc.readinessProbe.enabled }}
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /etc/radar-appserver/healthcheck.sh
+            initialDelaySeconds: {{ $svc.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $svc.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ $svc.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ $svc.readinessProbe.successThreshold }}
+            failureThreshold: {{ $svc.readinessProbe.failureThreshold }}
+          {{- end }}
+          {{- if $svc.customStartupProbe }}
+          startupProbe: {{- $svc.customStartupProbe | toYaml | nindent 12 }}
+          {{- else if $svc.startupProbe.enabled }}
+          startupProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /etc/radar-appserver/healthcheck.sh
+            initialDelaySeconds: {{ $svc.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ $svc.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ $svc.startupProbe.timeoutSeconds }}
+            successThreshold: {{ $svc.startupProbe.successThreshold }}
+            failureThreshold: {{ $svc.startupProbe.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml $svc.resources | nindent 12 }}
+          {{- with $svc.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- if $svc.volumes }}
+      volumes:
+        {{- range $vol := $svc.volumes }}
+        - name: {{ $vol.name }}
+          {{- if $vol.configMap }}
+          configMap:
+            name: {{ include "appserver-microservices.serviceFullname" (dict "root" $root "serviceName" $name) }}
+          {{- end }}
+          {{- if $vol.secret }}
+          secret:
+            secretName: {{ include "appserver-microservices.serviceFullname" (dict "root" $root "serviceName" $name) }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- with $svc.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with $svc.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with $svc.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+---
+{{- end }}
+{{- end }}
