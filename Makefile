@@ -182,3 +182,10 @@ update-velero:
 	@helm repo add $(patsubst update-%,%,$@) https://vmware-tanzu.github.io/helm-charts
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
+
+update-airflow:
+	@echo "Updating Airflow"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://airflow.apache.org
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
