@@ -1,8 +1,8 @@
 apiVersion: v2
-appVersion: 0.7.1
+appVersion: 0.7.2
 description: A Helm chart for RADAR-base fitbit connector. This application collects data from participants via the Fitbit Web API.
 name: radar-fitbit-connector
-version: 0.12.0
+version: 0.11.2
 icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
 sources:
 - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-fitbit-connector
