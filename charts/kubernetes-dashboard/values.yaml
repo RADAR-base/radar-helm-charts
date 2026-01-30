@@ -76,10 +76,10 @@ kubernetes-dashboard:
     # Resources applied to the Kong deployment
     resources:
       requests:
-        cpu: 50m
+        cpu: 100m
         memory: 181Mi
       limits:
-        cpu: 100m
+        cpu: 200m
         memory: 256Mi
 
   # Disable optional components (not installed in your cluster)
