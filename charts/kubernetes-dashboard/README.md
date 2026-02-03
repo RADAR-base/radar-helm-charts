@@ -3,11 +3,11 @@
 
 
 
-
 # kubernetes-dashboard
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/kubernetes-dashboard)](https://artifacthub.io/packages/helm/radar-base/kubernetes-dashboard)
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 7.3.2](https://img.shields.io/badge/AppVersion-7.3.2-informational?style=flat-square)
+
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 7.3.2](https://img.shields.io/badge/AppVersion-7.3.2-informational?style=flat-square) 
 
 A Helm chart for Kubernetes Dashboard. This chart is an overlay for the official kubernetes-dashboard chart with custom resource limits configured for RADAR-K8s environments.
 
