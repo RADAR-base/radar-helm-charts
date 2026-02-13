@@ -3,7 +3,7 @@
 # radar-kafka
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-kafka)](https://artifacthub.io/packages/helm/radar-base/radar-kafka)
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
 
 Apache Kafka for RADAR-base using the Strimzi Operator
 
@@ -49,9 +49,9 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | dev_deployment | bool | `false` | Deploy with minimal replicas, replicationFactor and without PVCs (a.k.a ephemeral mode) |
 | nameOverride | string | `""` | String to partially override radar-kafka.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-kafka.fullname template with a string |
-| metrics | object | `{"enabled":true,"kafkaExporter":{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"},"podMonitor":{"interval":"30s","scrapeTimeout":"30s"},"prometheusRules":{"consumerGroupLagDelta":20000}}` | Enable metrics to be collected via Prometheus-operator |
+| metrics | object | `{"enabled":true,"kafkaExporter":{"enableSaramaLogging":true,"groupRegex":".*","resources":{},"topicRegex":".*"},"podMonitor":{"interval":"30s","scrapeTimeout":"30s"},"prometheusRules":{"consumerGroupLagDelta":20000}}` | Enable metrics to be collected via Prometheus-operator |
 | metrics.enabled | bool | `true` | Enable monitoring of metrics |
-| metrics.kafkaExporter | object | `{"enableSaramaLogging":true,"groupRegex":".*","topicRegex":".*"}` | Values for Prometheus JMX Exporter attached to Kafka pods ref: https://strimzi.io/docs/operators/latest/deploying#proc-metrics-kafka-deploy-options-str |
+| metrics.kafkaExporter | object | `{"enableSaramaLogging":true,"groupRegex":".*","resources":{},"topicRegex":".*"}` | Values for Prometheus JMX Exporter attached to Kafka pods ref: https://strimzi.io/docs/operators/latest/deploying#proc-metrics-kafka-deploy-options-str |
 | metrics.kafkaExporter.groupRegex | string | `".*"` | Regex that selects consumer groups for KafkaExporter errors/warnings. |
 | metrics.podMonitor | object | `{"interval":"30s","scrapeTimeout":"30s"}` | Prometheus scrap config for Kafka pods. These settings do not affect scrape of Strimzi operators. |
 | metrics.prometheusRules | object | `{"consumerGroupLagDelta":20000}` | Custom parameters to selected prometheus rules |
@@ -60,19 +60,20 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | strimzi-registry-operator | object | `{"clusterName":"radar","operatorNamespace":"default"}` | Values for schema registry operator ref: https://github.com/lsst-sqre/strimzi-registry-operator |
 | strimzi-registry-operator.clusterName | string | `"radar"` | Keep in sync with 'fullnameOverride' |
 | strimzi-registry-operator.operatorNamespace | string | `"default"` | Keep in sync with namespace used by deployment |
-| kafka | object | `{"cruiseControl":{"addRebalanceTemplate":true,"enabled":false,"goals":[],"skipHardGoalCheck":true},"insyncReplicas":2,"metadataVersion":"3.9-IV0","partitions":9,"podSecurityContext":{},"replicas":3,"replicationFactor":3,"resources":{"requests":{"cpu":"100m","memory":"1Gi"}},"securityContext":{},"storage":{"size":"10Gi"}}` | Values for Kafka cluster deployed by Strimzi kafka operator |
+| kafka | object | `{"cruiseControl":{"addRebalanceTemplate":true,"enabled":false,"goals":[],"javaOptions":{"-Xms":"128m","-Xmx":"256m"},"resources":{},"skipHardGoalCheck":true},"insyncReplicas":2,"javaOptions":{"-Xms":"512m","-Xmx":"1G"},"metadataVersion":"3.9-IV0","nodePool":{"jvmOptions":{"-Xms":"512m","-Xmx":"1G"},"resources":{}},"partitions":9,"podSecurityContext":{},"replicas":3,"replicationFactor":3,"resources":{"requests":{}},"securityContext":{},"storage":{"size":"10Gi"},"topicOperator":{"jvmOptions":{"-Xms":"64m","-Xmx":"128m"},"resources":{}},"userOperator":{"jvmOptions":{"-Xms":"64m","-Xmx":"128m"},"resources":{}}}` | Values for Kafka cluster deployed by Strimzi kafka operator |
 | kafka.replicas | int | `3` | Number of Kafka brokers |
 | kafka.replicationFactor | int | `3` | Number of replicas for Kafka topics |
 | kafka.insyncReplicas | int | `2` | Number of in-sync kafka broker replicas |
 | kafka.partitions | int | `9` | Number of topic data partitions. Rule of thumb: 3 times the number of brokers. Headroom is used for future upscale of brokers. ref: https://learn.conduktor.io/kafka/kafka-topics-choosing-the-replication-factor-and-partitions-count/ |
 | kafka.metadataVersion | string | `"3.9-IV0"` | Metadata API version. Keep in sync with appVersion |
 | kafka.storage | object | `{"size":"10Gi"}` | Storage size for Kafka pods |
-| kafka.resources | object | `{"requests":{"cpu":"100m","memory":"1Gi"}}` | Resource requests for Kafka pods |
-| kafka.cruiseControl | object | `{"addRebalanceTemplate":true,"enabled":false,"goals":[],"skipHardGoalCheck":true}` | Config for the Cruise Control rebalancer (https://github.com/linkedin/cruise-control) |
+| kafka.javaOptions | object | `{"-Xms":"512m","-Xmx":"1G"}` | JVM options for Kafka pods |
+| kafka.cruiseControl | object | `{"addRebalanceTemplate":true,"enabled":false,"goals":[],"javaOptions":{"-Xms":"128m","-Xmx":"256m"},"resources":{},"skipHardGoalCheck":true}` | Config for the Cruise Control rebalancer (https://github.com/linkedin/cruise-control) |
 | kafka.cruiseControl.enabled | bool | `false` | Deploy the Cruise Control rebalancer operator. |
 | kafka.cruiseControl.addRebalanceTemplate | bool | `true` | Add a KafkaRebalance template CRD. Note that this does not automatically rebalance the cluster. For rebalancing, you need to create a KafkaRebalance resource using the template. |
 | kafka.cruiseControl.goals | list | `[]` | Goals for the Cruise Control rebalancer. If left empty, the default goals are used (see: https://github.com/linkedin/cruise-control#goals). |
 | kafka.cruiseControl.skipHardGoalCheck | bool | `true` | Skip hard goal check by Cruise Control rebalancer. |
+| kafka.cruiseControl.javaOptions | object | `{"-Xms":"128m","-Xmx":"256m"}` | JVM options for Cruise Control pods |
 | kafka.podSecurityContext | object | `{}` | Security Context for Kafka pods ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str |
 | kafka.securityContext | object | `{}` | Security Context for Kafka containers ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str |
 | schema-registry | object | check `values.yaml` | Values for schema registry deployed by strimzi-registry-operator ref: https://github.com/lsst-sqre/strimzi-registry-operator |

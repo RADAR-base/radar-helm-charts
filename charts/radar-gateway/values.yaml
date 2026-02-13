@@ -236,6 +236,15 @@ serviceMonitor:
   # -- Enable metrics to be collected via Prometheus-operator
   enabled: true
 
+jmxExporter:
+  resources: {}
+#    requests:
+#      cpu: 100m
+#      memory: 64Mi
+#    limits: {}
+#      cpu: 200m
+#      memory: 256Mi
+
 hpa:
   # -- Enable HPA
   enabled: true

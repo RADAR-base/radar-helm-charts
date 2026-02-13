@@ -22,6 +22,14 @@ metrics:
     # --
     topicRegex: ".*"
     enableSaramaLogging: true
+    resources: {}
+  #   requests:
+  #     cpu: 10m
+  #     memory: 256Mi
+  #   limits:
+  #     cpu: 100
+  #     memory: 512Mi
+
   # -- Prometheus scrap config for Kafka pods. These settings do not affect scrape of Strimzi operators.
   podMonitor:
     interval: 30s
@@ -35,9 +43,13 @@ metrics:
 # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-operators-str
 # @default -- check `values.yaml`
 strimzi-kafka-operator:
-  resources:
-    limits:
-      memory: 512Mi
+  resources: {}
+#    requests:
+#      cpu: 100m
+#      memory: 256Mi
+#    limits:
+#      cpu: 100
+#      memory: 512Mi
 
 # -- Values for schema registry operator
 # ref: https://github.com/lsst-sqre/strimzi-registry-operator
@@ -67,11 +79,54 @@ kafka:
   storage:
     size: 10Gi
 
-  # -- Resource requests for Kafka pods
   resources:
-    requests:
-      cpu: 100m
-      memory: 1Gi
+    requests: {}
+#      cpu: 100m
+#      memory: 1Gi
+#    limits:
+#      cpu: 1
+#      memory: 2Gi
+
+  # -- JVM options for Kafka pods
+  javaOptions:
+    -Xms: 512m
+    -Xmx: 1G
+
+  nodePool:
+    jvmOptions:
+      -Xms: 512m
+      -Xmx: 1G
+    resources: {}
+#      requests:
+#        cpu: 100m
+#        memory: 1Gi
+#      limits:
+#        cpu: 1
+#        memory: 2Gi
+
+  userOperator:
+    jvmOptions:
+      -Xms: 64m
+      -Xmx: 128m
+    resources: {}
+  #      requests:
+  #        cpu: 10m
+  #        memory: 256Mi
+  #      limits:
+  #        cpu: 100
+  #        memory: 512Mi
+
+  topicOperator:
+    jvmOptions:
+      -Xms: 64m
+      -Xmx: 128m
+    resources: {}
+  #      requests:
+  #        cpu: 10m
+  #        memory: 256Mi
+  #      limits:
+  #        cpu: 100
+  #        memory: 512Mi
 
   # -- Config for the Cruise Control rebalancer (https://github.com/linkedin/cruise-control)
   cruiseControl:
@@ -85,6 +140,17 @@ kafka:
     goals: []
     # -- Skip hard goal check by Cruise Control rebalancer.
     skipHardGoalCheck: true
+    # -- JVM options for Cruise Control pods
+    javaOptions:
+      -Xms: 128m
+      -Xmx: 256m
+    resources: {}
+#      requests:
+#        cpu: 10m
+#        memory: 128MiGi
+#      limits:
+#        cpu: 100m
+#        memory: 256Mi
 
   # -- Security Context for Kafka pods
   # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str
@@ -132,3 +198,7 @@ schema-registry:
       securityProtocol: SSL
       # 'none' compatibility level for schema registry was taken from legacy schema registry chart.
       compatibilityLevel: none
+#      cpuLimit: 1
+#      cpuRequest: 100m
+#      memoryLimit: 1Gi
+#      memoryRequest: 500Mi

@@ -92,6 +92,7 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | serviceMonitor.enabled | bool | `true` | Enable metrics to be collected via Prometheus-operator |
+| jmxExporter.resources | object | `{}` |  |
 | hpa.enabled | bool | `true` | Enable HPA |
 | hpa.maxReplicas | string | `"5"` | Maximum number of replicas |
 | hpa.targetCPU | string | `"80"` | Target CPU utilization percentage |

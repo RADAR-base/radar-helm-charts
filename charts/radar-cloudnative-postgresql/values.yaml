@@ -149,7 +149,7 @@ cluster:
           name: radar-cloudnative-postgresql-uploadconnector
 
   backups:
-    enabled: true
+    enabled: false
     endpointURL: http://minio:9000
     provider: s3
     s3:

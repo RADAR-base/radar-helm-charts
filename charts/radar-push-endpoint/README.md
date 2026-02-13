@@ -3,7 +3,7 @@
 # radar-push-endpoint
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-push-endpoint)](https://artifacthub.io/packages/helm/radar-base/radar-push-endpoint)
 
-![Version: 0.6.3](https://img.shields.io/badge/Version-0.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
+![Version: 0.6.5](https://img.shields.io/badge/Version-0.6.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming data from Push or Subscription based WEB APIs. It performs authentication, authorization and content validation. For more details of the configurations, see https://github.com/RADAR-base/RADAR-PushEndpoint.
 
@@ -120,4 +120,19 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | garmin.userRepositoryClientId | string | `"radar_push_endpoint"` | The client ID to access the user repository if the repository requires authorization |
 | garmin.userRepositoryClientSecret | string | `"secret"` | The client secret to access the user repository if the repository requires authorization |
 | garmin.userRepositoryTokenUrl | string | `"http://management-portal:8080/managementportal/oauth/token"` | The token URL for authentication (Usually the management portal token url). Make sure to avoid trailing slash (/) in the url. |
-| redis.url | string | `"redis://radar-redis-replication-headless:6379"` | The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties. |
+| garmin.backfill.enabled | bool | `true` | Whether to enable Garmin backfill requests |
+| garmin.backfill.activitiesEnabled | bool | `true` | Whether to enable Garmin backfill requests for activities |
+| garmin.backfill.activityDetailsEnabled | bool | `true` | Whether to enable Garmin backfill requests for activity details |
+| garmin.backfill.bodyCompositionsEnabled | bool | `true` | Whether to enable Garmin backfill requests for body composition |
+| garmin.backfill.dailiesEnabled | bool | `true` | Whether to enable Garmin backfill requests for dailies |
+| garmin.backfill.epochSummariesEnabled | bool | `true` | Whether to enable Garmin backfill requests for epoch summaries |
+| garmin.backfill.pulseOXEnabled | bool | `true` | Whether to enable Garmin backfill requests for pulse oximeter |
+| garmin.backfill.sleepsEnabled | bool | `true` | Whether to enable Garmin backfill requests for sleep |
+| garmin.backfill.stressEnabled | bool | `true` | Whether to enable Garmin backfill requests for stress |
+| garmin.backfill.userMetricsEnabled | bool | `true` | Whether to enable Garmin backfill requests for user metrics |
+| garmin.backfill.moveIQEnabled | bool | `true` | Whether to enable Garmin backfill requests for moveIQ |
+| garmin.backfill.respirationEnabled | bool | `true` | Whether to enable Garmin backfill requests for respiration |
+| garmin.backfill.bloodPressureEnabled | bool | `false` | Whether to enable blood pressure backfill requests |
+| garmin.backfill.healthSnapshotEnabled | bool | `false` | Whether to enable health snapshot backfill requests |
+| garmin.backfill.heartRateVariabilityEnabled | bool | `false` | Whether to enable heart rate variability backfill requests |
+| redis.url | string | `"redis://radar-redis-replication-master:6379"` | The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties. |

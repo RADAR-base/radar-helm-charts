@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: 3.9.0
 description: "Apache Kafka for RADAR-base using the Strimzi Operator"
 name: radar-kafka
-version: 0.3.0
+version: 0.4.0
 keywords:
   - kafka
   - queue

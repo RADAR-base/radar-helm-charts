@@ -48,8 +48,11 @@ spec:
     enabled: {{ .Values.metrics.enabled }}
     image: {{ include "common.images.image" (dict "imageRoot" .Values.redisExporter.image "global" .Values.global "chart" .Chart ) }}
     imagePullPolicy: {{ .Values.image.pullPolicy }}
-    {{- if .Values.redisExporter.securityContext }}
-    securityContext: {{ .Values.redisExporter.securityContext | toYaml | nindent 6 }}
+    {{- with .Values.redisExporter.securityContext }}
+    securityContext: {{ . | toYaml | nindent 6 }}
+    {{- end }}
+    {{- with .Values.redisExporter.resources }}
+    resources: {{ . | toYaml | nindent 6 }}
     {{- end }}
   env:
     - name: REDIS_EXPORTER_INCL_SYSTEM_METRICS
