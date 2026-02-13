@@ -55,7 +55,7 @@ RADAR-base home page.
 | ingress.path | string | `"/"` | Path within the url structure |
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
-| ingress.hosts | list | `["{{ .Values.server_name | quote }}"]` | Hosts to accept requests from |
+| ingress.hosts | list | `["{{ .Values.server_name }}"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | resources.limits | object | `{"cpu":"200m"}` | CPU/Memory resource limits |
 | resources.requests | object | `{"cpu":"10m","memory":"5Mi"}` | CPU/Memory resource requests |

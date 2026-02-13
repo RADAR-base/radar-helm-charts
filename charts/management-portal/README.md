@@ -88,7 +88,6 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | keystore | string | `""` | base 64 encoded binary p12 keystore containing a ECDSA certificate with alias `radarbase-managementportal-ec` and a RSA certificate with alias `selfsigned`. |
-| public_jwks | string | `""` |  |
 | postgres.host | string | `nil` | host name of the postgres db |
 | postgres.port | string | `nil` | post of the postgres db |
 | postgres.database | string | `nil` | database name |

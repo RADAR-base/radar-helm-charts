@@ -3,7 +3,7 @@
 # radar-hydra
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-hydra)](https://artifacthub.io/packages/helm/radar-base/radar-hydra)
 
-![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.2.0](https://img.shields.io/badge/AppVersion-v2.2.0-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.2.0](https://img.shields.io/badge/AppVersion-v2.2.0-informational?style=flat-square)
 
 A ORY Hydra Helm chart for RADAR-base. ORY Hydra is a cloud native Identity and User Management system.
 
@@ -185,11 +185,9 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 | oauth_clients.radar_rest_sources_auth_backend.enable | bool | `false` |  |
 | oauth_clients.radar_rest_sources_auth_backend.audience[0] | string | `"res_ManagementPortal"` |  |
 | oauth_clients.radar_rest_sources_auth_backend.audience[1] | string | `"res_upload"` |  |
-| oauth_clients.radar_rest_sources_auth_backend.audience[2] | string | `"res_restAuthorizer"` |  |
 | oauth_clients.radar_rest_sources_auth_backend.client_secret | string | `""` |  |
 | oauth_clients.radar_rest_sources_auth_backend.scope[0] | string | `"PROJECT.READ"` |  |
 | oauth_clients.radar_rest_sources_auth_backend.scope[1] | string | `"SUBJECT.READ"` |  |
-| oauth_clients.radar_rest_sources_auth_backend.scope[2] | string | `"SUBJECT.UPDATE"` |  |
 | oauth_clients.radar_rest_sources_auth_backend.grantTypes[0] | string | `"client_credentials"` |  |
 | oauth_clients.radar_rest_sources_auth_backend.access_token_validity | int | `900` |  |
 | oauth_clients.radar_rest_sources_auth_backend.tokenEndpointAuthMethod | string | `"client_secret_post"` |  |
