@@ -25,3 +25,7 @@ misconfigurations:
       - radar-kafka/charts/strimzi-kafka-operator/templates/020-ClusterRole-strimzi-cluster-operator-role.yaml
       - radar-kafka/charts/strimzi-registry-operator/templates/rbac.yaml
       - radar-redis/charts/redis-operator/templates/role.yaml
+  - id: AVD-KSV-0050
+    statement: Operator needs permissions to manage roles and rolebindings for proper functionality.
+    paths:
+      - radar-kafka/charts/strimzi-kafka-operator/templates/020-ClusterRole-strimzi-cluster-operator-role.yaml
