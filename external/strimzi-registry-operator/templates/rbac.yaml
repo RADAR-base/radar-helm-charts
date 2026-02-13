@@ -28,7 +28,7 @@ rules:
 
   # Access to the built-in resources the operator manages
   - apiGroups: [""]
-    resources: [configmaps, services]
+    resources: [secrets, configmaps, services]
     verbs: [get, list, watch, patch, create]
 
   - apiGroups: ["apps"]
