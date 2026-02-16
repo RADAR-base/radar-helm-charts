@@ -44,3 +44,6 @@ for additional information on how to configure this service if needed.
 | grafana | object | check 'values.yaml' | Grafana Helm Chart configuration |
 | grafana.server_name | string | `"localhost"` | Hostname for the Grafana service |
 | grafana.advertised_protocol | string | `"https"` | Protocol for the Grafana service (allowed values: http, https) |
+| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
+| podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
+| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |

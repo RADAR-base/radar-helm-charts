@@ -136,3 +136,6 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | garmin.backfill.healthSnapshotEnabled | bool | `false` | Whether to enable health snapshot backfill requests |
 | garmin.backfill.heartRateVariabilityEnabled | bool | `false` | Whether to enable heart rate variability backfill requests |
 | redis.url | string | `"redis://radar-redis-replication-master:6379"` | The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties. |
+| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
+| podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
+| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |

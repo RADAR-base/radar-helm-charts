@@ -88,3 +88,6 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 | serverName | string | `"localhost"` | Domain name of the server |
 | authUrl | string | `nil` | Authorization URL of the IDP (overrides the default value derived from the serverName) |
 | authPath | string | `"/auth"` | Authorization path appended to the authUrl of the IDP (/auth for Hydra, /authorize for MP) |
+| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
+| podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
+| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |
