@@ -212,4 +212,4 @@ podDisruptionBudget:
   # -- Minimum number of pods that must be available during disruptions
   minAvailable: 1
   # -- Maximum number of pods that can be unavailable during disruptions
-  # maxUnavailable:
+  maxUnavailable: ~
