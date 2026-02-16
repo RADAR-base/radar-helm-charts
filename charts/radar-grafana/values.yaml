@@ -130,3 +130,12 @@ grafana:
       reloadURL: "'{{ .Values.advertised_protocol }}://{{ .Values.server_name }}:3000/api/admin/provisioning/notifications/reload"
 
   assertNoLeakedSecrets: false
+
+# Pod Disruption Budget configuration
+podDisruptionBudget:
+  # -- Enable Pod Disruption Budget
+  enabled: true
+  # -- Minimum number of pods that must be available during disruptions
+  minAvailable: 1
+  # -- Maximum number of pods that can be unavailable during disruptions
+  # maxUnavailable:
