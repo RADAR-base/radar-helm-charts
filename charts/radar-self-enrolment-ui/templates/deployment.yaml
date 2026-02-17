@@ -140,21 +140,21 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+      {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.deployment.tolerations }}
+      {{- end }}
+      {{- with .Values.deployment.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.deployment.topologySpreadConstraints }}
+      {{- end }}
+      {{- with .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.deployment.dnsConfig }}
+      {{- end }}
+      {{- with .Values.deployment.dnsConfig }}
       dnsConfig:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
