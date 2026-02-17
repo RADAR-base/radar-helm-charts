@@ -94,3 +94,6 @@ RADAR-base home page.
 | monitoring.url | string | `nil` | URL to the monitoring stack, usually Prometheus |
 | logging.enabled | bool | `false` | Enable link to the logging stack, usually Graylog |
 | logging.url | string | `nil` | URL to the monitoring stack, usually Graylog |
+| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
+| podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
+| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |

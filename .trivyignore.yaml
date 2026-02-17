@@ -19,6 +19,13 @@ misconfigurations:
     paths:
       - velero-s3-deployment/charts/velero/templates/role.yaml
   - id: AVD-KSV-0041
-    statement: Operator needs permissions to manage cluster roles.
+    statement: Operator needs permissions to manage cluster roles and secrets.
     paths:
       - radar-kafka/charts/strimzi-kafka-operator/templates/031-ClusterRole-strimzi-entity-operator.yaml
+      - radar-kafka/charts/strimzi-kafka-operator/templates/020-ClusterRole-strimzi-cluster-operator-role.yaml
+      - radar-kafka/charts/strimzi-registry-operator/templates/rbac.yaml
+      - radar-redis/charts/redis-operator/templates/role.yaml
+  - id: AVD-KSV-0050
+    statement: Operator needs permissions to manage roles and rolebindings for proper functionality.
+    paths:
+      - radar-kafka/charts/strimzi-kafka-operator/templates/020-ClusterRole-strimzi-cluster-operator-role.yaml
