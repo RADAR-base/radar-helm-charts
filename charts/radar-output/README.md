@@ -113,6 +113,9 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | topics.questionnaire_response.pathProperties.plugins | string | `"fixed value"` | Alternative path plugins of the questionnaire_response topic |
 | deduplication.enable | bool | `true` | Whether to enable deduplication |
 | compression.type | string | `"gzip"` | Compression type to use for output files. Can be one of: gzip, zip, none |
+| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
+| podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
+| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |
 
 ## Cost Considerations
 
@@ -122,7 +125,3 @@ If you are using paid S3 services (like AWS S3), then you might want to update t
 2. `worker.cacheSize` - Increase this value to reduce S3 costs. This will increase local storage and memory requirements of radar-output.
 3. `paths.properties.format`- Change the output path format to `${project}/${user}/${topic}/${time:YYYYmmdd}${attempt}${extension}` to only create one file per day.
 4. `deduplication.enable` - Set this to false. This will reduce the number of requests and memory used by the output converter, but it may increase the storage size and will require analysts to remove duplicates at a later time.
-
-| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
-| podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
-| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |
