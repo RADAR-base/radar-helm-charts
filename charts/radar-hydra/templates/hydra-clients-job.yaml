@@ -43,7 +43,8 @@ spec:
                 {{- if $client.responseTypes }}, "response_types": {{ $client.responseTypes | toJson }}{{- end }}
                 {{- if kindIs "string" $client.scope }}, "scope": "{{ $client.scope }}"{{ else if $client.scope }}, "scope": "{{ join " " $client.scope }}"{{ end }}
                 {{- if $client.audience }}, "audience": {{ $client.audience | toJson }}{{- else if $client.resource_ids }}, "audience": {{ $client.resource_ids | toJson }}{{- end }}
-                {{- if $client.redirectUris }}, "redirect_uris": {{ $client.redirectUris | toJson }}{{- end }}
+                {{- if $client.redirectUris }}, "redirect_uris": [{{- range $e := $client.redirectUris }}{{- tpl $e $ | toJson }}{{- end }}]
+                {{- end }}
                 {{- if $client.allowed_cors_origins }}, "allowed_cors_origins": {{ $client.allowed_cors_origins | toJson }}{{- end }}
                 {{- if hasKey $client "skip_consent" }}, "skip_consent": {{ $client.skip_consent | default false }}{{- end }}
                 {{- if hasKey $client "skip_logout_consent" }}, "skip_logout_consent": {{ $client.skip_logout_consent | default false }}{{- end }}
