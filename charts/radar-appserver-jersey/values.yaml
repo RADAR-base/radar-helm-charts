@@ -1,0 +1,315 @@
+# Default values for radar-appserver.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of radar-appserver replicas to deploy
+replicaCount: 2
+
+image:
+  # -- Image registry
+  registry: ghcr.io
+  # -- Image repository
+  repository: radar-base/radar-appserver/radar-appserver
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
+
+# -- String to partially override radar-appserver.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override radar-appserver.fullname template with a string
+fullnameOverride: ""
+
+# -- Configure radar-appserver pods' Security Context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Configure radar-appserver containers' Security Context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # -- Kubernetes Service type
+  type: ClusterIP
+  # -- radar-appserver port
+  port: 8080
+
+# -- Reconfigure Ingress to not force TLS
+disable_tls: false
+# -- The protocol in advertised URIs (https, http)
+advertised_protocol: https
+
+ingress:
+  # -- Enable ingress controller resource
+  enabled: true
+  # -- Annotations that define default ingress class, certificate issuer and session configuration
+  # @default -- check values.yaml
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  # -- Path within the url structure
+  path: "/appserver/?(.*)"
+  # -- Ingress path type
+  pathType: ImplementationSpecific
+  # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ingressClassName: nginx
+  # -- Hosts to accept requests from
+  hosts:
+    - localhost
+  tls:
+    # -- TLS Secret Name
+    secretName: radar-base-tls
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  # -- CPU/Memory resource requests
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Toleration labels for pod assignment
+tolerations: []
+
+# -- Affinity labels for pod assignment
+affinity: {}
+
+# -- Standard JAVA_OPTS that should be passed to this service
+javaOpts: "-XX:GCTimeRatio=19 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=30 --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.management/javax.management.openmbean=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.management/javax.management=ALL-UNNAMED -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
+
+# -- Extra environment variables
+extraEnvVars: []
+#  - name: BEARER_AUTH
+#    value: true
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for livenessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Custom startupProbe that overrides the default one
+customStartupProbe: {}
+
+startupProbe:
+  # -- Enable startupProbe
+  enabled: true
+  # -- Initial delay seconds for startupProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for startupProbe
+  periodSeconds: 10
+  # -- Timeout seconds for startupProbe
+  timeoutSeconds: 10
+  # -- Success threshold for startupProbe
+  successThreshold: 1
+  # -- Failure threshold for startupProbe
+  failureThreshold: 30
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'management-portal'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
+# Configuration of the Postgres data base to store data from Appserver
+postgres:
+  # -- host name of the postgres db
+  host:
+  # -- port of the postgres db
+  port:
+  # -- database name
+  database:
+  # -- Kubernetes secret containing the database JDBC Connection url
+  # (disables use of 'host', 'port' and 'database' values).
+  urlSecret:
+    name: radar-cloudnative-postgresql-appserver
+    key: jdbc-uri
+  # -- postgres user
+  user:
+  # -- Kubernetes secret containing the database user
+  # (disables use of 'user' value).
+  userSecret:
+    name: radar-cloudnative-postgresql-appserver
+    key: username
+  # -- password of the postgres user
+  password:
+  # -- Kubernetes secret containing the database password
+  # (disables use of 'password' value).
+  passwordSecret:
+    name: radar-cloudnative-postgresql-appserver
+    key: password
+
+  hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+  jdbcDriver: org.postgresql.Driver
+
+  # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
+  # Ignored when using 'urlSecret'.
+  connection_parameters: ""
+  ssl:
+    # -- set to true of the connecting to postgres using SSL
+    enabled: false
+    keystorepassword: keystorepassword
+
+protocol:
+  githubProtocolRepo: RADAR-base/RADAR-aRMT-protocols
+  protocolFileName: protocol.json
+  githubBranch: master
+
+# -- URL of the Management Portal
+managementportal_url: http://management-portal:8080/managementportal
+
+serverName: localhost
+
+# -- radar_is.yml config for token verification
+managementportal_resource_name: res_AppServer
+# -- List of OAuth2 authentication server public key endpoints for token verification
+public_key_endpoints:
+  - http://management-portal:8080/managementportal/oauth/token_key
+
+# -- Google credentials containing FCM server key, etc.
+google_application_credentials: ""
+# With helmfile, this can be set in a production.yaml.gotmpl
+# file by setting
+#   google_application_credentials: {{ readFile "etc/radar-appserver/google-credentials.json" | quote }}
+
+# -- Github client token which is used for authenticating requests
+github_client_token: ""
+
+smtp:
+  # -- set to true, if sending of notifications via email should be enabled.
+  enabled: false
+  # -- Hostname of the SMTP server
+  host: smtp
+  # -- Port of the SMTP server
+  port: 25
+  # -- Username of the SMTP server
+  username: username
+  # -- Password of the SMTP server
+  password: secret
+  # -- Email address which should be used to send activation emails
+  from: noreply@example.com
+  # -- set to true,if TTLS should be enabled
+  starttls: false
+  # -- set to true, if the account should be authenticated before sending emails
+  auth: true
+  # -- Timeout (ms) for establishing TCP connection to server
+  connect_timeout: 10000
+  # -- Timeout (ms) for read operations (socket read timeout), waiting for server responses
+  read_timeout: 10000
+
+upload:
+  # -- if set to true, file upload endpoint will be enabled
+  enabled: false
+  # -- Maximum file size for upload. Can be any number followed by MB or GB.
+  max_file_size: 20MB
+  # Settings for file storage
+  storage:
+    # -- Type of storage to use for file upload (s3)
+    type: s3
+    # -- Internal url to storage
+    url: http://minio-headless:9000
+    # -- Bucket name of the S3 storage
+    bucket_name: radar-output-storage
+    # -- Access key of the S3 storage
+    access_key: secret
+    # -- Secret key of the S3 storage
+    secret_key: secret
+    path:
+      # -- Prefix for the path in the storage; will become <bucket>/<prefix>/<project>/<subject>/<topic>
+      prefix: output
+      # -- if set to true, a new folder will be created for each day
+      collection_per_day: false

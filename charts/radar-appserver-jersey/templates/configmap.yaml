@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  healthcheck.sh: |
+    #!/bin/sh
+    STATUS=$(curl -s --max-time 4 localhost:8080/actuator/health)
+    if ! (echo "$STATUS" | grep -Fq 'db":{"status":"UP'); then
+      exit 1
+    fi
+  appserver.yml: |
+    # Resource config class
+    resourceConfig: org.radarbase.appserver.jersey.enhancer.factory.AppserverResourceEnhancerFactory
+
+    server:
+      baseUri: http://0.0.0.0:{{ .Values.service.port }}/appserver/
+      requestTimeout: 30
+      isJmxEnabled: false
+
+    auth:
+      managementPortalUrl: {{ .Values.managementportal_url }}
+      resourceName: res_AppServer
+
+    #db:
+    #  additionalProperties:
+    #    jakarta.persistence.schema-generation.database.action: drop-and-create
+    # GitHub configuration.
+
+    github:
+      # GitHub Cache configuration.
+      cache:
+        # Duration in seconds for which the cache is valid.
+        cacheDurationSec: 3600
+        # Duration in seconds after which the cache can be refreshed.
+        retryDurationSec: 60
+        # Maximum number of entries in the cache.
+        maxCacheSize: 10000
+      # GitHub HTTP Client configuration.
+      client:
+        maxContentLength: 1000000
+        timeoutSec: 10
+        githubToken:
+
+    # Quartz Scheduler Configuration.
+    quartz:
+      # Specifies the dispatcher for asynchronous operations.
+      # Options: 'io' (for I/O-bound tasks), 'default' (for CPU-bound tasks), 'unconfined' (uses calling thread).
+      # Defaults to 'unconfined' if not provided.
+      coroutineDispatcher: io
+      # Specifies the type of coroutine job.
+      # Options: 'supervisor-job' (supervises child jobs), 'coroutine-job' (no supervision).
+      # Defaults to 'supervisor-job' if not provided.
+      coroutineJob: supervisor-job
+
+    protocol:
+      githubProtocolRepo: RADAR-base/RADAR-aRMT-protocols
+      protocolFileName: protocol.json
+      githubBranch: master
+
+    email:
+      enabled: false
+
+    fcm:
+      fcmsender: org.radarbase.appserver.jersey.fcm.downstream.AdminSdkFcmSender
+      credentials:
+
+    eventBus:
+      numThreads: 3
