@@ -10533,6 +10533,36 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 0.1.7
+    created: "2026-02-18T15:17:21.761011383Z"
+    dependencies:
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: RADAR-base home page.
+    digest: fc1560c64951e15a2c73d16c92851e6f64249929dbeb210b1833036808411519
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-home
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-home
+    - https://github.com/RADAR-base/radar-home
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-home-0.5.4/radar-home-0.5.4.tgz
+    version: 0.5.4
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 0.1.7
     created: "2025-10-23T11:11:26.786042742Z"
     dependencies:
     - name: common
@@ -23048,4 +23078,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-28T10:40:35.143272825Z"
+generated: "2026-02-18T15:17:21.762105146Z"
