@@ -1,0 +1,49 @@
+{{- $root := . -}}
+{{- range $name, $svc := $root.Values.services }}
+{{- if and $svc.enabled $svc.ingress $svc.ingress.enabled }}
+{{- $path := $svc.ingress.path -}}
+{{- $hosts := $svc.ingress.hosts -}}
+{{- $svcPort := $svc.service.port -}}
+{{- $pathType := $svc.ingress.pathType -}}
+{{- if semverCompare ">=1.19-0" $root.Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "appserver-microservices.serviceFullname" ( dict "root" $root "serviceName" $name ) }}
+  namespace: {{ include "common.names.namespace" $root | quote }}
+  labels: {{- include "appserver-microservices.labels" ( dict "root" $root "serviceName" $name ) | nindent 4 }}
+  annotations:
+    {{- if or $svc.ingress.annotations $svc.commonAnnotations }}
+    {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list $svc.ingress.annotations $svc.commonAnnotations ) "context" $root ) }}
+    {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $root ) | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if $svc.ingress.ingressClassName }}
+  ingressClassName: {{ $svc.ingress.ingressClassName | quote }}
+  {{- end }}
+{{- if and $svc.ingress.tls (not $svc.disable_tls) }}
+  tls:
+    - hosts:
+      {{- range $hosts }}
+        - {{ . | quote }}
+      {{- end }}
+      secretName: {{ $svc.ingress.tls.secretName }}
+{{- end }}
+  rules:
+  {{- range $host := $svc.ingress.hosts }}
+    - host: {{ $host | quote }}
+      http:
+        paths:
+          - path: {{ $path | quote }}
+            {{- if and $pathType (semverCompare ">=1.18-0" $root.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ $pathType }}
+            {{- end }}
+            backend:
+{{ include "common.ingress.backend" (dict "serviceName" (include "appserver-microservices.serviceFullname" (dict "root" $root "serviceName" $name)) "servicePort" "http" "context" $root) | nindent 14 }}
+  {{- end }}
+---
+{{- end }}
+{{- end }}
