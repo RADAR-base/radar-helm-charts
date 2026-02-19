@@ -338,9 +338,9 @@ identity_server:
   # Set the following values if the IDP is external to the cluster (i.e. Ory Kratos)
 
   # -- The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos
-  server_url: http://radar-kratos-public
+  public_url: http://radar-kratos-public
   # -- The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
-  server_admin_url: http://radar-kratos-admin
+  admin_url: http://radar-kratos-admin
   # -- The user activation flow type to use for Management Portal (e.g., recovery, verification)
   user_activation_flow_type: "verification"
   # -- The user activation method to use for Management Portal (e.g., link, code)
@@ -355,11 +355,13 @@ authserver:
   # Set the following values if the authserver is external to the cluster (i.e. Ory Hydra)
 
   # -- The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth
-  server_url: http://radar-hydra-public:4444
+  token_url: http://radar-hydra-public:4444/oauth2/token
   # -- The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
-  server_admin_url: http://radar-hydra-admin:4445
+  admin_url: http://radar-hydra-admin:4445
   # -- The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login
-  login_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra'
+  auth_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra/oauth2/auth'
+  # -- The JWKS URL for the authserver; needed when deviating from http(s)://server_name/auth/jwks
+  jwks_url: http://radar-hydra-admin:4445/admin/keys/hydra.jwt.access-token
 
 managementportal:
   # -- set to true, if automatic source-type import from catalogue server should be enabled

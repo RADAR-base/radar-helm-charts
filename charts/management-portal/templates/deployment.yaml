@@ -118,24 +118,26 @@ spec:
             value: http://{{ .Values.catalogue_server }}:9010/source-types
           - name: MANAGEMENTPORTAL_IDENTITYSERVER_ADMINEMAIL
             value: {{ .Values.identity_server.admin_email }}
-          - name: MANAGEMENTPORTAL_IDENTITYSERVER_SERVERURL
-            value: {{ tpl .Values.identity_server.server_url . }}
-          - name: MANAGEMENTPORTAL_IDENTITYSERVER_SERVERADMINURL
-            value: {{ tpl .Values.identity_server.server_admin_url . }}
+          - name: MANAGEMENTPORTAL_IDENTITYSERVER_PUBLICURL
+            value: {{ tpl .Values.identity_server.public_url . }}
+          - name: MANAGEMENTPORTAL_IDENTITYSERVER_ADMINURL
+            value: {{ tpl .Values.identity_server.admin_url . }}
           - name: MANAGEMENTPORTAL_IDENTITYSERVER_INTERNAL
             value: {{ .Values.identity_server.internal | quote }}
           - name: MANAGEMENTPORTAL_IDENTITYSERVER_USER_ACTIVATION_FLOW_TYPE
             value: {{ .Values.identity_server.user_activation_flow_type | quote }}
           - name: MANAGEMENTPORTAL_IDENTITYSERVER_USER_ACTIVATION_METHOD
             value: {{ .Values.identity_server.user_activation_method | quote }}
-          - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERURL
-            value:  {{ tpl .Values.authserver.server_url . }}
-          - name: MANAGEMENTPORTAL_AUTHSERVER_LOGINURL
-            value: {{ tpl .Values.authserver.login_url . }}
+          - name: MANAGEMENTPORTAL_AUTHSERVER_TOKENURL
+            value: {{ tpl .Values.authserver.token_url . }}
+          - name: MANAGEMENTPORTAL_AUTHSERVER_AUTHURL
+            value: {{ tpl .Values.authserver.auth_url . }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_INTERNAL
             value: {{ .Values.authserver.internal | quote }}
-          - name: MANAGEMENTPORTAL_AUTHSERVER_SERVERADMINURL
-            value: {{ tpl .Values.authserver.server_admin_url . }}
+          - name: MANAGEMENTPORTAL_AUTHSERVER_ADMINURL
+            value: {{ tpl .Values.authserver.admin_url . }}
+          - name: MANAGEMENTPORTAL_AUTHSERVER_JWKSURL
+            value: {{ tpl .Values.authserver.server_admin_url . }}/admin/keys/hydra.jwt.access-token
           - name: MANAGEMENTPORTAL_COMMON_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -165,14 +167,12 @@ spec:
               secretKeyRef:
                 name: {{ $secretName }}
                 key: smtpPassword
-          {{ end }}
-          - name: SPRING_MAIL_FROM
-            value: {{ .Values.smtp.from | quote }}
+          {{- end }}
           - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
             value: "{{ .Values.smtp.auth }}"
           - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
             value: {{ .Values.smtp.starttls | quote }}
-          {{ end }}
+          {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -231,13 +231,13 @@ spec:
             - name: secrets-config
               mountPath: /secrets/
               # Otherwise: Unable to read header from OAuth clients file: java.nio.file.NoSuchFileException: /mp-includes/config/oauth_client_details.csv
-            {{ end }}
+            {{- end }}
             - name: keystore
               mountPath: /mp-includes/config/
             {{- if .Values.postgres.ssl.enabled }}
             - name: postgres-root-cert
               mountPath: /root/.postgresql/
-            {{ end }}
+            {{- end }}
       volumes:
         - name: config
           configMap:
@@ -246,7 +246,7 @@ spec:
         - name: secrets-config
           secret:
             secretName: {{ include "management-portal.fullname" . }}-config
-        {{ end }}
+        {{- end }}
         - name: keystore
           secret:
             secretName: {{ include "management-portal.fullname" . }}-keystore
@@ -254,7 +254,7 @@ spec:
         - name: postgres-root-cert
           secret:
             secretName: {{ include "management-portal.fullname" . }}-root-cert
-        {{ end }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

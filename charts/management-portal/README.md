@@ -102,15 +102,16 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | server_name | string | `"localhost"` | domain name of the server |
 | catalogue_server | string | `"catalog-server"` | Hostname of the catalogue-server |
 | identity_server.internal | bool | `true` | Whether the IDP is the MP's internal IDP |
-| identity_server.server_url | string | `"http://radar-kratos-public"` | The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos |
-| identity_server.server_admin_url | string | `"http://radar-kratos-admin"` | The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
+| identity_server.public_url | string | `"http://radar-kratos-public"` | The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos |
+| identity_server.admin_url | string | `"http://radar-kratos-admin"` | The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
 | identity_server.user_activation_flow_type | string | `"verification"` | The user activation flow type to use for Management Portal (e.g., recovery, verification) |
 | identity_server.user_activation_method | string | `"link"` | The user activation method to use for Management Portal (e.g., link, code) |
 | identity_server.admin_email | string | `"admin@example.com"` | The admin email to link to the admin service account. This account should only be used to set up admin-users |
 | authserver.internal | bool | `true` | Whether the authserver is the MP's internal authserver |
-| authserver.server_url | string | `"http://radar-hydra-public:4444"` | The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth |
-| authserver.server_admin_url | string | `"http://radar-hydra-admin:4445"` | The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
-| authserver.login_url | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra"` | The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login |
+| authserver.token_url | string | `"http://radar-hydra-public:4444/oauth2/token"` | The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth |
+| authserver.admin_url | string | `"http://radar-hydra-admin:4445"` | The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
+| authserver.auth_url | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra/oauth2/auth"` | The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login |
+| authserver.jwks_url | string | `"http://radar-hydra-admin:4445/admin/keys/hydra.jwt.access-token"` | The JWKS URL for the authserver; needed when deviating from http(s)://server_name/auth/jwks |
 | managementportal.catalogue_server_enable_auto_import | bool | `false` | set to true, if automatic source-type import from catalogue server should be enabled |
 | managementportal.common_privacy_policy_url | string | `"http://info.thehyve.nl/radar-cns-privacy-policy"` | Override with a publicly resolvable url of the privacy-policy url for your set-up. This can be overridden on a project basis as well. |
 | managementportal.oauth_checking_key_aliases_0 | string | `"radarbase-managementportal-ec"` | Keystore alias to sign JWT tokens from Management Portal |
