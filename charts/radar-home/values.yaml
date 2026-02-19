@@ -207,4 +207,13 @@ logging:
   # -- Enable link to the logging stack, usually Graylog
   enabled: false
   # -- URL to the monitoring stack, usually Graylog
-  url: '{{ .Values.advertised_protocol }}://graylog.{{ .Values.server_name }}'
+  url:
+
+# Pod Disruption Budget configuration
+podDisruptionBudget:
+  # -- Enable Pod Disruption Budget
+  enabled: true
+  # -- Minimum number of pods that must be available during disruptions
+  minAvailable: 1
+  # -- Maximum number of pods that can be unavailable during disruptions
+  maxUnavailable: ~
