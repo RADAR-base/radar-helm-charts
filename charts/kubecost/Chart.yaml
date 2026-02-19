@@ -1,0 +1,30 @@
+apiVersion: v2
+appVersion: "2.6.3"
+description: A Helm chart for Kubecost cost analyzer. This chart is an overlay for the official cost-analyzer chart with custom resource limits configured for RADAR-K8s environments.
+name: kubecost
+version: 1.0.0
+sources:
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/kubecost
+- https://github.com/kubecost/cost-analyzer-helm-chart
+keywords:
+  - kubecost
+  - cost-analyzer
+  - monitoring
+  - kubernetes
+  - radar-base
+annotations:
+  artifacthub.io/license: Apache-2.0
+deprecated: false
+type: application
+home: "https://www.kubecost.com"
+maintainers:
+  - email: mani.thumu@kcl.ac.uk
+    name: Mani Thumu
+    url: https://www.kcl.ac.uk
+  - email: yatharth.ranjan@kcl.ac.uk
+    name: Yatharth Ranjan
+    url: https://www.kcl.ac.uk/people/yatharth-ranjan
+dependencies:
+- name: cost-analyzer
+  repository: https://kubecost.github.io/cost-analyzer/
+  version: 2.6.3
