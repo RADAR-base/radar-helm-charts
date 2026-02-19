@@ -3,7 +3,7 @@
 # radar-rest-sources-authorizer
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-authorizer)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-authorizer)
 
-![Version: 2.3.1](https://img.shields.io/badge/Version-2.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.11](https://img.shields.io/badge/AppVersion-4.4.11-informational?style=flat-square)
+![Version: 2.3.2](https://img.shields.io/badge/Version-2.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.11](https://img.shields.io/badge/AppVersion-4.4.11-informational?style=flat-square)
 
 A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer which is a portal to authorize the Fitbit connector to read data from Fitbit accounts.
 
@@ -88,3 +88,6 @@ A Helm chart for the front-end application of RADAR-base Rest Sources Authorizer
 | serverName | string | `"localhost"` | Domain name of the server |
 | authUrl | string | `nil` | Authorization URL of the IDP (overrides the default value derived from the serverName) |
 | authPath | string | `"/auth"` | Authorization path appended to the authUrl of the IDP (/auth for Hydra, /authorize for MP) |
+| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
+| podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
+| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |

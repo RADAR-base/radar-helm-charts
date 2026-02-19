@@ -3,7 +3,7 @@
 # radar-output
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-output)](https://artifacthub.io/packages/helm/radar-base/radar-output)
 
-![Version: 1.2.7](https://img.shields.io/badge/Version-1.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.5](https://img.shields.io/badge/AppVersion-3.0.5-informational?style=flat-square)
+![Version: 1.2.8](https://img.shields.io/badge/Version-1.2.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.5](https://img.shields.io/badge/AppVersion-3.0.5-informational?style=flat-square)
 
 A Helm chart for RADAR-base output restructure service. This application reads data from intermediate storage and restructure the data into project-> subject-id-> data topic -> data split per hour. This service offers few options to choose the source and target of the pipeline.
 
@@ -113,6 +113,9 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | topics.questionnaire_response.pathProperties.plugins | string | `"fixed value"` | Alternative path plugins of the questionnaire_response topic |
 | deduplication.enable | bool | `true` | Whether to enable deduplication |
 | compression.type | string | `"gzip"` | Compression type to use for output files. Can be one of: gzip, zip, none |
+| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
+| podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
+| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |
 
 ## Cost Considerations
 

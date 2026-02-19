@@ -355,3 +355,12 @@ openTelemetry:
     tracesExporterEnabled: false
     # -- Enable OpenTelemetry logs exporter other than Sentry
     logsExporterEnabled: true
+
+# Pod Disruption Budget configuration
+podDisruptionBudget:
+  # -- Enable Pod Disruption Budget
+  enabled: true
+  # -- Minimum number of pods that must be available during disruptions
+  minAvailable: 1
+  # -- Maximum number of pods that can be unavailable during disruptions
+  maxUnavailable: ~

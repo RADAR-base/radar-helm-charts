@@ -364,3 +364,12 @@ garmin:
 redis:
   # -- The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties.
   url: "redis://radar-redis-replication-master:6379"
+
+# Pod Disruption Budget configuration
+podDisruptionBudget:
+  # -- Enable Pod Disruption Budget
+  enabled: true
+  # -- Minimum number of pods that must be available during disruptions
+  minAvailable: 1
+  # -- Maximum number of pods that can be unavailable during disruptions
+  maxUnavailable: ~

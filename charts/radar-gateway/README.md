@@ -3,7 +3,7 @@
 # radar-gateway
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-gateway)](https://artifacthub.io/packages/helm/radar-base/radar-gateway)
 
-![Version: 1.8.0](https://img.shields.io/badge/Version-1.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.9.2](https://img.shields.io/badge/AppVersion-0.9.2-informational?style=flat-square)
+![Version: 1.8.1](https://img.shields.io/badge/Version-1.8.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.9.2](https://img.shields.io/badge/AppVersion-0.9.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming participant data. It performs authentication, authorization, content validation and decompression. For more details of the configurations, see https://github.com/RADAR-base/RADAR-Gateway/blob/master/gateway.yml.
 
@@ -134,3 +134,6 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | openTelemetry.exporter.metricsExporterEnabled | bool | `false` | Enable OpenTelemetry metrics exporter other than Sentry |
 | openTelemetry.exporter.tracesExporterEnabled | bool | `false` | Enable OpenTelemetry traces exporter other than Sentry |
 | openTelemetry.exporter.logsExporterEnabled | bool | `true` | Enable OpenTelemetry logs exporter other than Sentry |
+| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
+| podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
+| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |

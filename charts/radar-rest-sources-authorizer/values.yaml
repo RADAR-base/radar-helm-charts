@@ -189,3 +189,12 @@ serverName: localhost
 authUrl:
 # -- Authorization path appended to the authUrl of the IDP (/auth for Hydra, /authorize for MP)
 authPath: /auth
+
+# Pod Disruption Budget configuration
+podDisruptionBudget:
+  # -- Enable Pod Disruption Budget
+  enabled: true
+  # -- Minimum number of pods that must be available during disruptions
+  minAvailable: 1
+  # -- Maximum number of pods that can be unavailable during disruptions
+  maxUnavailable: ~

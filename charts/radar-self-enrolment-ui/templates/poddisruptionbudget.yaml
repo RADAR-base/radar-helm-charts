@@ -2,10 +2,10 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "radar-home.fullname" . }}
+  name: {{ include "radar-self-enrolment-ui.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "radar-home.labels" . | nindent 4 }}
+    {{- include "radar-self-enrolment-ui.labels" . | nindent 4 }}
 spec:
   {{- if not (or (hasKey .Values.podDisruptionBudget "minAvailable") (hasKey .Values.podDisruptionBudget "maxUnavailable")) }}
   minAvailable: 1
@@ -18,5 +18,5 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "radar-home.selectorLabels" . | nindent 6 }}
+      {{- include "radar-self-enrolment-ui.selectorLabels" . | nindent 6 }}
 {{- end }}

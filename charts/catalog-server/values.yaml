@@ -288,3 +288,12 @@ cc:
   schemaRegistryApiKey: srApiKey
   # -- API secret of the Confluent Cloud based schema registry
   schemaRegistryApiSecret: srApiSecret
+
+# Pod Disruption Budget configuration
+podDisruptionBudget:
+  # -- Enable Pod Disruption Budget
+  enabled: true
+  # -- Minimum number of pods that must be available during disruptions
+  minAvailable: 1
+  # -- Maximum number of pods that can be unavailable during disruptions
+  maxUnavailable: ~
