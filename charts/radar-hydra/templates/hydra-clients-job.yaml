@@ -1,0 +1,75 @@
+{{/*Using a container that runs a client setup script after Hydra is ready, allowing setting fixed client ID, as an alternative to init containers looking up dynamic client uuid created when using Hydra client template (as init containers may not be possible in all cases.*/}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-hydra-clients-setup
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      serviceAccountName: {{ .Release.Name }}-hydra-clients-job-sa
+      restartPolicy: OnFailure
+      containers:
+        - name: hydra-client-manager
+          # Official, minimal curl image that includes /bin/sh
+          image: curlimages/curl:8.15.0
+          command: ["sh","-eu","-c"]
+          args:
+            - |
+              echo "Waiting for Hydra Admin API to be available..."
+              until curl -s -f -o /dev/null "{{ .Values.hydra_server_url }}/health/ready"; do
+                echo "Hydra not ready yet, waiting 5 seconds..."
+                sleep 5
+              done
+              echo "Hydra is ready! Proceeding to create/update clients."
+
+              {{- range $name, $client := .Values.oauth_clients }}
+              {{- if (default false $client.enable) }}
+
+              echo "Processing client: {{ $name }}"
+              CLIENT_ID="{{ $name }}"
+
+              # Build the JSON payload (remove any comments; JSON can't contain '# ...')
+              JSON_PAYLOAD=$(cat <<'EOF'
+              {
+                "client_id": "{{ $name }}",
+                "client_name": "{{ $name }}",
+                "client_secret": "{{ $client.client_secret | default "secret" }}"
+                {{- if $client.grantTypes }}, "grant_types": {{ $client.grantTypes | toJson }}{{- end }}
+                {{- if $client.responseTypes }}, "response_types": {{ $client.responseTypes | toJson }}{{- end }}
+                {{- if kindIs "string" $client.scope }}, "scope": "{{ $client.scope }}"{{ else if $client.scope }}, "scope": "{{ join " " $client.scope }}"{{ end }}
+                {{- if $client.audience }}, "audience": {{ $client.audience | toJson }}{{- else if $client.resource_ids }}, "audience": {{ $client.resource_ids | toJson }}{{- end }}
+                {{- if $client.redirectUris }}, "redirect_uris": [{{- range $e := $client.redirectUris }}{{- tpl $e $ | toJson }}{{- end }}]
+                {{- end }}
+                {{- if $client.allowed_cors_origins }}, "allowed_cors_origins": {{ $client.allowed_cors_origins | toJson }}{{- end }}
+                {{- if hasKey $client "skip_consent" }}, "skip_consent": {{ $client.skip_consent | default false }}{{- end }}
+                {{- if hasKey $client "skip_logout_consent" }}, "skip_logout_consent": {{ $client.skip_logout_consent | default false }}{{- end }}
+                , "token_endpoint_auth_method": "{{ default "client_secret_basic" $client.tokenEndpointAuthMethod }}"
+              }
+              EOF
+              )
+
+              HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "{{ $.Values.hydra_admin_url }}/clients/${CLIENT_ID}")
+
+              if [ "$HTTP_STATUS" = "200" ]; then
+                echo "Client '${CLIENT_ID}' exists, updating it..."
+                METHOD="PUT"
+                URL="{{ $.Values.hydra_admin_url }}/clients/${CLIENT_ID}"
+              else
+                echo "Client '${CLIENT_ID}' does not exist, creating it..."
+                METHOD="POST"
+                URL="{{ $.Values.hydra_admin_url }}/clients"
+              fi
+
+              printf '%s' "$JSON_PAYLOAD" | curl -sS -X "${METHOD}" --fail -H "Content-Type: application/json" -d @- "${URL}"
+              echo "Successfully processed client '{{ $name }}'."
+              echo "---"
+
+              {{- end }}
+              {{- end }}
+
+              echo "All clients processed successfully."

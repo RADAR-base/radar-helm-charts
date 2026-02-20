@@ -9,7 +9,7 @@ hydra:
 
   ingress:
     admin:
-      enabled: true
+      enabled: false
       className: "nginx"
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -38,22 +38,29 @@ hydra:
         - secretName: radar-base-tls
           hosts:
             - '{{ .Values.server_name }}'
+
   hydra:
     automigration:
       enabled: true
     config:
       # Leave empty to use the DSN environmental variable.
       dsn:
+      secrets:
+        system:
+        cookie:
       urls:
         self:
+          admin: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/admin/hydra/'
           issuer: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra/'
-        login: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/login'
-        consent: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra-ui/consent'
+          public: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra/'
+        login: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/auth/oauth-login'
+        consent: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/auth/consent'
+        logout: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/auth/logout'
 
       log:
         level: debug
         format: text
-        leak_sensitive_values: false
+        leak_sensitive_values: true
 
       strategies:
         access_token: jwt
@@ -61,10 +68,14 @@ hydra:
           scope_claim: both
 
       oauth2:
-        allowed_top_level_claims: [scope, roles, authorities, sources, user_name]
+        allowed_top_level_claims: [scope, roles, authorities, sources, user_name, email]
         mirror_top_level_claims: false
         client_credentials:
           default_grant_allowed_scope: true
+        grant:
+          refresh_token:
+            # Set grace period. Omit the line below to disable.
+            rotation_grace_period: 300s
 
       serve:
         public:
@@ -82,3 +93,336 @@ hydra:
         secretKeyRef:
           name: radar-cloudnative-postgresql-hydra
           key: uri
+
+  maester:
+    enabled: false
+
+hydra_server_url: "http://radar-hydra-public:4444"
+hydra_admin_url: "http://radar-hydra-admin:4445/admin"
+
+oauth_clients:
+  ManagementPortalapp:
+    enable: true
+    redirectUris:
+      - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/managementportal/api/redirect/login'
+    grantTypes:
+      - authorization_code
+      - refresh_token
+    responseTypes:
+      - code
+      - id_token
+    client_secret: ""
+    scope: SOURCEDATA.CREATE SOURCETYPE.UPDATE SOURCETYPE.DELETE AUTHORITY.UPDATE MEASUREMENT.DELETE PROJECT.READ AUDIT.CREATE USER.DELETE AUTHORITY.DELETE SUBJECT.DELETE MEASUREMENT.UPDATE SOURCEDATA.UPDATE SUBJECT.READ USER.UPDATE SOURCETYPE.CREATE AUTHORITY.READ USER.CREATE SOURCE.CREATE SOURCE.READ SUBJECT.CREATE ROLE.UPDATE ROLE.READ MEASUREMENT.READ PROJECT.UPDATE PROJECT.DELETE ROLE.DELETE SOURCE.DELETE SOURCETYPE.READ ROLE.CREATE SOURCEDATA.DELETE SUBJECT.UPDATE SOURCE.UPDATE PROJECT.CREATE AUDIT.READ MEASUREMENT.CREATE AUDIT.DELETE AUDIT.UPDATE AUTHORITY.CREATE USER.READ SOURCEDATA.READ ORGANIZATION.READ ORGANIZATION.CREATE ORGANIZATION.UPDATE OAUTHCLIENTS.READ OAUTHCLIENTS.CREATE OAUTHCLIENTS.UPDATE
+    audience:
+      - res_ManagementPortal
+    allowed_cors_origins:
+      - http://localhost:3000
+    skip_consent: true
+    skip_logout_consent: false
+
+  pRMT:
+    enable: false
+    audience:
+      - res_gateway
+      - res_ManagementPortal
+      - res_appconfig
+    client_secret: ""
+    scope:
+      - MEASUREMENT.CREATE
+      - PROJECT.READ
+      - ROLE.READ
+      - SOURCE.READ
+      - SOURCEDATA.READ
+      - SOURCETYPE.READ
+      - SUBJECT.READ
+      - SUBJECT.UPDATE
+      - USER.READ
+    grantTypes:
+      - refresh_token
+      - authorization_code
+    access_token_validity: 43200
+    refresh_token_validity: 7948800
+    additional_information: '{"dynamic_registration": true}'
+    tokenEndpointAuthMethod: client_secret_post
+
+  aRMT:
+    enable: false
+    audience:
+      - res_gateway
+      - res_ManagementPortal
+      - res_appconfig
+      - res_AppServer
+      - res_DataDashboardAPI
+    client_secret: ""
+    scope:
+      - MEASUREMENT.READ
+      - MEASUREMENT.CREATE
+      - PROJECT.READ
+      - ROLE.READ
+      - SOURCE.READ
+      - SOURCEDATA.READ
+      - SOURCETYPE.READ
+      - SUBJECT.READ
+      - SUBJECT.UPDATE
+      - USER.READ
+    grantTypes:
+      - refresh_token
+      - authorization_code
+    access_token_validity: 43200
+    refresh_token_validity: 7948800
+    additional_information: '{"dynamic_registration": true}'
+    tokenEndpointAuthMethod: client_secret_post
+    redirectUris:
+      - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/managementportal/api/redirect/login'
+
+  SEP:
+    enable: false
+    audience:
+      - res_gateway
+      - res_ManagementPortal
+      - res_appconfig
+      - res_AppServer
+      - res_DataDashboardAPI
+      - res_restAuthorizer
+    client_secret: ""
+    scope:
+      - PROJECT.READ
+      - SOURCETYPE.READ
+      - SUBJECT.READ
+      - SUBJECT.UPDATE
+      - SUBJECT.CREATE
+      - USER.READ
+    grantTypes:
+      - refresh_token
+      - authorization_code
+      - client_credentials
+    access_token_validity: 43200
+    refresh_token_validity: 7948800
+    additional_information: '{"dynamic_registration": true}'
+    redirectUris:
+      - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/managementportal/api/redirect/login'
+
+  THINC-IT:
+    enable: false
+    audience:
+      - res_gateway
+      - res_ManagementPortal
+      - res_appconfig
+    client_secret: ""
+    scope:
+      - MEASUREMENT.CREATE
+      - PROJECT.READ
+      - ROLE.READ
+      - SOURCE.READ
+      - SOURCEDATA.READ
+      - SOURCETYPE.READ
+      - SUBJECT.READ
+      - SUBJECT.UPDATE
+      - USER.READ
+    grantTypes:
+      - refresh_token
+      - authorization_code
+    access_token_validity: 43200
+    refresh_token_validity: 7948800
+    additional_information: '{"dynamic_registration": true}'
+
+  radar_redcap_integrator:
+    enable: false
+    audience:
+      - res_ManagementPortal
+    client_secret: ""
+    scope:
+      - PROJECT.READ
+      - SUBJECT.CREATE
+      - SUBJECT.READ
+      - SUBJECT.UPDATE
+    grantTypes:
+      - client_credentials
+    access_token_validity: 900
+
+  radar_upload_backend:
+    enable: false
+    audience:
+      - res_ManagementPortal
+    client_secret: ""
+    scope:
+      - PROJECT.READ
+      - SUBJECT.READ
+    grantTypes:
+      - client_credentials
+    access_token_validity: 900
+    additional_information: '{"dynamic_registration": true}'
+
+  radar_upload_connect:
+    enable: false
+    audience:
+      - res_ManagementPortal
+      - res_upload
+    client_secret: ""
+    scope:
+      - MEASUREMENT.CREATE
+      - PROJECT.READ
+      - SOURCE.READ
+      - SOURCETYPE.READ
+      - SUBJECT.READ
+      - SUBJECT.UPDATE
+    grantTypes:
+      - client_credentials
+    access_token_validity: 900
+
+  radar_upload_frontend:
+    enable: false
+    audience:
+      - res_ManagementPortal
+      - res_upload
+    client_secret: ""
+    scope:
+      - MEASUREMENT.CREATE
+      - PROJECT.READ
+      - SOURCETYPE.READ
+      - SUBJECT.READ
+    grantTypes:
+      - authorization_code
+    access_token_validity: 900
+    redirectUris:
+      - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/upload/login'
+      - /upload/login
+
+  radar_rest_sources_auth_backend:
+    enable: false
+    audience:
+      - res_ManagementPortal
+      - res_upload
+    client_secret: ""
+    scope:
+      - PROJECT.READ
+      - SUBJECT.READ
+    grantTypes:
+      - client_credentials
+    access_token_validity: 900
+    # This is considered less secure, better to send  client secret in Auth header, which requires changing code on the auth backend side
+    tokenEndpointAuthMethod: client_secret_post
+
+  radar_rest_sources_authorizer:
+    enable: false
+    audience:
+      - res_restAuthorizer
+    client_secret: ""
+    scope:
+      - PROJECT.READ
+      - SOURCETYPE.READ
+      - SUBJECT.READ
+      - SUBJECT.UPDATE
+      - SUBJECT.CREATE
+    grantTypes:
+      - authorization_code
+    access_token_validity: 900
+    redirectUris:
+      - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/rest-sources/authorizer/login'
+    tokenEndpointAuthMethod: client_secret_post
+
+  radar_fitbit_connector:
+    enable: false
+    audience:
+      - res_restAuthorizer
+    client_secret: ""
+    scope:
+      - SUBJECT.READ
+      - MEASUREMENT.CREATE
+    grantTypes:
+      - client_credentials
+    access_token_validity: 900
+    tokenEndpointAuthMethod: client_secret_post
+
+  radar_appconfig:
+    enable: false
+    audience:
+      - res_ManagementPortal
+      - res_appconfig
+    client_secret: ""
+    scope:
+      - MEASUREMENT.CREATE
+      - OAUTHCLIENTS.READ
+      - PROJECT.READ
+      - SOURCETYPE.READ
+      - SUBJECT.READ
+    grantTypes:
+      - client_credentials
+    access_token_validity: 900
+
+  appconfig_frontend:
+    enable: false
+    audience:
+      - res_appconfig
+    client_secret: ""
+    scope:
+      - MEASUREMENT.CREATE
+      - OAUTHCLIENTS.READ
+      - PROJECT.CREATE
+      - PROJECT.READ
+      - PROJECT.UPDATE
+      - SOURCETYPE.READ
+      - SUBJECT.READ
+      - SUBJECT.UPDATE
+    grantTypes:
+      - authorization_code
+      - refresh_token
+    access_token_validity: 900
+    refresh_token_validity: 78000
+    redirectUris:
+      - /appconfig/login
+    autoapprove:
+      - MEASUREMENT.CREATE
+      - OAUTHCLIENTS.READ
+      - PROJECT.CREATE
+      - PROJECT.READ
+      - PROJECT.UPDATE
+      - SOURCETYPE.READ
+      - SUBJECT.READ
+      - SUBJECT.UPDATE
+
+  grafana_dashboard:
+    enable: false
+    audience:
+      - res_ManagementPortal
+    client_secret: ""
+    scope:
+      - USER.READ
+    grantTypes:
+      - authorization_code
+      - refresh_token
+    access_token_validity: 900
+    refresh_token_validity: 78000
+    redirectUris:
+      - '{{ .Values.hydra.advertised_protocol }}://dashboard.{{ .Values.hydra.server_name }}/login/generic_oauth'
+    autoapprove:
+      - USER.READ
+
+  radar_push_endpoint:
+    enable: false
+    audience:
+      - res_restAuthorizer
+    client_secret: ""
+    scope:
+      - SOURCETYPE.READ
+      - SUBJECT.UPDATE
+      - MEASUREMENT.READ
+      - MEASUREMENT.CREATE
+      - PROJECT.READ
+      - SUBJECT.READ
+    grantTypes:
+      - client_credentials
+    access_token_validity: 900
+
+  radar_data_dashboard_backend:
+    enable: false
+    audience:
+      - res_ManagementPortal
+    client_secret: ""
+    scope:
+      - PROJECT.READ
+      - SUBJECT.READ
+      - MEASUREMENT.READ
+    grantTypes:
+      - client_credentials
+    access_token_validity: 900

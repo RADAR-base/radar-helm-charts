@@ -1,18 +1,14 @@
-# Default values for radar-home.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-# -- Number of Appconfig replicas to deploy
+# -- Number of radar-console frontend replicas to deploy
 replicaCount: 1
 
 image:
   # -- Image registry
-  registry: ghcr.io
+  registry: docker.io
   # -- Image repository
-  repository: radar-base/radar-home/radar-home
+  repository: peymanm/radarbase-console
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag:
+  tag: 0.0.5
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy
@@ -25,26 +21,35 @@ image:
   #
   pullSecrets: []
 
-# -- String to partially override radar-home.fullname template with a string (will prepend the release name)
+# -- String to partially override radar-console.fullname template with a string (will prepend the release name)
 nameOverride: ""
-# -- String to fully override radar-home.fullname template with a string
+# -- String to fully override radar-console.fullname template with a string
 fullnameOverride: ""
 
-# -- Kubernetes namespace that Appconfig is going to be deployed on
-namespace: default
+envVars: []
+
+# -- Annotations for Appconfig frontend pods
+podAnnotations: {}
+
+# -- Configure Appconfig pods' Security Context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Configure Appconfig containers' Security Context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
 
 service:
-  # -- Kubernetes Service type
   type: ClusterIP
-  # -- Port
-  port: 8080
-
-# -- Reconfigure Ingress to not force TLS
-disable_tls: false
-# -- Hostname for the home service
-server_name: localhost
-# -- The protocol in advertised URIs (https, http)
-advertised_protocol: https
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
 
 ingress:
   # -- Enable ingress controller resource
@@ -53,18 +58,23 @@ ingress:
   # @default -- check values.yaml
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+  hostname: localhost
   # -- Path within the url structure
-  path: /
+  path: /radarbase-console
   # -- Ingress Path type
   pathType: ImplementationSpecific
   # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
   ingressClassName: nginx
   # -- Hosts to accept requests from
-  hosts:
-    - '{{ .Values.server_name }}'
-  tls:
+  tls: true
     # -- TLS Secret Name
-    secretName: radar-base-tls
+  existingSecret: radar-base-tls
+
+configMap:
+  mounted: true
+  mountPath: /usr/share/nginx/html/assets
+  data:
+    frontend-config.json: {}
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -89,11 +99,6 @@ tolerations: []
 # -- Affinity labels for pod assignment
 affinity: {}
 
-# -- Extra environment variables
-extraEnvVars: []
-#  - name: BEARER_AUTH
-#    value: true
-
 # -- Custom livenessProbe that overrides the default one
 customLivenessProbe: {}
 
@@ -110,6 +115,9 @@ livenessProbe:
   successThreshold: 1
   # -- Failure threshold for livenessProbe
   failureThreshold: 3
+  httpGet:
+    path: /
+    port: http
 
 # -- Custom readinessProbe that overrides the default one
 customReadinessProbe: {}
@@ -127,6 +135,9 @@ readinessProbe:
   successThreshold: 1
   # -- Failure threshold for readinessProbe
   failureThreshold: 3
+  httpGet:
+    path: /
+    port: http
 
 # -- Custom startupProbe that overrides the default one
 customStartupProbe: {}
@@ -144,6 +155,9 @@ startupProbe:
   successThreshold: 1
   # -- Failure threshold for startupProbe
   failureThreshold: 30
+  httpGet:
+    path: /
+    port: http
 
 # -- Network policy defines who can access this application and who this applications has access to
 # @default -- check `values.yaml`
@@ -167,53 +181,22 @@ networkpolicy:
       podSelector:
         matchLabels:
           k8s-app: kube-dns
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: app-config
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: management-portal
     ports:
       - port: 53
         protocol: UDP
       - port: 53
         protocol: TCP
-
-s3:
-  # -- Enable link to S3
-  enabled: false
-  # -- URL to S3
-  url: '{{ .Values.advertised_protocol }}://s3.{{ .Values.server_name }}/login'
-
-dashboard:
-  # -- Enable link to dashboard
-  enabled: false
-  # -- URL to dashboard
-  url: '{{ .Values.advertised_protocol }}://dashboard.{{ .Values.server_name }}'
-
-appConfig:
-  # -- Enable link to app-config service
-  enabled: false
-
-uploadPortal:
-  # -- Enable link to upload portal
-  enabled: false
-
-restAuthorizer:
-  # -- Enable link to rest source authorizer
-  enabled: false
-
-monitoring:
-  # -- Enable link to the monitoring stack, usually Prometheus
-  enabled: false
-  # -- URL to the monitoring stack, usually Prometheus
-  url: '{{ .Values.advertised_protocol }}://grafana.{{ .Values.server_name }}/login'
-
-logging:
-  # -- Enable link to the logging stack, usually Graylog
-  enabled: false
-  # -- URL to the monitoring stack, usually Graylog
-  url:
-
-# Pod Disruption Budget configuration
-podDisruptionBudget:
-  # -- Enable Pod Disruption Budget
-  enabled: true
-  # -- Minimum number of pods that must be available during disruptions
-  minAvailable: 1
-  # -- Maximum number of pods that can be unavailable during disruptions
-  maxUnavailable: ~
+      - port: 8080
+        protocol: TCP

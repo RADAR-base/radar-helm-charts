@@ -81,7 +81,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   # -- Path within the url structure
-  path: "/kratos-ui(/|$)(.*)"
+  path: "/study(/|$)(.*)"
   # -- Ingress Path type
   pathType: ImplementationSpecific
   # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
@@ -137,8 +137,6 @@ deployment:
   # - name: FOO
   #   value: BAR
   extraEnv:
-    - name: HYDRA_ADMIN_URL
-      value: http://radar-hydra-admin
   # -- If you want to mount external volume
   # For example, mount a secret containing Certificate root CA to verify database
   # TLS connection.
@@ -231,7 +229,7 @@ customStartupProbe: {}
 
 startupProbe:
   # -- Enable startupProbe
-  enabled: true
+  enabled: false
   # -- Initial delay seconds for startupProbe
   initialDelaySeconds: 5
   # -- Period seconds for startupProbe
@@ -264,7 +262,7 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: kratos-admin
+          app.kubernetes.io/name: kratos
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
@@ -284,44 +282,57 @@ networkpolicy:
       - port: 53
         protocol: TCP
 
-# -- Set this to ORY Kratos's Admin URL
-kratosAdminUrl: "http://kratos-admin:80/admin"
+# Application specific configuration
 
-# -- Set this to ORY Kratos's public URL
-kratosPublicUrl: "https://localhost/kratos"
+# Base path for the application
+basePath: "study"
 
-# -- Set this to ORY Kratos's public URL accessible from the outside world.
-kratosBrowserUrl: "https://localhost/kratos"
+auth:
+  armt:
+    # Client credentials for ARMT authentication
+    clientId: "aRMT"
+    clientSecret: ""
+    redirectUri: "{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/armt"
+  prmt:
+    # Client credentials for PRMT authentication
+    clientId: "pRMT"
+    clientSecret: ""
+    redirectUri: "{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/prmt"
+  sep:
+    # Client credentials for SEP frontend authentication
+    clientId: "SEP"
+    clientSecret: ""
+    redirectUri: "{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/{{ .Values.basePath }}/connect/sep"
 
-# -- Set this to ORY Hydra's Admin URL
-hydraAdminUrl: "http://radar-hydra-admin"
+kratos:
+  # Kratos urls
+  internalUrl: "http://radar-kratos-public:80"
+  adminUrl: "http://radar-kratos-admin/admin"
 
-# -- Set this to ORY Hydra's public URL
-hydraPublicUrl: "http://radar-hydra-public:4444"
+hydra:
+  # Hydra urls
+  internalUrl: "http://radar-hydra-public:4444"
+  adminUrl: "http://radar-hydra-admin:4445/admin"
+  browserUrl: "{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra"
 
-# -- Set this to the REST source backend service URL
-restSourceBackendUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend"
+rest_sources_auth:
+  # Rest source auth urls
+  backendUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend"
+  frontendUrl: "{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/rest-sources/authorizer/"
 
-# -- Set this to the RADAR Gateway service URL
+github:
+  # Github authentication token
+  authToken: ""
+  # Github repository name
+  repository: "radar-self-enrolment-definitions"
+
+# Gateway url
 gatewayUrl: "http://radar-gateway:8080"
 
-# -- Client ID for ARMT authentication
-armtClientId: "aRMT"
+# Study definition repository (GITHUB, LOCAL)
+studyDefinitionRepository: "GITHUB"
 
-# -- Client secret for ARMT authentication
-armtClientSecret: ""
-
-# -- Client ID for SEP authentication
-sepClientId: "SEP"
-
-# -- Client secret for SEP authentication
-sepClientSecret: ""
-
-# -- GitHub authentication token for API access (leave empty if not used)
-githubAuthToken: ""
-
-# -- The basePath
-basePath: "/kratos-ui"
+managementportal_url: http://management-portal:8080/managementportal
 
 test:
   # -- use a busybox image from another repository

@@ -244,6 +244,18 @@ networkpolicy:
       podSelector:
         matchLabels:
           app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: hydra
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: kratos
   - to:
     - namespaceSelector:
         matchLabels:
@@ -275,22 +287,28 @@ postgres:
   database:
   # -- Kubernetes secret containing the database JDBC Connection url
   # (disables use of 'host', 'port' and 'database' values).
+  # Set to empty/null to use chart's own secret created from postgres.url value
+  # Otherwise e.g. name: radar-cloudnative-postgresql-managementportal
   urlSecret:
-    name: radar-cloudnative-postgresql-managementportal
+    name:
     key: jdbc-uri
   # -- database user
   user:
   # -- Kubernetes secret containing the database username
   # (disables use of 'user' value).
+  # Set to empty/null to use chart's own secret created from postgres.user value
+  # Otherwise e.g. name: radar-cloudnative-postgresql-managementportal
   userSecret:
-    name: radar-cloudnative-postgresql-managementportal
+    name:
     key: username
   # -- password of the database user
   password:
   # -- Kubernetes secret containing the database password
   # (disables use of 'password' value).
+  # Set to empty/null to use chart's own secret created from postgres.password value
+  # Otherwise e.g. name: radar-cloudnative-postgresql-managementportal
   passwordSecret:
-    name: radar-cloudnative-postgresql-managementportal
+    name:
     key: password
 
   # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
@@ -314,22 +332,36 @@ catalogue_server: catalog-server
 
 # Settings pertaining to the identity provider (IDP)
 identity_server:
+  # -- Whether the IDP is the MP's internal IDP
+  internal: true
+
+  # Set the following values if the IDP is external to the cluster (i.e. Ory Kratos)
+
+  # -- The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos
+  public_url: http://radar-kratos-public
+  # -- The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
+  admin_url: http://radar-kratos-admin
+  # -- The user activation flow type to use for Management Portal (e.g., recovery, verification)
+  user_activation_flow_type: "verification"
+  # -- The user activation method to use for Management Portal (e.g., link, code)
+  user_activation_method: "link"
   # -- The admin email to link to the admin service account. This account should only be used to set up admin-users
   admin_email: admin@example.com
-  # -- The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos
-  server_url:
-  # -- The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
-  server_admin_url: http://radar-kratos-admin
-  # -- The publicly accessible login URL for the IDP; needed when deviating from http(s)://server_name/kratos-ui
-  login_url:
 
 authserver:
+  # -- Whether the authserver is the MP's internal authserver
+  internal: true
+
+  # Set the following values if the authserver is external to the cluster (i.e. Ory Hydra)
+
   # -- The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth
-  server_url: http://radar-hydra:4444
+  token_url: http://radar-hydra-public:4444/oauth2/token
   # -- The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides
-  server_admin_url: http://radar-hydra:4445
+  admin_url: http://radar-hydra-admin:4445
   # -- The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login
-  login_url: http://localhost:4444
+  auth_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra/oauth2/auth'
+  # -- The JWKS URL for the authserver; needed when deviating from http(s)://server_name/auth/jwks
+  jwks_url: http://radar-hydra-admin:4445/admin/keys/hydra.jwt.access-token
 
 managementportal:
   # -- set to true, if automatic source-type import from catalogue server should be enabled
@@ -346,6 +378,10 @@ managementportal:
   frontend_client_secret: xxx
   # -- Admin password of the default admin user created by the system
   common_admin_password: xxx
+   # -- The file where the OAuth2 client details are stored
+  oauth_clients_file: /secrets/oauth_client_details.csv
+  # -- Base URL managementportal calls from inside the application container
+  base_url: ''
 
 # Configurations of the SMTP server to send activation emails from Management Portal
 smtp:
@@ -608,7 +644,7 @@ oauth_clients:
     access_token_validity: 900
     refresh_token_validity: 78000
     redirect_uri:
-      - http://dashboard.localhost/login/generic_oauth
+      - '{{ .Values.advertised_protocol }}://dashboard.{{ .Values.server_name }}/login/generic_oauth'
     autoapprove:
       - USER.READ
 

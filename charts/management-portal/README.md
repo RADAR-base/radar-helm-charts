@@ -3,7 +3,7 @@
 # management-portal
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/management-portal)](https://artifacthub.io/packages/helm/radar-base/management-portal)
 
-![Version: 1.6.3](https://img.shields.io/badge/Version-1.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.13](https://img.shields.io/badge/AppVersion-2.1.13-informational?style=flat-square)
+![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.13](https://img.shields.io/badge/AppVersion-2.1.13-informational?style=flat-square)
 
 A Helm chart for RADAR-Base Management Portal to manage projects and participants throughout RADAR-base.
 
@@ -91,23 +91,27 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | postgres.host | string | `nil` | host name of the postgres db |
 | postgres.port | string | `nil` | post of the postgres db |
 | postgres.database | string | `nil` | database name |
-| postgres.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'host', 'port' and 'database' values). |
+| postgres.urlSecret | object | `{"key":"jdbc-uri","name":null}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'host', 'port' and 'database' values). Set to empty/null to use chart's own secret created from postgres.url value Otherwise e.g. name: radar-cloudnative-postgresql-managementportal |
 | postgres.user | string | `nil` | database user |
-| postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database username (disables use of 'user' value). |
+| postgres.userSecret | object | `{"key":"username","name":null}` | Kubernetes secret containing the database username (disables use of 'user' value). Set to empty/null to use chart's own secret created from postgres.user value Otherwise e.g. name: radar-cloudnative-postgresql-managementportal |
 | postgres.password | string | `nil` | password of the database user |
-| postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-managementportal"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
+| postgres.passwordSecret | object | `{"key":"password","name":null}` | Kubernetes secret containing the database password (disables use of 'password' value). Set to empty/null to use chart's own secret created from postgres.password value Otherwise e.g. name: radar-cloudnative-postgresql-managementportal |
 | postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true if the connecting to postgres using SSL |
 | postgres.ssl.keystore | string | `""` | base64 encoded certificate needed to connect to the PostgreSQL With helmfile, this can be set in a production.yaml.gotmpl file by setting   keystore: {{ readFile "certificate.pem" | b64enc | quote }} or with SOPS   keystore: {{ exec "sops" (list "-d" "certificate.pem") | b64enc | quote }} |
 | server_name | string | `"localhost"` | domain name of the server |
 | catalogue_server | string | `"catalog-server"` | Hostname of the catalogue-server |
+| identity_server.internal | bool | `true` | Whether the IDP is the MP's internal IDP |
+| identity_server.public_url | string | `"http://radar-kratos-public"` | The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos |
+| identity_server.admin_url | string | `"http://radar-kratos-admin"` | The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
+| identity_server.user_activation_flow_type | string | `"verification"` | The user activation flow type to use for Management Portal (e.g., recovery, verification) |
+| identity_server.user_activation_method | string | `"link"` | The user activation method to use for Management Portal (e.g., link, code) |
 | identity_server.admin_email | string | `"admin@example.com"` | The admin email to link to the admin service account. This account should only be used to set up admin-users |
-| identity_server.server_url | string | `nil` | The publicly accessible server URL for the IDP; needed when deviating from http(s)://server_name/kratos |
-| identity_server.server_admin_url | string | `"http://radar-kratos-admin"` | The admin server URL for the IDP used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
-| identity_server.login_url | string | `nil` | The publicly accessible login URL for the IDP; needed when deviating from http(s)://server_name/kratos-ui |
-| authserver.server_url | string | `"http://radar-hydra:4444"` | The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth |
-| authserver.server_admin_url | string | `"http://radar-hydra:4445"` | The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
-| authserver.login_url | string | `"http://localhost:4444"` | The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login |
+| authserver.internal | bool | `true` | Whether the authserver is the MP's internal authserver |
+| authserver.token_url | string | `"http://radar-hydra-public:4444/oauth2/token"` | The publicly accessible server URL for the authserver; needed when deviating from http(s)://server_name/auth |
+| authserver.admin_url | string | `"http://radar-hydra-admin:4445"` | The admin server URL for the authserver used for service-to-service requests. Only needs to be accessible from inside the cluster where the managementportal resides |
+| authserver.auth_url | string | `"{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/hydra/oauth2/auth"` | The publicly accessible login URL for the authserver; needed when deviating from http(s)://server_name/auth/login |
+| authserver.jwks_url | string | `"http://radar-hydra-admin:4445/admin/keys/hydra.jwt.access-token"` | The JWKS URL for the authserver; needed when deviating from http(s)://server_name/auth/jwks |
 | managementportal.catalogue_server_enable_auto_import | bool | `false` | set to true, if automatic source-type import from catalogue server should be enabled |
 | managementportal.common_privacy_policy_url | string | `"http://info.thehyve.nl/radar-cns-privacy-policy"` | Override with a publicly resolvable url of the privacy-policy url for your set-up. This can be overridden on a project basis as well. |
 | managementportal.oauth_checking_key_aliases_0 | string | `"radarbase-managementportal-ec"` | Keystore alias to sign JWT tokens from Management Portal |
@@ -115,6 +119,8 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | managementportal.oauth_require_aal2 | bool | `true` | Whether or not to require AAL2 level authentication (i.e. MFA) |
 | managementportal.frontend_client_secret | string | `"xxx"` | OAuth2 Client secret of the Management Portal frontend application |
 | managementportal.common_admin_password | string | `"xxx"` | Admin password of the default admin user created by the system |
+| managementportal.oauth_clients_file | string | `"/secrets/oauth_client_details.csv"` | The file where the OAuth2 client details are stored |
+| managementportal.base_url | string | `""` | Base URL managementportal calls from inside the application container |
 | smtp.enabled | bool | `false` | set to true, if SMTP server should be enabled. Required to be true for production setup |
 | smtp.host | string | `"smtp"` | Hostname of the SMTP server |
 | smtp.port | int | `25` | Port of the SMTP server |

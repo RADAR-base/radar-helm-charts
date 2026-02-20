@@ -21,9 +21,7 @@ data:
       {{- end }}
 
     auth:
-      # Management Portal URL
-      managementPortalUrl: {{ .Values.managementportal_url }}
-      # OAuth2 Auth URL for MP Client
+      # OAuth2 Auth URL
       authUrl: {{ .Values.auth_url }}
       # OAuth2 Client id of rest sources authorizer backend
       clientId: radar_rest_sources_auth_backend
