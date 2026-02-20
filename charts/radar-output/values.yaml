@@ -270,3 +270,12 @@ deduplication:
 compression:
   # -- Compression type to use for output files. Can be one of: gzip, zip, none
   type: gzip
+
+# Horizontal Pod Autoscaler
+hpa:
+  # -- Enable HPA
+  enabled: false
+  # -- Maximum number of replicas
+  maxReplicas: 5
+  # -- Target CPU utilization percentage
+  targetCPU: 80
