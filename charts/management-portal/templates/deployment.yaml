@@ -137,7 +137,7 @@ spec:
           - name: MANAGEMENTPORTAL_AUTHSERVER_ADMINURL
             value: {{ tpl .Values.authserver.admin_url . }}
           - name: MANAGEMENTPORTAL_AUTHSERVER_JWKSURL
-            value: {{ tpl .Values.authserver.server_admin_url . }}/admin/keys/hydra.jwt.access-token
+            value: {{ tpl .Values.authserver.jwks_url . }}
           - name: MANAGEMENTPORTAL_COMMON_ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
