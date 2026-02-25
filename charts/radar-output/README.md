@@ -35,7 +35,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| replicaCount | int | `2` | Number of radar-output replicas to deploy |
+| replicaCount | int | `1` | Number of radar-output replicas to deploy |
 | image.registry | string | `"ghcr.io"` | Image registry |
 | image.repository | string | `"radar-base/radar-output-restructure/radar-output-restructure"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
