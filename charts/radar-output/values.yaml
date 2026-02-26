@@ -279,3 +279,5 @@ hpa:
   maxReplicas: 5
   # -- Target CPU utilization percentage
   targetCPU: 80
+  # -- Target Memory utilization percentage
+  targetMemory: ~

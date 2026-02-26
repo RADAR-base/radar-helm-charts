@@ -116,6 +116,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | hpa.enabled | bool | `false` | Enable HPA |
 | hpa.maxReplicas | int | `5` | Maximum number of replicas |
 | hpa.targetCPU | int | `80` | Target CPU utilization percentage |
+| hpa.targetMemory | string | `nil` | Target Memory utilization percentage |
 
 ## Cost Considerations
 
