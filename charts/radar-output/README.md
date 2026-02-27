@@ -116,6 +116,10 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
 | podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
 | podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |
+| hpa.enabled | bool | `false` | Enable HPA |
+| hpa.maxReplicas | int | `5` | Maximum number of replicas |
+| hpa.targetCPU | int | `80` | Target CPU utilization percentage |
+| hpa.targetMemory | string | `nil` | Target Memory utilization percentage |
 
 ## Cost Considerations
 
