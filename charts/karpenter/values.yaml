@@ -1,0 +1,37 @@
+replicas: 1
+version: 1.9.0
+nodeSelector:
+  kubernetes.io/os: linux
+
+tolerations:
+  - key: "CriticalAddonsOnly"
+    operator: "Exists"
+  - key: "dmz-pod"
+    operator: "Equal"
+    value: "false"
+    effect: "NoExecute"
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+          - key: eks.amazonaws.com/nodegroup
+            operator: In
+            values:
+              - dmz-m5-l-mng-od-3
+
+controller:
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 1
+      memory: 1Gi
+
+logLevel: info
+
+settings:
+  # -- Name of the EKS cluster Karpenter is provisioning nodes for. Required.
+  clusterName: ""

@@ -1,0 +1,20 @@
+apiVersion: v2
+appVersion: "1.9.0"
+description: A Helm chart for Karpenter, an open-source node provisioning project for Kubernetes. This chart is an overlay for the original Karpenter chart with default values tuned for RADAR-base deployments.
+name: karpenter
+version: 1.9.0
+sources: ["https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/karpenter"]
+deprecated: false
+type: application
+home: "https://karpenter.sh"
+maintainers:
+  - email: mani.thumu@kcl.ac.uk
+    name: Mani Thumu
+    url: https://www.kcl.ac.uk
+  - email: yatharth.ranjan@kcl.ac.uk
+    name: Yatharth Ranjan
+    url: https://www.kcl.ac.uk/people/yatharth-ranjan
+dependencies:
+- name: karpenter
+  version: 1.9.0
+  repository: oci://public.ecr.aws/karpenter
