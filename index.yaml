@@ -13478,6 +13478,29 @@ entries:
   radar-nifi:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2026-03-26T16:14:29.69341502Z"
+    dependencies:
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    - name: nifi-cluster
+      repository: file://../../external/nifi-cluster
+      version: 1.14.1
+    - condition: nifikop.enabled
+      name: nifikop
+      repository: file://../../external/nifikop
+      version: 1.14.1
+    description: A Helm chart for Kubernetes
+    digest: 9e160c189b49b464187fa482b7d226ca4201b694b8ad9e01c714c57f0c282865
+    name: radar-nifi
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-nifi-3.1.0/radar-nifi-3.1.0.tgz
+    version: 3.1.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-12-04T11:17:20.50418164Z"
     dependencies:
     - name: common
@@ -23078,4 +23101,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2026-02-18T15:17:21.762105146Z"
+generated: "2026-03-26T16:14:29.694368605Z"
