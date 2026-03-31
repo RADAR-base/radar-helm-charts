@@ -1,0 +1,12 @@
+# Ignore Helm chart files when building Docker image
+Chart.yaml
+values.yaml
+*.md
+*.gotmpl
+templates/
+charts/
+Chart.lock
+
+
+
+

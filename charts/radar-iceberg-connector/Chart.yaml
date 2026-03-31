@@ -1,0 +1,30 @@
+apiVersion: v2
+appVersion: 7.8.0
+description: A Helm chart for RADAR-base Iceberg connector in standalone mode. This connector uses Apache Iceberg sink connector with Kafka Connect to write Kafka data to Iceberg tables in object storage.
+name: radar-iceberg-connector
+version: 0.1.0
+icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
+sources:
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-iceberg-connector
+- https://github.com/apache/iceberg
+- https://iceberg.apache.org/docs/latest/kafka-connect/
+keywords:
+  - radar-base
+  - iceberg
+  - kafka-connect
+  - sink
+annotations:
+  artifacthub.io/license: Apache-2.0
+type: application
+home: "https://radar-base.org"
+maintainers:
+  - name: Yatharth Ranjan
+    email: yatharthranjan89@gmail.com
+    url: https://www.radar-base.org/
+dependencies:
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  tags:
+  - bitnami-common
+  version: 2.x.x
+

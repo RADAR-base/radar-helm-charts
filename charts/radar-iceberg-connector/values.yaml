@@ -1,0 +1,376 @@
+# Default values for radar-iceberg-connector.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of radar-iceberg-connector replicas to deploy
+replicaCount: 1
+
+image:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
+  # Default uses Confluent's Kafka Connect image. For production, build a custom image
+  # that includes the Iceberg connector plugin. See README for instructions.
+  repository: confluentinc/cp-kafka-connect
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "7.8.0"
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
+
+# -- Build configuration for adding Iceberg connector plugin at runtime
+# This is useful for development but for production, pre-build an image with the connector
+build:
+  # -- Enable runtime plugin installation (slower startup)
+  enabled: false
+  # -- Iceberg connector version to install
+  icebergVersion: "1.6.1"
+  # -- Additional Maven dependencies for the Iceberg connector
+  mavenDependencies:
+    - "org.apache.iceberg:iceberg-kafka-connect:1.6.1"
+    - "org.apache.iceberg:iceberg-aws:1.6.1"
+
+# -- String to partially override radar-iceberg-connector.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override radar-iceberg-connector.fullname template with a string
+fullnameOverride: ""
+
+# -- Configure radar-iceberg-connector pods' Security Context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- JVM Options
+kafkaHeapOpts: "-Xms3g -Xmx4g"
+
+# -- Configure radar-iceberg-connector containers' Security Context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # -- Kubernetes Service type
+  type: ClusterIP
+  # -- radar-iceberg-connector port
+  port: 8083
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  # -- CPU/Memory resource requests
+  requests:
+    cpu: 100m
+    memory: 3Gi
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Toleration labels for pod assignment
+tolerations: []
+
+# -- Affinity labels for pod assignment
+affinity: {}
+
+# -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specific [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
+extraEnvVars: []
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 60
+  # -- Period seconds for livenessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 30
+  # -- Period seconds for readinessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Custom startupProbe that overrides the default one
+customStartupProbe: {}
+
+startupProbe:
+  # -- Enable startupProbe
+  enabled: true
+  # -- Initial delay seconds for startupProbe
+  initialDelaySeconds: 10
+  # -- Period seconds for startupProbe
+  periodSeconds: 10
+  # -- Timeout seconds for startupProbe
+  timeoutSeconds: 10
+  # -- Success threshold for startupProbe
+  successThreshold: 1
+  # -- Failure threshold for startupProbe
+  failureThreshold: 30
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app: 'cp-kafka'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app: 'cp-schema-registry'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'catalog-server'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'nessie'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app: 'minio'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
+# -- Number of deployed Kafka broker instances
+kafka_num_brokers: 3
+
+kafka:
+  # -- Kafka broker URLs (PLAINTEXT by default for cp-kafka, use SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094 for RADAR Kafka with SASL)
+  url: PLAINTEXT://cp-kafka-headless:9092
+  # -- Security related env vars set in pods. Not applied when `cc.enabled` is true.
+  # For PLAINTEXT connections, these can be omitted or left as-is (will be ignored)
+  security:
+    # -- Env vars set for authentication with Kafka brokers. Not applied when `cc.enabled` is true.
+    # Comment out or change these if using SASL authentication
+    env:
+      # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+      - name: CONNECT_SECURITY_PROTOCOL
+        value: PLAINTEXT
+      # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+      - name: CONNECT_PRODUCER_SECURITY_PROTOCOL
+        value: PLAINTEXT
+      # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+      - name: CONNECT_CONSUMER_SECURITY_PROTOCOL
+        value: PLAINTEXT
+      # Uncomment below for SASL authentication:
+      # - name: CONNECT_SASL_MECHANISM
+      #   value: SCRAM-SHA-512
+      # - name: CONNECT_PRODUCER_SASL_MECHANISM
+      #   value: SCRAM-SHA-512
+      # - name: CONNECT_CONSUMER_SASL_MECHANISM
+      #   value: SCRAM-SHA-512
+    # -- Secret for the Kafka SASL JAAS configuration. Not applied when `cc.enabled` is true.
+    # Uncomment and configure if using SASL authentication
+    jaasSecret:
+      name: ""
+      key: sasl.jaas.config
+
+schemaRegistry:
+  # -- Schema registry URL (cp-schema-registry for Confluent Platform, radar-kafka-schema-registry for RADAR Kafka)
+  url: http://cp-schema-registry:8081
+
+catalogServer:
+  # -- Catalog server URL
+  url: http://catalog-server:9010
+
+# Iceberg Catalog Configuration
+# -- Iceberg REST catalog URL (Nessie) (iceberg.catalog.uri or iceberg.catalog.<namespace>.uri)
+icebergCatalogUrl: http://nessie:19120/api/v1
+# -- Iceberg catalog type (rest, hive, hadoop, nessie) (iceberg.catalog.type)
+icebergCatalogType: rest
+# -- Iceberg catalog implementation class (iceberg.catalog.catalog-impl)
+icebergCatalogImpl: org.apache.iceberg.rest.RESTCatalog
+# -- Iceberg warehouse location (S3 path) (iceberg.catalog.warehouse)
+icebergWarehouse: s3a://iceberg-warehouse/
+# -- Iceberg FileIO implementation (iceberg.catalog.io-impl)
+icebergIoImpl: org.apache.iceberg.aws.s3.S3FileIO
+# -- Iceberg catalog credential (for REST catalogs) (iceberg.catalog.credential)
+icebergCatalogCredential: ""
+# -- Additional catalog properties as key-value pairs (iceberg.catalog.*)
+# Example: {"iceberg.catalog.header.X-My-Header": "my-value"}
+icebergCatalogProperties: {}
+# -- List of topics to be consumed by the sink connector separated by comma. Topics defined in the catalog server
+# will automatically be loaded if `initTopics.enabled` is true.
+topics: ""
+# -- Target S3 endpoint url (MinIO or AWS S3)
+s3Endpoint: http://minio:9000
+# -- The AWS region to be used by the connector. Some compatibility layers require this.
+s3Region: us-east-1
+# -- Number of tasks in the connector
+maxTasks: 4
+# -- Access key of the target S3 bucket
+bucketAccessKey: access_key
+# -- Secret key of the target S3 bucket
+bucketSecretKey: secret
+# -- Iceberg table namespace/database
+icebergNamespace: radar
+
+# Iceberg Tables Configuration
+# -- Auto create Iceberg tables if they don't exist (iceberg.tables.auto-create-enabled)
+autoCreateTables: true
+# -- Auto evolve Iceberg table schema (iceberg.tables.evolve-schema-enabled)
+autoEvolveSchema: true
+# -- Force all schema fields to be optional (iceberg.tables.schema-force-optional)
+icebergSchemaForceOptional: false
+# -- Enable dynamic table routing (iceberg.tables.dynamic-enabled)
+icebergDynamicTablesEnabled: false
+# -- Field name to use for routing records to tables (iceberg.tables.route-field)
+icebergRouteField: ""
+# -- Enable CDC/upsert mode for handling updates and deletes (iceberg.tables.upsert-mode-enabled)
+icebergUpsertModeEnabled: false
+# -- ID columns for upsert operations, comma-separated (iceberg.tables.id-columns)
+icebergIdColumns: ""
+# -- Enable CTAS (Create Table As Select) for auto-created tables (iceberg.tables.ctas-enabled)
+icebergCtasEnabled: false
+# -- Default partition spec for auto-created tables (iceberg.tables.default-partition-by)
+icebergDefaultPartitionBy: ""
+# -- Default commit branch for tables (iceberg.tables.default-commit-branch)
+icebergDefaultCommitBranch: ""
+
+# Iceberg Table Write Configuration
+# -- Write format for Iceberg tables (parquet, orc, avro) (iceberg.table.write-format)
+icebergWriteFormat: parquet
+# -- Parquet compression codec (snappy, gzip, lz4, zstd, uncompressed) (iceberg.table.write.parquet.compression-codec)
+icebergParquetCompressionCodec: ""
+# -- Parquet compression level (iceberg.table.write.parquet.compression-level)
+icebergParquetCompressionLevel: ""
+# -- ORC compression codec (iceberg.table.write.orc.compression-codec)
+icebergOrcCompressionCodec: ""
+# -- Avro compression codec (iceberg.table.write.avro.compression-codec)
+icebergAvroCompressionCodec: ""
+
+# Iceberg Control Configuration
+# -- Control topic name for coordinating commits (iceberg.control.topic)
+icebergControlTopic: control-iceberg
+# -- Control consumer group ID (iceberg.control.group-id)
+icebergControlGroupId: cg-control-iceberg
+# -- Commit interval in milliseconds (iceberg.control.commit.interval-ms)
+icebergCommitIntervalMs: 60000
+# -- Commit timeout in milliseconds (iceberg.control.commit.timeout-ms)
+icebergCommitTimeoutMs: 120000
+# -- Number of threads for committing (iceberg.control.commit.threads)
+icebergCommitThreads: 4
+# -- Number of control topic partitions (for auto-creation) (iceberg.control.topic.partitions)
+icebergControlTopicPartitions: 1
+# -- Replication factor for control topic (iceberg.control.topic.replication-factor)
+icebergControlTopicReplicationFactor: 3
+# -- Enable auto-commit on control events (iceberg.control.auto-commit-enabled)
+icebergControlAutoCommitEnabled: true
+
+# Hadoop Configuration (for HDFS/Hive catalogs)
+# -- Hadoop configuration directory path (iceberg.hadoop-conf-dir)
+icebergHadoopConfDir: ""
+# -- Additional Hadoop configuration properties (iceberg.hadoop.*)
+# Example: {"iceberg.hadoop.fs.s3a.connection.maximum": "100"}
+icebergHadoopProperties: {}
+
+# Static Routing Configuration (optional)
+# -- Map of table names to route regex patterns for static routing
+# Example: {"default.events_list": "list", "default.events_create": "create"}
+icebergTableRouteRegex: {}
+
+# Per-Table Configuration (optional)
+# -- Per-table specific configuration properties
+# Example:
+#   "default.events_list":
+#     write-format: "orc"
+#     route-regex: "list"
+#     commit-branch: "main"
+icebergPerTableConfig: {}
+
+cc:
+  # -- Set to true, if Confluent Cloud is used
+  enabled: false
+  # -- Confluent cloud based Kafka broker URL (if Confluent Cloud based Kafka cluster is used)
+  bootstrapServerurl: ""
+  # -- Confluent cloud based Schema registry URL (if Confluent Cloud based Schema registry is used)
+  schemaRegistryUrl: ""
+  # -- API Key of the Confluent Cloud cluster
+  apiKey: ccApikey
+  # -- API secret of the Confluent Cloud cluster
+  apiSecret: ccApiSecret
+  # -- API Key of the Confluent Cloud Schema registry
+  schemaRegistryApiKey: srApiKey
+  # -- API Key of the Confluent Cloud Schema registry
+  schemaRegistryApiSecret: srApiSecret
+
+initTopics:
+  # -- If true, fetch list of topics from catalog server
+  enabled: true
+
+  image:
+    # -- Image repository to fetch topics with
+    repository: linuxserver/yq
+    # -- Image tag to fetch topics with
+    tag: 3.2.2
+    # -- Image pull policy to fetch topics with
+    pullPolicy: IfNotPresent

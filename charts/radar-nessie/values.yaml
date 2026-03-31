@@ -1,0 +1,53 @@
+# -- String to partially override name template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override name template with a string
+fullnameOverride: ""
+
+image:
+  registry: ghcr.io
+  repository: projectnessie/nessie
+  tag: latest
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 19120
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: nessie.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 1
+    memory: 1Gi
+
+podAnnotations: {}
+nodeSelector: {}
+affinity: {}
+tolerations: []
+
+# Storage config: use JDBC (PostgreSQL) or in-memory
+storage:
+  type: jdbc # jdbc|inmemory
+  jdbc:
+    dialect: postgresql
+    url: jdbc:postgresql://postgresql:5432/nessie
+    username: nessie
+    passwordSecretName: nessie-db
+    passwordSecretKey: password
+
+

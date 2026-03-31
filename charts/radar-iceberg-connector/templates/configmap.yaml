@@ -1,0 +1,152 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  sink-iceberg.properties: |
+    name=radar-iceberg-sink-connector
+    connector.class=org.apache.iceberg.connect.IcebergSinkConnector
+    tasks.max={{ .Values.maxTasks | int }}
+    topics={{ .Values.topics }}
+
+    # Iceberg catalog configuration
+    iceberg.catalog.{{ .Values.icebergNamespace }}.uri={{ .Values.icebergCatalogUrl }}
+    iceberg.catalog.{{ .Values.icebergNamespace }}.catalog-impl={{ .Values.icebergCatalogImpl }}
+    iceberg.catalog.{{ .Values.icebergNamespace }}.type={{ .Values.icebergCatalogType }}
+    iceberg.catalog.{{ .Values.icebergNamespace }}.warehouse={{ .Values.icebergWarehouse }}
+    iceberg.catalog.{{ .Values.icebergNamespace }}.io-impl={{ .Values.icebergIoImpl }}
+    {{- if .Values.icebergCatalogCredential }}
+    iceberg.catalog.{{ .Values.icebergNamespace }}.credential={{ .Values.icebergCatalogCredential }}
+    {{- end }}
+    {{- range $key, $value := .Values.icebergCatalogProperties }}
+    {{ $key }}={{ $value }}
+    {{- end }}
+    
+    # Iceberg table configuration
+    iceberg.tables={{ .Values.icebergNamespace }}
+    iceberg.tables.auto-create-enabled={{ .Values.autoCreateTables }}
+    iceberg.tables.schema-force-optional={{ .Values.icebergSchemaForceOptional }}
+    iceberg.tables.evolve-schema-enabled={{ .Values.autoEvolveSchema }}
+    iceberg.tables.dynamic-enabled={{ .Values.icebergDynamicTablesEnabled }}
+    {{- if .Values.icebergRouteField }}
+    iceberg.tables.route-field={{ .Values.icebergRouteField }}
+    {{- end }}
+    iceberg.tables.upsert-mode-enabled={{ .Values.icebergUpsertModeEnabled }}
+    {{- if .Values.icebergIdColumns }}
+    iceberg.tables.id-columns={{ .Values.icebergIdColumns }}
+    {{- end }}
+    iceberg.tables.ctas-enabled={{ .Values.icebergCtasEnabled }}
+    {{- if .Values.icebergDefaultPartitionBy }}
+    iceberg.tables.default-partition-by={{ .Values.icebergDefaultPartitionBy }}
+    {{- end }}
+    {{- if .Values.icebergDefaultCommitBranch }}
+    iceberg.tables.default-commit-branch={{ .Values.icebergDefaultCommitBranch }}
+    {{- end }}
+    
+    # Iceberg table write format
+    iceberg.table.write-format={{ .Values.icebergWriteFormat }}
+    {{- if .Values.icebergParquetCompressionCodec }}
+    iceberg.table.write.parquet.compression-codec={{ .Values.icebergParquetCompressionCodec }}
+    {{- end }}
+    {{- if .Values.icebergParquetCompressionLevel }}
+    iceberg.table.write.parquet.compression-level={{ .Values.icebergParquetCompressionLevel }}
+    {{- end }}
+    {{- if .Values.icebergOrcCompressionCodec }}
+    iceberg.table.write.orc.compression-codec={{ .Values.icebergOrcCompressionCodec }}
+    {{- end }}
+    {{- if .Values.icebergAvroCompressionCodec }}
+    iceberg.table.write.avro.compression-codec={{ .Values.icebergAvroCompressionCodec }}
+    {{- end }}
+    
+    # Iceberg control configuration
+    iceberg.control.topic={{ .Values.icebergControlTopic }}
+    iceberg.control.group-id={{ .Values.icebergControlGroupId }}
+    iceberg.control.commit.interval-ms={{ .Values.icebergCommitIntervalMs }}
+    iceberg.control.commit.timeout-ms={{ .Values.icebergCommitTimeoutMs }}
+    iceberg.control.commit.threads={{ .Values.icebergCommitThreads }}
+    {{- if .Values.icebergControlTopicPartitions }}
+    iceberg.control.topic.partitions={{ .Values.icebergControlTopicPartitions }}
+    {{- end }}
+    {{- if .Values.icebergControlTopicReplicationFactor }}
+    iceberg.control.topic.replication-factor={{ .Values.icebergControlTopicReplicationFactor }}
+    {{- end }}
+    iceberg.control.auto-commit-enabled={{ .Values.icebergControlAutoCommitEnabled }}
+    
+    {{- if .Values.icebergHadoopConfDir }}
+    # Hadoop configuration
+    iceberg.hadoop-conf-dir={{ .Values.icebergHadoopConfDir }}
+    {{- end }}
+    {{- range $key, $value := .Values.icebergHadoopProperties }}
+    {{ $key }}={{ $value }}
+    {{- end }}
+    
+    {{- range $table, $regex := .Values.icebergTableRouteRegex }}
+    # Static routing for {{ $table }}
+    iceberg.table.{{ $table }}.route-regex={{ $regex }}
+    {{- end }}
+    
+    {{- range $table, $config := .Values.icebergPerTableConfig }}
+    # Per-table configuration for {{ $table }}
+    {{- range $key, $value := $config }}
+    iceberg.table.{{ $table }}.{{ $key }}={{ $value }}
+    {{- end }}
+    {{- end }}
+    
+    {{- if .Values.s3Endpoint }}
+    # S3 configuration
+    iceberg.catalog.{{ .Values.icebergNamespace }}.s3.endpoint={{ .Values.s3Endpoint }}
+    iceberg.catalog.{{ .Values.icebergNamespace }}.s3.path-style-access=true
+    {{- end }}
+    {{- if .Values.s3Region }}
+    iceberg.catalog.{{ .Values.icebergNamespace }}.s3.region={{ .Values.s3Region }}
+    {{- end }}
+    {{- if and .Values.bucketAccessKey .Values.bucketSecretKey }}
+    iceberg.catalog.{{ .Values.icebergNamespace }}.s3.access-key-id=${env:AWS_ACCESS_KEY_ID}
+    iceberg.catalog.{{ .Values.icebergNamespace }}.s3.secret-access-key=${env:AWS_SECRET_ACCESS_KEY}
+    {{- end }}
+
+    # Kafka Connect internal configuration
+    {{/*-1 means use default configured by the kafka broker*/}}
+    config.storage.replication.factor=-1
+    offset.storage.replication.factor=-1
+    status.storage.replication.factor=-1
+    topic.creation.default.replication.factor=-1
+
+    # Error handling
+    errors.tolerance=all
+    errors.log.enable=true
+    errors.deadletterqueue.topic.name=dead_letter_queue_iceberg
+    errors.deadletterqueue.topic.replication.factor={{ .Values.kafka_num_brokers | int }}
+    errors.deadletterqueue.context.headers.enable=true
+    errors.retry.delay.max.ms=60000
+    errors.retry.timeout=300000
+    
+  healthcheck.sh: |
+    #!/bin/sh
+    STATUS=$(curl -sf localhost:8083/connectors/radar-iceberg-sink-connector/status | grep -o '\"state\":\"[^\"]*\"')
+    if echo "$STATUS" | tr '\\n' ',' | grep -q FAILED; then
+      exit 1
+    elif [ $(echo "$STATUS" | grep RUNNING | wc -l) -le 0 ]; then
+      exit 1
+    fi
+    exit 0
+
+  add-topics-to-config.sh: |
+    #!/usr/bin/env sh
+    SOURCE=$1
+    TARGET=$2
+    set -e
+    TOPICS="$(curl -sf {{ .Values.catalogServer.url }}/source-types | jq -r '[to_entries | .[] | select(.key | test("^.*-source-types$")) | .value[].data[].topic] | sort | unique | join(",")')"
+    if [ "$TOPICS" == "" ]; then
+      echo "No topics found!"
+      exit 1
+    fi
+    sed "s/^topics=.\+\$/\\0,$TOPICS/" "$SOURCE" | sed "s/^topics=\$/\\0$TOPICS/" > "$TARGET"
+    echo "Configured the following topics"
+    grep "topics=" "$TARGET"
+

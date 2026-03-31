@@ -1,0 +1,46 @@
+# Example Dockerfile for building a Kafka Connect image with Apache Iceberg connector
+# 
+# Usage:
+#   docker build -t your-registry/kafka-connect-iceberg:7.8.0 -f Dockerfile.example .
+#   docker push your-registry/kafka-connect-iceberg:7.8.0
+#
+# Then update values.yaml:
+#   image:
+#     repository: your-registry/kafka-connect-iceberg
+#     tag: 7.8.0
+
+FROM confluentinc/cp-kafka-connect:7.8.0
+
+USER root
+
+# Create plugin directory for Iceberg connector
+RUN mkdir -p /usr/share/confluent-hub-components/iceberg-kafka-connect
+
+# Download Apache Iceberg Kafka Connect runtime and dependencies
+WORKDIR /usr/share/confluent-hub-components/iceberg-kafka-connect
+
+# Iceberg Kafka Connect Runtime (includes the connector)
+RUN curl -L -O https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-kafka-connect-runtime/1.6.1/iceberg-kafka-connect-runtime-1.6.1.jar
+
+# Iceberg AWS Bundle (for S3 support)
+RUN curl -L -O https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-aws-bundle/1.6.1/iceberg-aws-bundle-1.6.1.jar
+
+# Optional: Add Nessie client if using Nessie catalog
+# RUN curl -L -O https://repo1.maven.org/maven2/org/projectnessie/nessie-client/0.76.0/nessie-client-0.76.0.jar
+
+# Set the plugin path to include the new plugins directory
+ENV CONNECT_PLUGIN_PATH="/usr/share/java,/usr/share/confluent-hub-components"
+
+# Verify the JARs were downloaded
+RUN ls -lh /usr/share/confluent-hub-components/iceberg-kafka-connect/
+
+# Switch back to non-root user
+USER appuser
+
+# Health check (optional)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8083/ || exit 1
+
+
+
+

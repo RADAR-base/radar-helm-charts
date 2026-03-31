@@ -1,0 +1,30 @@
+apiVersion: v2
+name: radar-nessie
+description: "Project Nessie catalog server for RADAR-base"
+type: application
+version: 0.1.0
+appVersion: "latest"
+home: "https://projectnessie.org"
+icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
+keywords:
+  - radar-base
+  - nessie
+  - iceberg
+  - catalog
+sources:
+  - https://github.com/RADAR-base/radar-helm-charts
+annotations:
+  artifacthub.io/license: Apache-2.0
+deprecated: false
+maintainers:
+  - name: Yatharth Ranjan
+    email: yatharthranjan89@gmail.com
+    url: https://www.radar-base.org/
+dependencies:
+  - name: common
+    repository: https://radar-base.github.io/radar-helm-charts
+    version: 2.x.x
+    tags:
+      - bitnami-common
+
+
