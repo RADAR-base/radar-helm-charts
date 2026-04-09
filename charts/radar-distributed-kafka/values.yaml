@@ -190,7 +190,7 @@ connectors:
       "format.class": "io.confluent.connect.s3.format.avro.AvroFormat"
       "s3.bucket.name": "s3-source-bucket"
       "s3.region": "us-east-1"
-      "store.url": "
+      "store.url": ""
       "s3.path.style.access.enabled": ""
       "aws.access.key.id": ""
       "aws.secret.access.key": ""
