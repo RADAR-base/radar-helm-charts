@@ -1,0 +1,61 @@
+{{- $root := . -}}
+{{- range $i, $configData := .Values.connectors }}
+  {{- if $configData.enabled }}
+  {{- $connectorName := required (printf "connectors[%d].name is required" $i) $configData.name -}}
+  {{- $connectorId := include "radar-distributed-kafka.connectorId" $connectorName -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
+  namespace: {{ include "common.names.namespace" $root | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $root.Values.commonLabels "context" $root ) | nindent 4 }}
+  {{- if $root.Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $root.Values.commonAnnotations "context" $root ) | nindent 4 }}
+  {{- end }}
+data:
+  connector.yaml: |-
+    {{- range $key, $value := $configData.properties }}
+    {{ $key }}:{{ $value }}
+    {{- end }}
+  connector.json: |-
+    {{- $config := deepCopy $configData.properties -}}
+    {{- $_ := set $config "kafka.topic" $configData.topic -}}
+    {{- $_ := set $config "connector.class" $configData.connectorClass -}}
+    {{- $_ := set $config "tasks.max" ($configData.maxTasks | toString) -}}
+    {{- $config | toPrettyJson | nindent 4 }}
+  register-connector.sh: |
+    #!/bin/sh
+    set -eu
+
+    CONNECTOR_NAME="$1"
+    CONNECTOR_CONFIG_FILE="$2"
+    MAX_WAIT_SECONDS="${CONNECTOR_REGISTRATION_MAX_WAIT_SECONDS:-120}"
+    RETRY_INTERVAL_SECONDS="${CONNECTOR_REGISTRATION_RETRY_INTERVAL_SECONDS:-3}"
+    CONNECT_URL="http://localhost:${CONNECT_REST_PORT:-8083}"
+    ELAPSED=0
+
+    until curl -sf "${CONNECT_URL}/connectors" >/dev/null; do
+      if [ "$ELAPSED" -ge "$MAX_WAIT_SECONDS" ]; then
+        echo "Timed out waiting for Kafka Connect at ${CONNECT_URL}" >&2
+        exit 1
+      fi
+      sleep "$RETRY_INTERVAL_SECONDS"
+      ELAPSED=$((ELAPSED + RETRY_INTERVAL_SECONDS))
+    done
+
+    curl -sf -X PUT \
+      -H "Content-Type: application/json" \
+      --data "@${CONNECTOR_CONFIG_FILE}" \
+      "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/config" >/dev/null
+  healthcheck.sh: |
+    #!/bin/sh
+    CONNECTOR_NAME="$1"
+    STATUS=$(curl -sf "localhost:8083/connectors/${CONNECTOR_NAME}/status" | grep -o '\"state\":\"[^\"]*\"')
+    if echo "$STATUS" | tr '\\n' ',' | grep -q FAILED; then
+      exit 1
+    elif [ "$(echo "$STATUS" | grep RUNNING | wc -l)" -le 1 ]; then
+      exit 1
+    fi
+  {{- end }}
+{{- end }}

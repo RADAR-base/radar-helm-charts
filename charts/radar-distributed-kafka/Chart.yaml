@@ -1,0 +1,26 @@
+apiVersion: v2
+appVersion: 7.8.5
+description: A Helm chart for running distributed Kafka source connectors with per-source configuration blocks.
+name: radar-distributed-kafka
+version: 0.1.0
+icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
+sources:
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-distributed-kafka
+keywords:
+  - radar-base
+  - kafka-connect
+  - source-connector
+annotations:
+  artifacthub.io/license: Apache-2.0
+type: application
+home: "https://radar-base.org"
+maintainers:
+  - email: pim@thehyve.nl
+    name: Pim van Nierop
+    url: https://www.thehyve.nl/experts/pim-van-nierop
+dependencies:
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  tags:
+  - bitnami-common
+  version: 2.x.x

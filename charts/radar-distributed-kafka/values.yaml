@@ -1,0 +1,234 @@
+# Default values for radar-distributed-kafka.
+# This is a YAML-formatted file.
+
+# -- Number of replicas per connector deployment
+replicaCount: 1
+
+image:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
+  # Default uses Confluent's Kafka Connect image. For production, use a custom image
+  # that already contains the connector plugins you enable in `connectors`.
+  repository: confluentinc/cp-server-connect
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "7.8.0"
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  pullSecrets: []
+
+# -- String to partially override radar-distributed-kafka.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override radar-distributed-kafka.fullname template with a string
+fullnameOverride: ""
+
+# -- Configure connector pods' Security Context
+podSecurityContext: {}
+
+# -- JVM options for Kafka Connect
+kafkaHeapOpts: "-Xms1g -Xmx2g"
+
+# -- Configure connector containers' Security Context
+securityContext: {}
+
+service:
+  # -- Kubernetes Service type
+  type: ClusterIP
+  # -- Connector REST API port
+  port: 8083
+
+resources:
+  # -- CPU/Memory resource requests
+  requests:
+    cpu: 100m
+    memory: 1Gi
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Toleration labels for pod assignment
+tolerations: []
+
+# -- Affinity labels for pod assignment
+affinity: {}
+
+# -- Additional environment variables to pass to all connectors
+extraEnvVars: []
+
+pluginInstallation:
+  # -- Install connector plugins at startup using an init container.
+  enabled: true
+  # -- Directory where plugins are installed and then mounted into the Kafka Connect container.
+  pluginPath: /opt/connect-plugins
+  # -- Confluent Hub package coordinates to install (for example `confluentinc/kafka-connect-s3-source:latest`).
+  confluentHubPackages:
+    - confluentinc/kafka-connect-s3:latest
+    - confluentinc/kafka-connect-s3-source:latest
+  # -- Optional image override for the plugin installer init container.
+  # By default the chart uses the same image as `image`.
+  initContainerImage: {}
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for livenessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Custom startupProbe that overrides the default one
+customStartupProbe: {}
+
+startupProbe:
+  # -- Enable startupProbe
+  enabled: true
+  # -- Initial delay seconds for startupProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for startupProbe
+  periodSeconds: 10
+  # -- Timeout seconds for startupProbe
+  timeoutSeconds: 10
+  # -- Success threshold for startupProbe
+  successThreshold: 1
+  # -- Failure threshold for startupProbe
+  failureThreshold: 30
+
+# -- Number of deployed Kafka broker instances
+kafka_num_brokers: 3
+
+kafka:
+  # -- Kafka broker URLs
+  url: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
+  # -- Security related env vars set in pods.
+  security:
+    # -- Env vars set for authentication with Kafka brokers.
+    env:
+      - name: CONNECT_SECURITY_PROTOCOL
+        value: SASL_PLAINTEXT
+      - name: CONNECT_SASL_MECHANISM
+        value: SCRAM-SHA-512
+      - name: CONNECT_PRODUCER_SECURITY_PROTOCOL
+        value: SASL_PLAINTEXT
+      - name: CONNECT_PRODUCER_SASL_MECHANISM
+        value: SCRAM-SHA-512
+      - name: CONNECT_CONSUMER_SECURITY_PROTOCOL
+        value: SASL_PLAINTEXT
+      - name: CONNECT_CONSUMER_SASL_MECHANISM
+        value: SCRAM-SHA-512
+    # -- Secret for the Kafka SASL JAAS configuration
+    jaasSecret:
+      name: shared-service-user
+      key: sasl.jaas.config
+
+schemaRegistry:
+  # -- Schema registry URL
+  url: http://radar-kafka-schema-registry:8081
+
+# -- Additional properties injected into all connector property files
+# @default -- {}
+commonConnectorProperties: {}
+
+connectorRegistration:
+  # -- Automatically register/update connector config at pod startup
+  enabled: true
+  # -- Maximum time in seconds to wait for Connect REST API before failing startup
+  maxWaitSeconds: 120
+  # -- Interval in seconds between readiness checks for Connect REST API
+  retryIntervalSeconds: 3
+
+# -- List of source connector definitions. Each enabled entry is deployed as a separate Kafka Connect worker.
+# @default -- Check values.yaml
+connectors:
+  - name: s3-avro-source
+    # -- Whether this connector entry should be deployed
+    enabled: true
+    # -- Source connector type. Currently only `s3` is supported.
+    type: s3-source
+    # -- Kafka topic where this source writes records.
+    topic: connect_s3_default
+    # -- Number of tasks for this connector
+    maxTasks: 1
+    # -- Extra connector properties specific to this connector entry
+    connectorClass: io.confluent.connect.s3.source.S3SourceConnector
+    keyConverter: org.apache.kafka.connect.storage.StringConverter
+    valueConverter: io.confluent.connect.avro.AvroConverter
+    tasksMax: 1
+    properties:
+      "mode": "GENERIC"
+      "topics.dir": "input"
+      "topic.regex.list": "s3-source-topic:input/.*\\.avro$"
+      "format.class": "io.confluent.connect.s3.format.avro.AvroFormat"
+      "s3.bucket.name": "s3-source-bucket"
+      "s3.region": "us-east-1"
+      "store.url": "
+      "s3.path.style.access.enabled": ""
+      "aws.access.key.id": ""
+      "aws.secret.access.key": ""
+      "confluent.topic.bootstrap.servers": "radar-kafka-kafka-bootstrap:9094"
+
+# -- Network policy defines who can access this application and who this application has access to
+networkpolicy:
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-kafka-schema-registry'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
