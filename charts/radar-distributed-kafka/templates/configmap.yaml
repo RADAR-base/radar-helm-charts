@@ -1,8 +1,8 @@
 {{- $root := . -}}
 {{- range $i, $configData := .Values.connectors }}
-  {{- if $configData.enabled }}
-  {{- $connectorName := required (printf "connectors[%d].name is required" $i) $configData.name -}}
-  {{- $connectorId := include "radar-distributed-kafka.connectorId" $connectorName -}}
+{{- if $configData.enabled }}
+{{- $connectorName := required (printf "connectors[%d].name is required" $i) $configData.name -}}
+{{- $connectorId := include "radar-distributed-kafka.connectorId" $connectorName }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -57,5 +57,6 @@ data:
     elif [ "$(echo "$STATUS" | grep RUNNING | wc -l)" -le 1 ]; then
       exit 1
     fi
-  {{- end }}
+
+{{- end }}
 {{- end }}
