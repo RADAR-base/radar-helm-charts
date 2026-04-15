@@ -130,7 +130,7 @@ airflow:
     replicas: 1
 
     kubernetes:
-        resources: {}
+      resources: {}
 
   # Airflow scheduler settings
   scheduler:
