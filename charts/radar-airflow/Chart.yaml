@@ -14,7 +14,7 @@ maintainers:
     url: https://phidatalab.org/team/heet-sankesara/
 dependencies:
 - name: airflow
-  version: 1.18.0
+  version: 1.20.0
   repository: file://../../external/airflow
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts
