@@ -113,7 +113,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | topics.questionnaire_response.pathProperties.plugins | string | `"fixed value"` | Alternative path plugins of the questionnaire_response topic |
 | deduplication.enable | bool | `true` | Whether to enable deduplication |
 | compression.type | string | `"gzip"` | Compression type to use for output files. Can be one of: gzip, zip, none |
-| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
+| podDisruptionBudget.enabled | bool | `false` | Enable Pod Disruption Budget |
 | podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
 | podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |
 | hpa.enabled | bool | `false` | Enable HPA |

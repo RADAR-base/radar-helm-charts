@@ -124,7 +124,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | githubAuthToken | string | `""` | GitHub authentication token for API access (leave empty if not used) |
 | basePath | string | `"/kratos-ui"` | The basePath |
 | test.busybox | object | `{"repository":"busybox","tag":1}` | use a busybox image from another repository |
-| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
+| podDisruptionBudget.enabled | bool | `false` | Enable Pod Disruption Budget |
 | podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
 | podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |
 | hpa.enabled | bool | `false` | Enable HPA |
