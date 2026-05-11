@@ -8,7 +8,7 @@ image:
   repository: peymanm/radarbase-console
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.0.25
+  tag: 0.0.37
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy

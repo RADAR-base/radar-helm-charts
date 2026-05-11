@@ -7,12 +7,13 @@ replicaCount: 1
 
 image:
   # -- Image registry
-  registry: ghcr.io
+  registry: docker.io
   # -- Image repository
-  repository: radar-base/managementportal/management-portal
+  repository: peymanm/management-portal
+  #  radar-base/managementportal/management-portal
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag:
+  tag: 2.1.32
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy
