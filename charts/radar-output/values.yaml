@@ -238,6 +238,11 @@ paths:
   output: output
   # -- Output path construction factory
   factory: org.radarbase.output.path.FormattedPathFactory
+  path:
+    # -- Output path format
+    format: ${projectId}/${userId}/${topic}/${filename}
+    # -- Output path plugins
+    # plugins: fixed time key value
   # -- Additional properties. For details see https://github.com/RADAR-base/radar-output-restructure/blob/master/restructure.yml
   properties: {}
 
@@ -280,7 +285,7 @@ podDisruptionBudget:
   # -- Maximum number of pods that can be unavailable during disruptions
   maxUnavailable: ~
 
-# Horizontal Pod Autoscaler configuration
+# Horizontal Pod Autoscaler
 hpa:
   # -- Enable HPA
   enabled: false

@@ -114,6 +114,7 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | cc.schemaRegistryApiKey | string | `"srApiKey"` | Confluent Cloud schema registry API key |
 | cc.schemaRegistryApiSecret | string | `"srApiSecret"` | Confluent Cloud schema registry API secret |
 | garmin.enabled | bool | `true` | Whether to enable Garmin endpoints |
+| garmin.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for PKCE flow, "oauth1" for legacy flow |
 | garmin.consumerKey | string | `"consumerKey"` | Consumer key for you application in Garmin Health API developer portal |
 | garmin.consumerSecret | string | `"consumerSecret"` | Consumer secret for you application in Garmin Health API developer portal |
 | garmin.userRepositoryClass | string | `"org.radarbase.push.integration.garmin.user.GarminServiceUserRepository"` | The user repository to use for getting list of users and their authorization information |
