@@ -93,20 +93,24 @@ spec:
   {{- end }}
   entityOperator:
     topicOperator:
-      {{- if .Values.kafka.topicOperator.jvmOptions }}
-      jvmOptions: {{ .Values.kafka.topicOperator.jvmOptions | toYaml | nindent 8 }}
+      {{- with .Values.kafka.topicOperator.jvmOptions }}
+      jvmOptions:
+        {{- toYaml . | nindent 8 }}
       {{- else }}
       {}
       {{- end }}
       {{- with .Values.kafka.topicOperator.resources }}
-      resources: {{ . | toYaml | nindent 8 }}
+      resources:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
     userOperator:
-      {{- if .Values.kafka.userOperator.jvmOptions }}
-      jvmOptions: {{ .Values.kafka.userOperator.jvmOptions | toYaml | nindent 8 }}
+      {{- with .Values.kafka.userOperator.jvmOptions }}
+      jvmOptions:
+        {{- toYaml . | nindent 8 }}
       {{- else }}
       {}
       {{- end }}
       {{- with .Values.kafka.userOperator.resources }}
-      resources: {{ . | toYaml | nindent 8 }}
+      resources:
+        {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -238,6 +238,11 @@ paths:
   output: output
   # -- Output path construction factory
   factory: org.radarbase.output.path.FormattedPathFactory
+  path:
+    # -- Output path format
+    format: ${projectId}/${userId}/${topic}/${filename}
+    # -- Output path plugins
+    # plugins: fixed time key value
   # -- Additional properties. For details see https://github.com/RADAR-base/radar-output-restructure/blob/master/restructure.yml
   properties: {}
 
@@ -270,3 +275,14 @@ deduplication:
 compression:
   # -- Compression type to use for output files. Can be one of: gzip, zip, none
   type: gzip
+
+# Horizontal Pod Autoscaler
+hpa:
+  # -- Enable HPA
+  enabled: false
+  # -- Maximum number of replicas
+  maxReplicas: 5
+  # -- Target CPU utilization percentage
+  targetCPU: 80
+  # -- Target Memory utilization percentage
+  targetMemory: ~
