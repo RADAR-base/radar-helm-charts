@@ -107,6 +107,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | paths.input | string | `"topics"` | Relative path to intermediate storage root to browse for data |
 | paths.output | string | `"output"` | Relative path to output storage to write data |
 | paths.factory | string | `"org.radarbase.output.path.FormattedPathFactory"` | Output path construction factory |
+| paths.path.format | string | `"${projectId}/${userId}/${topic}/${filename}"` | Output path format |
 | paths.properties | object | `{}` | Additional properties. For details see https://github.com/RADAR-base/radar-output-restructure/blob/master/restructure.yml |
 | topics | object | `{"questionnaire_response":{"pathProperties":{"format":"${projectId}/${userId}/${topic}/${value:name}/${filename}","plugins":"fixed value"}}}` | Individual topic configuration |
 | topics.questionnaire_response.pathProperties.format | string | `"${projectId}/${userId}/${topic}/${value:name}/${filename}"` | Alternative path output of the questionnaire_response topic |
