@@ -20020,6 +20020,38 @@ entries:
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
+    appVersion: 0.1.0
+    created: "2026-05-27T19:33:57.135399852Z"
+    dependencies:
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for RADAR-base Self Enrolment UI
+    digest: 151920af845899a29e977a790bd302bb823e9728e6ad8ca02c2ff0707375e664
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    name: radar-self-enrolment-ui
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-self-enrolment-ui
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-self-enrolment-ui-0.4.0/radar-self-enrolment-ui-0.4.0.tgz
+    version: 0.4.0
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
     appVersion: 0.0.1
     created: "2025-10-14T11:16:45.629944738Z"
     dependencies:
@@ -23724,4 +23756,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2026-05-27T19:28:26.120082255Z"
+generated: "2026-05-27T19:33:57.13629973Z"
