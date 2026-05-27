@@ -22,6 +22,8 @@ data:
     {{- $config := deepCopy $configData.properties -}}
     {{- $_ := set $config "kafka.topic" $configData.topic -}}
     {{- $_ := set $config "connector.class" $configData.connectorClass -}}
+    {{- $_ := set $config "key.converter" $configData.keyConverter -}}
+    {{- $_ := set $config "value.converter" $configData.valueConverter -}}
     {{- $_ := set $config "tasks.max" ($configData.maxTasks | toString) -}}
     {{- $config | toPrettyJson | nindent 4 }}
   register-connector.sh: |
