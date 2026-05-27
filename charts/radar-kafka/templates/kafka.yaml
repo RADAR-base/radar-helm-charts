@@ -78,13 +78,13 @@ spec:
       - mode: remove-brokers
         template:
           name: {{ template "common.names.fullname" . }}-rebalance-template
-    {{- with .Values.kafka.cruiseControl.javaOptions }}
-    jvmOptions:
-      {{ toYaml . | nindent 6 }}
+    {{- if .Values.kafka.cruiseControl.javaOptions }}
+    javaOptions:
+      {{- toYaml .Values.kafka.cruiseControl.javaOptions | nindent 6 }}
     {{- end }}
-    {{- with .Values.kafka.cruiseControl.resources }}
+    {{- if .Values.kafka.cruiseControl.resources }}
     resources:
-      {{ toYaml . | nindent 6 }}
+      {{ toYaml .Values.kafka.cruiseControl.resources | nindent 6 }}
     {{- end }}
   {{- end }}
   {{ if .Values.metrics.enabled }}

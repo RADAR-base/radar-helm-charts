@@ -96,9 +96,9 @@ A Helm chart for RADAR-base fitbit connector. This application collects data fro
 | fitbit_api_url | string | `"https://api.fitbit.com"` | Fitbit API URL. |
 | fitbit_api_client | string | `""` | Fitbit API client id. |
 | fitbit_api_secret | string | `""` | Fitbit API client secret. |
-| oauthClientId | string | `"radar_fitbit_connector"` | OAuth2 client id from Management Portal |
-| oauthClientSecret | string | `"secret"` | OAuth2 client secret from Management Portal |
-| auth_url | string | `"http://management-portal:8080/managementportal/oauth/token"` | OAuth2 Auth URL for connector client to get access tokens |
+| oauthClientId | string | `"radar_fitbit_connector"` | OAuth2 client id from Hydra |
+| oauthClientSecret | string | `"secret"` | OAuth2 client secret from Hydra |
+| auth_url | string | `"http://radar-hydra-public:4444/oauth2/token"` | OAuth2 Auth URL for connector client to get access tokens |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of Management Portal. This will be used to create URLs to access Management Portal |
 | includeIntradayData | bool | `true` | Set to true, if intraday access data should be collected by the connector. This will be set in connector.properties. |
 | user_repository_class | string | `"ServiceUserRepository"` | Class of the user repository to use. This should be a class that implements the UserRepository interface. |
