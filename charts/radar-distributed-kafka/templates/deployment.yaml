@@ -1,0 +1,267 @@
+{{- $root := . -}}
+{{- range $i, $connector := .Values.connectors }}
+{{- if $connector.enabled }}
+{{- $connectorName := required (printf "connectors[%d].name is required" $i) $connector.name -}}
+{{- $connectorId := include "radar-distributed-kafka.connectorId" $connectorName -}}
+{{- $connectorType := lower (required (printf "connectors[%d].type is required" $i) $connector.type) -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
+  namespace: {{ include "common.names.namespace" $root | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $root.Values.commonLabels "context" $root ) | nindent 4 }}
+  {{- if $root.Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $root.Values.commonAnnotations "context" $root ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ $root.Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "radar-distributed-kafka.name" $root }}
+      app.kubernetes.io/instance: {{ $root.Release.Name }}
+      app.kubernetes.io/component: {{ $connectorId }}
+  template:
+    metadata:
+      annotations:
+        checksum/configmap: {{ include (print $root.Template.BasePath "/configmap.yaml") $root | sha256sum }}
+      labels:
+        app.kubernetes.io/name: {{ include "radar-distributed-kafka.name" $root }}
+        app.kubernetes.io/instance: {{ $root.Release.Name }}
+        app.kubernetes.io/component: {{ $connectorId }}
+    spec:
+      {{- include "radar-distributed-kafka.imagePullSecrets" $root | nindent 6 }}
+      securityContext:
+        {{- toYaml $root.Values.podSecurityContext | nindent 8 }}
+      {{- if $root.Values.pluginInstallation.enabled }}
+      initContainers:
+        - name: install-plugins
+          image: {{ include "radar-distributed-kafka.pluginInstallerImage" $root }}
+          imagePullPolicy: {{ $root.Values.image.pullPolicy | quote }}
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              PLUGIN_DIR={{ default "/opt/connect-plugins" $root.Values.pluginInstallation.pluginPath | quote }}
+              mkdir -p "${PLUGIN_DIR}"
+              {{- if $root.Values.pluginInstallation.confluentHubPackages }}
+              {{- range $pkg := $root.Values.pluginInstallation.confluentHubPackages }}
+              echo "Installing connector plugin {{ $pkg }}"
+              confluent-hub install --no-prompt --component-dir "${PLUGIN_DIR}" {{ $pkg | quote }}
+              {{- end }}
+              {{- else }}
+              echo "No pluginInstallation.confluentHubPackages configured; skipping installation"
+              {{- end }}
+          volumeMounts:
+            - name: plugin-dir
+              mountPath: {{ default "/opt/connect-plugins" $root.Values.pluginInstallation.pluginPath | quote }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                  - key: "app.kubernetes.io/name"
+                    operator: In
+                    values:
+                    - {{ include "radar-distributed-kafka.name" $root }}
+                  - key: "app.kubernetes.io/instance"
+                    operator: In
+                    values:
+                    - {{ $root.Release.Name }}
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: {{ $root.Chart.Name }}
+          securityContext:
+            {{- toYaml $root.Values.securityContext | nindent 12 }}
+          image: {{ include "radar-distributed-kafka.image" $root }}
+          imagePullPolicy: {{ $root.Values.image.pullPolicy | quote }}
+          command:
+            - /bin/bash
+            - -c
+            - |
+              /etc/confluent/docker/configure
+              /etc/confluent/docker/launch
+          env:
+          - name: CONNECT_BOOTSTRAP_SERVERS
+            value: "{{ $root.Values.kafka.url }}"
+          {{- with $root.Values.kafka.security.env }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- if $root.Values.kafka.security.jaasSecret.name }}
+          - name: CONNECT_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ $root.Values.kafka.security.jaasSecret.name }}
+                key: {{ $root.Values.kafka.security.jaasSecret.key }}
+          - name: CONNECT_PRODUCER_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ $root.Values.kafka.security.jaasSecret.name }}
+                key: {{ $root.Values.kafka.security.jaasSecret.key }}
+          - name: CONNECT_CONSUMER_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ $root.Values.kafka.security.jaasSecret.name }}
+                key: {{ $root.Values.kafka.security.jaasSecret.key }}
+          {{- end }}
+          - name: CONNECT_REST_PORT
+            value: "8083"
+          - name: CONNECT_GROUP_ID
+            value: "default"
+          - name: CONNECT_CONFIG_STORAGE_TOPIC
+            value: "default.config"
+          - name: CONNECT_OFFSET_STORAGE_TOPIC
+            value: "default.offsets"
+          - name: CONNECT_STATUS_STORAGE_TOPIC
+            value: "default.status"
+          - name: CONNECT_KEY_CONVERTER
+            value: "io.confluent.connect.avro.AvroConverter"
+          - name: CONNECT_VALUE_CONVERTER
+            value: "io.confluent.connect.avro.AvroConverter"
+          - name: CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE
+            value: "false"
+          - name: CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE
+            value: "false"
+          - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL
+            value: "{{ $root.Values.schemaRegistry.url }}"
+          - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL
+            value: "{{ $root.Values.schemaRegistry.url }}"
+          - name: CONNECT_INTERNAL_KEY_CONVERTER
+            value: "org.apache.kafka.connect.json.JsonConverter"
+          - name: CONNECT_INTERNAL_VALUE_CONVERTER
+            value: "org.apache.kafka.connect.json.JsonConverter"
+          - name: CONNECT_OFFSET_FLUSH_INTERVAL_MS
+            value: "10000"
+          - name: CONNECT_REST_ADVERTISED_HOST_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: CONNECT_REST_ADVERTISED_PORT
+            value: "8083"
+          - name: CONNECT_PLUGIN_PATH
+            {{- if $root.Values.pluginInstallation.enabled }}
+            value: {{ printf "%s,/usr/share/confluent-hub-components,/usr/share/kafka-connect/plugins" (default "/opt/connect-plugins" $root.Values.pluginInstallation.pluginPath) | quote }}
+            {{- else }}
+            value: "/usr/share/confluent-hub-components,/usr/share/kafka-connect/plugins"
+            {{- end }}
+          - name: CONNECT_VALUE_CONVERTER_CONNECT_META_DATA
+            value: "false"
+          - name: CONNECTOR_REGISTRATION_MAX_WAIT_SECONDS
+            value: {{ default 120 $root.Values.connectorRegistration.maxWaitSeconds | quote }}
+          - name: CONNECTOR_REGISTRATION_RETRY_INTERVAL_SECONDS
+            value: {{ default 3 $root.Values.connectorRegistration.retryIntervalSeconds | quote }}
+          - name: KAFKA_HEAP_OPTS
+            value: "{{ $root.Values.kafkaHeapOpts }}"
+          - name: CONNECT_LOG4J_LOGGERS
+            value: "org.reflections=ERROR"
+          {{- if eq $connectorType "s3" }}
+          - name: AWS_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
+                key: awsAccessKey
+          - name: AWS_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
+                key: awsSecretKey
+          {{- end }}
+          {{- with $root.Values.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- with $connector.extraEnvVars }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- if $root.Values.connectorRegistration.enabled }}
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                - /bin/sh
+                - /etc/kafka-connect/connector/register-connector.sh
+                - {{ $connectorName | quote }}
+                - /etc/kafka-connect/connector/connector.json
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8083
+              protocol: TCP
+          {{- if $root.Values.customLivenessProbe }}
+          livenessProbe: {{- $root.Values.customLivenessProbe | toYaml | nindent 12 }}
+          {{- else if $root.Values.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /etc/kafka-connect/connector/healthcheck.sh
+              - {{ $connectorName | quote }}
+            initialDelaySeconds: {{ $root.Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $root.Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ $root.Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ $root.Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ $root.Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if $root.Values.customReadinessProbe }}
+          readinessProbe: {{- $root.Values.customReadinessProbe | toYaml | nindent 12 }}
+          {{- else if $root.Values.readinessProbe.enabled }}
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /etc/kafka-connect/connector/healthcheck.sh
+              - {{ $connectorName | quote }}
+            initialDelaySeconds: {{ $root.Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $root.Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ $root.Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ $root.Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ $root.Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          {{- if $root.Values.customStartupProbe }}
+          startupProbe: {{- $root.Values.customStartupProbe | toYaml | nindent 12 }}
+          {{- else if $root.Values.startupProbe.enabled }}
+          startupProbe:
+            exec:
+              command:
+              - /bin/sh
+              - /etc/kafka-connect/connector/healthcheck.sh
+              - {{ $connectorName | quote }}
+            initialDelaySeconds: {{ $root.Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ $root.Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ $root.Values.startupProbe.timeoutSeconds }}
+            successThreshold: {{ $root.Values.startupProbe.successThreshold }}
+            failureThreshold: {{ $root.Values.startupProbe.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml $root.Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/kafka-connect/connector
+            {{- if $root.Values.pluginInstallation.enabled }}
+            - name: plugin-dir
+              mountPath: {{ default "/opt/connect-plugins" $root.Values.pluginInstallation.pluginPath | quote }}
+            {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
+        {{- if $root.Values.pluginInstallation.enabled }}
+        - name: plugin-dir
+          emptyDir: {}
+        {{- end }}
+      {{- with $root.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with $root.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with $root.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+---
+{{- end }}
+{{- end }}
