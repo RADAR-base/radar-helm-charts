@@ -3,7 +3,7 @@
 # radar-rest-sources-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-backend)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-backend)
 
-![Version: 1.5.8](https://img.shields.io/badge/Version-1.5.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.13](https://img.shields.io/badge/AppVersion-4.4.13-informational?style=flat-square)
+![Version: 1.5.9](https://img.shields.io/badge/Version-1.5.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.14](https://img.shields.io/badge/AppVersion-4.4.14-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -111,15 +111,19 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.fitbit.clientId | string | `nil` | FitBit client id |
 | restSourceClients.fitbit.clientSecret | string | `nil` | FitBit client secret |
 | restSourceClients.fitbit.scope | string | `"activity heartrate sleep profile"` | List of scopes of the data that should be collected from Fitbit. For details, please refer to https://dev.fitbit.com/build/reference/web-api/developer-guide/application-design/#Scopes |
+| restSourceClients.fitbit.usesPkce | bool | `false` | Whether this client uses PKCE for authorization |
+| restSourceClients.fitbit.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for standard OAuth2 flow |
 | restSourceClients.garmin.enable | bool | `false` | set to true, if Garmin client should be used |
 | restSourceClients.garmin.sourceType | string | `"Garmin"` | Type of the data sources |
-| restSourceClients.garmin.preAuthorizationEndpoint | string | `"https://connectapi.garmin.com/oauth-service/oauth/request_token"` | Pre authorization endpoint to get request token in OAuth 1.0 terminology |
-| restSourceClients.garmin.authorizationEndpoint | string | `"https://connect.garmin.com/oauthConfirm"` | Authorization endpoint to get oauth confirmation in OAuth 1.0 terminology |
-| restSourceClients.garmin.deregistrationEndpoint | string | `"https://healthapi.garmin.com/wellness-api/rest/user/registration"` | Endpoint to deregister a user on garmin to disable receiving push requests |
-| restSourceClients.garmin.tokenEndpoint | string | `"https://connectapi.garmin.com/oauth-service/oauth/access_token"` | Token endpoint to request access-token from Garmin |
+| restSourceClients.garmin.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for PKCE flow, "oauth1" for legacy flow. OAuth1 will be retired on 12/31/2026. |
+| restSourceClients.garmin.usesPkce | bool | `true` | Whether this client uses PKCE (must be true for Garmin OAuth2) |
+| restSourceClients.garmin.preAuthorizationEndpoint | string | `"https://connectapi.garmin.com/oauth-service/oauth/request_token"` | Pre authorization endpoint to get request token (OAuth1 only, ignored when oauthVersion is oauth2) |
+| restSourceClients.garmin.authorizationEndpoint | string | `"https://connect.garmin.com/oauth2Confirm"` | Authorization endpoint for Garmin authentication. For OAuth2: oauth2Confirm, for OAuth1: oauthConfirm |
+| restSourceClients.garmin.tokenEndpoint | string | `"https://diauth.garmin.com/di-oauth2-service/oauth/token"` | Token endpoint to request access-token from Garmin. For OAuth2: di-oauth2-service, for OAuth1: oauth-service |
+| restSourceClients.garmin.deregistrationEndpoint | string | `"https://apis.garmin.com/wellness-api/rest/user/registration"` | Endpoint to deregister a user on Garmin to disable receiving push requests |
 | restSourceClients.garmin.clientId | string | `"Garmin-clientid"` | Garmin client id |
 | restSourceClients.garmin.clientSecret | string | `"Garmin-clientsecret"` | Garmin client secret |
-| restSourceClients.garmin.scope | string | `"activity heartrate sleep profile"` | List of scopes of the data that should be collected from Garmin. |
+| restSourceClients.garmin.scope | string | `"activity heartrate sleep profile"` | Scopes for OAuth1 flow (not used in OAuth2 - Garmin manages scopes server-side for OAuth2) |
 | restSourceClients.oura.enable | bool | `true` | set to true, if Oura client should be used |
 | restSourceClients.oura.sourceType | string | `"Oura"` | Type of the data sources |
 | restSourceClients.oura.authorizationEndpoint | string | `"https://cloud.ouraring.com/oauth/authorize"` | Authorization endpoint for Oura authentication and authorization |
@@ -128,3 +132,5 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.oura.clientId | string | `"Oura-clientid"` | Oura client id |
 | restSourceClients.oura.clientSecret | string | `"Oura-clientsecret"` | Oura client secret |
 | restSourceClients.oura.scope | string | `"daily session heartrate workout tag personal email spo2 ring_configuration"` | List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication |
+| restSourceClients.oura.usesPkce | bool | `true` | Whether this client uses PKCE for authorization |
+| restSourceClients.oura.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for standard OAuth2 flow |

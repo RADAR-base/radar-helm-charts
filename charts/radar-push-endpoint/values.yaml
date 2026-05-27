@@ -315,6 +315,8 @@ cc:
 garmin:
   # -- Whether to enable Garmin endpoints
   enabled: true
+  # -- OAuth version to use: "oauth2" for PKCE flow, "oauth1" for legacy flow
+  oauthVersion: "oauth2"
   # -- Consumer key for you application in Garmin Health API developer portal
   consumerKey: "consumerKey"
   # -- Consumer secret for you application in Garmin Health API developer portal

@@ -57,6 +57,7 @@ data:
     pushIntegration:
       garmin:
         enabled: {{ .Values.garmin.enabled }}
+        oauthVersion: {{ .Values.garmin.oauthVersion }}
         consumerKey: {{ .Values.garmin.consumerKey }}
         consumerSecret: {{ .Values.garmin.consumerSecret }}
         userRepositoryClass: {{ .Values.garmin.userRepositoryClass }}

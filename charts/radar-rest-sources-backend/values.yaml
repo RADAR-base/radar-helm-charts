@@ -311,25 +311,33 @@ restSourceClients:
     clientSecret:
     # -- List of scopes of the data that should be collected from Fitbit. For details, please refer to https://dev.fitbit.com/build/reference/web-api/developer-guide/application-design/#Scopes
     scope: activity heartrate sleep profile
+    # -- Whether this client uses PKCE for authorization
+    usesPkce: false
+    # -- OAuth version to use: "oauth2" for standard OAuth2 flow
+    oauthVersion: oauth2
 
   garmin:
     # -- set to true, if Garmin client should be used
     enable: false
     # -- Type of the data sources
     sourceType: Garmin
-    # -- Pre authorization endpoint to get request token in OAuth 1.0 terminology
+    # -- OAuth version to use: "oauth2" for PKCE flow, "oauth1" for legacy flow. OAuth1 will be retired on 12/31/2026.
+    oauthVersion: oauth2
+    # -- Whether this client uses PKCE (must be true for Garmin OAuth2)
+    usesPkce: true
+    # -- Pre authorization endpoint to get request token (OAuth1 only, ignored when oauthVersion is oauth2)
     preAuthorizationEndpoint: https://connectapi.garmin.com/oauth-service/oauth/request_token
-    # -- Authorization endpoint to get oauth confirmation in OAuth 1.0 terminology
-    authorizationEndpoint: https://connect.garmin.com/oauthConfirm
-    # -- Endpoint to deregister a user on garmin to disable receiving push requests
-    deregistrationEndpoint: https://healthapi.garmin.com/wellness-api/rest/user/registration
-     # -- Token endpoint to request access-token from Garmin
-    tokenEndpoint: https://connectapi.garmin.com/oauth-service/oauth/access_token
+    # -- Authorization endpoint for Garmin authentication. For OAuth2: oauth2Confirm, for OAuth1: oauthConfirm
+    authorizationEndpoint: https://connect.garmin.com/oauth2Confirm
+    # -- Token endpoint to request access-token from Garmin. For OAuth2: di-oauth2-service, for OAuth1: oauth-service
+    tokenEndpoint: https://diauth.garmin.com/di-oauth2-service/oauth/token
+    # -- Endpoint to deregister a user on Garmin to disable receiving push requests
+    deregistrationEndpoint: https://apis.garmin.com/wellness-api/rest/user/registration
     # -- Garmin client id
     clientId: Garmin-clientid
     # -- Garmin client secret
     clientSecret: Garmin-clientsecret
-    # -- List of scopes of the data that should be collected from Garmin.
+    # -- Scopes for OAuth1 flow (not used in OAuth2 - Garmin manages scopes server-side for OAuth2)
     scope: activity heartrate sleep profile
 
   oura:
@@ -348,3 +356,7 @@ restSourceClients:
     clientSecret: Oura-clientsecret
     # -- List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication
     scope: daily session heartrate workout tag personal email spo2 ring_configuration
+    # -- Whether this client uses PKCE for authorization
+    usesPkce: true
+    # -- OAuth version to use: "oauth2" for standard OAuth2 flow
+    oauthVersion: oauth2
