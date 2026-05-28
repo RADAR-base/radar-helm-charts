@@ -202,7 +202,7 @@ podDisruptionBudget:
 # Horizontal Pod Autoscaler configuration
 hpa:
   # -- Enable HPA
-  enabled: false
+  enabled: true
   # -- Maximum number of replicas
   maxReplicas: 5
   # -- Target CPU utilization percentage
