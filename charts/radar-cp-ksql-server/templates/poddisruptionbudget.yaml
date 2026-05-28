@@ -8,14 +8,10 @@ metadata:
     app: cp-ksql-server
     release: {{ .Release.Name }}
 spec:
-  {{- if not (or (hasKey .Values.podDisruptionBudget "minAvailable") (hasKey .Values.podDisruptionBudget "maxUnavailable")) }}
-  minAvailable: 1
-  {{- end }}
-  {{- if hasKey .Values.podDisruptionBudget "minAvailable" }}
-  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
-  {{- end }}
-  {{- if hasKey .Values.podDisruptionBudget "maxUnavailable" }}
+  {{- if .Values.podDisruptionBudget.maxUnavailable }}
   maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+  {{- else }}
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable | default 1 }}
   {{- end }}
   selector:
     matchLabels:
