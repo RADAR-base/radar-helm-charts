@@ -1,0 +1,11 @@
+# Ignore all files with sensitive production values
+production.yaml
+prod.yaml
+*-prod.yaml
+*-production.yaml
+prod-*.yaml
+production-*.yaml
+aws-*.yaml
+secrets/
+private/
+*.secret.yaml

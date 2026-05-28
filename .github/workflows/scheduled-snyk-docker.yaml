@@ -48,6 +48,8 @@ jobs:
           INCLUDE_CHARTS: charts/cc-schema-registry-proxy
             charts/cert-manager-lets-encrypt
             charts/kube-prometheus-stack
+            charts/kubecost
+            charts/kubernetes-dashboard
             charts/radar-grafana
             charts/radar-hydra
             charts/radar-kratos
