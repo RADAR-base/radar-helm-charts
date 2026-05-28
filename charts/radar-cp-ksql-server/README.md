@@ -3,7 +3,7 @@
 # radar-cp-ksql-server
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-cp-ksql-server)](https://artifacthub.io/packages/helm/radar-base/radar-cp-ksql-server)
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![AppVersion: 7.6.0](https://img.shields.io/badge/AppVersion-7.6.0-informational?style=flat-square)
+![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![AppVersion: 7.6.0](https://img.shields.io/badge/AppVersion-7.6.0-informational?style=flat-square)
 
 ConfluentInc Ksql Server for RADAR-base
 
@@ -56,3 +56,7 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | ksql.configurationOverrides."ksql.persistence.default.format.key" | string | `"AVRO"` |  |
 | ksql.configurationOverrides."ksql.persistence.default.format.value" | string | `"AVRO"` |  |
 | ksql.configurationOverrides."log4j.logger.processing" | bool | `false` |  |
+| podDisruptionBudget | object | `{"enabled":false,"maxUnavailable":null,"minAvailable":1}` | Pod Disruption Budget configuration |
+| podDisruptionBudget.enabled | bool | `false` | Enable Pod Disruption Budget |
+| podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
+| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |

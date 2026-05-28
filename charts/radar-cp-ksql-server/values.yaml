@@ -21,3 +21,12 @@ ksql:
     "ksql.persistence.default.format.key": AVRO
     "ksql.persistence.default.format.value": AVRO
     "log4j.logger.processing": false
+
+# -- Pod Disruption Budget configuration
+podDisruptionBudget:
+  # -- Enable Pod Disruption Budget
+  enabled: false
+  # -- Minimum number of pods that must be available during disruptions
+  minAvailable: 1
+  # -- Maximum number of pods that can be unavailable during disruptions
+  maxUnavailable: ~

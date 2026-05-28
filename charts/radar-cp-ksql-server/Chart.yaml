@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: 7.6.0
 description: "ConfluentInc Ksql Server for RADAR-base"
 name: radar-cp-ksql-server
-version: 0.0.1
+version: 0.0.2
 keywords:
   - kafka
   - queue

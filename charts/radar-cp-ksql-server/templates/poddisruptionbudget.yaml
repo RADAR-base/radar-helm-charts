@@ -1,0 +1,24 @@
+{{- if ((.Values.podDisruptionBudget).enabled) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-cp-ksql-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: cp-ksql-server
+    release: {{ .Release.Name }}
+spec:
+  {{- if not (or (hasKey .Values.podDisruptionBudget "minAvailable") (hasKey .Values.podDisruptionBudget "maxUnavailable")) }}
+  minAvailable: 1
+  {{- end }}
+  {{- if hasKey .Values.podDisruptionBudget "minAvailable" }}
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  {{- end }}
+  {{- if hasKey .Values.podDisruptionBudget "maxUnavailable" }}
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: cp-ksql-server
+      release: {{ .Release.Name }}
+{{- end }}
