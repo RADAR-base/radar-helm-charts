@@ -276,6 +276,15 @@ compression:
   # -- Compression type to use for output files. Can be one of: gzip, zip, none
   type: gzip
 
+# Pod Disruption Budget configuration
+podDisruptionBudget:
+  # -- Enable Pod Disruption Budget
+  enabled: false
+  # -- Minimum number of pods that must be available during disruptions
+  minAvailable: 1
+  # -- Maximum number of pods that can be unavailable during disruptions
+  maxUnavailable: ~
+
 # Horizontal Pod Autoscaler
 hpa:
   # -- Enable HPA

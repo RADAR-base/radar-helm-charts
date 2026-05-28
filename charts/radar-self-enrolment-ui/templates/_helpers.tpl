@@ -59,6 +59,14 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
+Selector labels
+*/}}
+{{- define "radar-self-enrolment-ui.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "radar-self-enrolment-ui.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{/*
 Create a secret name which can be overridden.
 */}}
 {{- define "radar-self-enrolment-ui.secretname" -}}

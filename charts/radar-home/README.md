@@ -3,7 +3,7 @@
 # radar-home
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-home)](https://artifacthub.io/packages/helm/radar-base/radar-home)
 
-![Version: 0.5.4](https://img.shields.io/badge/Version-0.5.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.7](https://img.shields.io/badge/AppVersion-0.1.7-informational?style=flat-square)
+![Version: 0.5.5](https://img.shields.io/badge/Version-0.5.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.7](https://img.shields.io/badge/AppVersion-0.1.7-informational?style=flat-square)
 
 RADAR-base home page.
 
@@ -94,6 +94,6 @@ RADAR-base home page.
 | monitoring.url | string | `nil` | URL to the monitoring stack, usually Prometheus |
 | logging.enabled | bool | `false` | Enable link to the logging stack, usually Graylog |
 | logging.url | string | `nil` | URL to the monitoring stack, usually Graylog |
-| podDisruptionBudget.enabled | bool | `true` | Enable Pod Disruption Budget |
+| podDisruptionBudget.enabled | bool | `false` | Enable Pod Disruption Budget |
 | podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
 | podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |

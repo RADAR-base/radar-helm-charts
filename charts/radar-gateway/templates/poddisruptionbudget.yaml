@@ -2,10 +2,10 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "radar-home.fullname" . }}
+  name: {{ include "radar-gateway.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "radar-home.labels" . | nindent 4 }}
+    {{- include "radar-gateway.labels" . | nindent 4 }}
 spec:
   {{- if .Values.podDisruptionBudget.maxUnavailable }}
   maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
@@ -14,5 +14,5 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "radar-home.selectorLabels" . | nindent 6 }}
+      {{- include "radar-gateway.selectorLabels" . | nindent 6 }}
 {{- end }}
