@@ -87,3 +87,33 @@ data:
           bloodPressureEnabled: {{ .Values.garmin.backfill.bloodPressureEnabled }}
           healthSnapshotEnabled: {{ .Values.garmin.backfill.healthSnapshotEnabled }}
           heartRateVariabilityEnabled: {{ .Values.garmin.backfill.heartRateVariabilityEnabled }}
+      googlehealth:
+        enabled: {{ .Values.googlehealth.enabled }}
+        userRepositoryClass: {{ .Values.googlehealth.userRepositoryClass }}
+        userRepositoryUrl: {{ .Values.googlehealth.userRepositoryUrl }}
+        userRepositoryClientId: {{ .Values.googlehealth.userRepositoryClientId }}
+        userRepositoryClientSecret: {{ .Values.googlehealth.userRepositoryClientSecret }}
+        userRepositoryTokenUrl: {{ .Values.googlehealth.userRepositoryTokenUrl }}
+        apiBaseUrl: {{ .Values.googlehealth.apiBaseUrl }}
+        googleCloudProjectId: {{ .Values.googlehealth.googleCloudProjectId | quote }}
+        subscriberId: {{ .Values.googlehealth.subscriberId | quote }}
+        subscriberEndpointUri: {{ .Values.googlehealth.subscriberEndpointUri | quote }}
+        subscriberSecret: {{ .Values.googlehealth.subscriberSecret | quote }}
+        serviceAccountKeyPath: {{ .Values.googlehealth.serviceAccountKeyPath | quote }}
+        triggerDataTypes:
+        {{- range .Values.googlehealth.triggerDataTypes }}
+          - {{ . }}
+        {{- end }}
+        enabledDataTypes:
+        {{- range .Values.googlehealth.enabledDataTypes }}
+          - {{ . }}
+        {{- end }}
+        backfill:
+          enabled: {{ .Values.googlehealth.backfill.enabled }}
+          redis:
+            uri: {{ .Values.redis.url }}
+            lockPrefix: radar-push-googlehealth/lock
+          maxThreads: {{ .Values.googlehealth.backfill.maxThreads }}
+          maxBackfillPeriod: {{ .Values.googlehealth.backfill.maxBackfillPeriod }}
+          chunkSizeDays: {{ .Values.googlehealth.backfill.chunkSizeDays }}
+          iterationIntervalMinutes: {{ .Values.googlehealth.backfill.iterationIntervalMinutes }}
