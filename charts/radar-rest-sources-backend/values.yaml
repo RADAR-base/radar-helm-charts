@@ -311,8 +311,6 @@ restSourceClients:
     clientSecret:
     # -- List of scopes of the data that should be collected from Fitbit. For details, please refer to https://dev.fitbit.com/build/reference/web-api/developer-guide/application-design/#Scopes
     scope: activity heartrate sleep profile
-    # -- Whether this client uses PKCE for authorization
-    usesPkce: false
     # -- OAuth version to use: "oauth2" for standard OAuth2 flow
     oauthVersion: oauth2
 
@@ -323,8 +321,6 @@ restSourceClients:
     sourceType: Garmin
     # -- OAuth version to use: "oauth2" for PKCE flow, "oauth1" for legacy flow. OAuth1 will be retired on 12/31/2026.
     oauthVersion: oauth2
-    # -- Whether this client uses PKCE (must be true for Garmin OAuth2)
-    usesPkce: true
     # -- Pre authorization endpoint to get request token (OAuth1 only, ignored when oauthVersion is oauth2)
     preAuthorizationEndpoint: https://connectapi.garmin.com/oauth-service/oauth/request_token
     # -- Authorization endpoint for Garmin authentication. For OAuth2: oauth2Confirm, for OAuth1: oauthConfirm
@@ -356,8 +352,6 @@ restSourceClients:
     clientSecret: Oura-clientsecret
     # -- List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication
     scope: daily session heartrate workout tag personal email spo2 ring_configuration
-    # -- Whether this client uses PKCE for authorization
-    usesPkce: true
     # -- OAuth version to use: "oauth2" for standard OAuth2 flow
     oauthVersion: oauth2
 
