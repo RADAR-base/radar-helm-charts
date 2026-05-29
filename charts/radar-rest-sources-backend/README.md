@@ -138,5 +138,4 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.google.clientId | string | `"Google-clientid"` | Google OAuth2 client id (from Google Cloud Console > APIs & Services > Credentials) |
 | restSourceClients.google.clientSecret | string | `"Google-clientsecret"` | Google OAuth2 client secret (from Google Cloud Console > APIs & Services > Credentials) |
 | restSourceClients.google.scope | string | `"https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly https://www.googleapis.com/auth/googlehealth.sleep.readonly https://www.googleapis.com/auth/googlehealth.profile.readonly"` | List of scopes of the data that should be collected from Google Health. See https://developers.google.com/health/guides/authorization |
-| restSourceClients.google.usesPkce | bool | `true` | Whether this client uses PKCE (must be true for Google) |
 | restSourceClients.google.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for standard OAuth2 flow with PKCE |
