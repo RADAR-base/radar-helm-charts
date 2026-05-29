@@ -136,4 +136,23 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | garmin.backfill.bloodPressureEnabled | bool | `false` | Whether to enable blood pressure backfill requests |
 | garmin.backfill.healthSnapshotEnabled | bool | `false` | Whether to enable health snapshot backfill requests |
 | garmin.backfill.heartRateVariabilityEnabled | bool | `false` | Whether to enable heart rate variability backfill requests |
+| googlehealth.enabled | bool | `false` | Whether to enable Google Health endpoints |
+| googlehealth.userRepositoryClass | string | `"org.radarbase.push.integration.google.user.GoogleHealthServiceUserRepository"` | The user repository to use for getting list of users and their authorization information |
+| googlehealth.userRepositoryUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend"` | The base url of the user repository if the repository is http(s) based. |
+| googlehealth.userRepositoryClientId | string | `"radar_pushendpoint"` | The client ID to access the user repository if the repository requires authorization |
+| googlehealth.userRepositoryClientSecret | string | `"secret"` | The client secret to access the user repository if the repository requires authorization |
+| googlehealth.userRepositoryTokenUrl | string | `"http://management-portal:8080/managementportal/oauth/token"` | The token URL for authentication (usually the management portal token url). |
+| googlehealth.apiBaseUrl | string | `"https://health.googleapis.com/v4"` | Base URL of the Google Health API |
+| googlehealth.googleCloudProjectId | string | `""` | Google Cloud project ID that owns the Google Health subscription. Must match the project where the service account lives. |
+| googlehealth.subscriberId | string | `"radar-pep"` | Stable identifier for this PEP's webhook subscriber on Google's side. Used in the subscription resource path. |
+| googlehealth.subscriberEndpointUri | string | `""` | Public HTTPS URL where Google sends PINGs (must be reachable from the internet for the verification handshake at create time). |
+| googlehealth.subscriberSecret | string | `""` | Random secret (32+ bytes recommended). Google echoes "Bearer <secret>" back in the Authorization header on every PING. |
+| googlehealth.serviceAccountKeyPath | string | `""` | Filesystem path inside the PEP container to a Google Cloud service account JSON key (used for subscriber registration only). |
+| googlehealth.triggerDataTypes | list | `["steps","sleep","exercise","daily-resting-heart-rate","heart-rate","daily-sleep-temperature-derivations"]` | Data types Google will send PINGs for. Must be a subset of enabledDataTypes. |
+| googlehealth.enabledDataTypes | list | `["steps","heart-rate","heart-rate-variability","oxygen-saturation","total-calories","daily-resting-heart-rate","respiratory-rate-sleep-summary","daily-sleep-temperature-derivations","sleep","exercise"]` | All data types PEP will ingest. Types in this list but not in triggerDataTypes are caught up opportunistically from each PING. |
+| googlehealth.backfill.enabled | bool | `true` | Whether to enable Google Health historical backfill loop |
+| googlehealth.backfill.maxThreads | int | `4` | Number of concurrent backfill worker threads |
+| googlehealth.backfill.maxBackfillPeriod | int | `730` | Maximum historical period to backfill |
+| googlehealth.backfill.chunkSizeDays | int | `7` | Size of each backfill chunk in days |
+| googlehealth.backfill.iterationIntervalMinutes | int | `10` | Interval in minutes between backfill iterations |
 | redis.url | string | `"redis://radar-redis-replication-master:6379"` | The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties. |

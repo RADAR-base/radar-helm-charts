@@ -111,12 +111,10 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.fitbit.clientId | string | `nil` | FitBit client id |
 | restSourceClients.fitbit.clientSecret | string | `nil` | FitBit client secret |
 | restSourceClients.fitbit.scope | string | `"activity heartrate sleep profile"` | List of scopes of the data that should be collected from Fitbit. For details, please refer to https://dev.fitbit.com/build/reference/web-api/developer-guide/application-design/#Scopes |
-| restSourceClients.fitbit.usesPkce | bool | `false` | Whether this client uses PKCE for authorization |
 | restSourceClients.fitbit.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for standard OAuth2 flow |
 | restSourceClients.garmin.enable | bool | `false` | set to true, if Garmin client should be used |
 | restSourceClients.garmin.sourceType | string | `"Garmin"` | Type of the data sources |
 | restSourceClients.garmin.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for PKCE flow, "oauth1" for legacy flow. OAuth1 will be retired on 12/31/2026. |
-| restSourceClients.garmin.usesPkce | bool | `true` | Whether this client uses PKCE (must be true for Garmin OAuth2) |
 | restSourceClients.garmin.preAuthorizationEndpoint | string | `"https://connectapi.garmin.com/oauth-service/oauth/request_token"` | Pre authorization endpoint to get request token (OAuth1 only, ignored when oauthVersion is oauth2) |
 | restSourceClients.garmin.authorizationEndpoint | string | `"https://connect.garmin.com/oauth2Confirm"` | Authorization endpoint for Garmin authentication. For OAuth2: oauth2Confirm, for OAuth1: oauthConfirm |
 | restSourceClients.garmin.tokenEndpoint | string | `"https://diauth.garmin.com/di-oauth2-service/oauth/token"` | Token endpoint to request access-token from Garmin. For OAuth2: di-oauth2-service, for OAuth1: oauth-service |
@@ -132,5 +130,12 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.oura.clientId | string | `"Oura-clientid"` | Oura client id |
 | restSourceClients.oura.clientSecret | string | `"Oura-clientsecret"` | Oura client secret |
 | restSourceClients.oura.scope | string | `"daily session heartrate workout tag personal email spo2 ring_configuration"` | List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication |
-| restSourceClients.oura.usesPkce | bool | `true` | Whether this client uses PKCE for authorization |
 | restSourceClients.oura.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for standard OAuth2 flow |
+| restSourceClients.google.enable | bool | `false` | set to true, if Google Health client should be used |
+| restSourceClients.google.sourceType | string | `"Google"` | Type of the data sources |
+| restSourceClients.google.authorizationEndpoint | string | `"https://accounts.google.com/o/oauth2/v2/auth"` | Authorization endpoint for Google authentication and authorization |
+| restSourceClients.google.tokenEndpoint | string | `"https://oauth2.googleapis.com/token"` | Token endpoint to request access-token from Google |
+| restSourceClients.google.clientId | string | `"Google-clientid"` | Google OAuth2 client id (from Google Cloud Console > APIs & Services > Credentials) |
+| restSourceClients.google.clientSecret | string | `"Google-clientsecret"` | Google OAuth2 client secret (from Google Cloud Console > APIs & Services > Credentials) |
+| restSourceClients.google.scope | string | `"https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly https://www.googleapis.com/auth/googlehealth.sleep.readonly https://www.googleapis.com/auth/googlehealth.profile.readonly"` | List of scopes of the data that should be collected from Google Health. See https://developers.google.com/health/guides/authorization |
+| restSourceClients.google.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for standard OAuth2 flow with PKCE |
