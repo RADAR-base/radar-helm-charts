@@ -134,3 +134,12 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.oura.scope | string | `"daily session heartrate workout tag personal email spo2 ring_configuration"` | List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication |
 | restSourceClients.oura.usesPkce | bool | `true` | Whether this client uses PKCE for authorization |
 | restSourceClients.oura.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for standard OAuth2 flow |
+| restSourceClients.google.enable | bool | `false` | set to true, if Google Health client should be used |
+| restSourceClients.google.sourceType | string | `"Google"` | Type of the data sources |
+| restSourceClients.google.authorizationEndpoint | string | `"https://accounts.google.com/o/oauth2/v2/auth"` | Authorization endpoint for Google authentication and authorization |
+| restSourceClients.google.tokenEndpoint | string | `"https://oauth2.googleapis.com/token"` | Token endpoint to request access-token from Google |
+| restSourceClients.google.clientId | string | `"Google-clientid"` | Google OAuth2 client id (from Google Cloud Console > APIs & Services > Credentials) |
+| restSourceClients.google.clientSecret | string | `"Google-clientsecret"` | Google OAuth2 client secret (from Google Cloud Console > APIs & Services > Credentials) |
+| restSourceClients.google.scope | string | `"https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly https://www.googleapis.com/auth/googlehealth.sleep.readonly https://www.googleapis.com/auth/googlehealth.profile.readonly"` | List of scopes of the data that should be collected from Google Health. See https://developers.google.com/health/guides/authorization |
+| restSourceClients.google.usesPkce | bool | `true` | Whether this client uses PKCE (must be true for Google) |
+| restSourceClients.google.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for standard OAuth2 flow with PKCE |

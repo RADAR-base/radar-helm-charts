@@ -360,3 +360,23 @@ restSourceClients:
     usesPkce: true
     # -- OAuth version to use: "oauth2" for standard OAuth2 flow
     oauthVersion: oauth2
+
+  google:
+    # -- set to true, if Google Health client should be used
+    enable: false
+    # -- Type of the data sources
+    sourceType: Google
+    # -- Authorization endpoint for Google authentication and authorization
+    authorizationEndpoint: https://accounts.google.com/o/oauth2/v2/auth
+    # -- Token endpoint to request access-token from Google
+    tokenEndpoint: https://oauth2.googleapis.com/token
+    # -- Google OAuth2 client id (from Google Cloud Console > APIs & Services > Credentials)
+    clientId: Google-clientid
+    # -- Google OAuth2 client secret (from Google Cloud Console > APIs & Services > Credentials)
+    clientSecret: Google-clientsecret
+    # -- List of scopes of the data that should be collected from Google Health. See https://developers.google.com/health/guides/authorization
+    scope: https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly https://www.googleapis.com/auth/googlehealth.sleep.readonly https://www.googleapis.com/auth/googlehealth.profile.readonly
+    # -- Whether this client uses PKCE (must be true for Google)
+    usesPkce: true
+    # -- OAuth version to use: "oauth2" for standard OAuth2 flow with PKCE
+    oauthVersion: oauth2
