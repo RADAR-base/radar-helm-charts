@@ -136,13 +136,18 @@ oauth_clients:
       - SUBJECT.READ
       - SUBJECT.UPDATE
       - USER.READ
+      - offline_access
     grantTypes:
       - refresh_token
       - authorization_code
     access_token_validity: 43200
     refresh_token_validity: 7948800
     additional_information: '{"dynamic_registration": true}'
-    tokenEndpointAuthMethod: client_secret_post
+    tokenEndpointAuthMethod: client_secret_basic
+    redirectUris:
+      - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/study/connect/prmt'
+      - 'org.radarbase.prmt:/'
+      - 'org.radarbase.prmt://login'
 
   aRMT:
     enable: false
@@ -164,15 +169,18 @@ oauth_clients:
       - SUBJECT.READ
       - SUBJECT.UPDATE
       - USER.READ
+      - offline_access
     grantTypes:
       - refresh_token
       - authorization_code
     access_token_validity: 43200
     refresh_token_validity: 7948800
     additional_information: '{"dynamic_registration": true}'
-    tokenEndpointAuthMethod: client_secret_post
+    tokenEndpointAuthMethod: none
     redirectUris:
-      - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/managementportal/api/redirect/login'
+      - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/study/connect/armt'
+      - 'org.phidatalab.radar-armt:/'
+      - 'org.phidatalab.radar_armt:/'
 
   SEP:
     enable: false
@@ -199,7 +207,7 @@ oauth_clients:
     refresh_token_validity: 7948800
     additional_information: '{"dynamic_registration": true}'
     redirectUris:
-      - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/managementportal/api/redirect/login'
+      - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/study/connect/sep'
 
   THINC-IT:
     enable: false
@@ -315,12 +323,26 @@ oauth_clients:
       - SUBJECT.CREATE
     grantTypes:
       - authorization_code
+      - refresh_token
     access_token_validity: 900
     redirectUris:
       - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/rest-sources/authorizer/login'
     tokenEndpointAuthMethod: client_secret_post
 
   radar_fitbit_connector:
+    enable: false
+    audience:
+      - res_restAuthorizer
+    client_secret: ""
+    scope:
+      - SUBJECT.READ
+      - MEASUREMENT.CREATE
+    grantTypes:
+      - client_credentials
+    access_token_validity: 900
+    tokenEndpointAuthMethod: client_secret_post
+
+  radar_oura_connector:
     enable: false
     audience:
       - res_restAuthorizer
