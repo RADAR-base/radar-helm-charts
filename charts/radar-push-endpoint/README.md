@@ -25,6 +25,7 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 * Kubernetes 1.28+
 * Kubectl 1.28+
 * Helm 3.1.0+
+* [metrics-server](https://github.com/kubernetes-sigs/metrics-server) is required in the cluster when HPA is enabled (`hpa.enabled=true`)
 
 ## Requirements
 
