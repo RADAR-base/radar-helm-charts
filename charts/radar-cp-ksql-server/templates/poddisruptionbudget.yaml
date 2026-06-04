@@ -2,10 +2,11 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "radar-home.fullname" . }}
+  name: {{ .Release.Name }}-cp-ksql-server
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "radar-home.labels" . | nindent 4 }}
+    app: cp-ksql-server
+    release: {{ .Release.Name }}
 spec:
   {{- if .Values.podDisruptionBudget.maxUnavailable }}
   maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
@@ -14,5 +15,6 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "radar-home.selectorLabels" . | nindent 6 }}
+      app: cp-ksql-server
+      release: {{ .Release.Name }}
 {{- end }}

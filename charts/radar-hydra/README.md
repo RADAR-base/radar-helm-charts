@@ -3,7 +3,7 @@
 # radar-hydra
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-hydra)](https://artifacthub.io/packages/helm/radar-base/radar-hydra)
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.2.0](https://img.shields.io/badge/AppVersion-v2.2.0-informational?style=flat-square)
+![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.2.0](https://img.shields.io/badge/AppVersion-v2.2.0-informational?style=flat-square)
 
 A ORY Hydra Helm chart for RADAR-base. ORY Hydra is a cloud native Identity and User Management system.
 
@@ -275,3 +275,13 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 | oauth_clients.radar_data_dashboard_backend.scope[2] | string | `"MEASUREMENT.READ"` |  |
 | oauth_clients.radar_data_dashboard_backend.grantTypes[0] | string | `"client_credentials"` |  |
 | oauth_clients.radar_data_dashboard_backend.access_token_validity | int | `900` |  |
+| oauth_clients.pdb | object | `{"enabled":false,"spec":{"maxUnavailable":null,"minAvailable":1}}` | Pod Disruption Budget configuration |
+| oauth_clients.pdb.enabled | bool | `false` | Enable Pod Disruption Budget |
+| oauth_clients.pdb.spec.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
+| oauth_clients.pdb.spec.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |
+| oauth_clients.deployment | object | `{"autoscaling":{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPU":{"averageUtilization":80,"type":"Utilization"},"targetMemory":{}}}` | Horizontal Pod Autoscaler configuration |
+| oauth_clients.deployment.autoscaling.enabled | bool | `false` | Enable HPA |
+| oauth_clients.deployment.autoscaling.minReplicas | int | `1` | Minimum number of replicas |
+| oauth_clients.deployment.autoscaling.maxReplicas | int | `5` | Maximum number of replicas |
+| oauth_clients.deployment.autoscaling.targetCPU | object | `{"averageUtilization":80,"type":"Utilization"}` | Target CPU utilization percentage |
+| oauth_clients.deployment.autoscaling.targetMemory | object | `{}` | Target Memory utilization percentage |

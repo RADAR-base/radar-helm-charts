@@ -361,3 +361,28 @@ kratos:
               key: uri
         - name: DSN
           value: "$(POSTGRES_URI)?sslmode=disable&max_conns=20&max_idle_conns=4"
+
+  # -- Pod Disruption Budget configuration (covers kratos deployment only, not courier)
+  pdb:
+    # -- Enable Pod Disruption Budget
+    enabled: false
+    spec:
+      # -- Minimum number of pods that must be available during disruptions
+      minAvailable: 1
+      # -- Maximum number of pods that can be unavailable during disruptions
+      maxUnavailable: ~
+
+  # -- Horizontal Pod Autoscaler configuration
+  autoscaling:
+    # -- Enable HPA
+    enabled: false
+    # -- Minimum number of replicas
+    minReplicas: 1
+    # -- Maximum number of replicas
+    maxReplicas: 5
+    # -- Target CPU utilization percentage
+    targetCPU:
+      type: Utilization
+      averageUtilization: 80
+    # -- Target Memory utilization percentage
+    targetMemory: {}
