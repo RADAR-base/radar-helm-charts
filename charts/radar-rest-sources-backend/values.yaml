@@ -359,7 +359,7 @@ restSourceClients:
     # -- set to true, if Google Health client should be used
     enable: false
     # -- Type of the data sources
-    sourceType: Google
+    sourceType: GoogleHealth
     # -- Authorization endpoint for Google authentication and authorization
     authorizationEndpoint: https://accounts.google.com/o/oauth2/v2/auth
     # -- Token endpoint to request access-token from Google
