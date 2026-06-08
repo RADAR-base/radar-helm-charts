@@ -421,8 +421,6 @@ googlehealth:
     enabled: true
     # -- Number of concurrent backfill worker threads
     maxThreads: 4
-    # -- Maximum historical period to backfill
-    maxBackfillPeriod: P730D
     # -- Size of each backfill chunk in days
     chunkSizeDays: 7
     # -- Interval in minutes between backfill iterations

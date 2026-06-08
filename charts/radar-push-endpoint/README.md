@@ -156,7 +156,6 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | googlehealth.enabledDataTypes | list | `["steps","heart-rate","heart-rate-variability","oxygen-saturation","total-calories","daily-resting-heart-rate","respiratory-rate-sleep-summary","daily-sleep-temperature-derivations","sleep","exercise"]` | All data types the Push Endpoint will ingest. Types in this list but not in triggerDataTypes are caught up opportunistically from each PING. |
 | googlehealth.backfill.enabled | bool | `true` | Whether to enable Google Health historical backfill loop |
 | googlehealth.backfill.maxThreads | int | `4` | Number of concurrent backfill worker threads |
-| googlehealth.backfill.maxBackfillPeriod | string | `"P730D"` | Maximum historical period to backfill |
 | googlehealth.backfill.chunkSizeDays | int | `7` | Size of each backfill chunk in days |
 | googlehealth.backfill.iterationIntervalMinutes | int | `10` | Interval in minutes between backfill iterations |
 | redis.url | string | `"redis://radar-redis-replication-master:6379"` | The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties. |
