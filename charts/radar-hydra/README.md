@@ -71,12 +71,16 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 | oauth_clients.pRMT.scope[6] | string | `"SUBJECT.READ"` |  |
 | oauth_clients.pRMT.scope[7] | string | `"SUBJECT.UPDATE"` |  |
 | oauth_clients.pRMT.scope[8] | string | `"USER.READ"` |  |
+| oauth_clients.pRMT.scope[9] | string | `"offline_access"` |  |
 | oauth_clients.pRMT.grantTypes[0] | string | `"refresh_token"` |  |
 | oauth_clients.pRMT.grantTypes[1] | string | `"authorization_code"` |  |
 | oauth_clients.pRMT.access_token_validity | int | `43200` |  |
 | oauth_clients.pRMT.refresh_token_validity | int | `7948800` |  |
 | oauth_clients.pRMT.additional_information | string | `"{\"dynamic_registration\": true}"` |  |
-| oauth_clients.pRMT.tokenEndpointAuthMethod | string | `"client_secret_post"` |  |
+| oauth_clients.pRMT.tokenEndpointAuthMethod | string | `"client_secret_basic"` |  |
+| oauth_clients.pRMT.redirectUris[0] | string | `"{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/study/connect/prmt"` |  |
+| oauth_clients.pRMT.redirectUris[1] | string | `"org.radarbase.prmt:/"` |  |
+| oauth_clients.pRMT.redirectUris[2] | string | `"org.radarbase.prmt://login"` |  |
 | oauth_clients.aRMT.enable | bool | `false` |  |
 | oauth_clients.aRMT.audience[0] | string | `"res_gateway"` |  |
 | oauth_clients.aRMT.audience[1] | string | `"res_ManagementPortal"` |  |
@@ -94,13 +98,16 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 | oauth_clients.aRMT.scope[7] | string | `"SUBJECT.READ"` |  |
 | oauth_clients.aRMT.scope[8] | string | `"SUBJECT.UPDATE"` |  |
 | oauth_clients.aRMT.scope[9] | string | `"USER.READ"` |  |
+| oauth_clients.aRMT.scope[10] | string | `"offline_access"` |  |
 | oauth_clients.aRMT.grantTypes[0] | string | `"refresh_token"` |  |
 | oauth_clients.aRMT.grantTypes[1] | string | `"authorization_code"` |  |
 | oauth_clients.aRMT.access_token_validity | int | `43200` |  |
 | oauth_clients.aRMT.refresh_token_validity | int | `7948800` |  |
 | oauth_clients.aRMT.additional_information | string | `"{\"dynamic_registration\": true}"` |  |
-| oauth_clients.aRMT.tokenEndpointAuthMethod | string | `"client_secret_post"` |  |
-| oauth_clients.aRMT.redirectUris[0] | string | `"{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/managementportal/api/redirect/login"` |  |
+| oauth_clients.aRMT.tokenEndpointAuthMethod | string | `"none"` |  |
+| oauth_clients.aRMT.redirectUris[0] | string | `"{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/study/connect/armt"` |  |
+| oauth_clients.aRMT.redirectUris[1] | string | `"org.phidatalab.radar-armt:/"` |  |
+| oauth_clients.aRMT.redirectUris[2] | string | `"org.phidatalab.radar_armt:/"` |  |
 | oauth_clients.SEP.enable | bool | `false` |  |
 | oauth_clients.SEP.audience[0] | string | `"res_gateway"` |  |
 | oauth_clients.SEP.audience[1] | string | `"res_ManagementPortal"` |  |
@@ -121,7 +128,7 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 | oauth_clients.SEP.access_token_validity | int | `43200` |  |
 | oauth_clients.SEP.refresh_token_validity | int | `7948800` |  |
 | oauth_clients.SEP.additional_information | string | `"{\"dynamic_registration\": true}"` |  |
-| oauth_clients.SEP.redirectUris[0] | string | `"{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/managementportal/api/redirect/login"` |  |
+| oauth_clients.SEP.redirectUris[0] | string | `"{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/study/connect/sep"` |  |
 | oauth_clients.THINC-IT.enable | bool | `false` |  |
 | oauth_clients.THINC-IT.audience[0] | string | `"res_gateway"` |  |
 | oauth_clients.THINC-IT.audience[1] | string | `"res_ManagementPortal"` |  |
@@ -200,6 +207,7 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 | oauth_clients.radar_rest_sources_authorizer.scope[3] | string | `"SUBJECT.UPDATE"` |  |
 | oauth_clients.radar_rest_sources_authorizer.scope[4] | string | `"SUBJECT.CREATE"` |  |
 | oauth_clients.radar_rest_sources_authorizer.grantTypes[0] | string | `"authorization_code"` |  |
+| oauth_clients.radar_rest_sources_authorizer.grantTypes[1] | string | `"refresh_token"` |  |
 | oauth_clients.radar_rest_sources_authorizer.access_token_validity | int | `900` |  |
 | oauth_clients.radar_rest_sources_authorizer.redirectUris[0] | string | `"{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/rest-sources/authorizer/login"` |  |
 | oauth_clients.radar_rest_sources_authorizer.tokenEndpointAuthMethod | string | `"client_secret_post"` |  |
@@ -211,6 +219,14 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 | oauth_clients.radar_fitbit_connector.grantTypes[0] | string | `"client_credentials"` |  |
 | oauth_clients.radar_fitbit_connector.access_token_validity | int | `900` |  |
 | oauth_clients.radar_fitbit_connector.tokenEndpointAuthMethod | string | `"client_secret_post"` |  |
+| oauth_clients.radar_oura_connector.enable | bool | `false` |  |
+| oauth_clients.radar_oura_connector.audience[0] | string | `"res_restAuthorizer"` |  |
+| oauth_clients.radar_oura_connector.client_secret | string | `""` |  |
+| oauth_clients.radar_oura_connector.scope[0] | string | `"SUBJECT.READ"` |  |
+| oauth_clients.radar_oura_connector.scope[1] | string | `"MEASUREMENT.CREATE"` |  |
+| oauth_clients.radar_oura_connector.grantTypes[0] | string | `"client_credentials"` |  |
+| oauth_clients.radar_oura_connector.access_token_validity | int | `900` |  |
+| oauth_clients.radar_oura_connector.tokenEndpointAuthMethod | string | `"client_secret_post"` |  |
 | oauth_clients.radar_appconfig.enable | bool | `false` |  |
 | oauth_clients.radar_appconfig.audience[0] | string | `"res_ManagementPortal"` |  |
 | oauth_clients.radar_appconfig.audience[1] | string | `"res_appconfig"` |  |
