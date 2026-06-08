@@ -11655,6 +11655,34 @@ entries:
   radar-hydra:
   - apiVersion: v2
     appVersion: v2.2.0
+    created: "2026-06-08T04:00:04.884620962Z"
+    dependencies:
+    - name: hydra
+      repository: file://../../external/hydra
+      version: 0.53.0
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A ORY Hydra Helm chart for RADAR-base. ORY Hydra is a cloud native
+      Identity and User Management system.
+    digest: 55bd8d5ca6ac8a3f1e71460be5d0a30cb767bc9197deb0f0c8bf9402b333d0ca
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-hydra
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-hydra
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-hydra-0.3.2/radar-hydra-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v2
+    appVersion: v2.2.0
     created: "2026-06-04T12:30:44.752451185Z"
     dependencies:
     - name: hydra
@@ -24195,4 +24223,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2026-06-04T12:30:45.912007588Z"
+generated: "2026-06-08T04:00:04.88686883Z"
