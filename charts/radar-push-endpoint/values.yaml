@@ -380,14 +380,22 @@ googlehealth:
   apiBaseUrl: "https://health.googleapis.com/v4"
   # -- Google Cloud project ID that owns the Google Health subscription. Must match the project where the service account lives.
   googleCloudProjectId: ""
-  # -- Stable identifier for this PEP's webhook subscriber on Google's side. Used in the subscription resource path.
-  subscriberId: "radar-pep"
+  # -- Stable identifier for this Push Endpoint's webhook subscriber on Google's side. Used in the subscription resource path.
+  subscriberId: "radar-push-endpoint-<deployment>-<study>"   # MUST be unique per deployment (and maybe study) (e.g. radar-pep-stage)
   # -- Public HTTPS URL where Google sends PINGs (must be reachable from the internet for the verification handshake at create time).
   subscriberEndpointUri: ""
   # -- Random secret (32+ bytes recommended). Google echoes "Bearer <secret>" back in the Authorization header on every PING.
   subscriberSecret: ""
-  # -- Filesystem path inside the PEP container to a Google Cloud service account JSON key (used for subscriber registration only).
+  # -- Filesystem path inside the Push Endpoint container to a Google Cloud service account JSON key (used for subscriber registration only).
   serviceAccountKeyPath: ""
+  # -- How Google creates per-user subscriptions for this deployment's subscriber: MANUAL (Push Endpoint manages them) or AUTOMATIC. Must be MANUAL when subscriptionReconcileEnabled is true.
+  subscriptionCreatePolicy: MANUAL
+  # -- Whether Push Endpoint reconciles per-user subscriptions: create for authorized users, delete for deregistered ones. Must be false if subscriptionCreatePolicy is AUTOMATIC.
+  subscriptionReconcileEnabled: true
+  # -- Interval in minutes between subscription reconcile passes.
+  subscriptionReconcileIntervalMinutes: 5
+  # -- Safety cap: skip deletion and alarm if a single reconcile pass would delete more subscriptions than this (0 disables the cap).
+  subscriptionReconcileMaxDeletesPerPass: 50
   # -- Data types Google will send PINGs for. Must be a subset of enabledDataTypes.
   triggerDataTypes:
     - steps
@@ -396,7 +404,7 @@ googlehealth:
     - daily-resting-heart-rate
     - heart-rate
     - daily-sleep-temperature-derivations
-  # -- All data types PEP will ingest. Types in this list but not in triggerDataTypes are caught up opportunistically from each PING.
+  # -- All data types the Push Endpoint will ingest. Types in this list but not in triggerDataTypes are caught up opportunistically from each PING.
   enabledDataTypes:
     - steps
     - heart-rate
@@ -414,7 +422,7 @@ googlehealth:
     # -- Number of concurrent backfill worker threads
     maxThreads: 4
     # -- Maximum historical period to backfill
-    maxBackfillPeriod: 730
+    maxBackfillPeriod: P730D
     # -- Size of each backfill chunk in days
     chunkSizeDays: 7
     # -- Interval in minutes between backfill iterations

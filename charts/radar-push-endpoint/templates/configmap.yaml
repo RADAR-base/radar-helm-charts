@@ -100,6 +100,10 @@ data:
         subscriberEndpointUri: {{ .Values.googlehealth.subscriberEndpointUri | quote }}
         subscriberSecret: {{ .Values.googlehealth.subscriberSecret | quote }}
         serviceAccountKeyPath: {{ .Values.googlehealth.serviceAccountKeyPath | quote }}
+        subscriptionCreatePolicy: {{ .Values.googlehealth.subscriptionCreatePolicy }}
+        subscriptionReconcileEnabled: {{ .Values.googlehealth.subscriptionReconcileEnabled }}
+        subscriptionReconcileIntervalMinutes: {{ .Values.googlehealth.subscriptionReconcileIntervalMinutes }}
+        subscriptionReconcileMaxDeletesPerPass: {{ .Values.googlehealth.subscriptionReconcileMaxDeletesPerPass }}
         triggerDataTypes:
         {{- range .Values.googlehealth.triggerDataTypes }}
           - {{ . }}
