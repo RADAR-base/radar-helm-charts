@@ -55,12 +55,21 @@ spec:
             - /etc/radar/radar.yml
             - {{ .Values.command }}
           env:
-          - name: KAFKA_REST_PROXY
-            value: "{{ .Values.rest_proxy }}"
           - name: KAFKA_SCHEMA_REGISTRY
             value: "{{ .Values.schema_registry }}"
           - name: KAFKA_BROKERS
             value: "{{ .Values.kafka_num_brokers }}"
+          {{- if .Values.secret.jaas.name }}
+          - name: STREAM_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.jaas.name }}
+                key: {{ .Values.secret.jaas.key }}
+          {{- end }}
+          {{- range $name, $value := .Values.envVars }}
+          - name: {{ $name }}
+            value: {{ $value }}
+          {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -73,8 +82,10 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/radar/
+            {{- if .Values.persistence.enabled }}
             - name: backend-monitor-disconnect-data
-              mountPath: /var/lib/radar/data
+              mountPath: {{ .Values.config.persistence_path | default "/var/lib/radar/data" }}
+            {{- end }}
       volumes:
         - name: config
           configMap:
