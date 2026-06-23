@@ -42,6 +42,9 @@ API for data in the data dashboard
 | image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
+| namespace | string | `"default"` |  |
+| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| serviceAccount.name | string | `nil` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | podSecurityContext | object | `{}` | Configure pod's Security Context |
 | securityContext | object | `{}` | Configure container's Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
