@@ -24,6 +24,7 @@ data:
       properties:
         {{ .Values.jdbc.properties | toYaml | indent 8 | trim }}
     hazelcast:
+      enable: true
       network:
         port: 5801
         join:
