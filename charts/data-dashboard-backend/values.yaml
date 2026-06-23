@@ -236,4 +236,4 @@ jdbc:
     # -- Must be _true_ for compatibility with table created by jdbc-connector
     hibernate.globally_quoted_identifiers: true
     # -- Must be _CamelCaseToUppercaseColumnNamingStrategy_ for compatibility with table created by jdbc-connector
-    hibernate.physical_naming_strategy: org.radarbase.datadashboard.backend.domain.model.CamelCaseToUppercaseColumnNamingStrategy
+    hibernate.physical_naming_strategy: org.radarbase.datadashboard.backend.domain.hibernate.CamelCaseToUppercaseColumnNamingStrategy
