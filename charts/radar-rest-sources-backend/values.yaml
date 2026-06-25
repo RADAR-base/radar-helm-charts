@@ -369,6 +369,6 @@ restSourceClients:
     # -- Google OAuth2 client secret (from Google Cloud Console > APIs & Services > Credentials)
     clientSecret: Google-clientsecret
     # -- List of scopes of the data that should be collected from Google Health. See https://developers.google.com/health/guides/authorization
-    scope: https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly https://www.googleapis.com/auth/googlehealth.sleep.readonly https://www.googleapis.com/auth/googlehealth.profile.readonly https://www.googleapis.com/auth/googlehealth.irn.readonly https://www.googleapis.com/auth/googlehealth.ecg.readonly https://www.googleapis.com/auth/googlehealth.settings.readonly https://www.googleapis.com/auth/googlehealth.location.readonly
+    scope: https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly https://www.googleapis.com/auth/googlehealth.sleep.readonly https://www.googleapis.com/auth/googlehealth.irn.readonly https://www.googleapis.com/auth/googlehealth.ecg.readonly https://www.googleapis.com/auth/googlehealth.settings.readonly https://www.googleapis.com/auth/googlehealth.location.readonly
     # -- OAuth version to use: OAUTH2 for standard OAuth2 flow with PKCE
     oauthVersion: OAUTH2
