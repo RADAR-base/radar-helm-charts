@@ -112,6 +112,7 @@ data:
         {{- range .Values.googlehealth.enabledDataTypes }}
           - {{ . }}
         {{- end }}
+        exerciseTcxEnabled: {{ .Values.googlehealth.exerciseTcxEnabled }}
         backfill:
           enabled: {{ .Values.googlehealth.backfill.enabled }}
           redis:

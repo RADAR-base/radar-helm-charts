@@ -152,10 +152,12 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | googlehealth.subscriptionReconcileEnabled | bool | `true` | Whether Push Endpoint reconciles per-user subscriptions: create for authorized users, delete for deregistered ones. Must be false if subscriptionCreatePolicy is AUTOMATIC. |
 | googlehealth.subscriptionReconcileIntervalMinutes | int | `5` | Interval in minutes between subscription reconcile passes. |
 | googlehealth.subscriptionReconcileMaxDeletesPerPass | int | `50` | Safety cap: skip deletion and alarm if a single reconcile pass would delete more subscriptions than this (0 disables the cap). |
-| googlehealth.triggerDataTypes | list | `["steps","sleep","exercise","daily-resting-heart-rate","heart-rate","daily-sleep-temperature-derivations"]` | Data types Google will send PINGs for. Must be a subset of enabledDataTypes. |
-| googlehealth.enabledDataTypes | list | `["steps","heart-rate","heart-rate-variability","oxygen-saturation","total-calories","daily-resting-heart-rate","respiratory-rate-sleep-summary","daily-sleep-temperature-derivations","sleep","exercise"]` | All data types the Push Endpoint will ingest. Types in this list but not in triggerDataTypes are caught up opportunistically from each PING. |
+| googlehealth.triggerDataTypes | list | `["steps","sleep","exercise","daily-resting-heart-rate","heart-rate","daily-sleep-temperature-derivations","heart-rate-variability","total-calories","respiratory-rate-sleep-summary"]` | Data types Google will send PINGs for. Must be a subset of enabledDataTypes. |
+| googlehealth.enabledDataTypes | list | `["steps","heart-rate","heart-rate-variability","oxygen-saturation","total-calories","daily-resting-heart-rate","respiratory-rate-sleep-summary","daily-sleep-temperature-derivations","sleep","exercise","electrocardiogram","irregular-rhythm-notification"]` | All data types the Push Endpoint will ingest. Types in this list but not in triggerDataTypes are caught up opportunistically from each PING. |
+| googlehealth.exerciseTcxEnabled | bool | `true` | Whether to fetch and produce TCX (Training Center XML) data for exercise sessions |
 | googlehealth.backfill.enabled | bool | `true` | Whether to enable Google Health historical backfill loop |
 | googlehealth.backfill.maxThreads | int | `4` | Number of concurrent backfill worker threads |
+| googlehealth.backfill.maxBackfillPeriod | string | `"P730D"` | Maximum period to backfill in ISO-8601 duration format (e.g. P730D for 2 years) |
 | googlehealth.backfill.chunkSizeDays | int | `7` | Size of each backfill chunk in days |
 | googlehealth.backfill.iterationIntervalMinutes | int | `10` | Interval in minutes between backfill iterations |
 | redis.url | string | `"redis://radar-redis-replication-master:6379"` | The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties. |

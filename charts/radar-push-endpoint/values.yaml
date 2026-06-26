@@ -404,6 +404,9 @@ googlehealth:
     - daily-resting-heart-rate
     - heart-rate
     - daily-sleep-temperature-derivations
+    - heart-rate-variability
+    - total-calories
+    - respiratory-rate-sleep-summary
   # -- All data types the Push Endpoint will ingest. Types in this list but not in triggerDataTypes are caught up opportunistically from each PING.
   enabledDataTypes:
     - steps
@@ -416,11 +419,17 @@ googlehealth:
     - daily-sleep-temperature-derivations
     - sleep
     - exercise
+    - electrocardiogram
+    - irregular-rhythm-notification
+  # -- Whether to fetch and produce TCX (Training Center XML) data for exercise sessions
+  exerciseTcxEnabled: true
   backfill:
     # -- Whether to enable Google Health historical backfill loop
     enabled: true
     # -- Number of concurrent backfill worker threads
     maxThreads: 4
+    # -- Maximum period to backfill in ISO-8601 duration format (e.g. P730D for 2 years)
+    maxBackfillPeriod: "P730D"
     # -- Size of each backfill chunk in days
     chunkSizeDays: 7
     # -- Interval in minutes between backfill iterations
