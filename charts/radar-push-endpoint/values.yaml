@@ -405,7 +405,6 @@ googlehealth:
     - heart-rate
     - daily-sleep-temperature-derivations
     - heart-rate-variability
-    - total-calories
     - respiratory-rate-sleep-summary
   # -- All data types the Push Endpoint will ingest. Types in this list but not in triggerDataTypes are caught up opportunistically from each PING.
   enabledDataTypes:
