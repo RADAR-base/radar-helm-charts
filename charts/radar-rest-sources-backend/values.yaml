@@ -357,7 +357,7 @@ restSourceClients:
 
   google:
     # -- set to true, if Google Health client should be used
-    enable: false
+    enable: true
     # -- Type of the data sources
     sourceType: GoogleHealth
     # -- Authorization endpoint for Google authentication and authorization

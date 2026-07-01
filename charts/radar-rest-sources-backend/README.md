@@ -131,7 +131,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.oura.clientSecret | string | `"Oura-clientsecret"` | Oura client secret |
 | restSourceClients.oura.scope | string | `"daily session heartrate workout tag personal email spo2 ring_configuration"` | List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication |
 | restSourceClients.oura.oauthVersion | string | `"OAUTH2"` | OAuth version to use: OAUTH2 for standard OAuth2 flow |
-| restSourceClients.google.enable | bool | `false` | set to true, if Google Health client should be used |
+| restSourceClients.google.enable | bool | `true` | set to true, if Google Health client should be used |
 | restSourceClients.google.sourceType | string | `"GoogleHealth"` | Type of the data sources |
 | restSourceClients.google.authorizationEndpoint | string | `"https://accounts.google.com/o/oauth2/v2/auth"` | Authorization endpoint for Google authentication and authorization |
 | restSourceClients.google.tokenEndpoint | string | `"https://oauth2.googleapis.com/token"` | Token endpoint to request access-token from Google |
