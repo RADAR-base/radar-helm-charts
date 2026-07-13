@@ -103,6 +103,53 @@ ingress:
     # -- Name of the secret that contains TLS certificates
     secretName: radar-base-tls
 
+gatewayAPI:
+  # -- Enable Gateway API HTTPRoute resource (alternative to ingress). Opt-in:
+  # requires the Gateway API CRDs and a Gateway controller to be installed.
+  enabled: false
+  # -- Annotations to add to the HTTPRoute
+  annotations: {}
+  # -- Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared
+  # resource and must be created separately (not by this chart).
+  parentRef:
+    # -- Name of the Gateway
+    name: radar-base
+    # -- Namespace of the Gateway (defaults to the release namespace when empty)
+    namespace: ""
+  # -- Hostnames the HTTPRoutes accept requests for (must intersect the Gateway
+  # listener hostnames). String values support Helm templating (tpl); defaults to
+  # serverName so deployments override it the same way as ingress.hosts.
+  hostnames:
+    - "{{ .Values.serverName }}"
+  # -- HTTPS listener on the Gateway that the main route attaches to
+  https:
+    # -- Listener port (empty attaches to all matching listeners)
+    port: 443
+    # -- Listener sectionName on the Gateway (optional)
+    sectionName: ""
+  # -- Path match type (PathPrefix, Exact or RegularExpression)
+  pathType: PathPrefix
+  # -- Path to match within the URL structure
+  path: /kafka
+  # -- Additional HTTPRoute filters (e.g. URLRewrite, RequestHeaderModifier)
+  # @default -- check values.yaml
+  filters: []
+    # - type: URLRewrite
+    #   urlRewrite:
+    #     path:
+    #       type: ReplacePrefixMatch
+    #       replacePrefixMatch: /kafka
+  # -- HTTP->HTTPS redirect route (equivalent to nginx force-TLS behaviour)
+  httpsRedirect:
+    # -- Enable a second HTTPRoute that 301-redirects HTTP traffic to HTTPS
+    enabled: true
+    # -- HTTP listener port on the Gateway to attach the redirect to
+    port: 80
+    # -- Listener sectionName on the Gateway (optional)
+    sectionName: ""
+    # -- Redirect HTTP status code
+    statusCode: 301
+
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

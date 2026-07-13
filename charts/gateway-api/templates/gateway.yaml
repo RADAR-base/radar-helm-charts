@@ -1,0 +1,19 @@
+{{- if .Values.gateway.enabled -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if or .Values.gateway.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.gateway.annotations .Values.commonAnnotations ) "context" . ) }}
+    {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  gatewayClassName: {{ .Values.gateway.gatewayClassName }}
+  {{- with .Values.gateway.infrastructure }}
+  infrastructure: {{- include "common.tplvalues.render" ( dict "value" . "context" $ ) | nindent 4 }}
+  {{- end }}
+  listeners: {{- include "common.tplvalues.render" ( dict "value" .Values.gateway.listeners "context" $ ) | nindent 4 }}
+{{- end -}}

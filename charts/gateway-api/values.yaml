@@ -1,0 +1,58 @@
+# Default values for gateway-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- String to fully override the Gateway name. Keep this in sync with the
+# `gatewayAPI.parentRef.name` used by services that attach to this Gateway.
+fullnameOverride: radar-base
+# -- String to partially override the Gateway name
+nameOverride: ""
+# -- String to fully override common.names.namespace
+namespaceOverride: ""
+
+# -- Resolvable server name for the Gateway listeners. Defaults to localhost;
+# deployments override this per-environment (same value as ingress server_name).
+# Referenced via tpl in gateway.listeners below.
+serverName: localhost
+
+# -- Labels to add to all resources
+commonLabels: {}
+# -- Annotations to add to all resources
+commonAnnotations: {}
+
+gateway:
+  # -- Enable the shared Gateway resource
+  enabled: true
+  # -- GatewayClass that implements this Gateway (must exist in the cluster)
+  gatewayClassName: nginx
+  # -- Annotations to add to the Gateway (string values support Helm templating)
+  annotations: {}
+  # -- Gateway infrastructure. With NGINX Gateway Fabric these annotations/labels
+  # are propagated onto the generated nginx data-plane Service, which is where the
+  # AWS NLB is created. Set the NLB subnet/EIP here. Reuse the existing subnet, but
+  # use a NEW EIP while nginx-ingress is still running (an EIP can only attach to
+  # one NLB at a time).
+  # @default -- {} (see example below)
+  infrastructure: {}
+    # annotations:
+    #   service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    #   service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-0976b8e78648206de
+    #   service.beta.kubernetes.io/aws-load-balancer-eip-allocations: eipalloc-<NEW>
+  # -- Listeners exposed by the Gateway. Rendered as-is; string values support
+  # Helm templating (tpl), so hostnames can reference other values.
+  # @default -- an HTTP (:80) and HTTPS (:443) listener, see values.yaml
+  listeners:
+    - name: http
+      hostname: "{{ .Values.serverName }}"
+      port: 80
+      protocol: HTTP
+    - name: https
+      hostname: "{{ .Values.serverName }}"
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            group: ""
+            name: radar-base-tls
