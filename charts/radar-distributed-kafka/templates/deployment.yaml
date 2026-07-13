@@ -43,13 +43,18 @@ spec:
             - |
               PLUGIN_DIR={{ default "/opt/connect-plugins" $root.Values.pluginInstallation.pluginPath | quote }}
               mkdir -p "${PLUGIN_DIR}"
-              {{- if $root.Values.pluginInstallation.confluentHubPackages }}
               {{- range $pkg := $root.Values.pluginInstallation.confluentHubPackages }}
               echo "Installing connector plugin {{ $pkg }}"
               confluent-hub install --no-prompt --component-dir "${PLUGIN_DIR}" {{ $pkg | quote }}
               {{- end }}
-              {{- else }}
-              echo "No pluginInstallation.confluentHubPackages configured; skipping installation"
+              {{- range $url := $root.Values.pluginInstallation.archiveUrls }}
+              echo "Downloading connector plugin archive {{ $url }}"
+              curl -fsSL --retry 3 -o /tmp/plugin-archive.zip {{ $url | quote }}
+              python3 -m zipfile -e /tmp/plugin-archive.zip "${PLUGIN_DIR}/"
+              rm -f /tmp/plugin-archive.zip
+              {{- end }}
+              {{- if and (empty $root.Values.pluginInstallation.confluentHubPackages) (empty $root.Values.pluginInstallation.archiveUrls) }}
+              echo "No connector plugins configured; skipping installation"
               {{- end }}
           volumeMounts:
             - name: plugin-dir

@@ -24,6 +24,12 @@ data:
     {{- $_ := set $config "connector.class" $configData.connectorClass -}}
     {{- $_ := set $config "key.converter" $configData.keyConverter -}}
     {{- $_ := set $config "value.converter" $configData.valueConverter -}}
+    {{- if and (contains "Avro" $configData.keyConverter) (not (hasKey $config "key.converter.schema.registry.url")) -}}
+    {{- $_ := set $config "key.converter.schema.registry.url" $root.Values.schemaRegistry.url -}}
+    {{- end -}}
+    {{- if and (contains "Avro" $configData.valueConverter) (not (hasKey $config "value.converter.schema.registry.url")) -}}
+    {{- $_ := set $config "value.converter.schema.registry.url" $root.Values.schemaRegistry.url -}}
+    {{- end -}}
     {{- $_ := set $config "tasks.max" ($configData.maxTasks | toString) -}}
     {{- $config | toPrettyJson | nindent 4 }}
   register-connector.sh: |

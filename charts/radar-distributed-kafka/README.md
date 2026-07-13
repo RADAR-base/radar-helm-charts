@@ -55,7 +55,8 @@ A Helm chart for running distributed Kafka source connectors with per-source con
 | extraEnvVars | list | `[]` | Additional environment variables to pass to all connectors |
 | pluginInstallation.enabled | bool | `true` | Install connector plugins at startup using an init container. |
 | pluginInstallation.pluginPath | string | `"/opt/connect-plugins"` | Directory where plugins are installed and then mounted into the Kafka Connect container. |
-| pluginInstallation.confluentHubPackages | list | `["confluentinc/kafka-connect-s3:latest","confluentinc/kafka-connect-s3-source:latest"]` | Confluent Hub package coordinates to install (for example `confluentinc/kafka-connect-s3-source:latest`). |
+| pluginInstallation.confluentHubPackages | list | `[]` | Confluent Hub package coordinates to install (for example `confluentinc/kafka-connect-s3:latest`). |
+| pluginInstallation.archiveUrls | list | `["https://github.com/lensesio/stream-reactor/releases/download/11.7.8/kafka-connect-aws-s3-11.7.8.zip"]` | URLs of connector plugin zip archives to download and extract into the plugin directory (for example Lenses stream-reactor releases from GitHub). |
 | pluginInstallation.initContainerImage | object | `{}` | Optional image override for the plugin installer init container. By default the chart uses the same image as `image`. |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
@@ -93,5 +94,5 @@ A Helm chart for running distributed Kafka source connectors with per-source con
 | connectors[0].type | string | `"s3-source"` | Source connector type. Currently only `s3` is supported. |
 | connectors[0].topic | string | `"connect_s3_default"` | Kafka topic where this source writes records. |
 | connectors[0].maxTasks | int | `1` | Number of tasks for this connector |
-| connectors[0].connectorClass | string | `"io.confluent.connect.s3.source.S3SourceConnector"` | Extra connector properties specific to this connector entry |
+| connectors[0].connectorClass | string | `"io.lenses.streamreactor.connect.aws.s3.source.S3SourceConnector"` | Extra connector properties specific to this connector entry |
 | networkpolicy | object | `{"egress":[{"to":[{"ipBlock":{"cidr":"0.0.0.0/0","except":["10.0.0.0/8","192.168.0.0/16","172.16.0.0/12"]}}]},{"ports":[{"port":53,"protocol":"UDP"},{"port":53,"protocol":"TCP"}],"to":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"{{ .Release.Namespace }}"}},"podSelector":{"matchLabels":{"app.kubernetes.io/name":"radar-kafka-kafka-bootstrap"}}},{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"{{ .Release.Namespace }}"}},"podSelector":{"matchLabels":{"app.kubernetes.io/name":"radar-kafka-schema-registry"}}},{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"kube-system"}},"podSelector":{"matchLabels":{"k8s-app":"kube-dns"}}}]}],"policyTypes":["Egress"]}` | Network policy defines who can access this application and who this application has access to |

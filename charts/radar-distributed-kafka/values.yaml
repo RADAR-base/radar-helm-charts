@@ -64,10 +64,12 @@ pluginInstallation:
   enabled: true
   # -- Directory where plugins are installed and then mounted into the Kafka Connect container.
   pluginPath: /opt/connect-plugins
-  # -- Confluent Hub package coordinates to install (for example `confluentinc/kafka-connect-s3-source:latest`).
-  confluentHubPackages:
-    - confluentinc/kafka-connect-s3:latest
-    - confluentinc/kafka-connect-s3-source:latest
+  # -- Confluent Hub package coordinates to install (for example `confluentinc/kafka-connect-s3:latest`).
+  confluentHubPackages: []
+  # -- URLs of connector plugin zip archives to download and extract into the plugin directory
+  # (for example Lenses stream-reactor releases from GitHub).
+  archiveUrls:
+    - https://github.com/lensesio/stream-reactor/releases/download/11.7.8/kafka-connect-aws-s3-11.7.8.zip
   # -- Optional image override for the plugin installer init container.
   # By default the chart uses the same image as `image`.
   initContainerImage: {}
@@ -179,22 +181,17 @@ connectors:
     # -- Number of tasks for this connector
     maxTasks: 1
     # -- Extra connector properties specific to this connector entry
-    connectorClass: io.confluent.connect.s3.source.S3SourceConnector
+    connectorClass: io.lenses.streamreactor.connect.aws.s3.source.S3SourceConnector
     keyConverter: org.apache.kafka.connect.storage.StringConverter
     valueConverter: io.confluent.connect.avro.AvroConverter
     tasksMax: 1
     properties:
-      "mode": "GENERIC"
-      "topics.dir": "input"
-      "topic.regex.list": "s3-source-topic:input/.*\\.avro$"
-      "format.class": "io.confluent.connect.s3.format.avro.AvroFormat"
-      "s3.bucket.name": "s3-source-bucket"
-      "s3.region": "us-east-1"
-      "store.url": ""
-      "s3.path.style.access.enabled": ""
-      "aws.access.key.id": ""
-      "aws.secret.access.key": ""
-      "confluent.topic.bootstrap.servers": "radar-kafka-kafka-bootstrap:9094"
+      "connect.s3.kcql": "INSERT INTO connect_s3_default SELECT * FROM s3-source-bucket:input STOREAS `AVRO`"
+      "connect.s3.aws.auth.mode": "Credentials"
+      "connect.s3.aws.access.key": ""
+      "connect.s3.aws.secret.key": ""
+      "connect.s3.aws.region": "us-east-1"
+      "connect.s3.source.extension.includes": "avro"
 
 # -- Network policy defines who can access this application and who this application has access to
 networkpolicy:
