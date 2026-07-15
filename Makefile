@@ -115,6 +115,12 @@ update-mongodb:
 	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-nginx-gateway-fabric:
+	@echo "Updating nginx-gateway-fabric"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm pull -d external --untar oci://ghcr.io/nginx/charts/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-nifi-cluster:
 	@echo "Updating NiFi Cluster"
 	@rm -rf external/$(patsubst update-%,%,$@)

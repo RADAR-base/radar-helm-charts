@@ -1,0 +1,21 @@
+Gateway API CRDs installed — standard channel, bundle-version v1.5.1.
+
+Installed CustomResourceDefinitions (group gateway.networking.k8s.io):
+  - gatewayclasses
+  - gateways
+  - httproutes
+  - grpcroutes
+  - tlsroutes
+  - referencegrants
+  - backendtlspolicies
+  - listenersets
+
+Verify:
+  kubectl get crd | grep gateway.networking.k8s.io
+
+These are managed by this Helm release. `helm uninstall` will DELETE them, and
+deleting a CRD deletes every custom resource of that type cluster-wide — remove
+Gateways/HTTPRoutes first.
+
+Install order: this chart -> a Gateway controller (nginx-gateway-fabric) ->
+gateway-api (the Gateway) -> services with HTTPRoutes.

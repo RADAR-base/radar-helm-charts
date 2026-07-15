@@ -58,6 +58,7 @@ jobs:
             external/fluent-bit
             external/graylog
             external/ingress-nginx
+            external/nginx-gateway-fabric
             external/strimzi-kafka-operator
             external/strimzi-registry-operator
             external/redis-operator

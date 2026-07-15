@@ -11,7 +11,9 @@ repos:
   hooks:
   - id: codespell
     args: [-L, "showIn"]
-    exclude: external/
+    # gateway-api-crds.yaml is vendored verbatim from kubernetes-sigs/gateway-api
+    # (contains the "NotIn" selector operator); do not lint upstream content.
+    exclude: '^(external/|charts/gateway-api-crds/templates/gateway-api-crds\.yaml$)'
 - repo: https://github.com/thlorenz/doctoc
   rev: v2.2.0
   hooks:
@@ -29,7 +31,8 @@ repos:
   - id: check-yaml
     exclude: "charts|external"
   - id: check-added-large-files
-    exclude: external/
+    # gateway-api-crds.yaml is the vendored upstream CRD bundle (~1 MB, standard channel).
+    exclude: '^(external/|charts/gateway-api-crds/templates/gateway-api-crds\.yaml$)'
   - id: check-executables-have-shebangs
     exclude: external/
   - id: check-shebang-scripts-are-executable
