@@ -4,7 +4,7 @@
 
 ![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
-A Helm chart for a shared Gateway API Gateway (and listeners) used as the cluster entrypoint. Services attach to it via HTTPRoutes. Requires the Gateway API CRDs and a Gateway controller (e.g. ingress-nginx) to be installed.
+A Helm chart for a shared Gateway API Gateway (and listeners) used as the cluster entrypoint. Services attach to it via HTTPRoutes. Requires the Gateway API CRDs and a Gateway controller (e.g. NGINX Gateway Fabric) to be installed.
 
 ## Maintainers
 
@@ -35,7 +35,7 @@ A Helm chart for a shared Gateway API Gateway (and listeners) used as the cluste
 | gateway.enabled | bool | `true` | Enable the shared Gateway resource |
 | gateway.gatewayClassName | string | `"nginx"` | GatewayClass that implements this Gateway (must exist in the cluster) |
 | gateway.annotations | object | `{}` | Annotations to add to the Gateway (string values support Helm templating) |
-| gateway.infrastructure | object | {} (see example below) | Gateway infrastructure. With NGINX Gateway Fabric these annotations/labels are propagated onto the generated nginx data-plane Service, which is where the AWS NLB is created. Set the NLB subnet/EIP here. Reuse the existing subnet, but use a NEW EIP while nginx-ingress is still running (an EIP can only attach to one NLB at a time). |
+| gateway.infrastructure | object | {} (see examples below) | Gateway infrastructure, passed through to the Gateway controller. These annotations and labels are propagated onto the data-plane Service the controller creates (with NGINX Gateway Fabric, the generated nginx Service), which is what a platform's load-balancer controller reads its configuration from. Set whatever your platform expects; the examples below cover the common cloud providers and bare-metal clusters. Consult your provider's Service annotation reference for the full list. |
 | gateway.listeners | list | an HTTP (:80) and HTTPS (:443) listener, see values.yaml | Listeners exposed by the Gateway. Rendered as-is; string values support Helm templating (tpl), so hostnames can reference other values. |
 
 ----------------------------------------------
