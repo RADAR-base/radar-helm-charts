@@ -3,7 +3,7 @@
 # radar-appserver
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-appserver)](https://artifacthub.io/packages/helm/radar-base/radar-appserver)
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.7](https://img.shields.io/badge/AppVersion-2.4.7-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.4.7](https://img.shields.io/badge/AppVersion-2.4.7-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Appserver
 
@@ -37,7 +37,7 @@ A Helm chart for the backend application of RADAR-base Appserver
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| replicaCount | int | `2` | Number of radar-appserver replicas to deploy |
+| replicaCount | int | `1` | Number of radar-appserver replicas to deploy |
 | image.registry | string | `"ghcr.io"` | Image registry |
 | image.repository | string | `"radar-base/radar-appserver/radar-appserver"` | Image repository |
 | image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
@@ -69,14 +69,14 @@ A Helm chart for the backend application of RADAR-base Appserver
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
 | livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
-| livenessProbe.timeoutSeconds | int | `5` | Timeout seconds for livenessProbe |
+| livenessProbe.timeoutSeconds | int | `10` | Timeout seconds for livenessProbe |
 | livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
 | readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
+| readinessProbe.initialDelaySeconds | int | `30` | Initial delay seconds for readinessProbe |
 | readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
-| readinessProbe.timeoutSeconds | int | `5` | Timeout seconds for readinessProbe |
+| readinessProbe.timeoutSeconds | int | `10` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
@@ -85,7 +85,7 @@ A Helm chart for the backend application of RADAR-base Appserver
 | startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
 | startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
 | startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
-| startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
+| startupProbe.failureThreshold | int | `10` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
 | postgres.host | string | `nil` | host name of the postgres db |
 | postgres.port | string | `nil` | port of the postgres db |
@@ -95,16 +95,20 @@ A Helm chart for the backend application of RADAR-base Appserver
 | postgres.userSecret | object | `{"key":"username","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database user (disables use of 'user' value). |
 | postgres.password | string | `nil` | password of the postgres user |
 | postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
-| postgres.hibernateDialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` |  |
-| postgres.jdbcDriver | string | `"org.postgresql.Driver"` |  |
+| postgres.hibernateDialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` | Hibernate SQL dialect used to talk to the database |
+| postgres.jdbcDriver | string | `"org.postgresql.Driver"` | JDBC driver class used to connect to the database |
 | postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
-| postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
-| protocol.githubProtocolRepo | string | `"RADAR-base/RADAR-aRMT-protocols"` |  |
-| protocol.protocolFileName | string | `"protocol.json"` |  |
-| protocol.githubBranch | string | `"master"` |  |
+| postgres.ssl.keystorepassword | string | `"keystorepassword"` | Password for the SSL keystore used for the postgres connection |
+| server.basePath | string | `"/appserver/"` | Base path (subpath) under which the appserver API and health endpoint are served |
+| server.requestTimeout | int | `30` | Request timeout in seconds for the appserver |
+| server.isJmxEnabled | bool | `false` | Enable JMX monitoring for the appserver |
+| eventBus.numThreads | int | `3` | Number of worker threads for the appserver event bus |
+| protocol.githubProtocolRepo | string | `"RADAR-base/RADAR-aRMT-protocols"` | GitHub repository containing the aRMT protocols |
+| protocol.protocolFileName | string | `"protocol.json"` | Name of the protocol file within the protocol repository |
+| protocol.githubBranch | string | `"master"` | Branch of the protocol repository to read the protocol from |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
-| serverName | string | `"localhost"` |  |
+| serverName | string | `"localhost"` | Server host name used by the appserver |
 | managementportal_resource_name | string | `"res_AppServer"` | radar_is.yml config for token verification |
 | public_key_endpoints | list | `["http://management-portal:8080/managementportal/oauth/token_key"]` | List of OAuth2 authentication server public key endpoints for token verification |
 | google_application_credentials | string | `""` | Google credentials containing FCM server key, etc. |

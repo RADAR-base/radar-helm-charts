@@ -10,8 +10,8 @@ metadata:
 data:
   healthcheck.sh: |
     #!/bin/sh
-    STATUS=$(curl -s --max-time 4 localhost:8080/actuator/health)
-    if ! (echo "$STATUS" | grep -Fq 'db":{"status":"UP'); then
+    STATUS=$(curl -s --max-time 4 localhost:{{ .Values.service.port }}{{ .Values.server.basePath }}health)
+    if ! (echo "$STATUS" | grep -Fq '"db":{"status":"UP'); then
       exit 1
     fi
   appserver.yml: |
@@ -19,19 +19,11 @@ data:
     resourceConfig: org.radarbase.appserver.jersey.enhancer.factory.AppserverResourceEnhancerFactory
 
     server:
-      baseUri: http://0.0.0.0:{{ .Values.service.port }}/appserver/
-      requestTimeout: 30
-      isJmxEnabled: false
+      baseUri: http://0.0.0.0:{{ .Values.service.port }}{{ .Values.server.basePath }}
+      requestTimeout: {{ .Values.server.requestTimeout }}
+      isJmxEnabled: {{ .Values.server.isJmxEnabled }}
 
-    auth:
-      managementPortalUrl: {{ .Values.managementportal_url }}
-      resourceName: res_AppServer
-
-    #db:
-    #  additionalProperties:
-    #    jakarta.persistence.schema-generation.database.action: drop-and-create
     # GitHub configuration.
-
     github:
       # GitHub Cache configuration.
       cache:
@@ -45,7 +37,6 @@ data:
       client:
         maxContentLength: 1000000
         timeoutSec: 10
-        githubToken:
 
     # Quartz Scheduler Configuration.
     quartz:
@@ -67,11 +58,6 @@ data:
       # Misfire threshold in milliseconds.
       misfireThreshold: 60000
 
-    protocol:
-      githubProtocolRepo: RADAR-base/RADAR-aRMT-protocols
-      protocolFileName: protocol.json
-      githubBranch: master
-
     email:
       enabled: false
 
@@ -80,4 +66,4 @@ data:
       credentials:
 
     eventBus:
-      numThreads: 3
+      numThreads: {{ .Values.eventBus.numThreads }}

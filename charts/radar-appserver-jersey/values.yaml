@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # -- Number of radar-appserver replicas to deploy
-replicaCount: 2
+replicaCount: 1
 
 image:
   # -- Image registry
@@ -117,7 +117,7 @@ livenessProbe:
   # -- Period seconds for livenessProbe
   periodSeconds: 30
   # -- Timeout seconds for livenessProbe
-  timeoutSeconds: 5
+  timeoutSeconds: 10
   # -- Success threshold for livenessProbe
   successThreshold: 1
   # -- Failure threshold for livenessProbe
@@ -130,11 +130,11 @@ readinessProbe:
   # -- Enable readinessProbe
   enabled: true
   # -- Initial delay seconds for readinessProbe
-  initialDelaySeconds: 5
+  initialDelaySeconds: 30
   # -- Period seconds for readinessProbe
   periodSeconds: 30
   # -- Timeout seconds for readinessProbe
-  timeoutSeconds: 5
+  timeoutSeconds: 10
   # -- Success threshold for readinessProbe
   successThreshold: 1
   # -- Failure threshold for readinessProbe
@@ -155,7 +155,7 @@ startupProbe:
   # -- Success threshold for startupProbe
   successThreshold: 1
   # -- Failure threshold for startupProbe
-  failureThreshold: 30
+  failureThreshold: 10
 
 # -- Network policy defines who can access this application and who this applications has access to
 # @default -- check `values.yaml`
@@ -233,7 +233,9 @@ postgres:
     name: radar-cloudnative-postgresql-appserver
     key: password
 
+  # -- Hibernate SQL dialect used to talk to the database
   hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+  # -- JDBC driver class used to connect to the database
   jdbcDriver: org.postgresql.Driver
 
   # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
@@ -242,16 +244,34 @@ postgres:
   ssl:
     # -- set to true of the connecting to postgres using SSL
     enabled: false
+    # -- Password for the SSL keystore used for the postgres connection
     keystorepassword: keystorepassword
 
+# Application server (radar-appserver-jersey) settings
+server:
+  # -- Base path (subpath) under which the appserver API and health endpoint are served
+  basePath: /appserver/
+  # -- Request timeout in seconds for the appserver
+  requestTimeout: 30
+  # -- Enable JMX monitoring for the appserver
+  isJmxEnabled: false
+
+eventBus:
+  # -- Number of worker threads for the appserver event bus
+  numThreads: 3
+
 protocol:
+  # -- GitHub repository containing the aRMT protocols
   githubProtocolRepo: RADAR-base/RADAR-aRMT-protocols
+  # -- Name of the protocol file within the protocol repository
   protocolFileName: protocol.json
+  # -- Branch of the protocol repository to read the protocol from
   githubBranch: master
 
 # -- URL of the Management Portal
 managementportal_url: http://management-portal:8080/managementportal
 
+# -- Server host name used by the appserver
 serverName: localhost
 
 # -- radar_is.yml config for token verification
