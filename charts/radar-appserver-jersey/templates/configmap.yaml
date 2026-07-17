@@ -57,6 +57,15 @@ data:
       # Options: 'supervisor-job' (supervises child jobs), 'coroutine-job' (no supervision).
       # Defaults to 'supervisor-job' if not provided.
       coroutineJob: supervisor-job
+      instanceName: quartzScheduler
+      # Number of worker threads for firing jobs.
+      threadCount: 5
+      # Prefix of the Quartz tables.
+      tablePrefix: QRTZ_
+      # JDBC delegate matching the database (PostgreSQL by default).
+      driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+      # Misfire threshold in milliseconds.
+      misfireThreshold: 60000
 
     protocol:
       githubProtocolRepo: RADAR-base/RADAR-aRMT-protocols
