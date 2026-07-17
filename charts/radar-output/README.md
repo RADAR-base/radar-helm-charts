@@ -3,7 +3,7 @@
 # radar-output
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-output)](https://artifacthub.io/packages/helm/radar-base/radar-output)
 
-![Version: 1.2.7](https://img.shields.io/badge/Version-1.2.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.5](https://img.shields.io/badge/AppVersion-3.0.5-informational?style=flat-square)
+![Version: 1.2.10](https://img.shields.io/badge/Version-1.2.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.6](https://img.shields.io/badge/AppVersion-3.0.6-informational?style=flat-square)
 
 A Helm chart for RADAR-base output restructure service. This application reads data from intermediate storage and restructure the data into project-> subject-id-> data topic -> data split per hour. This service offers few options to choose the source and target of the pipeline.
 
@@ -24,6 +24,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 * Kubernetes 1.28+
 * Kubectl 1.28+
 * Helm 3.1.0+
+* [metrics-server](https://github.com/kubernetes-sigs/metrics-server) is required in the cluster when HPA is enabled (`hpa.enabled=true`)
 
 ## Requirements
 
@@ -107,12 +108,20 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | paths.input | string | `"topics"` | Relative path to intermediate storage root to browse for data |
 | paths.output | string | `"output"` | Relative path to output storage to write data |
 | paths.factory | string | `"org.radarbase.output.path.FormattedPathFactory"` | Output path construction factory |
+| paths.path.format | string | `"${projectId}/${userId}/${topic}/${filename}"` | Output path format |
 | paths.properties | object | `{}` | Additional properties. For details see https://github.com/RADAR-base/radar-output-restructure/blob/master/restructure.yml |
 | topics | object | `{"questionnaire_response":{"pathProperties":{"format":"${projectId}/${userId}/${topic}/${value:name}/${filename}","plugins":"fixed value"}}}` | Individual topic configuration |
 | topics.questionnaire_response.pathProperties.format | string | `"${projectId}/${userId}/${topic}/${value:name}/${filename}"` | Alternative path output of the questionnaire_response topic |
 | topics.questionnaire_response.pathProperties.plugins | string | `"fixed value"` | Alternative path plugins of the questionnaire_response topic |
 | deduplication.enable | bool | `true` | Whether to enable deduplication |
 | compression.type | string | `"gzip"` | Compression type to use for output files. Can be one of: gzip, zip, none |
+| podDisruptionBudget.enabled | bool | `false` | Enable Pod Disruption Budget |
+| podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |
+| podDisruptionBudget.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable during disruptions |
+| hpa.enabled | bool | `false` | Enable HPA |
+| hpa.maxReplicas | int | `5` | Maximum number of replicas |
+| hpa.targetCPU | int | `80` | Target CPU utilization percentage |
+| hpa.targetMemory | string | `nil` | Target Memory utilization percentage |
 
 ## Cost Considerations
 

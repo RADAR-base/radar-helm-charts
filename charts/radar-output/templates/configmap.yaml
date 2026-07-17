@@ -140,9 +140,22 @@ data:
       output: "{{ .Values.paths.output }}"
       # Output path construction factory
       factory: {{ .Values.paths.factory }}
-      # Additional properties
+
+      # Global path formatter config (FormattedPathFactory)
+      path:
+        format: {{ .Values.paths.path.format | quote }}
+        {{- if .Values.paths.path.plugins }}
+        plugins: {{ .Values.paths.path.plugins | quote }}
+        {{- end }}
+        {{- if .Values.paths.path.properties }}
+        properties:
+{{ toYaml .Values.paths.path.properties | indent 10 }}
+        {{- end }}
+      # Optional: legacy/general plugin properties merged into path.properties by the app
+      {{- if .Values.paths.properties }}
       properties:
-        {{ .Values.paths.properties | toYaml | indent 8 | trim }}
+{{ toYaml .Values.paths.properties | indent 8 }}
+      {{- end }}
 
     # Individual topic configuration
     {{- if .Values.topics }}

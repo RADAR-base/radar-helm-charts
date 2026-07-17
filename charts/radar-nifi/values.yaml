@@ -86,6 +86,29 @@ nifi-cluster:
         create: true
     nifiClusterTaskSpec:
       retryDurationMinutes: 10
+    initContainers:
+      - name: download-postgres-driver
+        image: curlimages/curl:8.12.1
+        command:
+          - sh
+          - -c
+          - |
+            curl -L -o /jdbc/postgresql-42.7.5.jar \
+              https://jdbc.postgresql.org/download/postgresql-42.7.5.jar
+        volumeMounts:
+          - name: jdbc-drivers
+            mountPath: /jdbc
+      - name: download-postgres-nar
+        image: curlimages/curl:8.12.1
+        command:
+          - sh
+          - -c
+          - |
+            curl -L -o /extensions/nifi-dbcp-service-nar-2.5.0.nar \
+              https://repo1.maven.org/maven2/org/apache/nifi/nifi-dbcp-service-nar/2.5.0/nifi-dbcp-service-nar-2.5.0.nar
+        volumeMounts:
+          - name: extensions
+            mountPath: /extensions
     nodeConfigGroups:
       default_group:
         fsGroup: 1337
@@ -141,6 +164,13 @@ nifi-cluster:
               resources:
                 requests:
                   storage: 5Gi
+        externalVolumeConfigs:
+          - name: jdbc-drivers
+            mountPath: /opt/nifi/jdbc
+            emptyDir: {}
+          - name: extensions
+            mountPath: /opt/nifi/extensions
+            emptyDir: {}
     nodes:
       - id: 0
         labels:

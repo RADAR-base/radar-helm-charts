@@ -13,10 +13,12 @@ spec:
     - controller
     - broker
   {{- with .Values.kafka.nodePool.jvmOptions }}
-  jvmOptions: {{ toYaml . | nindent 4 }}
+  jvmOptions:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .Values.kafka.nodePool.resources }}
-  resources: {{ toYaml . | nindent 4 }}
+  resources:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   storage:
     type: jbod

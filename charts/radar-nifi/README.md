@@ -2,7 +2,7 @@
 
 # radar-nifi
 
-![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -56,6 +56,20 @@ A Helm chart for Kubernetes
 | nifi-cluster.cluster.listenersConfig.sslSecrets.tlsSecretName | string | `"radar-nifi-tls"` |  |
 | nifi-cluster.cluster.listenersConfig.sslSecrets.create | bool | `true` |  |
 | nifi-cluster.cluster.nifiClusterTaskSpec.retryDurationMinutes | int | `10` |  |
+| nifi-cluster.cluster.initContainers[0].name | string | `"download-postgres-driver"` |  |
+| nifi-cluster.cluster.initContainers[0].image | string | `"curlimages/curl:8.12.1"` |  |
+| nifi-cluster.cluster.initContainers[0].command[0] | string | `"sh"` |  |
+| nifi-cluster.cluster.initContainers[0].command[1] | string | `"-c"` |  |
+| nifi-cluster.cluster.initContainers[0].command[2] | string | `"curl -L -o /jdbc/postgresql-42.7.5.jar \\\n  https://jdbc.postgresql.org/download/postgresql-42.7.5.jar\n"` |  |
+| nifi-cluster.cluster.initContainers[0].volumeMounts[0].name | string | `"jdbc-drivers"` |  |
+| nifi-cluster.cluster.initContainers[0].volumeMounts[0].mountPath | string | `"/jdbc"` |  |
+| nifi-cluster.cluster.initContainers[1].name | string | `"download-postgres-nar"` |  |
+| nifi-cluster.cluster.initContainers[1].image | string | `"curlimages/curl:8.12.1"` |  |
+| nifi-cluster.cluster.initContainers[1].command[0] | string | `"sh"` |  |
+| nifi-cluster.cluster.initContainers[1].command[1] | string | `"-c"` |  |
+| nifi-cluster.cluster.initContainers[1].command[2] | string | `"curl -L -o /extensions/nifi-dbcp-service-nar-2.5.0.nar \\\n  https://repo1.maven.org/maven2/org/apache/nifi/nifi-dbcp-service-nar/2.5.0/nifi-dbcp-service-nar-2.5.0.nar\n"` |  |
+| nifi-cluster.cluster.initContainers[1].volumeMounts[0].name | string | `"extensions"` |  |
+| nifi-cluster.cluster.initContainers[1].volumeMounts[0].mountPath | string | `"/extensions"` |  |
 | nifi-cluster.cluster.nodeConfigGroups.default_group.fsGroup | int | `1337` |  |
 | nifi-cluster.cluster.nodeConfigGroups.default_group.isNode | bool | `true` |  |
 | nifi-cluster.cluster.nodeConfigGroups.default_group.resourcesRequirements.limits.cpu | int | `2` |  |
@@ -83,6 +97,12 @@ A Helm chart for Kubernetes
 | nifi-cluster.cluster.nodeConfigGroups.default_group.storageConfigs[4].name | string | `"data"` |  |
 | nifi-cluster.cluster.nodeConfigGroups.default_group.storageConfigs[4].pvcSpec.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | nifi-cluster.cluster.nodeConfigGroups.default_group.storageConfigs[4].pvcSpec.resources.requests.storage | string | `"5Gi"` |  |
+| nifi-cluster.cluster.nodeConfigGroups.default_group.externalVolumeConfigs[0].name | string | `"jdbc-drivers"` |  |
+| nifi-cluster.cluster.nodeConfigGroups.default_group.externalVolumeConfigs[0].mountPath | string | `"/opt/nifi/jdbc"` |  |
+| nifi-cluster.cluster.nodeConfigGroups.default_group.externalVolumeConfigs[0].emptyDir | object | `{}` |  |
+| nifi-cluster.cluster.nodeConfigGroups.default_group.externalVolumeConfigs[1].name | string | `"extensions"` |  |
+| nifi-cluster.cluster.nodeConfigGroups.default_group.externalVolumeConfigs[1].mountPath | string | `"/opt/nifi/extensions"` |  |
+| nifi-cluster.cluster.nodeConfigGroups.default_group.externalVolumeConfigs[1].emptyDir | object | `{}` |  |
 | nifi-cluster.cluster.nodes[0].id | int | `0` |  |
 | nifi-cluster.cluster.nodes[0].labels.nifi_node_group | string | `"default_group"` |  |
 | nifi-cluster.cluster.nodes[0].nodeConfigGroup | string | `"default_group"` |  |

@@ -10,6 +10,11 @@
 * PV provisioner support in the underlying infrastructure
 {{- end }}
 
+{{ define "common.prerequisiteswithhpa" -}}
+{{ template "common.prerequisites" . }}
+* [metrics-server](https://github.com/kubernetes-sigs/metrics-server) is required in the cluster when HPA is enabled (`hpa.enabled=true`)
+{{- end }}
+
 {{ define "common.header" -}}
 {{ template "chart.header" . }}[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/{{ template "chart.name" . }})](https://artifacthub.io/packages/helm/radar-base/{{ template "chart.name" . }})
 {{- end }}
