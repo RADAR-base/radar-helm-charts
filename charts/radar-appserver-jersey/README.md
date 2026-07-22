@@ -110,7 +110,7 @@ A Helm chart for the backend application of RADAR-base Appserver
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
 | serverName | string | `"localhost"` | Server host name used by the appserver |
 | managementportal_resource_name | string | `"res_AppServer"` | radar_is.yml config for token verification |
-| public_key_endpoints | list | `["http://management-portal:8080/managementportal/oauth/token_key"]` | List of OAuth2 authentication server public key endpoints for token verification |
+| public_key_endpoints | list | `["http://hydra-public:4444/.well-known/jwks.json","http://management-portal:8080/managementportal/oauth/token_key"]` | List of OAuth2 authentication server public key endpoints for token verification |
 | google_application_credentials | string | `""` | Google credentials containing FCM server key, etc. |
 | github_client_token | string | `""` | Github client token which is used for authenticating requests |
 | smtp.enabled | bool | `false` | set to true, if sending of notifications via email should be enabled. |
