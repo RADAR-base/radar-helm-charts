@@ -3,7 +3,7 @@
 # radar-hydra
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-hydra)](https://artifacthub.io/packages/helm/radar-base/radar-hydra)
 
-![Version: 0.3.3](https://img.shields.io/badge/Version-0.3.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.2.0](https://img.shields.io/badge/AppVersion-v2.2.0-informational?style=flat-square)
+![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.2.0](https://img.shields.io/badge/AppVersion-v2.2.0-informational?style=flat-square)
 
 A ORY Hydra Helm chart for RADAR-base. ORY Hydra is a cloud native Identity and User Management system.
 
@@ -107,7 +107,6 @@ Consult the [documentation](https://artifacthub.io/packages/helm/ory/hydra) of t
 | oauth_clients.aRMT.tokenEndpointAuthMethod | string | `"none"` |  |
 | oauth_clients.aRMT.redirectUris[0] | string | `"{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/study/connect/armt"` |  |
 | oauth_clients.aRMT.redirectUris[1] | string | `"org.phidatalab.radar-armt:/"` |  |
-| oauth_clients.aRMT.redirectUris[2] | string | `"org.phidatalab.radar_armt:/"` |  |
 | oauth_clients.SEP.enable | bool | `false` |  |
 | oauth_clients.SEP.audience[0] | string | `"res_gateway"` |  |
 | oauth_clients.SEP.audience[1] | string | `"res_ManagementPortal"` |  |
