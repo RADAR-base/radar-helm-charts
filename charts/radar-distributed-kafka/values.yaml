@@ -192,6 +192,13 @@ connectors:
       "connect.s3.aws.secret.key": ""
       "connect.s3.aws.region": "us-east-1"
       "connect.s3.source.extension.includes": "avro"
+    # -- Optional source offsets to seed when this connector is first created, in the
+    # format accepted by the Connect `PATCH /connectors/<name>/offsets` API (a list of
+    # partition/offset maps; all values must be strings). When set, the connector is
+    # created in STOPPED state, the offsets are applied, and it is then resumed —
+    # letting a source start from a chosen watermark instead of the beginning.
+    # Only applied when the connector does not yet exist in the Connect cluster.
+    initialOffsets: []
 
 # -- Network policy defines who can access this application and who this application has access to
 networkpolicy:

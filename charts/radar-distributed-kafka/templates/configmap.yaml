@@ -3,6 +3,18 @@
 {{- if $configData.enabled }}
 {{- $connectorName := required (printf "connectors[%d].name is required" $i) $configData.name -}}
 {{- $connectorId := include "radar-distributed-kafka.connectorId" $connectorName }}
+{{- $config := deepCopy $configData.properties -}}
+{{- $_ := set $config "kafka.topic" $configData.topic -}}
+{{- $_ := set $config "connector.class" $configData.connectorClass -}}
+{{- $_ := set $config "key.converter" $configData.keyConverter -}}
+{{- $_ := set $config "value.converter" $configData.valueConverter -}}
+{{- if and (contains "Avro" $configData.keyConverter) (not (hasKey $config "key.converter.schema.registry.url")) -}}
+{{- $_ := set $config "key.converter.schema.registry.url" $root.Values.schemaRegistry.url -}}
+{{- end -}}
+{{- if and (contains "Avro" $configData.valueConverter) (not (hasKey $config "value.converter.schema.registry.url")) -}}
+{{- $_ := set $config "value.converter.schema.registry.url" $root.Values.schemaRegistry.url -}}
+{{- end -}}
+{{- $_ := set $config "tasks.max" ($configData.maxTasks | toString) }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -19,25 +31,20 @@ data:
     {{ $key }}:{{ $value }}
     {{- end }}
   connector.json: |-
-    {{- $config := deepCopy $configData.properties -}}
-    {{- $_ := set $config "kafka.topic" $configData.topic -}}
-    {{- $_ := set $config "connector.class" $configData.connectorClass -}}
-    {{- $_ := set $config "key.converter" $configData.keyConverter -}}
-    {{- $_ := set $config "value.converter" $configData.valueConverter -}}
-    {{- if and (contains "Avro" $configData.keyConverter) (not (hasKey $config "key.converter.schema.registry.url")) -}}
-    {{- $_ := set $config "key.converter.schema.registry.url" $root.Values.schemaRegistry.url -}}
-    {{- end -}}
-    {{- if and (contains "Avro" $configData.valueConverter) (not (hasKey $config "value.converter.schema.registry.url")) -}}
-    {{- $_ := set $config "value.converter.schema.registry.url" $root.Values.schemaRegistry.url -}}
-    {{- end -}}
-    {{- $_ := set $config "tasks.max" ($configData.maxTasks | toString) -}}
     {{- $config | toPrettyJson | nindent 4 }}
+  {{- if $configData.initialOffsets }}
+  connector-create.json: |-
+    {{- dict "name" $connectorName "config" $config "initial_state" "STOPPED" | toPrettyJson | nindent 4 }}
+  initial-offsets.json: |-
+    {{- dict "offsets" $configData.initialOffsets | toPrettyJson | nindent 4 }}
+  {{- end }}
   register-connector.sh: |
     #!/bin/sh
     set -eu
 
     CONNECTOR_NAME="$1"
     CONNECTOR_CONFIG_FILE="$2"
+    CONNECTOR_DIR=$(dirname "$CONNECTOR_CONFIG_FILE")
     MAX_WAIT_SECONDS="${CONNECTOR_REGISTRATION_MAX_WAIT_SECONDS:-120}"
     RETRY_INTERVAL_SECONDS="${CONNECTOR_REGISTRATION_RETRY_INTERVAL_SECONDS:-3}"
     CONNECT_URL="http://localhost:${CONNECT_REST_PORT:-8083}"
@@ -52,10 +59,54 @@ data:
       ELAPSED=$((ELAPSED + RETRY_INTERVAL_SECONDS))
     done
 
-    curl -sf -X PUT \
-      -H "Content-Type: application/json" \
-      --data "@${CONNECTOR_CONFIG_FILE}" \
-      "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/config" >/dev/null
+    retry() {
+      RETRY_N=0
+      until "$@"; do
+        RETRY_N=$((RETRY_N + 1))
+        if [ "$RETRY_N" -ge 5 ]; then
+          return 1
+        fi
+        sleep "$RETRY_INTERVAL_SECONDS"
+      done
+    }
+
+    update_config() {
+      retry curl -sf -X PUT \
+        -H "Content-Type: application/json" \
+        --data "@${CONNECTOR_CONFIG_FILE}" \
+        "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/config" >/dev/null
+    }
+
+    seed_offsets_and_resume() {
+      retry curl -sf -X PATCH \
+        -H "Content-Type: application/json" \
+        --data "@${CONNECTOR_DIR}/initial-offsets.json" \
+        "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/offsets" >/dev/null
+      retry curl -sf -X PUT "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/resume" >/dev/null
+    }
+
+    if [ -f "${CONNECTOR_DIR}/initial-offsets.json" ]; then
+      if curl -sf "${CONNECT_URL}/connectors/${CONNECTOR_NAME}" >/dev/null; then
+        update_config
+        # Recover from a partially applied first registration: connector left
+        # STOPPED with no offsets recorded means the watermark was never seeded.
+        # A connector with recorded offsets is never re-seeded or auto-resumed.
+        STATE=$(curl -sf "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/status" | tr -d ' ' | grep -o '"state":"[A-Z]*"' | head -1 || true)
+        OFFSET_COUNT=$(curl -sf "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/offsets" | grep -c '"partition"' || true)
+        if [ "$STATE" = '"state":"STOPPED"' ] && [ "${OFFSET_COUNT:-1}" -eq 0 ]; then
+          seed_offsets_and_resume
+        fi
+      else
+        # First registration: create in STOPPED state, seed offsets, then start.
+        retry curl -sf -X POST \
+          -H "Content-Type: application/json" \
+          --data "@${CONNECTOR_DIR}/connector-create.json" \
+          "${CONNECT_URL}/connectors" >/dev/null
+        seed_offsets_and_resume
+      fi
+    else
+      update_config
+    fi
   healthcheck.sh: |
     #!/bin/sh
     CONNECTOR_NAME="$1"
