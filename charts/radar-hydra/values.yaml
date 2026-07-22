@@ -180,7 +180,6 @@ oauth_clients:
     redirectUris:
       - '{{ .Values.hydra.advertised_protocol }}://{{ .Values.hydra.server_name }}/study/connect/armt'
       - 'org.phidatalab.radar-armt:/'
-      - 'org.phidatalab.radar_armt:/'
 
   SEP:
     enable: false
