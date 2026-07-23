@@ -97,10 +97,12 @@ A Helm chart for the backend application of RADAR-base Appserver
 | postgres.passwordSecret | object | `{"key":"password","name":"radar-cloudnative-postgresql-appserver"}` | Kubernetes secret containing the database password (disables use of 'password' value). |
 | postgres.hibernateDialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` | Hibernate SQL dialect used to talk to the database |
 | postgres.jdbcDriver | string | `"org.postgresql.Driver"` | JDBC driver class used to connect to the database |
+| postgres.liquibase.enabled | bool | `true` | Enable Liquibase database migrations |
+| postgres.liquibase.changelogs | string | `"db/changelog/db.changelog-master.yaml"` | Path to the Liquibase changelog file |
 | postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` | Password for the SSL keystore used for the postgres connection |
-| server.basePath | string | `"/appserver/"` | Base path (subpath) under which the appserver API and health endpoint are served |
+| server.basePath | string | `"/"` | Base path (subpath) under which the appserver API and health endpoint are served |
 | server.requestTimeout | int | `30` | Request timeout in seconds for the appserver |
 | server.isJmxEnabled | bool | `false` | Enable JMX monitoring for the appserver |
 | eventBus.numThreads | int | `3` | Number of worker threads for the appserver event bus |

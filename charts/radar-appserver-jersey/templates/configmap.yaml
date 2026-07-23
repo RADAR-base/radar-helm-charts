@@ -58,6 +58,21 @@ data:
       # Misfire threshold in milliseconds.
       misfireThreshold: 60000
 
+    auth:
+      resourceName: {{ .Values.managementportal_resource_name }}
+      managementPortalUrl: {{ .Values.managementportal_url }}
+      {{- if .Values.public_key_endpoints }}
+      publicKeyUrls:
+      {{- range .Values.public_key_endpoints }}
+        - {{ . }}
+      {{- end }}
+      {{- end }}
+
+    db:
+      liquibase:
+        enabled: {{ .Values.postgres.liquibase.enabled }}
+        changelogs: {{ .Values.postgres.liquibase.changelogs }}
+
     email:
       enabled: false
 

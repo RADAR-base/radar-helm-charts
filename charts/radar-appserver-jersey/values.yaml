@@ -238,6 +238,12 @@ postgres:
   # -- JDBC driver class used to connect to the database
   jdbcDriver: org.postgresql.Driver
 
+  liquibase:
+    # -- Enable Liquibase database migrations
+    enabled: true
+    # -- Path to the Liquibase changelog file
+    changelogs: db/changelog/db.changelog-master.yaml
+
   # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
   # Ignored when using 'urlSecret'.
   connection_parameters: ""
@@ -250,7 +256,7 @@ postgres:
 # Application server (radar-appserver-jersey) settings
 server:
   # -- Base path (subpath) under which the appserver API and health endpoint are served
-  basePath: /appserver/
+  basePath: /
   # -- Request timeout in seconds for the appserver
   requestTimeout: 30
   # -- Enable JMX monitoring for the appserver
