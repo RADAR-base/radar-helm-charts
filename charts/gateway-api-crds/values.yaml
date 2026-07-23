@@ -1,6 +1,0 @@
-# gateway-api-crds has no configurable values: it is a passthrough chart that
-# vendors the upstream Gateway API CRDs (standard channel, v1.5.1) verbatim.
-#
-# Enable/disable the whole bundle at the release level (helmfile `installed:`),
-# not here. To change the CRD version or channel, re-vendor
-# templates/gateway-api-crds.yaml from upstream and bump Chart.yaml appVersion.
