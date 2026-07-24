@@ -4,7 +4,7 @@ description: A Helm chart for Kubecost cost analyzer. This chart is an overlay f
 name: kubecost
 version: 1.0.0
 sources:
-- https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/kubecost
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/external/kubecost
 - https://github.com/kubecost/cost-analyzer-helm-chart
 keywords:
   - kubecost

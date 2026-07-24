@@ -17,7 +17,7 @@ A Helm chart for Kubecost cost analyzer. This chart is an overlay for the offici
 
 ## Source Code
 
-* <https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/kubecost>
+* <https://github.com/RADAR-base/radar-helm-charts/tree/main/external/kubecost>
 * <https://github.com/kubecost/cost-analyzer-helm-chart>
 
 ## Requirements
