@@ -113,7 +113,7 @@ gatewayAPI:
   # resource and must be created separately (not by this chart).
   parentRef:
     # -- Name of the Gateway
-    name: radar-base
+    name: radar-base-k8s-gateway
     # -- Namespace of the Gateway (defaults to the release namespace when empty)
     namespace: ""
   # -- Hostnames the HTTPRoutes accept requests for (must intersect the Gateway

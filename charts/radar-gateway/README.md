@@ -66,8 +66,8 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | ingress.tls.secretName | string | `"radar-base-tls"` | Name of the secret that contains TLS certificates |
 | gatewayAPI.enabled | bool | `false` | Enable Gateway API HTTPRoute resource (alternative to ingress). Opt-in: requires the Gateway API CRDs and a Gateway controller to be installed. |
 | gatewayAPI.annotations | object | `{}` | Annotations to add to the HTTPRoute |
-| gatewayAPI.parentRef | object | `{"name":"radar-base","namespace":""}` | Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared resource and must be created separately (not by this chart). |
-| gatewayAPI.parentRef.name | string | `"radar-base"` | Name of the Gateway |
+| gatewayAPI.parentRef | object | `{"name":"radar-base-k8s-gateway","namespace":""}` | Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared resource and must be created separately (not by this chart). |
+| gatewayAPI.parentRef.name | string | `"radar-base-k8s-gateway"` | Name of the Gateway |
 | gatewayAPI.parentRef.namespace | string | `""` | Namespace of the Gateway (defaults to the release namespace when empty) |
 | gatewayAPI.hostnames | list | `["{{ .Values.serverName }}"]` | Hostnames the HTTPRoutes accept requests for (must intersect the Gateway listener hostnames). String values support Helm templating (tpl); defaults to serverName so deployments override it the same way as ingress.hosts. |
 | gatewayAPI.https | object | `{"port":443,"sectionName":""}` | HTTPS listener on the Gateway that the main route attaches to |

@@ -26,7 +26,7 @@ A Helm chart for a shared Gateway API Gateway (and listeners) used as the cluste
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| fullnameOverride | string | `"radar-base"` | String to fully override the Gateway name. Keep this in sync with the `gatewayAPI.parentRef.name` used by services that attach to this Gateway. |
+| fullnameOverride | string | `"radar-base-k8s-gateway"` | String to fully override the Gateway name. Keep this in sync with the `gatewayAPI.parentRef.name` used by services that attach to this Gateway. |
 | nameOverride | string | `""` | String to partially override the Gateway name |
 | namespaceOverride | string | `""` | String to fully override common.names.namespace |
 | serverName | string | `"localhost"` | Resolvable server name for the Gateway listeners. Defaults to localhost; deployments override this per-environment (same value as ingress server_name). Referenced via tpl in gateway.listeners below. |

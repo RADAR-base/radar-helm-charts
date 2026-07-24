@@ -4,7 +4,7 @@
 
 # -- String to fully override the Gateway name. Keep this in sync with the
 # `gatewayAPI.parentRef.name` used by services that attach to this Gateway.
-fullnameOverride: radar-base
+fullnameOverride: radar-base-k8s-gateway
 # -- String to partially override the Gateway name
 nameOverride: ""
 # -- String to fully override common.names.namespace
