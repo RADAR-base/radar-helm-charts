@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  healthcheck.sh: |
+    #!/bin/sh
+    STATUS=$(curl -s --max-time 4 localhost:{{ .Values.service.port }}{{ .Values.server.basePath }}health)
+    if ! (echo "$STATUS" | grep -Fq '"db":{"status":"UP'); then
+      exit 1
+    fi
+  appserver.yml: |
+    # Resource config class
+    resourceConfig: org.radarbase.appserver.jersey.enhancer.factory.AppserverResourceEnhancerFactory
+
+    server:
+      baseUri: http://0.0.0.0:{{ .Values.service.port }}{{ .Values.server.basePath }}
+      requestTimeout: {{ .Values.server.requestTimeout }}
+      isJmxEnabled: {{ .Values.server.isJmxEnabled }}
+
+    # GitHub configuration.
+    github:
+      # GitHub Cache configuration.
+      cache:
+        # Duration in seconds for which the cache is valid.
+        cacheDurationSec: 3600
+        # Duration in seconds after which the cache can be refreshed.
+        retryDurationSec: 60
+        # Maximum number of entries in the cache.
+        maxCacheSize: 10000
+      # GitHub HTTP Client configuration.
+      client:
+        maxContentLength: 1000000
+        timeoutSec: 10
+
+    # Quartz Scheduler Configuration.
+    quartz:
+      # Specifies the dispatcher for asynchronous operations.
+      # Options: 'io' (for I/O-bound tasks), 'default' (for CPU-bound tasks), 'unconfined' (uses calling thread).
+      # Defaults to 'unconfined' if not provided.
+      coroutineDispatcher: io
+      # Specifies the type of coroutine job.
+      # Options: 'supervisor-job' (supervises child jobs), 'coroutine-job' (no supervision).
+      # Defaults to 'supervisor-job' if not provided.
+      coroutineJob: supervisor-job
+      instanceName: quartzScheduler
+      # Number of worker threads for firing jobs.
+      threadCount: 5
+      # Prefix of the Quartz tables.
+      tablePrefix: QRTZ_
+      # JDBC delegate matching the database (PostgreSQL by default).
+      driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+      # Misfire threshold in milliseconds.
+      misfireThreshold: 60000
+
+    auth:
+      resourceName: {{ .Values.managementportal_resource_name }}
+      managementPortalUrl: {{ .Values.managementportal_url }}
+      {{- if .Values.public_key_endpoints }}
+      publicKeyUrls:
+      {{- range .Values.public_key_endpoints }}
+        - {{ . }}
+      {{- end }}
+      {{- end }}
+
+    db:
+      liquibase:
+        enabled: {{ .Values.postgres.liquibase.enabled }}
+        changelogs: {{ .Values.postgres.liquibase.changelogs }}
+
+    email:
+      enabled: false
+
+    fcm:
+      fcmsender: org.radarbase.appserver.jersey.fcm.downstream.AdminSdkFcmSender
+      credentials:
+
+    eventBus:
+      numThreads: {{ .Values.eventBus.numThreads }}
