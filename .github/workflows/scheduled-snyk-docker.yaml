@@ -57,6 +57,7 @@ jobs:
             external/cloudnativepg-operator
             external/fluent-bit
             external/graylog
+            external/headlamp
             external/ingress-nginx
             external/strimzi-kafka-operator
             external/strimzi-registry-operator

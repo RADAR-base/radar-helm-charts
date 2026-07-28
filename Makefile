@@ -66,6 +66,15 @@ update-graylog:
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
+# headlamp is a custom RADAR overlay of the upstream headlamp chart, so we do
+# not pull/replace the whole directory. Instead we refresh its vendored
+# headlamp dependency (updates external/headlamp/charts/*.tgz and Chart.lock).
+update-headlamp:
+	@echo "Updating headlamp"
+	@helm repo add headlamp https://kubernetes-sigs.github.io/headlamp/
+	@helm dependency update external/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-ingress-nginx:
 	@echo "Updating ingress-nginx"
 	@rm -rf external/$(patsubst update-%,%,$@)
