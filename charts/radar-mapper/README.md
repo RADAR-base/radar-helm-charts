@@ -12,7 +12,8 @@ A Helm chart for RADAR-base radar-mapper. Reads CDISC ODM XML files produced by 
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Pauline Conde | <mpgxvii@gmail.com> |  |
+| Pauline Conde | <pauline.conde@kcl.ac.uk> |  |
+| Yatharth Ranjan | <yatharth.ranjan@kcl.ac.uk> |  |
 
 ## Source Code
 
