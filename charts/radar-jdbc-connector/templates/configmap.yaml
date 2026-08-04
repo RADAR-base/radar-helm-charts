@@ -36,7 +36,7 @@ data:
 
     {{- with .Values.sink }}
     insert.mode = {{ .insertMode }}
-    # Topics that will be consumed
+    # Topics that will be consume`d
     topics = {{ .topics }}
     table.name.format = {{ .tableNameFormat }}
     auto.create = {{ .autoCreate }}
