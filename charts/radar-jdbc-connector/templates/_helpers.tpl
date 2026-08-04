@@ -117,7 +117,7 @@ Get the database url. Has to be created before the secret is created.
 {{- if $useCloudnative -}}
     {{- include "radar-jdbc-connector.cloudnativeDatabaseUrl" . -}}
 {{- else if .Values.jdbc.urlSecret.name -}}
-   {{- print (include "common.secrets.lookup" (dict "secret" .Values.jdbc.urlSecret.name "key" .Values.jdbc.urlSecret.key "defaultValue" "secret-not-found" "context" $)) }}
+   {{- b64dec (include "common.secrets.lookup" (dict "secret" .Values.jdbc.urlSecret.name "key" .Values.jdbc.urlSecret.key "defaultValue" "secret-not-found" "context" $)) }}
 {{- else -}}
     {{- .Values.jdbc.url -}}
 {{- end -}}
