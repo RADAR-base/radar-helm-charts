@@ -29,6 +29,9 @@ A Helm chart for Airflow used by RADAR-base
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| fernetKey | string | `""` |  |
+| jwtSecret | string | `""` |  |
+| apiSecretKey | string | `""` |  |
 | airflow.airflowHome | string | `"/opt/airflow"` |  |
 | airflow.defaultAirflowRepository | string | `"apache/airflow"` |  |
 | airflow.defaultAirflowTag | string | `"3.1.8"` |  |
@@ -53,17 +56,22 @@ A Helm chart for Airflow used by RADAR-base
 | airflow.env | list | `[]` |  |
 | airflow.volumes | list | `[]` |  |
 | airflow.volumeMounts | list | `[]` |  |
-| airflow.secret | list | `[]` |  |
+| airflow.secret[0].envName | string | `"AIRFLOW__API_AUTH__JWT_SECRET"` |  |
+| airflow.secret[0].secretName | string | `"airflow-jwt-secret"` |  |
+| airflow.secret[0].secretKey | string | `"jwt-secret"` |  |
 | airflow.enableBuiltInSecretEnvVars.AIRFLOW__CORE__FERNET_KEY | bool | `true` |  |
 | airflow.enableBuiltInSecretEnvVars.AIRFLOW__DATABASE__SQL_ALCHEMY_CONN | bool | `true` |  |
 | airflow.enableBuiltInSecretEnvVars.AIRFLOW_CONN_AIRFLOW_DB | bool | `true` |  |
 | airflow.enableBuiltInSecretEnvVars.AIRFLOW__API__SECRET_KEY | bool | `true` |  |
-| airflow.enableBuiltInSecretEnvVars.AIRFLOW__API_AUTH__JWT_SECRET | bool | `true` |  |
+| airflow.enableBuiltInSecretEnvVars.AIRFLOW__API_AUTH__JWT_SECRET | bool | `false` |  |
 | airflow.enableBuiltInSecretEnvVars.AIRFLOW__WEBSERVER__SECRET_KEY | bool | `true` |  |
 | airflow.enableBuiltInSecretEnvVars.AIRFLOW__CELERY__RESULT_BACKEND | bool | `true` |  |
 | airflow.enableBuiltInSecretEnvVars.AIRFLOW__CELERY__BROKER_URL | bool | `true` |  |
 | airflow.enableBuiltInSecretEnvVars.AIRFLOW__ELASTICSEARCH__HOST | bool | `true` |  |
 | airflow.enableBuiltInSecretEnvVars.AIRFLOW__OPENSEARCH__HOST | bool | `true` |  |
+| airflow.fernetKeySecretName | string | `"airflow-fernet-key"` |  |
+| airflow.jwtSecretName | string | `"airflow-jwt-secret"` |  |
+| airflow.apiSecretKeySecretName | string | `"airflow-api-secret-key"` |  |
 | airflow.data.metadataSecretName | string | `nil` |  |
 | airflow.data.resultBackendSecretName | string | `nil` |  |
 | airflow.data.brokerUrlSecretName | string | `nil` |  |
@@ -261,6 +269,7 @@ A Helm chart for Airflow used by RADAR-base
 | airflow.config.metrics.statsd_host | string | `"{{ printf \"%s-statsd\" (include \"airflow.fullname\" .) }}"` |  |
 | airflow.config.fab.enable_proxy_fix | string | `"True"` |  |
 | airflow.config.webserver.enable_proxy_fix | string | `"True"` |  |
+| airflow.config.webserver.log_request_clock_grace | string | `"300"` |  |
 | airflow.config.celery.flower_url_prefix | string | `"{{ ternary \"\" .Values.ingress.flower.path (eq .Values.ingress.flower.path \"/\") }}"` |  |
 | airflow.config.celery.worker_concurrency | int | `16` |  |
 | airflow.config.celery.sync_parallelism | string | `"{{ include \"cpu_count\" (((.Values.scheduler).resources).limits).cpu }}"` |  |

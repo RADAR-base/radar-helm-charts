@@ -1,3 +1,16 @@
+# Fernet key used to encrypt connections, variables and trigger kwargs in the metadata DB.
+# Leave empty to have the chart generate one on first install and reuse it thereafter; set it
+# to an explicit key (or a comma-separated "new,old" list) when recovering or rotating.
+fernetKey: ""
+
+# Secret used to sign the JWTs the api-server, workers and task pods authenticate with.
+# Leave empty to have the chart generate one on first install and reuse it thereafter.
+jwtSecret: ""
+
+# `[api] secret_key`: signs the task-log fetch tokens and the UI session cookies.
+# Leave empty to have the chart generate one on first install and reuse it thereafter.
+apiSecretKey: ""
+
 airflow:
   airflowHome: /opt/airflow
   defaultAirflowRepository: apache/airflow
@@ -58,7 +71,16 @@ airflow:
   volumeMounts: []
 
   # Secrets for all airflow containers
-  secret: []
+  secret:
+    # The subchart's built-in JWT env var only reaches the api-server and scheduler, so the
+    # worker log server and triggerer have no `[api_auth] jwt_secret` and reject every log
+    # request the api-server signs. Injecting it here covers *all* containers, including
+    # KubernetesExecutor task pods. Built-in injection is disabled below so api-server and
+    # scheduler do not end up with the env var twice.
+    # secretName must match `airflow.jwtSecretName` below (it is not templated).
+    - envName: AIRFLOW__API_AUTH__JWT_SECRET
+      secretName: airflow-jwt-secret
+      secretKey: jwt-secret
   # - envName: ""
   #   secretName: ""
   #   secretKey: ""
@@ -72,12 +94,29 @@ airflow:
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: true
     AIRFLOW_CONN_AIRFLOW_DB: true
     AIRFLOW__API__SECRET_KEY: true
-    AIRFLOW__API_AUTH__JWT_SECRET: true
+    # Injected for every container via `secret` above instead — see the comment there.
+    AIRFLOW__API_AUTH__JWT_SECRET: false
     AIRFLOW__WEBSERVER__SECRET_KEY: true
     AIRFLOW__CELERY__RESULT_BACKEND: true
     AIRFLOW__CELERY__BROKER_URL: true
     AIRFLOW__ELASTICSEARCH__HOST: true
     AIRFLOW__OPENSEARCH__HOST: true
+
+  # Name of the secret holding the Fernet key. Rendered by templates/fernet-key-secret.yaml,
+  # which preserves the existing key across upgrades — leaving this empty hands the key back
+  # to the subchart, which regenerates it on every upgrade.
+  fernetKeySecretName: airflow-fernet-key
+
+  # Name of the secret holding the JWT signing secret. Rendered by templates/jwt-secret.yaml,
+  # which preserves the existing value across upgrades — leaving this empty hands it back to
+  # the subchart, which regenerates it on every upgrade and breaks task log fetching.
+  jwtSecretName: airflow-jwt-secret
+
+  # Name of the secret holding `[api] secret_key`. Rendered by templates/api-secret-key-secret.yaml,
+  # which preserves the existing value across upgrades — leaving this empty hands it back to the
+  # subchart, which regenerates it on every upgrade and breaks task log fetching between any two
+  # components that rolled at different times.
+  apiSecretKeySecretName: airflow-api-secret-key
 
   data:
     # If secret names are provided, use those secrets
@@ -660,6 +699,11 @@ airflow:
     webserver:
       # For Airflow 2.X
       enable_proxy_fix: 'True'
+      # TTL *and* clock leeway of the JWT the api-server signs to fetch task logs from the
+      # worker log server. The upstream default of 30s assumes the log server answers within
+      # a second; a worker under memory pressure can take tens of seconds to respond on a cold
+      # request, and the token then arrives already expired (403, "Signature has expired").
+      log_request_clock_grace: '300'
     celery:
       flower_url_prefix: '{{ ternary "" .Values.ingress.flower.path (eq .Values.ingress.flower.path "/") }}'
       worker_concurrency: 16
