@@ -153,8 +153,9 @@ spec:
             name: {{ include "radar-rest-sources-backend.fullname" . }}
         {{- if .Values.googleHealth.enabled }}
         - name: google-service-account
-          configMap:
-            name: {{ include "radar-rest-sources-backend.fullname" . }}
+          secret:
+            secretName: {{ include "radar-rest-sources-backend.fullname" . }}-gha
+            defaultMode: 0444
         {{- end }}
         {{- if .Values.postgres.ssl.enabled }}
         - name: postgres-root-cert

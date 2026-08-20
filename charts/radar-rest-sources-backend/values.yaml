@@ -295,11 +295,12 @@ googleHealth:
     # -- Path the Google service-account JSON is mounted at inside the container. Also passed as
     # GOOGLE_HEALTH_SERVICE_ACCOUNT_PATH. Without a readable key, subscription management stays inactive.
     path: /etc/google/gha-service-account.json
-    # -- Inline service-account JSON, rendered into this chart's ConfigMap under the `ghaServiceAccountKey`
-    # key. Testing only — it ends up in plain text in the ConfigMap; move it to a Secret before this goes
-    # anywhere real. Defaults to `{}` so the key is always present and can be filled in with `kubectl edit
-    # cm <release>-radar-rest-sources-backend` (followed by `kubectl rollout restart`, since subPath mounts
-    # do not refresh in place).
+    # -- Inline service-account JSON, rendered into this chart's Secret (`<release>-radar-rest-sources-backend-gha`)
+    # under the `ghaServiceAccountKey` key. Pass it with `--set-file googleHealth.serviceAccount.key=<sa.json>`
+    # rather than pasting it into a values file. Defaults to `{}` so the key is always present and can be
+    # replaced later with `kubectl create secret generic <release>-radar-rest-sources-backend-gha
+    # --from-file=ghaServiceAccountKey=<sa.json> --dry-run=client -o yaml | kubectl apply -f -`, followed by
+    # `kubectl rollout restart`, since subPath mounts do not refresh in place.
     key: ""
   # -- Data types each per-user subscription subscribes to. MUST stay identical to
   # `googlehealth.triggerDataTypes` in the radar-push-endpoint chart, which configures the shared subscriber
