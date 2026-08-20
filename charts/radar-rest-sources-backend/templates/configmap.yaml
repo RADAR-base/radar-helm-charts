@@ -1,4 +1,19 @@
-{{- $restSourceClients := trim (include "radar-rest-sources-backend.enabledMapElementsAsList" .Values.restSourceClients) -}}
+{{/*
+Per-user Google Health webhook subscriptions are configured on the GoogleHealth client itself, so
+the .Values.googleHealth settings are folded into that client as its `subscription` block. The
+subscriber they hang off is registered by the Push Endpoint (radar-push-endpoint chart), which
+receives the webhooks; only the per-user subscriptions are created, deleted and reconciled here.
+*/}}
+{{- $clients := deepCopy .Values.restSourceClients -}}
+{{- if .Values.googleHealth.enabled -}}
+{{- $subscription := merge (dict "serviceAccountKeyPath" .Values.googleHealth.serviceAccount.path) (omit .Values.googleHealth "serviceAccount") -}}
+{{- range $id, $client := $clients -}}
+{{- if eq (toString $client.sourceType) "GoogleHealth" -}}
+{{- $_ := set $client "subscription" $subscription -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- $restSourceClients := trim (include "radar-rest-sources-backend.enabledMapElementsAsList" $clients) -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -53,3 +68,12 @@ data:
     redis:
         uri: {{ .Values.redis.uri }}
     {{- end }}
+{{- if .Values.googleHealth.enabled }}
+  # Google service-account JSON, mounted at {{ .Values.googleHealth.serviceAccount.path }}.
+  # Testing convenience: fill it in with `kubectl edit cm {{ include "radar-rest-sources-backend.fullname" . }}`
+  # and then `kubectl rollout restart deployment/{{ include "radar-rest-sources-backend.fullname" . }}` —
+  # subPath mounts do not pick up ConfigMap updates in place. Move this to a Secret before any real
+  # deployment.
+  ghaServiceAccountKey: |
+{{ .Values.googleHealth.serviceAccount.key | default "{}" | indent 4 }}
+{{- end }}

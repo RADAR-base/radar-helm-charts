@@ -273,6 +273,51 @@ postgres:
     enabled: false
     keystorepassword: keystorepassword
 
+# Per-user Google Health webhook subscriptions. The subscriber they hang off is registered by the
+# Push Endpoint (radar-push-endpoint chart), which receives the webhooks; only the per-user
+# subscriptions are created, deleted and reconciled here.
+googleHealth:
+  # -- Master switch for per-user subscription management, without having to unset the service account
+  enabled: true
+  # -- Base URL of the Google Health API
+  apiBaseUrl: "https://health.googleapis.com/v4"
+  # -- Google Cloud project that owns the Health API subscriber. Required when `googleHealth.enabled` is true.
+  googleCloudProjectId: ""
+  # -- Subscriber id the per-user subscriptions hang off. MUST match `googlehealth.subscriberId` in the
+  # radar-push-endpoint chart, which registers that subscriber.
+  subscriberId: "radar-pep"
+  # -- How often, in minutes, the background reconcile compares local state against Google's subscriptions
+  reconcileIntervalMinutes: 5
+  # -- If a single reconcile pass would delete more orphaned subscriptions than this, it skips deletion and
+  # warns instead. Zero or less disables the cap.
+  reconcileMaxDeletesPerPass: 50
+  serviceAccount:
+    # -- Path the Google service-account JSON is mounted at inside the container. Also passed as
+    # GOOGLE_HEALTH_SERVICE_ACCOUNT_PATH. Without a readable key, subscription management stays inactive.
+    path: /etc/google/gha-service-account.json
+    # -- Inline service-account JSON, rendered into this chart's ConfigMap under the `ghaServiceAccountKey`
+    # key. Testing only — it ends up in plain text in the ConfigMap; move it to a Secret before this goes
+    # anywhere real. Defaults to `{}` so the key is always present and can be filled in with `kubectl edit
+    # cm <release>-radar-rest-sources-backend` (followed by `kubectl rollout restart`, since subPath mounts
+    # do not refresh in place).
+    key: ""
+  # -- Data types each per-user subscription subscribes to. MUST stay identical to
+  # `googlehealth.triggerDataTypes` in the radar-push-endpoint chart, which configures the shared subscriber
+  # these subscriptions hang off — a type present here but not there never yields a webhook trigger. Only
+  # valid trigger types may be listed; anything else makes Google reject the create outright.
+  dataTypes:
+    - steps
+    - heart-rate
+    - heart-rate-variability
+    - daily-resting-heart-rate
+    - respiratory-rate-sleep-summary
+    - daily-sleep-temperature-derivations
+    - sleep
+    - exercise
+    - floors
+    - sedentary-period
+    - activity-level
+
 # Redis synchronization configuration
 redis:
   # -- URI of the redis database
