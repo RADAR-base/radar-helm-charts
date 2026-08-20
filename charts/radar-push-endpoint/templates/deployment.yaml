@@ -85,6 +85,10 @@ spec:
                 name: {{ .Values.secret.producer.jaas.name }}
                 key: {{ .Values.secret.producer.jaas.key }}
           {{- end }}
+          {{- if .Values.googlehealth.enabled }}
+          - name: GOOGLE_HEALTH_SERVICE_ACCOUNT_PATH
+            value: {{ .Values.googlehealth.serviceAccount.path | quote }}
+          {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -139,10 +143,20 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/radar-push-endpoint
+            {{- if .Values.googlehealth.enabled }}
+            - name: google-service-account
+              mountPath: {{ .Values.googlehealth.serviceAccount.path }}
+              subPath: ghaServiceAccountKey
+            {{- end }}
       volumes:
         - name: config
           configMap:
             name: {{ include "radar-push-endpoint.fullname" . }}
+        {{- if .Values.googlehealth.enabled }}
+        - name: google-service-account
+          configMap:
+            name: {{ include "radar-push-endpoint.fullname" . }}
+        {{- end }}
         - name: gateway-jmx-configmap
           configMap:
             name:  {{ include "radar-push-endpoint.fullname" . }}-jmx-configmap
