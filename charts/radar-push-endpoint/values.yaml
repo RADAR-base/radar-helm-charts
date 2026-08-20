@@ -404,11 +404,11 @@ googlehealth:
     # -- Path the Google service-account JSON is mounted at inside the container. Also passed as
     # GOOGLE_HEALTH_SERVICE_ACCOUNT_PATH. Without a readable key, subscriber registration does not run.
     path: /etc/google/gha-service-account.json
-    # -- Inline service-account JSON, rendered into this chart's ConfigMap under the `ghaServiceAccountKey`
-    # key. Testing only — it ends up in plain text in the ConfigMap; move it to a Secret before this goes
-    # anywhere real. Defaults to `{}` so the key is always present and can be filled in with `kubectl edit
-    # cm <release>-radar-push-endpoint` (followed by `kubectl rollout restart`, since subPath mounts do not
-    # refresh in place).
+    # -- Inline service-account JSON, rendered into this chart's Secret under the `ghaServiceAccountKey`
+    # key. Supply it with `helm upgrade --set-file googlehealth.serviceAccount.key=<sa.json>` rather than
+    # pasting it into values.yaml, so the credential never reaches git. Defaults to `{}` so the key always
+    # exists and can be replaced later by editing the Secret directly, followed by a `kubectl rollout
+    # restart` since subPath mounts do not refresh in place.
     key: ""
   # -- Data types the subscriber subscribes to, i.e. the ones that generate PINGs. MUST stay identical to
   # `googleHealth.dataTypes` in the radar-rest-sources-backend chart, which subscribes each user to the same

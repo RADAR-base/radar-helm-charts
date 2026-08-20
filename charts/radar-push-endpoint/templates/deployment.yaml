@@ -17,6 +17,9 @@ spec:
     metadata:
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if .Values.googlehealth.enabled }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+        {{- end }}
         kubectl.kubernetes.io/default-container: {{ .Chart.Name | quote }}
       labels:
         app.kubernetes.io/name: {{ include "radar-push-endpoint.name" . }}
@@ -154,8 +157,9 @@ spec:
             name: {{ include "radar-push-endpoint.fullname" . }}
         {{- if .Values.googlehealth.enabled }}
         - name: google-service-account
-          configMap:
-            name: {{ include "radar-push-endpoint.fullname" . }}
+          secret:
+            secretName: {{ include "radar-push-endpoint.fullname" . }}
+            defaultMode: 0444
         {{- end }}
         - name: gateway-jmx-configmap
           configMap:
