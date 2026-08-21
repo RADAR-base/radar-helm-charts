@@ -1,19 +1,4 @@
-{{/*
-Per-user Google Health webhook subscriptions are configured on the GoogleHealth client itself, so
-the .Values.googleHealth settings are folded into that client as its `subscription` block. The
-subscriber they hang off is registered by the Push Endpoint (radar-push-endpoint chart), which
-receives the webhooks; only the per-user subscriptions are created, deleted and reconciled here.
-*/}}
-{{- $clients := deepCopy .Values.restSourceClients -}}
-{{- if .Values.googleHealth.enabled -}}
-{{- $subscription := merge (dict "serviceAccountKeyPath" .Values.googleHealth.serviceAccount.path) (omit .Values.googleHealth "serviceAccount") -}}
-{{- range $id, $client := $clients -}}
-{{- if eq (toString $client.sourceType) "GoogleHealth" -}}
-{{- $_ := set $client "subscription" $subscription -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-{{- $restSourceClients := trim (include "radar-rest-sources-backend.enabledMapElementsAsList" $clients) -}}
+{{- $restSourceClients := trim (include "radar-rest-sources-backend.enabledMapElementsAsList" .Values.restSourceClients) -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -67,4 +52,25 @@ data:
     {{- if .Values.redis.uri }}
     redis:
         uri: {{ .Values.redis.uri }}
+    {{- end }}
+
+    {{- if .Values.googleHealth.enabled }}
+    # Per-user Google Health webhook subscriptions, keyed by the sourceType of the client they belong
+    # to. The subscriber they hang off is registered by the Push Endpoint (radar-push-endpoint chart),
+    # which receives the webhooks; only the per-user subscriptions are managed here.
+    restSourceClientSubscriptions:
+      GoogleHealth:
+        enabled: true
+        serviceAccountKeyPath: {{ .Values.googleHealth.serviceAccount.path | quote }}
+        apiBaseUrl: {{ .Values.googleHealth.apiBaseUrl }}
+        googleCloudProjectId: {{ .Values.googleHealth.googleCloudProjectId | quote }}
+        # MUST match the Push Endpoint subscriberId
+        subscriberId: {{ .Values.googleHealth.subscriberId }}
+        reconcileIntervalMinutes: {{ .Values.googleHealth.reconcileIntervalMinutes }}
+        reconcileMaxDeletesPerPass: {{ .Values.googleHealth.reconcileMaxDeletesPerPass }}
+        # MUST stay identical to the Push Endpoint's pushIntegration.googlehealth.triggerDataTypes.
+        dataTypes:
+          {{- range .Values.googleHealth.dataTypes }}
+          - {{ . }}
+          {{- end }}
     {{- end }}
