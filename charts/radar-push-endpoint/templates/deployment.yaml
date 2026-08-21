@@ -159,7 +159,6 @@ spec:
         - name: google-service-account
           secret:
             secretName: {{ include "radar-push-endpoint.fullname" . }}
-            defaultMode: 0444
         {{- end }}
         - name: gateway-jmx-configmap
           configMap:

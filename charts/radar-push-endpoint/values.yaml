@@ -79,10 +79,6 @@ ingress:
   # @default -- check values.yaml
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    # The application serves under /push/integrations/, so the public /push-endpoint prefix has to be
-    # rewritten onto it. Without this, every path below /push-endpoint (Garmin and Google Health alike)
-    # reaches the container unrewritten and 404s.
-    nginx.ingress.kubernetes.io/rewrite-target: /push/integrations/$1
     nginx.ingress.kubernetes.io/server-snippet: |
       location /push-endpoint/garmin {
         # set client body size to 20M #
@@ -97,8 +93,8 @@ ingress:
         allow 198.233.176.0/24;
         deny all;
       }
-  # -- Path within the url structure. Regex capture feeding `rewrite-target` above.
-  path: "/push-endpoint/?(.*)"
+  # -- Path within the url structure
+  path: "/push-endpoint"
   # -- Ingress Path type
   pathType: ImplementationSpecific
   # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
@@ -404,11 +400,7 @@ googlehealth:
     # -- Path the Google service-account JSON is mounted at inside the container. Also passed as
     # GOOGLE_HEALTH_SERVICE_ACCOUNT_PATH. Without a readable key, subscriber registration does not run.
     path: /etc/google/gha-service-account.json
-    # -- Inline service-account JSON, rendered into this chart's Secret under the `ghaServiceAccountKey`
-    # key. Supply it with `helm upgrade --set-file googlehealth.serviceAccount.key=<sa.json>` rather than
-    # pasting it into values.yaml, so the credential never reaches git. Defaults to `{}` so the key always
-    # exists and can be replaced later by editing the Secret directly, followed by a `kubectl rollout
-    # restart` since subPath mounts do not refresh in place.
+    # -- Inline service-account JSON, rendered into this chart's Secret under the `ghaServiceAccountKey` key.
     key: ""
   # -- Data types the subscriber subscribes to, i.e. the ones that generate PINGs. MUST stay identical to
   # `googleHealth.dataTypes` in the radar-rest-sources-backend chart, which subscribes each user to the same
