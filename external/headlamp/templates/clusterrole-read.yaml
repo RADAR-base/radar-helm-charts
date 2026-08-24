@@ -1,0 +1,48 @@
+{{- if .Values.clusterRead.create }}
+# Extra read-only cluster access for Headlamp, layered ON TOP of the built-in
+# 'view' ClusterRole that the subchart binds (headlamp.clusterRoleBinding).
+# 'view' covers namespaced resources read-only but omits cluster-scoped ones
+# (Nodes, PersistentVolumes) — and deliberately omits Secrets. This ClusterRole
+# restores read-only visibility of the cluster-scoped resources Headlamp needs
+# (Nodes/PVs/storage/metrics) WITHOUT granting any access to Secrets.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Values.clusterRead.name }}
+  labels:
+    app.kubernetes.io/name: headlamp
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+rules:
+  - apiGroups: [""]
+    resources: ["nodes", "persistentvolumes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses", "csidrivers", "csinodes", "volumeattachments"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["metrics.k8s.io"]
+    resources: ["nodes", "pods"]
+    verbs: ["get", "list", "watch"]
+  # Read-only visibility of RBAC objects (roles/bindings). Reveals the cluster's
+  # authorization structure but grants NO access to Secrets or their contents.
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Values.clusterRead.name }}
+  labels:
+    app.kubernetes.io/name: headlamp
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.clusterRead.name }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "headlamp-overlay.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

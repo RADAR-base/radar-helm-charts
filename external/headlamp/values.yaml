@@ -1,0 +1,62 @@
+# Headlamp overlay for RADAR-K8s environments.
+# This chart wraps the upstream Headlamp chart
+# (https://github.com/kubernetes-sigs/headlamp) and applies RADAR-specific
+# resource limits, a ClusterIP service, a hardened security context, and a
+# read-only RBAC posture.
+#
+# Values are prefixed with 'headlamp:' to pass them to the subchart dependency.
+headlamp:
+  # In-cluster access configuration
+  config:
+    inCluster: true
+    inClusterContextName: "main"
+
+  # Exposed as a ClusterIP service (no ingress); access via `kubectl port-forward`.
+  service:
+    type: ClusterIP
+    port: 80
+
+  # RBAC: bind Headlamp's ServiceAccount to the built-in 'view' ClusterRole for a
+  # read-only, view-only UI. 'view' is a default Kubernetes cluster role present
+  # on every cluster (read-only, and excludes Secrets), so this chart is
+  # self-contained and needs no externally provisioned role. To grant write
+  # access, point clusterRoleName at a broader role (e.g. 'edit' or 'cluster-admin').
+  # NOTE: 'view' omits cluster-scoped resources (Nodes, PersistentVolumes); those
+  # are granted read-only by the extra 'clusterRead' role below (secret-safe).
+  clusterRoleBinding:
+    create: true
+    clusterRoleName: view
+
+  # CPU/Memory requests and limits. Headlamp is a lightweight single-binary UI.
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+  # Hardened container security context.
+  # readOnlyRootFilesystem triggers the chart's automatic writable /tmp emptyDir.
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 100
+    runAsGroup: 101
+    privileged: false
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
+
+# Extra read-only cluster access, layered on top of the 'view' ClusterRole bound
+# above. 'view' omits cluster-scoped resources (Nodes, PersistentVolumes) and
+# Secrets. This grants read-only access to the cluster-scoped resources Headlamp
+# needs (Nodes/PVs/storage/metrics) while STILL keeping Secrets hidden. Disable
+# (create: false) to fall back to plain 'view' (no Node/PV visibility).
+clusterRead:
+  create: true
+  # Name of the extra read-only ClusterRole and its binding.
+  name: headlamp-cluster-read

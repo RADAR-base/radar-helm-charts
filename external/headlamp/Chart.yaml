@@ -1,0 +1,30 @@
+apiVersion: v2
+appVersion: "0.43.0"
+description: A Helm chart for Headlamp, a lightweight and extensible web UI for Kubernetes. This chart is an overlay for the official headlamp chart with custom resource limits configured for RADAR-K8s environments.
+name: headlamp
+version: 1.0.0
+sources:
+- https://github.com/RADAR-base/radar-helm-charts/tree/main/external/headlamp
+- https://github.com/kubernetes-sigs/headlamp
+keywords:
+  - headlamp
+  - dashboard
+  - monitoring
+  - kubernetes
+  - radar-base
+  - ui
+annotations:
+  artifacthub.io/license: Apache-2.0
+deprecated: false
+type: application
+home: "https://headlamp.dev"
+maintainers:
+  - email: mani.thumu@kcl.ac.uk
+    name: Mani Thumu
+  - email: yatharth.ranjan@kcl.ac.uk
+    name: Yatharth Ranjan
+    url: https://www.kcl.ac.uk/people/yatharth-ranjan
+dependencies:
+- name: headlamp
+  repository: https://kubernetes-sigs.github.io/headlamp/
+  version: 0.43.0
