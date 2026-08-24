@@ -82,6 +82,15 @@ update-ingress-nginx:
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
+# kubecost is a custom RADAR overlay of the upstream cost-analyzer chart, so we do
+# not pull/replace the whole directory. Instead we refresh its vendored
+# cost-analyzer dependency (updates external/kubecost/charts/*.tgz and Chart.lock).
+update-kubecost:
+	@echo "Updating kubecost"
+	@helm repo add cost-analyzer https://kubecost.github.io/cost-analyzer/
+	@helm dependency update external/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-kratos:
 	@echo "Updating kratos"
 	@rm -rf external/$(patsubst update-%,%,$@)
