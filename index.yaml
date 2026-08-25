@@ -6579,6 +6579,29 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/mongodb-11.1.10/mongodb-11.1.10.tgz
     version: 11.1.10
+  nginx-gateway-fabric:
+  - apiVersion: v2
+    appVersion: 2.6.6
+    created: "2026-08-25T14:42:00.153629035Z"
+    description: NGINX Gateway Fabric
+    digest: b5267372d17b950c915180594ad11444c3051088facd27dc9efef3b49a65debe
+    home: https://github.com/nginx/nginx-gateway-fabric
+    icon: https://raw.githubusercontent.com/nginx/nginx-gateway-fabric/main/charts/nginx-gateway-fabric/chart-icon.png
+    keywords:
+    - kubernetes
+    - gateway
+    - nginx
+    kubeVersion: '>= 1.31.0-0'
+    maintainers:
+    - email: kubernetes@nginx.com
+      name: nginx/nginx-gateway-fabric
+    name: nginx-gateway-fabric
+    sources:
+    - https://github.com/nginx/nginx-gateway-fabric/tree/main/charts/nginx-gateway-fabric
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/nginx-gateway-fabric-2.6.6/nginx-gateway-fabric-2.6.6.tgz
+    version: 2.6.6
   nifi:
   - apiVersion: v2
     appVersion: 1.23.2
@@ -24475,4 +24498,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2026-08-25T14:41:55.146264948Z"
+generated: "2026-08-25T14:42:00.154560872Z"
