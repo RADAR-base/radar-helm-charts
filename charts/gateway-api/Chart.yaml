@@ -1,0 +1,17 @@
+apiVersion: v2
+appVersion: "1.0"
+description: A Helm chart for a shared Gateway API Gateway (and listeners) used as the cluster entrypoint. Services attach to it via HTTPRoutes. Requires the Gateway API CRDs and a Gateway controller (e.g. NGINX Gateway Fabric) to be installed.
+name: gateway-api
+version: 0.1.0
+sources: ["https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/gateway-api"]
+deprecated: false
+type: application
+maintainers:
+  - email: mani.thumu@kcl.ac.uk
+    name: Mani Thumu
+dependencies:
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  tags:
+  - bitnami-common
+  version: 2.x.x

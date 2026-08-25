@@ -1,0 +1,74 @@
+# Default values for gateway-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- String to fully override the Gateway name. Keep this in sync with the
+# `gatewayAPI.parentRef.name` used by services that attach to this Gateway.
+fullnameOverride: radar-base-k8s-gateway
+# -- String to partially override the Gateway name
+nameOverride: ""
+# -- String to fully override common.names.namespace
+namespaceOverride: ""
+
+# -- Resolvable server name for the Gateway listeners. Defaults to localhost;
+# deployments override this per-environment (same value as ingress server_name).
+# Referenced via tpl in gateway.listeners below.
+serverName: localhost
+
+# -- Labels to add to all resources
+commonLabels: {}
+# -- Annotations to add to all resources
+commonAnnotations: {}
+
+gateway:
+  # -- Enable the shared Gateway resource
+  enabled: true
+  # -- GatewayClass that implements this Gateway (must exist in the cluster)
+  gatewayClassName: nginx
+  # -- Annotations to add to the Gateway (string values support Helm templating)
+  annotations: {}
+  # -- Gateway infrastructure, passed through to the Gateway controller. These
+  # annotations and labels are propagated onto the data-plane Service the
+  # controller creates (with NGINX Gateway Fabric, the generated nginx Service),
+  # which is what a platform's load-balancer controller reads its configuration
+  # from. Set whatever your platform expects; the examples below cover the common
+  # cloud providers and bare-metal clusters. Consult your provider's Service
+  # annotation reference for the full list.
+  # @default -- {} (see examples below)
+  infrastructure: {}
+    # annotations:
+    #   # AWS, NLB via the AWS Load Balancer Controller:
+    #   service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    #   service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+    #   service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-xxxxxxxxxxxx
+    #   service.beta.kubernetes.io/aws-load-balancer-eip-allocations: eipalloc-xxxxxxxxxxxx
+    #
+    #   # GCP / GKE:
+    #   cloud.google.com/l4-rbs: enabled
+    #   networking.gke.io/load-balancer-type: Internal
+    #
+    #   # Azure / ASK:
+    #   service.beta.kubernetes.io/azure-load-balancer-resource-group: <RESOURCE_GROUP>
+    #   service.beta.kubernetes.io/azure-pip-name: <PUBLIC_IP_NAME>
+    #
+    #   # Bare metal / on-premise, via MetalLB:
+    #   metallb.io/address-pool: <POOL_NAME>
+    #   metallb.io/loadBalancerIPs: <IP>
+  # -- Listeners exposed by the Gateway. Rendered as-is; string values support
+  # Helm templating (tpl), so hostnames can reference other values.
+  # @default -- an HTTP (:80) and HTTPS (:443) listener, see values.yaml
+  listeners:
+    - name: http
+      hostname: "{{ .Values.serverName }}"
+      port: 80
+      protocol: HTTP
+    - name: https
+      hostname: "{{ .Values.serverName }}"
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            group: ""
+            name: radar-base-tls
