@@ -64,7 +64,7 @@ A Helm chart for RADAR-base gateway. REST Gateway to Kafka, for incoming partici
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` | Name of the secret that contains TLS certificates |
-| gatewayAPI.enabled | bool | `false` | Enable Gateway API HTTPRoute resource (alternative to ingress). Opt-in: requires the Gateway API CRDs and a Gateway controller to be installed. |
+| gatewayAPI.enabled | bool | `true` | Enable Gateway API HTTPRoute resource (alternative to ingress). Opt-in: requires the Gateway API CRDs and a Gateway controller to be installed. |
 | gatewayAPI.annotations | object | `{}` | Annotations to add to the HTTPRoute |
 | gatewayAPI.parentRef | object | `{"name":"radar-base-k8s-gateway","namespace":""}` | Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared resource and must be created separately (not by this chart). |
 | gatewayAPI.parentRef.name | string | `"radar-base-k8s-gateway"` | Name of the Gateway |
