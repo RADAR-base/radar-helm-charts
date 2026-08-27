@@ -70,7 +70,7 @@ spec:
             value: "managementportal"
           - name: APP_SLEEP
             value: "10"   # gives time for the database to boot before the application
-          {{- if .Values.googleHealth.enabled }}
+          {{- if .Values.restSourceClientSubscriptions.googlehealth.enabled }}
           - name: GOOGLE_HEALTH_SERVICE_ACCOUNT_PATH
             value: /etc/google/gha-service-account.json
           {{- end }}
@@ -138,7 +138,7 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/radar-rest-sources-backend/
-            {{- if .Values.googleHealth.enabled }}
+            {{- if .Values.restSourceClientSubscriptions.googlehealth.enabled }}
             - name: google-service-account
               mountPath: /etc/google/gha-service-account.json
               subPath: ghaServiceAccountKey
@@ -151,10 +151,10 @@ spec:
         - name: config
           configMap:
             name: {{ include "radar-rest-sources-backend.fullname" . }}
-        {{- if .Values.googleHealth.enabled }}
+        {{- if .Values.restSourceClientSubscriptions.googlehealth.enabled }}
         - name: google-service-account
           secret:
-            secretName: {{ include "radar-rest-sources-backend.fullname" . }}-gha
+            secretName: {{ include "radar-rest-sources-backend.fullname" . }}
             defaultMode: 0444
         {{- end }}
         {{- if .Values.postgres.ssl.enabled }}
