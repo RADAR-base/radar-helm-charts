@@ -61,7 +61,7 @@ data:
     restSourceClientSubscriptions:
       GoogleHealth:
         enabled: true
-        serviceAccountKeyPath: {{ .Values.googleHealth.serviceAccount.path | quote }}
+        serviceAccountKeyPath: /etc/google/gha-service-account.json
         apiBaseUrl: {{ .Values.googleHealth.apiBaseUrl }}
         googleCloudProjectId: {{ .Values.googleHealth.googleCloudProjectId | quote }}
         # MUST match the Push Endpoint subscriberId
