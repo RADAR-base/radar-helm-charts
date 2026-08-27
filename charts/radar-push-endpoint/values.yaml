@@ -317,8 +317,10 @@ cc:
 garmin:
   # -- Whether to enable Garmin endpoints
   enabled: true
-  # -- OAuth version to use: "oauth2" for PKCE flow, "oauth1" for legacy flow
-  oauthVersion: "oauth2"
+  # -- OAuth version to use: "oauth2" for PKCE flow, "oauth1" for legacy flow. Only understood by
+  # PushEndpoint builds that carry the Garmin OAuth2 migration; other builds reject the unknown key and
+  # refuse to start, so leave this empty to omit it from the config entirely.
+  oauthVersion: ""
   # -- Consumer key for you application in Garmin Health API developer portal
   consumerKey: "consumerKey"
   # -- Consumer secret for you application in Garmin Health API developer portal
@@ -364,6 +366,97 @@ garmin:
     healthSnapshotEnabled: false
     # -- Whether to enable heart rate variability backfill requests
     heartRateVariabilityEnabled: false
+
+# The `googlehealth` block is only supported from chart version 0.6.8 onwards. Earlier charts (<= 0.6.7)
+# do not render it into the config, so setting these values there has no effect. It also requires a
+# PushEndpoint image that carries the Google Health integration; the default tag (chart appVersion) does
+# not have it yet, so pin `image.tag` to a build that does before enabling this.
+googlehealth:
+  # -- Whether to enable the Google Health API integration (webhook receiver, subscriber registration and
+  # backfill). Only supported from chart version 0.6.8 onwards, and requires a PushEndpoint image that
+  # includes the Google Health integration.
+  enabled: false
+  # -- The user repository to use for getting list of users and their authorization information
+  userRepositoryClass: "org.radarbase.push.integration.google.user.GoogleHealthServiceUserRepository"
+  # -- The base url of the user repository (the Rest Source Auth backend)
+  userRepositoryUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend/"
+  # -- The client ID to access the user repository
+  userRepositoryClientId: "radar_pushendpoint"
+  # -- The client secret to access the user repository
+  userRepositoryClientSecret: "secret"
+  # -- The token URL to authenticate against the user repository
+  userRepositoryTokenUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend/token/"
+  # -- Base URL of the Google Health API
+  apiBaseUrl: "https://health.googleapis.com/v4"
+  # -- Google Cloud project that owns the Health API subscriber. Required when `googlehealth.enabled` is true.
+  googleCloudProjectId: ""
+  # -- Subscriber id registered with Google. MUST be unique per deployment (e.g. radar-pep-stage) and MUST
+  # match `googleHealth.subscriberId` in the radar-rest-sources-backend chart, which hangs the per-user
+  # subscriptions off this subscriber.
+  subscriberId: "radar-pep"
+  # -- Publicly reachable URL Google delivers webhook PINGs to, e.g.
+  # https://<serverName>/push-endpoint/googlehealth/notifications
+  subscriberEndpointUri: ""
+  # -- 32+ byte random string. Google echoes it back as the Authorization header on every PING.
+  subscriberSecret: ""
+  # -- How Google creates per-user subscriptions for this subscriber (MANUAL or AUTOMATIC). Keep MANUAL:
+  # the Rest Source Auth backend creates and deletes the subscriptions explicitly.
+  subscriptionCreatePolicy: MANUAL
+  # -- Google service-account JSON used to register the subscriber. Rendered into this chart's Secret and
+  # mounted at /etc/google/gha-service-account.json; the mount path is fixed by the chart. Without a
+  # readable key, subscriber registration does not run.
+  serviceAccountKey: ""
+  # With helmfile, this can be set in a production.yaml.gotmpl
+  # file by setting
+  #   serviceAccountKey: {{ readFile "etc/radar-push-endpoint/gha-service-account.json" | quote }}
+  # -- Data types the subscriber subscribes to, i.e. the ones that generate PINGs. MUST stay identical to
+  # `googleHealth.dataTypes` in the radar-rest-sources-backend chart, which subscribes each user to the same
+  # set — a type listed there but not here never yields a webhook trigger.
+  triggerDataTypes:
+    - steps
+    - heart-rate
+    - heart-rate-variability
+    - daily-resting-heart-rate
+    - respiratory-rate-sleep-summary
+    - daily-sleep-temperature-derivations
+    - sleep
+    - exercise
+    - floors
+    - sedentary-period
+    - activity-level
+  # -- All data types fetched and produced to Kafka. Superset of `triggerDataTypes`; non-trigger types are
+  # caught up via the offset cursor rather than by a PING.
+  enabledDataTypes:
+    - steps
+    - heart-rate
+    - heart-rate-variability
+    - oxygen-saturation
+    - total-calories
+    - daily-resting-heart-rate
+    - respiratory-rate-sleep-summary
+    - daily-sleep-temperature-derivations
+    - sleep
+    - exercise
+    - electrocardiogram
+    - irregular-rhythm-notification
+    - floors
+    - sedentary-period
+    - activity-level
+  # -- Whether to fetch the TCX route/track detail attached to exercise sessions
+  exerciseTcxEnabled: true
+  # -- Whether to collect electrocardiogram waveforms. Large payloads and no webhook, so off by default.
+  electrocardiogramEnabled: false
+  backfill:
+    # -- Whether to enable historical backfill of Google Health data
+    enabled: true
+    # -- Number of threads used by the backfill workers
+    maxThreads: 4
+    # -- Size in days of a single backfill request window
+    chunkSizeDays: 7
+    # -- Minutes between two backfill iterations
+    iterationIntervalMinutes: 10
+    # -- Key prefix for the redis locks used to coordinate backfill across replicas
+    lockPrefix: radar-push-googlehealth/lock
 
 redis:
   # -- The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties.

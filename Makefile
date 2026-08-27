@@ -66,11 +66,29 @@ update-graylog:
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
+# headlamp is a custom RADAR overlay of the upstream headlamp chart, so we do
+# not pull/replace the whole directory. Instead we refresh its vendored
+# headlamp dependency (updates external/headlamp/charts/*.tgz and Chart.lock).
+update-headlamp:
+	@echo "Updating headlamp"
+	@helm repo add headlamp https://kubernetes-sigs.github.io/headlamp/
+	@helm dependency update external/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-ingress-nginx:
 	@echo "Updating ingress-nginx"
 	@rm -rf external/$(patsubst update-%,%,$@)
 	@helm repo add $(patsubst update-%,%,$@) https://kubernetes.github.io/ingress-nginx
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
+
+# kubecost is a custom RADAR overlay of the upstream cost-analyzer chart, so we do
+# not pull/replace the whole directory. Instead we refresh its vendored
+# cost-analyzer dependency (updates external/kubecost/charts/*.tgz and Chart.lock).
+update-kubecost:
+	@echo "Updating kubecost"
+	@helm repo add cost-analyzer https://kubecost.github.io/cost-analyzer/
+	@helm dependency update external/$(patsubst update-%,%,$@)
 	@echo ""
 
 update-kratos:
@@ -113,6 +131,12 @@ update-mongodb:
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
 	@rm -rf external/$(patsubst update-%,%,$@)
 	@helm pull -d external --untar bitnami/$(patsubst update-%,%,$@)
+	@echo ""
+
+update-nginx-gateway-fabric:
+	@echo "Updating nginx-gateway-fabric"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm pull -d external --untar oci://ghcr.io/nginx/charts/$(patsubst update-%,%,$@)
 	@echo ""
 
 update-nifi-cluster:

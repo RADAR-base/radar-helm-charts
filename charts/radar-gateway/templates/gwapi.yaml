@@ -1,0 +1,82 @@
+{{- if .Values.gatewayAPI.enabled -}}
+{{- $fullName := include "common.names.fullname" . -}}
+{{- $svcPort := .Values.service.port -}}
+{{- $ns := include "common.names.namespace" . -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}
+  namespace: {{ $ns | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if or .Values.gatewayAPI.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.gatewayAPI.annotations .Values.commonAnnotations ) "context" . ) }}
+    {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs:
+    - name: {{ .Values.gatewayAPI.parentRef.name }}
+      {{- with .Values.gatewayAPI.parentRef.namespace }}
+      namespace: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.gatewayAPI.https.port }}
+      port: {{ . }}
+      {{- end }}
+      {{- with .Values.gatewayAPI.https.sectionName }}
+      sectionName: {{ . | quote }}
+      {{- end }}
+  {{- with .Values.gatewayAPI.hostnames }}
+  hostnames:
+    {{- range . }}
+    - {{ ( tpl . $ ) | quote }}
+    {{- end }}
+  {{- end }}
+  rules:
+    - matches:
+        - path:
+            type: {{ .Values.gatewayAPI.pathType | default "PathPrefix" }}
+            value: {{ .Values.gatewayAPI.path | quote }}
+      {{- with .Values.gatewayAPI.filters }}
+      filters: {{- include "common.tplvalues.render" ( dict "value" . "context" $ ) | nindent 8 }}
+      {{- end }}
+      backendRefs:
+        - name: {{ $fullName }}
+          port: {{ $svcPort }}
+{{- if .Values.gatewayAPI.httpsRedirect.enabled }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-http-redirect
+  namespace: {{ $ns | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+spec:
+  parentRefs:
+    - name: {{ .Values.gatewayAPI.parentRef.name }}
+      {{- with .Values.gatewayAPI.parentRef.namespace }}
+      namespace: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.gatewayAPI.httpsRedirect.port }}
+      port: {{ . }}
+      {{- end }}
+      {{- with .Values.gatewayAPI.httpsRedirect.sectionName }}
+      sectionName: {{ . | quote }}
+      {{- end }}
+  {{- with .Values.gatewayAPI.hostnames }}
+  hostnames:
+    {{- range . }}
+    - {{ ( tpl . $ ) | quote }}
+    {{- end }}
+  {{- end }}
+  rules:
+    - matches:
+        - path:
+            type: {{ .Values.gatewayAPI.pathType | default "PathPrefix" }}
+            value: {{ .Values.gatewayAPI.path | quote }}
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: {{ .Values.gatewayAPI.httpsRedirect.statusCode | default 301 }}
+{{- end }}
+{{- end }}

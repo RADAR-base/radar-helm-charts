@@ -56,8 +56,11 @@ jobs:
             charts/radar-redis
             external/cloudnativepg-operator
             external/fluent-bit
+            external/kubecost
             external/graylog
+            external/headlamp
             external/ingress-nginx
+            external/nginx-gateway-fabric
             external/strimzi-kafka-operator
             external/strimzi-registry-operator
             external/redis-operator
