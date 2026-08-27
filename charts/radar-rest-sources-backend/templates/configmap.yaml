@@ -59,7 +59,7 @@ data:
     # to. The subscriber they hang off is registered by the Push Endpoint (radar-push-endpoint chart),
     # which receives the webhooks; only the per-user subscriptions are managed here.
     restSourceClientSubscriptions:
-      GoogleHealth:
+      googlehealth:
         enabled: true
         serviceAccountKeyPath: /etc/google/gha-service-account.json
         apiBaseUrl: {{ .Values.googleHealth.apiBaseUrl }}
