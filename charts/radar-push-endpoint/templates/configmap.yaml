@@ -108,7 +108,7 @@ data:
         subscriberId: {{ .Values.googlehealth.subscriberId }}
         subscriberEndpointUri: {{ .Values.googlehealth.subscriberEndpointUri | quote }}
         subscriberSecret: {{ .Values.googlehealth.subscriberSecret | quote }}
-        serviceAccountKeyPath: {{ .Values.googlehealth.serviceAccount.path | quote }}
+        serviceAccountKeyPath: /etc/google/gha-service-account.json
         subscriptionCreatePolicy: {{ .Values.googlehealth.subscriptionCreatePolicy }}
 
         # Data types that drive PINGs. MUST stay identical to googleHealth.dataTypes in

@@ -90,7 +90,7 @@ spec:
           {{- end }}
           {{- if .Values.googlehealth.enabled }}
           - name: GOOGLE_HEALTH_SERVICE_ACCOUNT_PATH
-            value: {{ .Values.googlehealth.serviceAccount.path | quote }}
+            value: /etc/google/gha-service-account.json
           {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
@@ -148,7 +148,7 @@ spec:
               mountPath: /etc/radar-push-endpoint
             {{- if .Values.googlehealth.enabled }}
             - name: google-service-account
-              mountPath: {{ .Values.googlehealth.serviceAccount.path }}
+              mountPath: /etc/google/gha-service-account.json
               subPath: ghaServiceAccountKey
             {{- end }}
       volumes:

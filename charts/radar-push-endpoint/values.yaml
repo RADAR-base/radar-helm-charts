@@ -367,8 +367,14 @@ garmin:
     # -- Whether to enable heart rate variability backfill requests
     heartRateVariabilityEnabled: false
 
+# The `googlehealth` block is only supported from chart version 0.6.8 onwards. Earlier charts (<= 0.6.7)
+# do not render it into the config, so setting these values there has no effect. It also requires a
+# PushEndpoint image that carries the Google Health integration; the default tag (chart appVersion) does
+# not have it yet, so pin `image.tag` to a build that does before enabling this.
 googlehealth:
-  # -- Whether to enable the Google Health API integration (webhook receiver, subscriber registration and backfill)
+  # -- Whether to enable the Google Health API integration (webhook receiver, subscriber registration and
+  # backfill). Only supported from chart version 0.6.8 onwards, and requires a PushEndpoint image that
+  # includes the Google Health integration.
   enabled: false
   # -- The user repository to use for getting list of users and their authorization information
   userRepositoryClass: "org.radarbase.push.integration.google.user.GoogleHealthServiceUserRepository"
@@ -396,12 +402,13 @@ googlehealth:
   # -- How Google creates per-user subscriptions for this subscriber (MANUAL or AUTOMATIC). Keep MANUAL:
   # the Rest Source Auth backend creates and deletes the subscriptions explicitly.
   subscriptionCreatePolicy: MANUAL
-  serviceAccount:
-    # -- Path the Google service-account JSON is mounted at inside the container. Also passed as
-    # GOOGLE_HEALTH_SERVICE_ACCOUNT_PATH. Without a readable key, subscriber registration does not run.
-    path: /etc/google/gha-service-account.json
-    # -- Inline service-account JSON, rendered into this chart's Secret under the `ghaServiceAccountKey` key.
-    key: ""
+  # -- Google service-account JSON used to register the subscriber. Rendered into this chart's Secret and
+  # mounted at /etc/google/gha-service-account.json; the mount path is fixed by the chart. Without a
+  # readable key, subscriber registration does not run.
+  serviceAccountKey: ""
+  # With helmfile, this can be set in a production.yaml.gotmpl
+  # file by setting
+  #   serviceAccountKey: {{ readFile "etc/radar-push-endpoint/gha-service-account.json" | quote }}
   # -- Data types the subscriber subscribes to, i.e. the ones that generate PINGs. MUST stay identical to
   # `googleHealth.dataTypes` in the radar-rest-sources-backend chart, which subscribes each user to the same
   # set — a type listed there but not here never yields a webhook trigger.
