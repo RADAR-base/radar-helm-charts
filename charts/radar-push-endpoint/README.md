@@ -3,7 +3,7 @@
 # radar-push-endpoint
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-push-endpoint)](https://artifacthub.io/packages/helm/radar-base/radar-push-endpoint)
 
-![Version: 0.6.7](https://img.shields.io/badge/Version-0.6.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
+![Version: 0.6.8](https://img.shields.io/badge/Version-0.6.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming data from Push or Subscription based WEB APIs. It performs authentication, authorization and content validation. For more details of the configurations, see https://github.com/RADAR-base/RADAR-PushEndpoint.
 
@@ -115,7 +115,7 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | cc.schemaRegistryApiKey | string | `"srApiKey"` | Confluent Cloud schema registry API key |
 | cc.schemaRegistryApiSecret | string | `"srApiSecret"` | Confluent Cloud schema registry API secret |
 | garmin.enabled | bool | `true` | Whether to enable Garmin endpoints |
-| garmin.oauthVersion | string | `"oauth2"` | OAuth version to use: "oauth2" for PKCE flow, "oauth1" for legacy flow |
+| garmin.oauthVersion | string | `""` | OAuth version to use: "oauth2" for PKCE flow, "oauth1" for legacy flow. Only understood by PushEndpoint builds that carry the Garmin OAuth2 migration; other builds reject the unknown key and refuse to start, so leave this empty to omit it from the config entirely. |
 | garmin.consumerKey | string | `"consumerKey"` | Consumer key for you application in Garmin Health API developer portal |
 | garmin.consumerSecret | string | `"consumerSecret"` | Consumer secret for you application in Garmin Health API developer portal |
 | garmin.userRepositoryClass | string | `"org.radarbase.push.integration.garmin.user.GarminServiceUserRepository"` | The user repository to use for getting list of users and their authorization information |
@@ -138,6 +138,28 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | garmin.backfill.bloodPressureEnabled | bool | `false` | Whether to enable blood pressure backfill requests |
 | garmin.backfill.healthSnapshotEnabled | bool | `false` | Whether to enable health snapshot backfill requests |
 | garmin.backfill.heartRateVariabilityEnabled | bool | `false` | Whether to enable heart rate variability backfill requests |
+| googlehealth.enabled | bool | `false` | Whether to enable the Google Health API integration (webhook receiver, subscriber registration and backfill). Only supported from chart version 0.6.8 onwards, and requires a PushEndpoint image that includes the Google Health integration. |
+| googlehealth.userRepositoryClass | string | `"org.radarbase.push.integration.google.user.GoogleHealthServiceUserRepository"` | The user repository to use for getting list of users and their authorization information |
+| googlehealth.userRepositoryUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | The base url of the user repository (the Rest Source Auth backend) |
+| googlehealth.userRepositoryClientId | string | `"radar_pushendpoint"` | The client ID to access the user repository |
+| googlehealth.userRepositoryClientSecret | string | `"secret"` | The client secret to access the user repository |
+| googlehealth.userRepositoryTokenUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/token/"` | The token URL to authenticate against the user repository |
+| googlehealth.apiBaseUrl | string | `"https://health.googleapis.com/v4"` | Base URL of the Google Health API |
+| googlehealth.googleCloudProjectId | string | `""` | Google Cloud project that owns the Health API subscriber. Required when `googlehealth.enabled` is true. |
+| googlehealth.subscriberId | string | `"radar-pep"` | Subscriber id registered with Google. MUST be unique per deployment (e.g. radar-pep-stage) and MUST match `googleHealth.subscriberId` in the radar-rest-sources-backend chart, which hangs the per-user subscriptions off this subscriber. |
+| googlehealth.subscriberEndpointUri | string | `""` | Publicly reachable URL Google delivers webhook PINGs to, e.g. https://<serverName>/push-endpoint/googlehealth/notifications |
+| googlehealth.subscriberSecret | string | `""` | 32+ byte random string. Google echoes it back as the Authorization header on every PING. |
+| googlehealth.subscriptionCreatePolicy | string | `"MANUAL"` | How Google creates per-user subscriptions for this subscriber (MANUAL or AUTOMATIC). Keep MANUAL: the Rest Source Auth backend creates and deletes the subscriptions explicitly. |
+| googlehealth.serviceAccountKey | string | `""` | Google service-account JSON used to register the subscriber. Rendered into this chart's Secret and mounted at /etc/google/gha-service-account.json; the mount path is fixed by the chart. Without a readable key, subscriber registration does not run. |
+| googlehealth.triggerDataTypes | list | `["steps","heart-rate","heart-rate-variability","daily-resting-heart-rate","respiratory-rate-sleep-summary","daily-sleep-temperature-derivations","sleep","exercise","floors","sedentary-period","activity-level"]` | Data types the subscriber subscribes to, i.e. the ones that generate PINGs. MUST stay identical to `googleHealth.dataTypes` in the radar-rest-sources-backend chart, which subscribes each user to the same set — a type listed there but not here never yields a webhook trigger. |
+| googlehealth.enabledDataTypes | list | `["steps","heart-rate","heart-rate-variability","oxygen-saturation","total-calories","daily-resting-heart-rate","respiratory-rate-sleep-summary","daily-sleep-temperature-derivations","sleep","exercise","electrocardiogram","irregular-rhythm-notification","floors","sedentary-period","activity-level"]` | All data types fetched and produced to Kafka. Superset of `triggerDataTypes`; non-trigger types are caught up via the offset cursor rather than by a PING. |
+| googlehealth.exerciseTcxEnabled | bool | `true` | Whether to fetch the TCX route/track detail attached to exercise sessions |
+| googlehealth.electrocardiogramEnabled | bool | `false` | Whether to collect electrocardiogram waveforms. Large payloads and no webhook, so off by default. |
+| googlehealth.backfill.enabled | bool | `true` | Whether to enable historical backfill of Google Health data |
+| googlehealth.backfill.maxThreads | int | `4` | Number of threads used by the backfill workers |
+| googlehealth.backfill.chunkSizeDays | int | `7` | Size in days of a single backfill request window |
+| googlehealth.backfill.iterationIntervalMinutes | int | `10` | Minutes between two backfill iterations |
+| googlehealth.backfill.lockPrefix | string | `"radar-push-googlehealth/lock"` | Key prefix for the redis locks used to coordinate backfill across replicas |
 | redis.url | string | `"redis://radar-redis-replication-master:6379"` | The redis server URL. Redis is used to keep track of garmin backfill progress and any other key value properties. |
 | podDisruptionBudget.enabled | bool | `false` | Enable Pod Disruption Budget |
 | podDisruptionBudget.minAvailable | int | `1` | Minimum number of pods that must be available during disruptions |

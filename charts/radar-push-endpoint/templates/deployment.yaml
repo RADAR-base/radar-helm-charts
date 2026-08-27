@@ -17,6 +17,9 @@ spec:
     metadata:
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if .Values.googlehealth.enabled }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+        {{- end }}
         kubectl.kubernetes.io/default-container: {{ .Chart.Name | quote }}
       labels:
         app.kubernetes.io/name: {{ include "radar-push-endpoint.name" . }}
@@ -85,6 +88,10 @@ spec:
                 name: {{ .Values.secret.producer.jaas.name }}
                 key: {{ .Values.secret.producer.jaas.key }}
           {{- end }}
+          {{- if .Values.googlehealth.enabled }}
+          - name: GOOGLE_HEALTH_SERVICE_ACCOUNT_PATH
+            value: /etc/google/gha-service-account.json
+          {{- end }}
           {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -139,10 +146,20 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/radar-push-endpoint
+            {{- if .Values.googlehealth.enabled }}
+            - name: google-service-account
+              mountPath: /etc/google/gha-service-account.json
+              subPath: ghaServiceAccountKey
+            {{- end }}
       volumes:
         - name: config
           configMap:
             name: {{ include "radar-push-endpoint.fullname" . }}
+        {{- if .Values.googlehealth.enabled }}
+        - name: google-service-account
+          secret:
+            secretName: {{ include "radar-push-endpoint.fullname" . }}
+        {{- end }}
         - name: gateway-jmx-configmap
           configMap:
             name:  {{ include "radar-push-endpoint.fullname" . }}-jmx-configmap
