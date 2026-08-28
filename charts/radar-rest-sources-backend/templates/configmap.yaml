@@ -53,3 +53,25 @@ data:
     redis:
         uri: {{ .Values.redis.uri }}
     {{- end }}
+
+    {{- $googlehealth := .Values.restSourceClientSubscriptions.googlehealth }}
+    {{- if $googlehealth.enabled }}
+    # Per-user Google Health webhook subscriptions, keyed by the source they belong to. The subscriber
+    # they hang off is registered by the Push Endpoint (radar-push-endpoint chart), which receives the
+    # webhooks; only the per-user subscriptions are managed here.
+    restSourceClientSubscriptions:
+      googlehealth:
+        enabled: true
+        serviceAccountKeyPath: /etc/google/gha-service-account.json
+        apiBaseUrl: {{ $googlehealth.apiBaseUrl }}
+        googleCloudProjectId: {{ $googlehealth.googleCloudProjectId | quote }}
+        # MUST match the Push Endpoint subscriberId
+        subscriberId: {{ $googlehealth.subscriberId }}
+        reconcileIntervalMinutes: {{ $googlehealth.reconcileIntervalMinutes }}
+        reconcileMaxDeletesPerPass: {{ $googlehealth.reconcileMaxDeletesPerPass }}
+        # MUST stay identical to the Push Endpoint's pushIntegration.googlehealth.triggerDataTypes.
+        dataTypes:
+          {{- range $googlehealth.dataTypes }}
+          - {{ . }}
+          {{- end }}
+    {{- end }}

@@ -3,7 +3,7 @@
 # radar-rest-sources-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-backend)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-backend)
 
-![Version: 1.5.11](https://img.shields.io/badge/Version-1.5.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.16](https://img.shields.io/badge/AppVersion-4.4.16-informational?style=flat-square)
+![Version: 1.5.12](https://img.shields.io/badge/Version-1.5.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.16](https://img.shields.io/badge/AppVersion-4.4.16-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -98,6 +98,14 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
+| restSourceClientSubscriptions.googlehealth.enabled | bool | `true` | Master switch for per-user subscription management, without having to unset the service account |
+| restSourceClientSubscriptions.googlehealth.apiBaseUrl | string | `"https://health.googleapis.com/v4"` | Base URL of the Google Health API |
+| restSourceClientSubscriptions.googlehealth.googleCloudProjectId | string | `""` | Google Cloud project that owns the Health API subscriber. Required when `restSourceClientSubscriptions.googlehealth.enabled` is true. |
+| restSourceClientSubscriptions.googlehealth.subscriberId | string | `"radar-pep"` | Subscriber id the per-user subscriptions hang off. MUST match `googlehealth.subscriberId` in the radar-push-endpoint chart, which registers that subscriber. |
+| restSourceClientSubscriptions.googlehealth.reconcileIntervalMinutes | int | `5` | How often, in minutes, the background reconcile compares local state against Google's subscriptions |
+| restSourceClientSubscriptions.googlehealth.reconcileMaxDeletesPerPass | int | `50` | If a single reconcile pass would delete more orphaned subscriptions than this, it skips deletion and warns instead. Zero or less disables the cap. |
+| restSourceClientSubscriptions.googlehealth.serviceAccountKey | string | `""` | Google service-account JSON used to manage the subscriptions. Without it, subscription management stays inactive. The chart mounts it at a fixed path, so only the key itself is configurable. |
+| restSourceClientSubscriptions.googlehealth.dataTypes | list | `["steps","heart-rate","heart-rate-variability","daily-resting-heart-rate","respiratory-rate-sleep-summary","daily-sleep-temperature-derivations","sleep","exercise","floors","sedentary-period","activity-level"]` | Data types each per-user subscription subscribes to. MUST stay identical to `googlehealth.triggerDataTypes` in the radar-push-endpoint chart, which configures the shared subscriber these subscriptions hang off — a type present here but not there never yields a webhook trigger. Only valid trigger types may be listed; anything else makes Google reject the create outright. |
 | redis.uri | string | `"redis://radar-redis-replication-master:6379"` | URI of the redis database |
 | serverName | string | `"localhost"` | Resolvable server name, needed to find the advertised URL and callback URL |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
