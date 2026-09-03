@@ -107,6 +107,7 @@ spec:
             value: {{ .Values.config.csrfCookieName | quote }}
           # Shared secret Hydra presents when calling the token hook
           - name: TOKEN_HOOK_API_KEY
+            value: {{ .Values.config.tokenHookApiKey | quote }}
             valueFrom:
               secretKeyRef:
                 name: {{ include "radar-self-enrolment-ui.secretname" . }}

@@ -2,7 +2,7 @@
 
 # radar-self-enrolment-ui
 
-![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base Self Enrolment UI
 
@@ -47,6 +47,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | nameOverride | string | `""` | String to partially override radar-self-enrolment-ui.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-self-enrolment-ui.fullname template with a string |
 | config.csrfCookieName | string | `"radar_csrf"` |  |
+| config.tokenHookApiKey | string | `"radar_token_hook_api_key"` |  |
 | config.secrets | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |
 | service.loadBalancerIP | string | `""` | The load balancer IP |
@@ -148,7 +149,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | hpa.targetMemory | string | `nil` | Target Memory utilization percentage |
 # radar-self-enrolment-ui
 
-![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base Self Enrolment UI
 
@@ -187,6 +188,7 @@ A Helm chart for RADAR-base Self Enrolment UI
 | nameOverride | string | `""` | String to partially override radar-self-enrolment-ui.fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override radar-self-enrolment-ui.fullname template with a string |
 | config.csrfCookieName | string | `"radar_csrf"` |  |
+| config.tokenHookApiKey | string | `"radar_token_hook_api_key"` |  |
 | config.secrets | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |
 | service.loadBalancerIP | string | `""` | The load balancer IP |

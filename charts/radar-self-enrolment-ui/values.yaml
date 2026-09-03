@@ -38,6 +38,7 @@ fullnameOverride: ""
 ## -- Application config
 config:
   csrfCookieName: "radar_csrf"
+  tokenHookApiKey: "radar_token_hook_api_key"
   secrets: {}
 
 ## -- Service configuration
