@@ -258,6 +258,12 @@ kratos:
           settings:
             ui_url: '{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/study/account/settings'
             required_aal: highest_available
+            after:
+              password:
+                hooks:
+                  # Sign the identity out of every other session when the password
+                  # changes, so a stolen session does not survive a password reset.
+                  - hook: revoke_active_sessions
 
           recovery:
             enabled: true
