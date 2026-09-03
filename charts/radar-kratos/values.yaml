@@ -263,8 +263,6 @@ kratos:
                 hooks:
                   # Sign the identity out of every other session when the password
                   # changes, so a stolen session does not survive a password reset.
-                  # Not enabled by default in Kratos; it has to be configured.
-                  # https://www.ory.com/docs/kratos/session-management/revoke-sessions-hook
                   - hook: revoke_active_sessions
 
           recovery:
