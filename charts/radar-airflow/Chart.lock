@@ -1,0 +1,9 @@
+dependencies:
+- name: airflow
+  repository: file://../../external/airflow
+  version: 1.20.0
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  version: 2.27.0
+digest: sha256:7e8744acd54bc7b303943b0b32bdf4b37589d86817e02c3e2ad23651b3f463aa
+generated: "2026-04-15T12:02:45.828382+01:00"
