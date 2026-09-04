@@ -1,0 +1,1869 @@
+global:
+  # -- String to partially override appserver-microservices.fullname template with a string (will prepend the release name)
+  nameOverride: ""
+  # -- String to fully override appserver-microservices.fullname template with a string
+  fullnameOverride: ""
+  # -- Number of appserver microservices replicas to deploy
+  replicaCount: 1
+  # -- Standard JAVA_OPTS that should be passed to this service
+  javaOpts: "-XX:GCTimeRatio=19 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=30 --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.management/javax.management.openmbean=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.management/javax.management=ALL-UNNAMED -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  imagePullSecrets: []
+
+  # -- Node labels for pod assignment
+  nodeSelector: { }
+  # -- Toleration labels for pod assignment
+  tolerations: [ ]
+  # -- Affinity labels for pod assignment
+  affinity: { }
+
+services:
+  gateway-service:
+    enabled: true
+    # -- Number of appserver microservices replicas to deploy
+    replicaCount: 1
+    image:
+      # -- Image repository
+      repository: ghcr.io/radar-base/radar-appserver/gateway-service
+      # -- Image tag (immutable tags are recommended)
+      tag:
+      # -- Image pull policy
+      pullPolicy: IfNotPresent
+    # -- Configure radar-appserver pods' Security Context
+    podSecurityContext: {}
+    # fsGroup: 2000
+
+    # -- Configure radar-appserver containers' Security Context
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+    service:
+      # -- Kubernetes Service type
+      type: ClusterIP
+      # -- appserver-microservices service port
+      port: 8080
+    ports:
+      # -- appserver-microservices container port
+      containerPort: 8080
+    # -- Command to run when starting the container.
+    command: "gateway-service"
+    # -- Reconfigure Ingress to not force TLS
+    disable_tls: false
+    # -- The protocol in advertised URIs (https, http)
+    advertised_protocol: https
+    ingress:
+      # -- Enable ingress controller resource
+      enabled: true
+      # -- Annotations that define default ingress class, certificate issuer and session configuration
+      # @default -- check values.yaml
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/rewrite-target: /$1
+      # -- Path within the url structure
+      path: "/appserver/?(.*)"
+      # -- Ingress path type
+      pathType: ImplementationSpecific
+      # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+      ingressClassName: nginx
+      # -- Hosts to accept requests from
+      hosts:
+        - localhost
+      tls:
+        # -- TLS Secret Name
+        secretName: radar-base-tls
+    resources:
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+
+      # -- CPU/Memory resource requests
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    # -- Node labels for pod assignment
+    nodeSelector: {}
+
+    # -- Toleration labels for pod assignment
+    tolerations: []
+
+    # -- Affinity labels for pod assignment
+    affinity: {}
+
+    # -- Extra environment variables
+    extraEnvVars: []
+    #  - name: BEARER_AUTH
+    #    value: true
+
+    # Should the JAVA_OPTS be added as environment variable for the service
+    injectJavaOpts: true
+    # -- Custom livenessProbe that overrides the default one
+    customLivenessProbe: {}
+
+    livenessProbe:
+      # -- Enable livenessProbe
+      enabled: true
+      # -- Initial delay seconds for livenessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for livenessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for livenessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for livenessProbe
+      successThreshold: 1
+      # -- Failure threshold for livenessProbe
+      failureThreshold: 3
+
+    # -- Custom readinessProbe that overrides the default one
+    customReadinessProbe: {}
+
+    readinessProbe:
+      # -- Enable readinessProbe
+      enabled: true
+      # -- Initial delay seconds for readinessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for readinessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for readinessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for readinessProbe
+      successThreshold: 1
+      # -- Failure threshold for readinessProbe
+      failureThreshold: 3
+
+    # -- Custom startupProbe that overrides the default one
+    customStartupProbe: {}
+
+    startupProbe:
+      # -- Enable startupProbe
+      enabled: true
+      # -- Initial delay seconds for startupProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for startupProbe
+      periodSeconds: 10
+      # -- Timeout seconds for startupProbe
+      timeoutSeconds: 10
+      # -- Success threshold for startupProbe
+      successThreshold: 1
+      # -- Failure threshold for startupProbe
+      failureThreshold: 30
+    # -- URL of the Management Portal
+    managementportal_url: http://management-portal:8080/managementportal
+
+    # -- Contents of a gateway-service.yml configuration file
+    # @default -- check `values.yaml`
+    config:
+      enabled: true
+      mouthPath: "/etc/radar-appserver/gateway-service.yml"
+      values:
+        resourceConfig: org.radarbase.appserver.microservices.gateway.enhancer.factory.GatewayServiceResourceEnhancerFactory
+        auth:
+          managementPortalUrl: http://management-portal:8081/managementportal
+          resourceName: res_AppServer
+        routes:
+          - name: project
+            path: projects
+            baseUrl: http://radar-appserver-project-service:9010/
+          - name: user
+            path:
+            baseUrl: http://radar-appserver-user-service:9013/
+          - name: github
+            path: github/content
+            baseUrl: http://radar-appserver-github-service:9011/
+          - name: protocol
+            path:
+            baseUrl: http://radar-appserver-protocol-service:9012/
+          - name: task
+            path:
+            baseUrl: http://radar-appserver-task-service:9014/
+          - name: messaging
+            path:
+            baseUrl: http://radar-appserver-messaging-service:9015/
+        server:
+          # Base URI of the application.
+          baseUri: http://localhost:8080
+          # Timeout for requests to the application.
+          requestTimeout: 30
+          isJmxEnabled: false
+
+    # envMap = map of ENV_NAME -> { value: "..." }  OR -> { valueFrom: { secretKeyRef: {...} } }
+    # @ignore
+    envMap:
+      APPSERVER_GATEWAY_SERVICE_BASE_URL:
+        value: "http://localhost:8080/"
+      APPSERVER_PROJECT_SERVICE_BASE_URL:
+        value: "http://radar-appserver-project-service:9010/"
+      APPSERVER_USER_SERVICE_BASE_URL:
+        value: "http://radar-appserver-user-service:9013/"
+      APPSERVER_GITHUB_SERVICE_BASE_URL:
+        value: "http://radar-appserver-github-service:9011/"
+      APPSERVER_PROTOCOL_SERVICE_BASE_URL:
+        value: "http://radar-appserver-protocol-service:9012/"
+      APPSERVER_TASK_SERVICE_BASE_URL:
+        value: "http://radar-appserver-task-service:9014/"
+      APPSERVER_CLOUD_SERVICE_BASE_URL:
+        value: "http://radar-appserver-cloud-messaging-service:9015/"
+      APPSERVER_MANAGEMENTPORTAL_BASE_URL:
+        value: "http://management-portal:8080/managementportal"
+
+    # @ignore
+    volumes:
+      - name: config
+        configMap:
+          nameTemplate: serviceFullname
+    # @ignore
+    volumeMounts:
+      - name: config
+        mountPath: /etc/radar-appserver/
+
+    # -- Network policy defines who can access this application and who this applications has access to
+    # @default -- check `values.yaml`
+    networkpolicy:
+      policyTypes:
+        - Ingress
+        - Egress
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: ingress-nginx
+      egress:
+        - to:
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                  - 10.0.0.0/8
+                  - 192.168.0.0/16
+                  - 172.16.0.0/12
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: 'management-portal'
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+              podSelector:
+                matchLabels:
+                  k8s-app: kube-dns
+          ports:
+            - port: 53
+              protocol: UDP
+            - port: 53
+              protocol: TCP
+
+  project-service:
+    enabled: true
+    # -- Number of appserver microservices replicas to deploy
+    replicaCount: 1
+    image:
+      # -- Image repository
+      repository: ghcr.io/radar-base/radar-appserver/project-service
+      # -- Image tag (immutable tags are recommended)
+      tag:
+      # -- Image pull policy
+      pullPolicy: IfNotPresent
+    # -- Configure radar-appserver pods' Security Context
+    podSecurityContext: {}
+    # fsGroup: 2000
+
+    # -- Configure radar-appserver containers' Security Context
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+    service:
+      # -- Kubernetes Service type
+      type: ClusterIP
+      # -- appserver-microservices service port
+      port: 9010
+    ports:
+      # -- appserver-microservices container port
+      containerPort: 9010
+    # -- Command to run when starting the container.
+    command: "project-service"
+    # -- Reconfigure Ingress to not force TLS
+    disable_tls: true
+    # -- The protocol in advertised URIs (https, http)
+    advertised_protocol: https
+    ingress:
+      # -- Enable ingress controller resource
+      enabled: false
+    resources:
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+
+      # -- CPU/Memory resource requests
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    # -- Node labels for pod assignment
+    nodeSelector: {}
+
+    # -- Toleration labels for pod assignment
+    tolerations: []
+
+    # -- Affinity labels for pod assignment
+    affinity: {}
+
+    # -- Extra environment variables
+    extraEnvVars: []
+    #  - name: BEARER_AUTH
+    #    value: true
+    postgres:
+      # -- host name of the postgres db
+      host:
+      # -- port of the postgres db
+      port:
+      # -- database name
+      database:
+      # -- Kubernetes secret containing the database JDBC Connection url
+      # (disables use of 'host', 'port' and 'database' values).
+      urlSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: jdbc-uri
+      # -- postgres user
+      user:
+      # -- Kubernetes secret containing the database user
+      # (disables use of 'user' value).
+      userSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: username
+      # -- password of the postgres user
+      password:
+      # -- Kubernetes secret containing the database password
+      # (disables use of 'password' value).
+      passwordSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: password
+
+      hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbcDriver: org.postgresql.Driver
+
+      # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
+      # Ignored when using 'urlSecret'.
+      connection_parameters: ""
+      ssl:
+        # -- set to true of the connecting to postgres using SSL
+        enabled: false
+        keystorepassword: keystorepassword
+    # Should the JAVA_OPTS be added as environment variable for the service
+    injectJavaOpts: true
+    # -- Custom livenessProbe that overrides the default one
+    customLivenessProbe: {}
+
+    livenessProbe:
+      # -- Enable livenessProbe
+      enabled: true
+      # -- Initial delay seconds for livenessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for livenessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for livenessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for livenessProbe
+      successThreshold: 1
+      # -- Failure threshold for livenessProbe
+      failureThreshold: 3
+
+    # -- Custom readinessProbe that overrides the default one
+    customReadinessProbe: {}
+
+    readinessProbe:
+      # -- Enable readinessProbe
+      enabled: true
+      # -- Initial delay seconds for readinessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for readinessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for readinessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for readinessProbe
+      successThreshold: 1
+      # -- Failure threshold for readinessProbe
+      failureThreshold: 3
+
+    # -- Custom startupProbe that overrides the default one
+    customStartupProbe: {}
+
+    startupProbe:
+      # -- Enable startupProbe
+      enabled: true
+      # -- Initial delay seconds for startupProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for startupProbe
+      periodSeconds: 10
+      # -- Timeout seconds for startupProbe
+      timeoutSeconds: 10
+      # -- Success threshold for startupProbe
+      successThreshold: 1
+      # -- Failure threshold for startupProbe
+      failureThreshold: 30
+    # -- URL of the Management Portal
+    managementportal_url: http://management-portal:8080/managementportal
+
+    # -- Contents of a gateway-service.yml configuration file
+    # @default -- check `values.yaml`
+    config:
+      enabled: true
+      mouthPath: "/etc/radar-appserver/project-service.yml"
+      values:
+        resourceConfig: org.radarbase.appserver.microservices.project.enhancer.factory.ProjectServiceResourceEnhancerFactory
+
+        server:
+          baseUri: http://project-service:9010
+          requestTimeout: 30
+          isJmxEnabled: false
+
+        db:
+          # For Development environment, use H2 database.
+#          jdbcDriver: org.h2.Driver
+#          jdbcUrl: jdbc:h2:mem:appserver_project
+#          hibernateDialect: org.hibernate.dialect.H2Dialect
+#          liquibase:
+#            enabled: false
+#          additionalProperties:
+#            jakarta.persistence.schema-generation.database.action: drop-and-create
+            #    hibernate.show_sql: true
+            #    hibernate.format_sql: true
+              jdbcDriver: org.postgresql.Driver
+              jdbcUrl: jdbc:postgresql://localhost:5432/appserver_project
+              hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+              username: radar
+              password: radar
+
+    # envMap = map of ENV_NAME -> { value: "..." }  OR -> { valueFrom: { secretKeyRef: {...} } }
+    # @ignore
+    envMap:
+      APPSERVER_PROJECT_SERVICE_BASE_URL:
+        value: "http://localhost:9010/"
+      APPSERVER_PROJECT_JDBC_URL:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: jdbc-uri
+      APPSERVER_PROJECT_JDBC_USERNAME:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: username
+      APPSERVER_PROJECT_JDBC_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: password
+      APPSERVER_PROJECT_HIBERNATE_DIALECT:
+        value: org.hibernate.dialect.PostgreSQLDialect
+      APPSERVER_PROJECT_JDBC_DRIVER:
+        value: org.postgresql.Driver
+
+    # @ignore
+    volumes:
+      - name: config
+        configMap:
+          nameTemplate: serviceFullname
+    # @ignore
+    volumeMounts:
+      - name: config
+        mountPath: /etc/radar-appserver/
+
+    # -- Network policy defines who can access this application and who this applications has access to
+    # @default -- check `values.yaml`
+    networkpolicy:
+      policyTypes:
+        - Ingress
+        - Egress
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: ingress-nginx
+      egress:
+        - to:
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                  - 10.0.0.0/8
+                  - 192.168.0.0/16
+                  - 172.16.0.0/12
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: 'management-portal'
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+              podSelector:
+                matchLabels:
+                  k8s-app: kube-dns
+          ports:
+            - port: 53
+              protocol: UDP
+            - port: 53
+              protocol: TCP
+
+  user-service:
+    enabled: true
+    # -- Number of appserver microservices replicas to deploy
+    replicaCount: 1
+    image:
+      # -- Image repository
+      repository: ghcr.io/radar-base/radar-appserver/user-service
+      # -- Image tag (immutable tags are recommended)
+      tag:
+      # -- Image pull policy
+      pullPolicy: IfNotPresent
+    # -- Configure radar-appserver pods' Security Context
+    podSecurityContext: {}
+    # fsGroup: 2000
+
+    # -- Configure radar-appserver containers' Security Context
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+    service:
+      # -- Kubernetes Service type
+      type: ClusterIP
+      # -- appserver-microservices service port
+      port: 9013
+    ports:
+      # -- appserver-microservices container port
+      containerPort: 9013
+    # -- Command to run when starting the container.
+    command: "user-service"
+    # -- Reconfigure Ingress to not force TLS
+    disable_tls: true
+    # -- The protocol in advertised URIs (https, http)
+    advertised_protocol: http
+    ingress:
+      # -- Enable ingress controller resource
+      enabled: false
+    resources:
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+
+      # -- CPU/Memory resource requests
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    # -- Node labels for pod assignment
+    nodeSelector: {}
+
+    # -- Toleration labels for pod assignment
+    tolerations: []
+
+    # -- Affinity labels for pod assignment
+    affinity: {}
+
+    # -- Extra environment variables
+    extraEnvVars: []
+    #  - name: BEARER_AUTH
+    #    value: true
+    postgres:
+      # -- host name of the postgres db
+      host:
+      # -- port of the postgres db
+      port:
+      # -- database name
+      database:
+      # -- Kubernetes secret containing the database JDBC Connection url
+      # (disables use of 'host', 'port' and 'database' values).
+      urlSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: jdbc-uri
+      # -- postgres user
+      user:
+      # -- Kubernetes secret containing the database user
+      # (disables use of 'user' value).
+      userSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: username
+      # -- password of the postgres user
+      password:
+      # -- Kubernetes secret containing the database password
+      # (disables use of 'password' value).
+      passwordSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: password
+
+      hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbcDriver: org.postgresql.Driver
+
+      # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
+      # Ignored when using 'urlSecret'.
+      connection_parameters: ""
+      ssl:
+        # -- set to true of the connecting to postgres using SSL
+        enabled: false
+        keystorepassword: keystorepassword
+    # Should the JAVA_OPTS be added as environment variable for the service
+    injectJavaOpts: true
+    # -- Custom livenessProbe that overrides the default one
+    customLivenessProbe: {}
+
+    livenessProbe:
+      # -- Enable livenessProbe
+      enabled: true
+      # -- Initial delay seconds for livenessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for livenessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for livenessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for livenessProbe
+      successThreshold: 1
+      # -- Failure threshold for livenessProbe
+      failureThreshold: 3
+
+    # -- Custom readinessProbe that overrides the default one
+    customReadinessProbe: {}
+
+    readinessProbe:
+      # -- Enable readinessProbe
+      enabled: true
+      # -- Initial delay seconds for readinessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for readinessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for readinessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for readinessProbe
+      successThreshold: 1
+      # -- Failure threshold for readinessProbe
+      failureThreshold: 3
+
+    # -- Custom startupProbe that overrides the default one
+    customStartupProbe: {}
+
+    startupProbe:
+      # -- Enable startupProbe
+      enabled: true
+      # -- Initial delay seconds for startupProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for startupProbe
+      periodSeconds: 10
+      # -- Timeout seconds for startupProbe
+      timeoutSeconds: 10
+      # -- Success threshold for startupProbe
+      successThreshold: 1
+      # -- Failure threshold for startupProbe
+      failureThreshold: 30
+    # -- URL of the Management Portal
+    managementportal_url: http://management-portal:8080/managementportal
+
+    # -- Contents of a gateway-service.yml configuration file
+    # @default -- check `values.yaml`
+    config:
+      enabled: true
+      mouthPath: "/etc/radar-appserver/user-service.yml"
+      values:
+        resourceConfig: org.radarbase.appserver.microservices.user.enhancer.factory.UserServiceResourceEnhancerFactory
+        server:
+          baseUri: http://user-service:9013
+          requestTimeout: 30
+          isJmxEnabled: false
+        db:
+          # For Development environment, use H2 database.
+#          jdbcDriver: org.h2.Driver
+#          jdbcUrl: jdbc:h2:mem:appserver_user
+#          hibernateDialect: org.hibernate.dialect.H2Dialect
+#          liquibase:
+#            enabled: false
+#          additionalProperties:
+#            jakarta.persistence.schema-generation.database.action: drop-and-create
+        #    hibernate.show_sql: true
+        #    hibernate.format_sql: true
+          jdbcDriver: org.postgresql.Driver
+          jdbcUrl: jdbc:postgresql://localhost:5432/appserver_user
+          hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+          username: radar
+          password: radar
+          email:
+            enabled: false
+          contract:
+            project: http://project-service:9010
+            task: http://task-service:9014
+
+    # envMap = map of ENV_NAME -> { value: "..." }  OR -> { valueFrom: { secretKeyRef: {...} } }
+    # @ignore
+    envMap:
+      APPSERVER_USER_SERVICE_BASE_URL:
+        value: "http://localhost:9013/"
+      APPSERVER_PROJECT_SERVICE_BASE_URL:
+        value: "http://radar-appserver-project-service:9010/"
+      APPSERVER_TASK_SERVICE_BASE_URL:
+        value: "http://radar-appserver-task-service:9014/"
+      RADAR_APPSERVER_NOTIFICATION_EMAIL_ENABLED:
+        false
+      APPSERVER_USER_JDBC_URL:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: username
+      APPSERVER_USER_JDBC_USERNAME:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: username
+      APPSERVER_USER_JDBC_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: password
+      APPSERVER_USER_HIBERNATE_DIALECT:
+        value: org.hibernate.dialect.PostgreSQLDialect
+      APPSERVER_USER_JDBC_DRIVER:
+        value: org.postgresql.Driver
+
+    # @ignore
+    volumes:
+      - name: config
+        configMap:
+          nameTemplate: serviceFullname
+    # @ignore
+    volumeMounts:
+      - name: config
+        mountPath: /etc/radar-appserver/
+
+    # -- Network policy defines who can access this application and who this applications has access to
+    # @default -- check `values.yaml`
+    networkpolicy:
+      policyTypes:
+        - Ingress
+        - Egress
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: ingress-nginx
+      egress:
+        - to:
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                  - 10.0.0.0/8
+                  - 192.168.0.0/16
+                  - 172.16.0.0/12
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: 'management-portal'
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+              podSelector:
+                matchLabels:
+                  k8s-app: kube-dns
+          ports:
+            - port: 53
+              protocol: UDP
+            - port: 53
+              protocol: TCP
+
+  task-service:
+    enabled: true
+    # -- Number of appserver microservices replicas to deploy
+    replicaCount: 1
+    image:
+      # -- Image repository
+      repository: ghcr.io/radar-base/radar-appserver/task-service
+      # -- Image tag (immutable tags are recommended)
+      tag:
+      # -- Image pull policy
+      pullPolicy: IfNotPresent
+    # -- Configure radar-appserver pods' Security Context
+    podSecurityContext: {}
+    # fsGroup: 2000
+
+    # -- Configure radar-appserver containers' Security Context
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+    service:
+      # -- Kubernetes Service type
+      type: ClusterIP
+      # -- appserver-microservices service port
+      port: 9014
+    ports:
+      # -- appserver-microservices container port
+      containerPort: 9014
+    # -- Command to run when starting the container.
+    command: "task-service"
+    # -- Reconfigure Ingress to not force TLS
+    disable_tls: true
+    # -- The protocol in advertised URIs (https, http)
+    advertised_protocol: http
+    ingress:
+      # -- Enable ingress controller resource
+      enabled: false
+    resources:
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+
+      # -- CPU/Memory resource requests
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    # -- Node labels for pod assignment
+    nodeSelector: {}
+
+    # -- Toleration labels for pod assignment
+    tolerations: []
+
+    # -- Affinity labels for pod assignment
+    affinity: {}
+
+    # -- Extra environment variables
+    extraEnvVars: []
+    #  - name: BEARER_AUTH
+    #    value: true
+    postgres:
+      # -- host name of the postgres db
+      host:
+      # -- port of the postgres db
+      port:
+      # -- database name
+      database:
+      # -- Kubernetes secret containing the database JDBC Connection url
+      # (disables use of 'host', 'port' and 'database' values).
+      urlSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: jdbc-uri
+      # -- postgres user
+      user:
+      # -- Kubernetes secret containing the database user
+      # (disables use of 'user' value).
+      userSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: username
+      # -- password of the postgres user
+      password:
+      # -- Kubernetes secret containing the database password
+      # (disables use of 'password' value).
+      passwordSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: password
+
+      hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbcDriver: org.postgresql.Driver
+
+      # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
+      # Ignored when using 'urlSecret'.
+      connection_parameters: ""
+      ssl:
+        # -- set to true of the connecting to postgres using SSL
+        enabled: false
+        keystorepassword: keystorepassword
+    # Should the JAVA_OPTS be added as environment variable for the service
+    injectJavaOpts: true
+    # -- Custom livenessProbe that overrides the default one
+    customLivenessProbe: {}
+
+    livenessProbe:
+      # -- Enable livenessProbe
+      enabled: true
+      # -- Initial delay seconds for livenessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for livenessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for livenessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for livenessProbe
+      successThreshold: 1
+      # -- Failure threshold for livenessProbe
+      failureThreshold: 3
+
+    # -- Custom readinessProbe that overrides the default one
+    customReadinessProbe: {}
+
+    readinessProbe:
+      # -- Enable readinessProbe
+      enabled: true
+      # -- Initial delay seconds for readinessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for readinessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for readinessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for readinessProbe
+      successThreshold: 1
+      # -- Failure threshold for readinessProbe
+      failureThreshold: 3
+
+    # -- Custom startupProbe that overrides the default one
+    customStartupProbe: {}
+
+    startupProbe:
+      # -- Enable startupProbe
+      enabled: true
+      # -- Initial delay seconds for startupProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for startupProbe
+      periodSeconds: 10
+      # -- Timeout seconds for startupProbe
+      timeoutSeconds: 10
+      # -- Success threshold for startupProbe
+      successThreshold: 1
+      # -- Failure threshold for startupProbe
+      failureThreshold: 30
+    # -- URL of the Management Portal
+    managementportal_url: http://management-portal:8080/managementportal
+
+    # -- Contents of a gateway-service.yml configuration file
+    # @default -- check `values.yaml`
+    config:
+      enabled: true
+      mouthPath: "/etc/radar-appserver/task-service.yml"
+      values:
+        resourceConfig: org.radarbase.appserver.microservices.task.enhancer.factory.TaskServiceResourceEnhancerFactory
+        server:
+          baseUri: http://localhost:9014
+          requestTimeout: 30
+          isJmxEnabled: false
+        db:
+          # For Development environment, use H2 database.
+#          jdbcDriver: org.h2.Driver
+#          jdbcUrl: jdbc:h2:mem:appserver_task
+#          hibernateDialect: org.hibernate.dialect.H2Dialect
+#          liquibase:
+#            enabled: false
+#          additionalProperties:
+#            jakarta.persistence.schema-generation.database.action: drop-and-create
+        #    hibernate.show_sql: true
+        #    hibernate.format_sql: true
+          jdbcDriver: org.postgresql.Driver
+          jdbcUrl: jdbc:postgresql://localhost:5432/appserver_task
+          hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+          username: radar
+          password: radar
+        eventBus:
+          numThreads: 3
+        contract:
+          user: http://user-service:9013
+          project: http://project-service:9010
+          protocol: http://protocol-service:9012
+          notification: http://cloud-messaging-service:9015
+
+    # envMap = map of ENV_NAME -> { value: "..." }  OR -> { valueFrom: { secretKeyRef: {...} } }
+    # @ignore
+    envMap:
+      APPSERVER_TASK_SERVICE_BASE_URL:
+        value: "http://localhost:9014/"
+      APPSERVER_PROJECT_SERVICE_BASE_URL:
+        value: "http://radar-appserver-project-service:9010/"
+      APPSERVER_USER_SERVICE_BASE_URL:
+        value: "http://radar-appserver-project-service:9013/"
+      APPSERVER_PROTOCOL_SERVICE_BASE_URL:
+        value: "http://radar-appserver-protocol-service:9012/"
+      APPSERVER_CLOUD_MESSAGING_SERVICE_BASE_URL:
+        value: "http://radar-appserver-cloud-messaging-service:9015/"
+      APPSERVER_TASK_JDBC_URL:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: username
+      APPSERVER_TASK_JDBC_USERNAME:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: username
+      APPSERVER_TASK_JDBC_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: password
+      APPSERVER_TASK_HIBERNATE_DIALECT:
+        value: org.hibernate.dialect.PostgreSQLDialect
+      APPSERVER_TASK_JDBC_DRIVER:
+        value: org.postgresql.Driver
+
+    # @ignore
+    volumes:
+      - name: config
+        configMap:
+          nameTemplate: serviceFullname
+    # @ignore
+    volumeMounts:
+      - name: config
+        mountPath: /etc/radar-appserver/
+
+    # -- Network policy defines who can access this application and who this applications has access to
+    # @default -- check `values.yaml`
+    networkpolicy:
+      policyTypes:
+        - Ingress
+        - Egress
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: ingress-nginx
+      egress:
+        - to:
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                  - 10.0.0.0/8
+                  - 192.168.0.0/16
+                  - 172.16.0.0/12
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: 'management-portal'
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+              podSelector:
+                matchLabels:
+                  k8s-app: kube-dns
+          ports:
+            - port: 53
+              protocol: UDP
+            - port: 53
+              protocol: TCP
+
+  cloud-mesaging-service:
+    enabled: true
+    # -- Number of appserver microservices replicas to deploy
+    replicaCount: 1
+    image:
+      # -- Image repository
+      repository: ghcr.io/radar-base/radar-appserver/cloud-messaging-service
+      # -- Image tag (immutable tags are recommended)
+      tag:
+      # -- Image pull policy
+      pullPolicy: IfNotPresent
+    # -- Configure radar-appserver pods' Security Context
+    podSecurityContext: {}
+    # fsGroup: 2000
+
+    # -- Configure radar-appserver containers' Security Context
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+    service:
+      # -- Kubernetes Service type
+      type: ClusterIP
+      # -- appserver-microservices service port
+      port: 9015
+    ports:
+      # -- appserver-microservices container port
+      containerPort: 9015
+    # -- Command to run when starting the container.
+    command: "cloud-messaging-service"
+    # -- Reconfigure Ingress to not force TLS
+    disable_tls: true
+    # -- The protocol in advertised URIs (https, http)
+    advertised_protocol: http
+    ingress:
+      # -- Enable ingress controller resource
+      enabled: false
+    resources:
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+
+      # -- CPU/Memory resource requests
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    # -- Node labels for pod assignment
+    nodeSelector: {}
+
+    # -- Toleration labels for pod assignment
+    tolerations: []
+
+    # -- Affinity labels for pod assignment
+    affinity: {}
+
+    # -- Extra environment variables
+    extraEnvVars: []
+    #  - name: BEARER_AUTH
+    #    value: true
+    postgres:
+      # -- host name of the postgres db
+      host:
+      # -- port of the postgres db
+      port:
+      # -- database name
+      database:
+      # -- Kubernetes secret containing the database JDBC Connection url
+      # (disables use of 'host', 'port' and 'database' values).
+      urlSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: jdbc-uri
+      # -- postgres user
+      user:
+      # -- Kubernetes secret containing the database user
+      # (disables use of 'user' value).
+      userSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: username
+      # -- password of the postgres user
+      password:
+      # -- Kubernetes secret containing the database password
+      # (disables use of 'password' value).
+      passwordSecret:
+        name: radar-cloudnative-postgresql-appserver
+        key: password
+
+      hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbcDriver: org.postgresql.Driver
+
+      # -- Additional JDBC connection parameters e.g. sslmode=verify-full.
+      # Ignored when using 'urlSecret'.
+      connection_parameters: ""
+      ssl:
+        # -- set to true of the connecting to postgres using SSL
+        enabled: false
+        keystorepassword: keystorepassword
+    # Should the JAVA_OPTS be added as environment variable for the service
+    injectJavaOpts: true
+    # -- Google credentials containing FCM server key, etc.
+    google_application_credentials: ""
+    smtp:
+      # -- set to true, if sending of notifications via email should be enabled.
+      enabled: false
+      # -- Hostname of the SMTP server
+      host: smtp
+      # -- Port of the SMTP server
+      port: 25
+      # -- Username of the SMTP server
+      username: username
+      # -- Password of the SMTP server
+      password: secret
+      # -- Email address which should be used to send activation emails
+      from: noreply@example.com
+      # -- set to true,if TTLS should be enabled
+      starttls: false
+      # -- set to true, if the account should be authenticated before sending emails
+      auth: true
+      # -- Timeout (ms) for establishing TCP connection to server
+      connect_timeout: 10000
+      # -- Timeout (ms) for read operations (socket read timeout), waiting for server responses
+      read_timeout: 10000
+    #
+    # -- Custom livenessProbe that overrides the default one
+    customLivenessProbe: {}
+    livenessProbe:
+      # -- Enable livenessProbe
+      enabled: true
+      # -- Initial delay seconds for livenessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for livenessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for livenessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for livenessProbe
+      successThreshold: 1
+      # -- Failure threshold for livenessProbe
+      failureThreshold: 3
+
+    # -- Custom readinessProbe that overrides the default one
+    customReadinessProbe: {}
+
+    readinessProbe:
+      # -- Enable readinessProbe
+      enabled: true
+      # -- Initial delay seconds for readinessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for readinessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for readinessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for readinessProbe
+      successThreshold: 1
+      # -- Failure threshold for readinessProbe
+      failureThreshold: 3
+
+    # -- Custom startupProbe that overrides the default one
+    customStartupProbe: {}
+
+    startupProbe:
+      # -- Enable startupProbe
+      enabled: true
+      # -- Initial delay seconds for startupProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for startupProbe
+      periodSeconds: 10
+      # -- Timeout seconds for startupProbe
+      timeoutSeconds: 10
+      # -- Success threshold for startupProbe
+      successThreshold: 1
+      # -- Failure threshold for startupProbe
+      failureThreshold: 30
+    # -- URL of the Management Portal
+    managementportal_url: http://management-portal:8080/managementportal
+
+    # -- Contents of a gateway-service.yml configuration file
+    # @default -- check `values.yaml`
+    config:
+      enabled: true
+      mouthPath: "/etc/radar-appserver/cloud-messaging-service.yml"
+      values:
+        resourceConfig: org.radarbase.appserver.microservices.cloud.messaging.enhancer.factory.CloudMessagingServiceResourceEnhancerFactory
+        server:
+          baseUri: http://localhost:9015
+          requestTimeout: 30
+          isJmxEnabled: false
+        db:
+          # For Development environment, use H2 database.
+#          jdbcDriver: org.h2.Driver
+#          jdbcUrl: jdbc:h2:mem:appserver_cloud_messaging
+#          hibernateDialect: org.hibernate.dialect.H2Dialect
+#          liquibase:
+#            enabled: false
+#          additionalProperties:
+#            jakarta.persistence.schema-generation.database.action: drop-and-create
+        #    hibernate.show_sql: true
+        #    hibernate.format_sql: true
+          jdbcDriver: org.postgresql.Driver
+          jdbcUrl: jdbc:postgresql://localhost:5432/appserver_cloud_messaging
+          hibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+          username: radar
+          password: radar
+        eventBus:
+          numThreads: 3
+        quartz:
+          coroutineDispatcher: io
+          coroutineJob: supervisor-job
+        contract:
+          project: http://project-service:9010
+          user: http://user-service:9013
+        email:
+          enabled: false
+          smtpHost: smtp.gmail.com
+          smtpPort: 587
+          smtpUser:
+          smtpPassword:
+          fromAddress: radar-base@kcl.ac.uk
+          connectTimeout: 10000
+          readTimeout: 10000
+          enableTls: true
+        fcm:
+          fcmsender: org.radarbase.appserver.jersey.fcm.downstream.AdminSdkFcmSender
+          credentials:
+
+    # envMap = map of ENV_NAME -> { value: "..." }  OR -> { valueFrom: { secretKeyRef: {...} } }
+    # @ignore
+    envMap:
+      APPSERVER_CLOUD_MESSAGING_SERVICE_BASE_URL:
+        value: "http://localhost:9015/"
+      APPSERVER_PROJECT_SERVICE_BASE_URL:
+        value: "http://radar-appserver-project-service:9010/"
+      APPSERVER_USER_SERVICE_BASE_URL:
+        value: "http://radar-appserver-project-service:9013/"
+      GOOGLE_APPLICATION_CREDENTIALS:
+        value: /etc/google/firebase-adminsdk.json
+      APPSERVER_CLOUD_MESSAGING_JDBC_URL:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: username
+      APPSERVER_CLOUD_MESSAGING_JDBC_USERNAME:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: username
+      APPSERVER_CLOUD_MESSAGING_JDBC_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: radar-cloudnative-postgresql-appserver
+            key: password
+      APPSERVER_CLOUD_MESSAGING_HIBERNATE_DIALECT:
+        value: org.hibernate.dialect.PostgreSQLDialect
+      APPSERVER_CLOUD_MESSAGING_JDBC_DRIVER:
+        value: org.postgresql.Driver
+
+    # @ignore
+    volumes:
+      - name: config
+        configMap:
+          nameTemplate: serviceFullname
+      - name: secrets
+        secret:
+          nameTemplate: serviceFullname
+
+    # @ignore
+    volumeMounts:
+      - name: config
+        mountPath: /etc/radar-appserver/
+      - name: secrets
+        mountPath: /etc/google/firebase-adminsdk.json
+        subPath: firebaseAdminSdkKey
+
+
+    # -- Network policy defines who can access this application and who this applications has access to
+    # @default -- check `values.yaml`
+    networkpolicy:
+      policyTypes:
+        - Ingress
+        - Egress
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: ingress-nginx
+      egress:
+        - to:
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                  - 10.0.0.0/8
+                  - 192.168.0.0/16
+                  - 172.16.0.0/12
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: 'management-portal'
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+              podSelector:
+                matchLabels:
+                  k8s-app: kube-dns
+          ports:
+            - port: 53
+              protocol: UDP
+            - port: 53
+              protocol: TCP
+
+  github-service:
+    enabled: true
+    # -- Number of appserver microservices replicas to deploy
+    replicaCount: 1
+    image:
+      # -- Image repository
+      repository: ghcr.io/radar-base/radar-appserver/github-service
+      # -- Image tag (immutable tags are recommended)
+      tag:
+      # -- Image pull policy
+      pullPolicy: IfNotPresent
+    # -- Configure radar-appserver pods' Security Context
+    podSecurityContext: {}
+    # fsGroup: 2000
+
+    # -- Configure radar-appserver containers' Security Context
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+    # runAsUser: 1000
+    service:
+      # -- Kubernetes Service type
+      type: ClusterIP
+      # -- appserver-microservices service port
+      port: 9011
+    ports:
+      # -- appserver-microservices container port
+      containerPort: 9011
+    # -- Command to run when starting the container.
+    command: "github-service"
+    # -- Reconfigure Ingress to not force TLS
+    disable_tls: true
+    # -- The protocol in advertised URIs (https, http)
+    advertised_protocol: http
+    ingress:
+      # -- Enable ingress controller resource
+      enabled: false
+    resources:
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+
+      # -- CPU/Memory resource requests
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    # -- Node labels for pod assignment
+    nodeSelector: {}
+
+    # -- Toleration labels for pod assignment
+    tolerations: []
+
+    # -- Affinity labels for pod assignment
+    affinity: {}
+
+    # -- Extra environment variables
+    extraEnvVars: []
+    #  - name: BEARER_AUTH
+    #    value: true
+
+    # Should the JAVA_OPTS be added as environment variable for the service
+    injectJavaOpts: true
+    # -- Custom livenessProbe that overrides the default one
+    customLivenessProbe: {}
+
+    livenessProbe:
+      # -- Enable livenessProbe
+      enabled: true
+      # -- Initial delay seconds for livenessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for livenessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for livenessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for livenessProbe
+      successThreshold: 1
+      # -- Failure threshold for livenessProbe
+      failureThreshold: 3
+
+    # -- Custom readinessProbe that overrides the default one
+    customReadinessProbe: {}
+
+    readinessProbe:
+      # -- Enable readinessProbe
+      enabled: true
+      # -- Initial delay seconds for readinessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for readinessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for readinessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for readinessProbe
+      successThreshold: 1
+      # -- Failure threshold for readinessProbe
+      failureThreshold: 3
+
+    # -- Custom startupProbe that overrides the default one
+    customStartupProbe: {}
+
+    startupProbe:
+      # -- Enable startupProbe
+      enabled: true
+      # -- Initial delay seconds for startupProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for startupProbe
+      periodSeconds: 10
+      # -- Timeout seconds for startupProbe
+      timeoutSeconds: 10
+      # -- Success threshold for startupProbe
+      successThreshold: 1
+      # -- Failure threshold for startupProbe
+      failureThreshold: 30
+    # -- URL of the Management Portal
+    managementportal_url: http://management-portal:8080/managementportal
+
+    # -- Contents of a gateway-service.yml configuration file
+    # @default -- check `values.yaml`
+    config:
+      enabled: true
+      mouthPath: "/etc/radar-appserver/github-service.yml"
+      values:
+        resourceConfig: org.radarbase.appserver.microservices.github.enhancer.factory.GithubServiceResourceEnhancerFactory
+        server:
+          baseUri: http://localhost:9011
+          requestTimeout: 30
+          isJmxEnabled: false
+          # GitHub configuration.
+        github:
+          # GitHub Cache configuration.
+          cache:
+            # Duration in seconds for which the cache is valid.
+            cacheDurationSec: 3600
+            # Duration in seconds after which the cache can be refreshed.
+            retryDurationSec: 60
+            # Maximum number of entries in the cache.
+            maxCacheSize: 10000
+            # GitHub HTTP Client configuration.
+          client:
+            maxContentLength: 1000000
+            timeoutSec: 10
+            githubToken:
+    # envMap = map of ENV_NAME -> { value: "..." }  OR -> { valueFrom: { secretKeyRef: {...} } }
+    # @ignore
+    envMap:
+      APPSERVER_GITHUB_SERVICE_BASE_URL:
+        value: "http://localhost:9011/"
+      SECURITY_GITHUB_CLIENT_TOKEN:
+        valueFrom:
+          secretKeyRef:
+            name: github-service
+            key: githubToken
+    # @ignore
+    volumes:
+      - name: config
+        configMap:
+          nameTemplate: serviceFullname
+    # @ignore
+    volumeMounts:
+      - name: config
+        mountPath: /etc/radar-appserver/
+
+    # -- Network policy defines who can access this application and who this applications has access to
+    # @default -- check `values.yaml`
+    networkpolicy:
+      policyTypes:
+        - Ingress
+        - Egress
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: ingress-nginx
+      egress:
+        - to:
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                  - 10.0.0.0/8
+                  - 192.168.0.0/16
+                  - 172.16.0.0/12
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: 'management-portal'
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+              podSelector:
+                matchLabels:
+                  k8s-app: kube-dns
+          ports:
+            - port: 53
+              protocol: UDP
+            - port: 53
+              protocol: TCP
+
+  protocol-service:
+    enabled: true
+    # -- Number of appserver microservices replicas to deploy
+    replicaCount: 1
+    image:
+      # -- Image repository
+      repository: ghcr.io/radar-base/radar-appserver/protocol-service
+      # -- Image tag (immutable tags are recommended)
+      tag:
+      # -- Image pull policy
+      pullPolicy: IfNotPresent
+    # -- Configure radar-appserver pods' Security Context
+    podSecurityContext: {}
+    # fsGroup: 2000
+
+    # -- Configure radar-appserver containers' Security Context
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+    # runAsUser: 1000
+    service:
+      # -- Kubernetes Service type
+      type: ClusterIP
+      # -- appserver-microservices service port
+      port: 9012
+    ports:
+      # -- appserver-microservices container port
+      containerPort: 9012
+    # -- Command to run when starting the container.
+    command: "protocol-service"
+    # -- Reconfigure Ingress to not force TLS
+    disable_tls: true
+    # -- The protocol in advertised URIs (https, http)
+    advertised_protocol: http
+    ingress:
+      # -- Enable ingress controller resource
+      enabled: false
+    resources:
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+
+      # -- CPU/Memory resource requests
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    # -- Node labels for pod assignment
+    nodeSelector: {}
+
+    # -- Toleration labels for pod assignment
+    tolerations: []
+
+    # -- Affinity labels for pod assignment
+    affinity: {}
+
+    # -- Extra environment variables
+    extraEnvVars: []
+    #  - name: BEARER_AUTH
+    #    value: true
+
+    # Should the JAVA_OPTS be added as environment variable for the service
+    injectJavaOpts: true
+    # -- Custom livenessProbe that overrides the default one
+    customLivenessProbe: {}
+
+    livenessProbe:
+      # -- Enable livenessProbe
+      enabled: true
+      # -- Initial delay seconds for livenessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for livenessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for livenessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for livenessProbe
+      successThreshold: 1
+      # -- Failure threshold for livenessProbe
+      failureThreshold: 3
+
+    # -- Custom readinessProbe that overrides the default one
+    customReadinessProbe: {}
+
+    readinessProbe:
+      # -- Enable readinessProbe
+      enabled: true
+      # -- Initial delay seconds for readinessProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for readinessProbe
+      periodSeconds: 30
+      # -- Timeout seconds for readinessProbe
+      timeoutSeconds: 5
+      # -- Success threshold for readinessProbe
+      successThreshold: 1
+      # -- Failure threshold for readinessProbe
+      failureThreshold: 3
+
+    # -- Custom startupProbe that overrides the default one
+    customStartupProbe: {}
+
+    startupProbe:
+      # -- Enable startupProbe
+      enabled: true
+      # -- Initial delay seconds for startupProbe
+      initialDelaySeconds: 5
+      # -- Period seconds for startupProbe
+      periodSeconds: 10
+      # -- Timeout seconds for startupProbe
+      timeoutSeconds: 10
+      # -- Success threshold for startupProbe
+      successThreshold: 1
+      # -- Failure threshold for startupProbe
+      failureThreshold: 30
+    # -- URL of the Management Portal
+    managementportal_url: http://management-portal:8080/managementportal
+
+    # -- Contents of a gateway-service.yml configuration file
+    # @default -- check `values.yaml`
+    config:
+      enabled: true
+      mouthPath: "/etc/radar-appserver/protocol-service.yml"
+      values:
+        resourceConfig: org.radarbase.appserver.microservices.protocol.enhancer.factory.ProtocolServiceResourceEnhancerFactory
+        server:
+          baseUri: http://localhost:9012
+          requestTimeout: 30
+          isJmxEnabled: false
+        protocol:
+          githubProtocolRepo: RADAR-base/RADAR-aRMT-protocols
+          protocolFileName: protocol.json
+          githubBranch: master
+        contract:
+          project: http://project-service:9010
+          user: http://user-service:9013
+          github: http://github-service:9011    # envMap = map of ENV_NAME -> { value: "..." }  OR -> { valueFrom: { secretKeyRef: {...} } }
+    # @ignore
+    envMap:
+      APPSERVER_GITHUB_SERVICE_BASE_URL:
+        value: "http://localhost:9011/"
+      APPSERVER_USER_SERVICE_BASE_URL:
+        value: "http://radar-appserver-user-service:9013/"
+      APPSERVER_PROJECT_SERVICE_BASE_URL:
+        value: "http://radar-appserver-project-service:9010/"
+    # @ignore
+    volumes:
+      - name: config
+        configMap:
+          nameTemplate: serviceFullname
+    # @ignore
+    volumeMounts:
+      - name: config
+        mountPath: /etc/radar-appserver/
+
+    # -- Network policy defines who can access this application and who this applications has access to
+    # @default -- check `values.yaml`
+    networkpolicy:
+      policyTypes:
+        - Ingress
+        - Egress
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: ingress-nginx
+      egress:
+        - to:
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                  - 10.0.0.0/8
+                  - 192.168.0.0/16
+                  - 172.16.0.0/12
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: 'management-portal'
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+              podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: '{{ .Values.postgres.host | default "radar-cloudnative-postgresql-cluster" | trunc 63 | trimSuffix "-" }}'
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: kube-system
+              podSelector:
+                matchLabels:
+                  k8s-app: kube-dns
+          ports:
+            - port: 53
+              protocol: UDP
+            - port: 53
+              protocol: TCP
