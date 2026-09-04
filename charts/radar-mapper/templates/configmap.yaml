@@ -1,0 +1,118 @@
+{{- if not .Values.existingSecret }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" (dict "customLabels" .Values.commonLabels "context" $) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
+  {{- end }}
+data:
+  # ── mapper.yml ─────────────────────────────────────────────────────────────
+  # Full application configuration. Credentials are embedded here from Helm
+  # values. For production deployments where credential exposure in ConfigMaps
+  # is a concern, pre-create a Kubernetes Secret containing 'mapper.yml' and
+  # reference it via existingSecret.
+  mapper.yml: |
+    source:
+      type: {{ .Values.source.type | quote }}
+      path: {{ .Values.source.path | quote }}
+      {{- if eq .Values.source.type "s3" }}
+      s3:
+        endpoint: {{ .Values.source.s3.endpoint | quote }}
+        bucket: {{ .Values.source.s3.bucket | quote }}
+        access_token: {{ .Values.source.s3.accessToken | quote }}
+        secret_key: {{ .Values.source.s3.secretKey | quote }}
+      {{- end }}
+
+    enrichment:
+      {{- range .Values.enrichment }}
+      - name: {{ .name | quote }}
+        {{- if .sourceFields }}
+        source_fields:
+          {{- range .sourceFields }}
+          - {{ . | quote }}
+          {{- end }}
+        {{- else }}
+        source_field: {{ .sourceField | quote }}
+        {{- end }}
+        {{- if .outputField }}
+        output_field: {{ .outputField | quote }}
+        {{- end }}
+        {{- if .addAsItem }}
+        add_as_item: true
+        {{- end }}
+        {{- if .match }}
+        match:
+          {{- range $field, $value := .match }}
+          {{ $field }}: {{ $value | quote }}
+          {{- end }}
+        {{- end }}
+        provider:
+          type: {{ .provider.type | quote }}
+          {{- if eq .provider.type "management_portal" }}
+          url: {{ $.Values.managementPortal.url | quote }}
+          client_id: {{ $.Values.managementPortal.clientId | quote }}
+          client_secret: {{ $.Values.managementPortal.clientSecret | quote }}
+          {{- if $.Values.managementPortal.tokenUrl }}
+          token_url: {{ $.Values.managementPortal.tokenUrl | quote }}
+          {{- end }}
+          {{- if $.Values.managementPortal.scope }}
+          scope: {{ $.Values.managementPortal.scope | quote }}
+          {{- end }}
+          {{- if $.Values.managementPortal.audience }}
+          audience: {{ $.Values.managementPortal.audience | quote }}
+          {{- end }}
+          {{- if .provider.projects }}
+          projects:
+            {{- range .provider.projects }}
+            - {{ . | quote }}
+            {{- end }}
+          {{- end }}
+          subject_attribute: {{ .provider.subjectAttribute | quote }}
+          {{- else if eq .provider.type "csv" }}
+          path: {{ .provider.path | quote }}
+          {{- if .provider.keyColumn }}
+          key_column: {{ .provider.keyColumn | quote }}
+          {{- end }}
+          {{- if .provider.keyColumns }}
+          key_columns:
+            {{- range .provider.keyColumns }}
+            - {{ . | quote }}
+            {{- end }}
+          {{- end }}
+          value_column: {{ .provider.valueColumn | quote }}
+          {{- end }}
+        on_missing: {{ .onMissing }}
+      {{- end }}
+
+    {{- if .Values.filter.excludeItems }}
+    filter:
+      exclude_items:
+        {{- range .Values.filter.excludeItems }}
+        - {{ . | quote }}
+        {{- end }}
+    {{- end }}
+
+    destination:
+      type: {{ .Values.destination.type | quote }}
+      path: {{ .Values.destination.path | quote }}
+      {{- if eq .Values.destination.type "s3" }}
+      s3:
+        endpoint: {{ .Values.destination.s3.endpoint | quote }}
+        bucket: {{ .Values.destination.s3.bucket | quote }}
+        access_token: {{ .Values.destination.s3.accessToken | quote }}
+        secret_key: {{ .Values.destination.s3.secretKey | quote }}
+      {{- end }}
+
+  # ── inline CSV files ───────────────────────────────────────────────────────
+  # Any enrichment entry with a lookupCsv value gets its content mounted as a
+  # file at the path specified in its provider config.
+  {{- range .Values.enrichment }}
+  {{- if .provider.lookupCsv }}
+  {{ base .provider.path }}: |
+{{ .provider.lookupCsv | indent 4 }}
+  {{- end }}
+  {{- end }}
+{{- end }}
