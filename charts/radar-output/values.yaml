@@ -164,6 +164,9 @@ source:
     # -- Interval in seconds to also include empty directories during sync with the storage (in seconds).
     # This values should be only changed in specific scenarios (e.g. e2e testing).
     emptyDirectorySyncInterval: 900
+    # -- Interval in seconds for incremental directory scans of the storage (in seconds).
+    # This value should be only changed in specific scenarios (e.g. e2e testing).
+    incrementalSyncInterval: 3600
 
 target:
   # -- Type of the output storage of the RADAR-base pipeline (e.g., s3 or azure)

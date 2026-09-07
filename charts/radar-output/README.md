@@ -77,6 +77,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | source.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
 | source.index.fullSyncInterval | int | `3600` | Interval in seconds to synchronize the index with the storage (in seconds). This values should be only changed in specific scenarios (e.g. e2e testing). |
 | source.index.emptyDirectorySyncInterval | int | `900` | Interval in seconds to also include empty directories during sync with the storage (in seconds). This values should be only changed in specific scenarios (e.g. e2e testing). |
+| source.index.incrementalSyncInterval | int | `3600` | Interval in seconds for incremental directory scans of the storage (in seconds). This value should be only changed in specific scenarios (e.g. e2e testing). |
 | target.type | string | `"s3"` | Type of the output storage of the RADAR-base pipeline (e.g., s3 or azure) |
 | target.s3.endpoint | string | `"http://minio:9000"` | s3 endpoint of the output storage |
 | target.s3.accessToken | string | `"access_key"` | s3 access-key of the output storage |

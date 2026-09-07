@@ -49,6 +49,7 @@ data:
       index:
         fullSyncInterval: {{ .index.fullSyncInterval | int }}
         emptyDirectorySyncInterval: {{ .index.emptyDirectorySyncInterval | int }}
+        incrementalSyncInterval: {{ .index.incrementalSyncInterval | int }}
     {{- end }}
 
     {{- with .Values.target }}
