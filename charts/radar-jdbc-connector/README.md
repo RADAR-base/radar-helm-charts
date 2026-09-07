@@ -63,10 +63,8 @@ Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: fal
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
-| extraEnvVars | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_CONSUMER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_CONSUMER_SASL_MECHANISM","value":"SCRAM-SHA-512"}]` | Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specific [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration) |
-| extraEnvVars[0] | object | `{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. Needed by kafka_init script. |
-| extraEnvVars[1] | object | `{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"}` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. Needed by kafka_init script. |
-| extraEnvVars[2] | object | `{"name":"CONNECT_CONSUMER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
+| extraEnvVars | list | `[{"name":"CONNECT_CONSUMER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_PRODUCER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_CONSUMER_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_PRODUCER_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"}]` | Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specific [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration) |
+| extraEnvVars[0] | object | `{"name":"CONNECT_CONSUMER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"}` | Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL. |
 | extraEnvVars[3] | object | `{"name":"CONNECT_CONSUMER_SASL_MECHANISM","value":"SCRAM-SHA-512"}` | Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512. |
 | secret.jaas | object | `{"key":"sasl.jaas.config","name":"shared-service-user"}` | Secret name for the JAAS configuration |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
@@ -103,9 +101,12 @@ Deployment of CloudNativePG TimescaleDB can be disabled by setting `enabled: fal
 | source.schema | string | `"public"` | Database schema (if any) |
 | source.tableWhitelist | string | `""` | Comma-separated list of tables to read |
 | source.topicPrefix | string | `""` | Prefix to prepend to table names to generate the name of the Kafka topic to publish data to. |
-| source.mode | string | `"incrementing"` | How to detect new values in a table. |
+| source.topicCleanupPolicy | string | `"delete"` | Policy to use when cleaning up topics. Can be delete or compact. |
+| source.mode | string | `"incrementing"` | How to detect new rows in a table (can be incrementing, timestamp, or timestamp+incrementing) |
 | source.incrementingColumnName | string | `""` | When using mode incrementing, which column to use as incrementing. If empty, autodetection will be used. |
+| source.timestampColumnName | string | `""` | When using mode timestamp, which column to use as timestamp. If empty, autodetection will be used. |
 | source.keyField | string | `""` | Field to use as key for the records. If empty, no key is used. |
+| source.query | string | `""` | Query to use to read data from the database. Can be used instead of tableWhitelist. |
 | source.persistence.enabled | bool | `true` | Whether to enable persistence for storing offsets |
 | source.persistence.existingClaim | string | `nil` | Existing persistent volume claim to use |
 | source.persistence.accessMode | string | `"ReadWriteOnce"` | PVC access mode |
