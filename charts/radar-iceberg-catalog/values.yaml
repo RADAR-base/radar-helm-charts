@@ -1,0 +1,146 @@
+# Default values for radar-iceberg-catalog.
+#
+# This chart is a thin RADAR wrapper around the upstream Lakekeeper chart
+# (external/lakekeeper). It adds three things Lakekeeper does not ship:
+#
+#   1. a Secret holding the object-storage credentials for the Iceberg warehouse,
+#   2. a bootstrap Job that initialises the server and creates the warehouse,
+#   3. a network policy in the RADAR house style.
+#
+# Everything under the `lakekeeper:` key is passed straight through to the subchart.
+
+# -- String to partially override the fullname template (will prepend the release name)
+nameOverride: ""
+# -- String to fully override the fullname template
+fullnameOverride: ""
+
+# -- Labels added to all resources of this chart
+commonLabels: {}
+# -- Annotations added to all resources of this chart
+commonAnnotations: {}
+
+warehouse:
+  # -- Name of the Iceberg warehouse to create. Connectors and query engines reference this
+  # name as `iceberg.catalog.warehouse` / `iceberg.rest-catalog.warehouse`.
+  name: radar
+  # -- Object-storage bucket holding the Iceberg data and metadata files.
+  # This MUST be a bucket of its own, separate from the `in/` archive and the output bucket,
+  # and it MUST NOT have lifecycle rules: Iceberg owns the lifetime of every file in it, and
+  # an external rule deleting "old" objects corrupts tables.
+  bucket: radar-warehouse
+  # -- S3 endpoint. For in-cluster MinIO this is the MinIO service.
+  endpoint: http://minio:9000
+  # -- Region. S3-compatible stores ignore it, but the AWS SDK requires a value.
+  region: local-01
+  # -- Use path-style addressing (`endpoint/bucket`). Required for MinIO.
+  pathStyleAccess: true
+  # -- Storage flavour reported to Lakekeeper: `s3-compat` for MinIO, `aws` for real S3.
+  flavor: s3-compat
+  # -- Enable STS credential vending. Requires a store that implements STS.
+  stsEnabled: false
+
+  credentials:
+    # -- Access key for the warehouse bucket. Ignored when `existingSecret` is set.
+    accessKey: ""
+    # -- Secret key for the warehouse bucket. Ignored when `existingSecret` is set.
+    secretKey: ""
+    # -- Use a pre-existing Secret instead of creating one from the values above.
+    # Recommended: it keeps credentials out of values files.
+    existingSecret: ""
+    # -- Key within the Secret holding the access key.
+    # Named after the AWS SDK environment variable on purpose: Trino consumes this Secret with
+    # `envFrom`, which turns each key into an environment variable of the same name, and its
+    # Iceberg catalog properties then reference `${ENV:AWS_ACCESS_KEY_ID}`.
+    accessKeyKey: AWS_ACCESS_KEY_ID
+    # -- Key within the Secret holding the secret key. See `accessKeyKey`.
+    secretKeyKey: AWS_SECRET_ACCESS_KEY
+
+bootstrap:
+  # -- Run a Job after install/upgrade that bootstraps the server and creates the warehouse.
+  # The Job is idempotent: an already-bootstrapped server or an existing warehouse is
+  # reported and treated as success.
+  enabled: true
+  # -- Accept the Lakekeeper terms of use as part of bootstrapping
+  acceptTermsOfUse: true
+  # -- Seconds the finished Job is kept before Kubernetes removes it
+  ttlSecondsAfterFinished: 600
+  # -- Number of retries before the Job is marked failed
+  backoffLimit: 6
+  # -- Seconds to wait for the catalog to answer before giving up
+  maxWaitSeconds: 300
+  image:
+    # -- Image registry for the bootstrap Job
+    registry: docker.io
+    # -- Image repository for the bootstrap Job. Needs `curl` and a shell.
+    repository: curlimages/curl
+    # -- Image tag for the bootstrap Job
+    tag: "8.11.1"
+    # -- Image pull policy for the bootstrap Job
+    pullPolicy: IfNotPresent
+  # -- CPU/Memory resources for the bootstrap Job
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+
+# -- Values passed through to the upstream Lakekeeper chart (external/lakekeeper).
+# See its own README for the full set.
+# @default -- check `values.yaml`
+lakekeeper:
+  catalog:
+    replicas: 2
+
+  # The embedded Postgres is convenient for staging and NOT suitable for production.
+  # For production set `postgresql.enabled: false` and point `externalDatabase` at a
+  # CloudNativePG cluster created by the radar-cloudnative-postgresql chart:
+  #
+  #   postgresql:
+  #     enabled: false
+  #   externalDatabase:
+  #     host_read: radar-iceberg-catalog-db-rw
+  #     host_write: radar-iceberg-catalog-db-rw
+  #     database: catalog
+  #     userSecret: radar-iceberg-catalog-db-app
+  #     userSecretKey: username
+  #     passwordSecret: radar-iceberg-catalog-db-app
+  #     passwordSecretKey: password
+  #
+  # Whichever you use: back this database up. Losing it does not lose a byte of data, but it
+  # loses the pointer identifying which metadata file is current for every table, and the
+  # tables stop being tables.
+  postgresql:
+    enabled: true
+
+  # Authentication is off by default so the chart is usable in a mock-data staging
+  # environment. Turn it on before any real participant data exists, by pointing
+  # `auth.oauth2.providerUri` at the same identity provider ManagementPortal uses.
+  auth:
+    oauth2:
+      providerUri: ""
+
+# -- Network policy defines who can access this application and who this application has
+# access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'minio'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP

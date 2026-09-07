@@ -1,0 +1,151 @@
+{{- if .Values.bootstrap.enabled }}
+{{- $fullname := include "radar-iceberg-catalog.fullname" . }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullname }}-bootstrap
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+data:
+  bootstrap.sh: |
+    #!/bin/sh
+    # Initialise Lakekeeper and create the RADAR warehouse.
+    #
+    # Idempotent by design: this Job runs on every install and upgrade, so an
+    # already-bootstrapped server and an existing warehouse are successes, not failures.
+    #
+    # NOTE: these endpoints are unauthenticated only while Lakekeeper's OIDC auth is off.
+    # Once `lakekeeper.auth.oauth2.providerUri` is set, bootstrapping needs a bearer token —
+    # disable this Job and bootstrap with an authenticated client instead.
+    set -eu
+
+    CATALOG_URL="${CATALOG_URL:?}"
+    WAREHOUSE_NAME="${WAREHOUSE_NAME:?}"
+    ELAPSED=0
+
+    echo "==> waiting for ${CATALOG_URL} to answer"
+    until curl -s -o /dev/null "${CATALOG_URL}/health"; do
+      if [ "${ELAPSED}" -ge "${MAX_WAIT_SECONDS}" ]; then
+        echo "timed out after ${MAX_WAIT_SECONDS}s waiting for ${CATALOG_URL}" >&2
+        exit 1
+      fi
+      sleep 3
+      ELAPSED=$((ELAPSED + 3))
+    done
+
+    echo "==> bootstrapping server"
+    CODE=$(curl -s -o /tmp/resp -w '%{http_code}' \
+      -X POST "${CATALOG_URL}/management/v1/bootstrap" \
+      -H 'Content-Type: application/json' \
+      -d "{\"accept-terms-of-use\": ${ACCEPT_TERMS}}")
+    case "${CODE}" in
+      2*)      echo "    bootstrapped (HTTP ${CODE})" ;;
+      400|409) echo "    already bootstrapped (HTTP ${CODE}), continuing" ;;
+      *)       echo "    bootstrap failed (HTTP ${CODE}):" >&2; cat /tmp/resp >&2; exit 1 ;;
+    esac
+
+    echo "==> creating warehouse ${WAREHOUSE_NAME}"
+    cat >/tmp/warehouse.json <<JSON
+    {
+      "warehouse-name": "${WAREHOUSE_NAME}",
+      "storage-profile": {
+        "type": "s3",
+        "bucket": "${WAREHOUSE_BUCKET}",
+        "endpoint": "${WAREHOUSE_ENDPOINT}",
+        "region": "${WAREHOUSE_REGION}",
+        "path-style-access": ${WAREHOUSE_PATH_STYLE},
+        "flavor": "${WAREHOUSE_FLAVOR}",
+        "sts-enabled": ${WAREHOUSE_STS_ENABLED}
+      },
+      "storage-credential": {
+        "type": "s3",
+        "credential-type": "access-key",
+        "aws-access-key-id": "${AWS_ACCESS_KEY_ID}",
+        "aws-secret-access-key": "${AWS_SECRET_ACCESS_KEY}"
+      }
+    }
+    JSON
+
+    CODE=$(curl -s -o /tmp/resp -w '%{http_code}' \
+      -X POST "${CATALOG_URL}/management/v1/warehouse" \
+      -H 'Content-Type: application/json' \
+      --data @/tmp/warehouse.json)
+    case "${CODE}" in
+      2*)      echo "    created (HTTP ${CODE})" ;;
+      409)     echo "    already exists (HTTP ${CODE}), continuing" ;;
+      *)       echo "    warehouse creation failed (HTTP ${CODE}):" >&2
+               cat /tmp/resp >&2
+               echo >&2
+               echo "    The storage-profile field names change between Lakekeeper releases." >&2
+               echo "    Compare the payload above with the API of the version you deployed." >&2
+               exit 1 ;;
+    esac
+
+    echo "==> verifying"
+    curl -sf "${CATALOG_URL}/catalog/v1/config?warehouse=${WAREHOUSE_NAME}" >/dev/null
+    echo "    warehouse ${WAREHOUSE_NAME} is servable. Done."
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # Revision-suffixed: Job specs are immutable, so each upgrade needs a fresh name.
+  name: {{ $fullname }}-bootstrap-{{ .Release.Revision }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  backoffLimit: {{ .Values.bootstrap.backoffLimit }}
+  ttlSecondsAfterFinished: {{ .Values.bootstrap.ttlSecondsAfterFinished }}
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: bootstrap
+          image: {{ include "radar-iceberg-catalog.bootstrapImage" . }}
+          imagePullPolicy: {{ .Values.bootstrap.image.pullPolicy | quote }}
+          command: ["/bin/sh", "/scripts/bootstrap.sh"]
+          env:
+            - name: CATALOG_URL
+              value: {{ include "radar-iceberg-catalog.lakekeeperUrl" . | quote }}
+            - name: MAX_WAIT_SECONDS
+              value: {{ .Values.bootstrap.maxWaitSeconds | quote }}
+            - name: ACCEPT_TERMS
+              value: {{ .Values.bootstrap.acceptTermsOfUse | quote }}
+            - name: WAREHOUSE_NAME
+              value: {{ .Values.warehouse.name | quote }}
+            - name: WAREHOUSE_BUCKET
+              value: {{ .Values.warehouse.bucket | quote }}
+            - name: WAREHOUSE_ENDPOINT
+              value: {{ .Values.warehouse.endpoint | quote }}
+            - name: WAREHOUSE_REGION
+              value: {{ .Values.warehouse.region | quote }}
+            - name: WAREHOUSE_PATH_STYLE
+              value: {{ .Values.warehouse.pathStyleAccess | quote }}
+            - name: WAREHOUSE_FLAVOR
+              value: {{ .Values.warehouse.flavor | quote }}
+            - name: WAREHOUSE_STS_ENABLED
+              value: {{ .Values.warehouse.stsEnabled | quote }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "radar-iceberg-catalog.warehouseSecret" . }}
+                  key: {{ .Values.warehouse.credentials.accessKeyKey }}
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "radar-iceberg-catalog.warehouseSecret" . }}
+                  key: {{ .Values.warehouse.credentials.secretKeyKey }}
+          resources:
+            {{- toYaml .Values.bootstrap.resources | nindent 12 }}
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: scripts
+          configMap:
+            name: {{ $fullname }}-bootstrap
+{{- end }}

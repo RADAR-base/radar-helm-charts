@@ -1,0 +1,9 @@
+dependencies:
+- name: lakekeeper
+  repository: file://../../external/lakekeeper
+  version: 0.11.0
+- name: common
+  repository: https://radar-base.github.io/radar-helm-charts
+  version: 2.27.0
+digest: sha256:e63cb905d7d4e4a8dfe7086acffdc29738cf8cd6d749a04d0062860e60b1c94a
+generated: "2026-08-17T22:31:32.127877+01:00"
