@@ -14206,6 +14206,34 @@ entries:
   radar-kratos:
   - apiVersion: v2
     appVersion: v1.3.0
+    created: "2026-09-07T14:17:13.788754551Z"
+    dependencies:
+    - name: kratos
+      repository: file://../../external/kratos
+      version: 0.52.1
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A ORY Kratos Helm chart for RADAR-base. ORY Kratos is a cloud native
+      Identity and User Management system.
+    digest: 183a725b6b2b9387d3e16cfe9c664722c0a14a2ae875de4568db478a93200c4c
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: radar-kratos
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-kratos
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-kratos-0.1.5/radar-kratos-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: v1.3.0
     created: "2026-06-04T12:30:44.995635Z"
     dependencies:
     - name: kratos
@@ -24597,4 +24625,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-03T13:24:30.933399534Z"
+generated: "2026-09-07T14:17:13.789840311Z"
