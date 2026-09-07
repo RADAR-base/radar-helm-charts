@@ -1,0 +1,19 @@
+{{- if (.Values.catalog.autoscaling.enabled) }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "iceberg-catalog.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "iceberg-catalog.labels" . | nindent 4 }}
+    app.kubernetes.io/component: catalog
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "iceberg-catalog.fullname" . }}
+  minReplicas: {{ .Values.catalog.replicas }}
+  maxReplicas: {{ .Values.catalog.autoscaling.maxReplicas }}
+  metrics:
+    {{- toYaml .Values.catalog.autoscaling.metrics | nindent 4 }}
+{{- end }}

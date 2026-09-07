@@ -1,0 +1,494 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "openfga.fullname" . }}
+  labels:
+    {{- include "openfga.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not  .Values.autoscaling.enabled }}
+  replicas: {{ ternary 1 .Values.replicaCount (eq .Values.datastore.engine "memory")}}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "openfga.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ (split ":" .Values.telemetry.metrics.addr)._1 }}"
+      labels:
+        {{- include "openfga.labels" . | nindent 8 }}
+        {{- with .Values.podExtraLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "openfga.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{ if or (and (has .Values.datastore.engine (list "postgres" "mysql")) .Values.datastore.applyMigrations .Values.datastore.waitForMigrations) .Values.extraInitContainers }}
+      initContainers:
+        {{- if and (has .Values.datastore.engine (list "postgres" "mysql")) .Values.datastore.applyMigrations .Values.datastore.waitForMigrations (eq .Values.datastore.migrationType "job") }}
+        - name: wait-for-migration
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.initContainer.repository }}:{{ .Values.initContainer.tag }}"
+          imagePullPolicy: {{ .Values.initContainer.pullPolicy }}
+          args: ["job-wr", '{{ include "openfga.fullname" . }}-migrate']
+          resources:
+            {{- toYaml .Values.datastore.migrations.resources | nindent 12 }}
+        {{- end }}
+        {{- if and (has .Values.datastore.engine (list "postgres" "mysql")) (eq .Values.datastore.migrationType "initContainer") }}
+        {{- with .Values.migrate.extraInitContainers }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: migrate-database
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          args: [ "migrate" ]
+          env:
+            {{- include "openfga.datastore.envConfig" . | nindent 12 }}
+            {{- if .Values.migrate.timeout }}
+            - name: OPENFGA_TIMEOUT
+              value: "{{ .Values.migrate.timeout }}"
+            {{- end }}
+            {{- with .Values.extraEnvVars }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.datastore.migrations.resources | nindent 12 }}
+          {{- with .Values.migrate.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.migrate.sidecars }}
+          {{- include "common.tplvalues.render" ( dict "value" .Values.migrate.sidecars "context" $) | nindent 8 }}
+          {{- end }}
+        {{- end }}
+        {{- with .Values.extraInitContainers }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: ["run"]
+          ports:
+            - name: grpc
+              containerPort: {{ (split ":" .Values.grpc.addr)._1 }}
+
+            - name: http
+              containerPort: {{ (split ":" .Values.http.addr)._1 }}
+              protocol: TCP
+
+            - name: profiler
+              containerPort: {{ (split ":" .Values.profiler.addr)._1 }}
+              protocol: TCP
+
+            - name: playground
+              containerPort: {{ .Values.playground.port }}
+              protocol: TCP
+
+            {{- if .Values.telemetry.metrics.enabled }}
+            - name: metrics
+              containerPort: {{ (split ":" .Values.telemetry.metrics.addr)._1 }}
+              protocol: TCP
+            {{- end }}
+
+          env:
+            {{- include "openfga.datastore.envConfig" . | nindent 12 }}
+            {{- if .Values.datastore.maxCacheSize }}
+            - name: OPENFGA_DATASTORE_MAX_CACHE_SIZE
+              value: "{{ .Values.datastore.maxCacheSize }}"
+            {{- end }}
+
+            {{- if .Values.datastore.maxOpenConns }}
+            - name: OPENFGA_DATASTORE_MAX_OPEN_CONNS
+              value: "{{ .Values.datastore.maxOpenConns }}"
+            {{- end }}
+
+            {{- if .Values.datastore.maxIdleConns }}
+            - name: OPENFGA_DATASTORE_MAX_IDLE_CONNS
+              value: "{{ .Values.datastore.maxIdleConns }}"
+            {{- end }}
+
+            {{- if .Values.datastore.connMaxIdleTime }}
+            - name: OPENFGA_DATASTORE_CONN_MAX_IDLE_TIME
+              value: "{{ .Values.datastore.connMaxIdleTime }}"
+            {{- end }}
+
+            {{- if .Values.datastore.connMaxLifetime }}
+            - name: OPENFGA_DATASTORE_CONN_MAX_LIFETIME
+              value: "{{ .Values.datastore.connMaxLifetime }}"
+            {{- end }}
+
+            {{- include "openfga.datastore.secondary.envConfig" . | nindent 12 }}
+
+            - name: OPENFGA_DATASTORE_METRICS_ENABLED
+              value: "{{ .Values.datastore.metrics.enabled }}"
+
+            {{- if .Values.maxConcurrentReadsForCheck }}
+            - name: OPENFGA_MAX_CONCURRENT_READS_FOR_CHECK
+              value: "{{ .Values.maxConcurrentReadsForCheck }}"
+            {{- end }}
+
+            {{- if .Values.maxConcurrentReadsForListObjects }}
+            - name: OPENFGA_MAX_CONCURRENT_READS_FOR_LIST_OBJECTS
+              value: "{{ .Values.maxConcurrentReadsForListObjects }}"
+            {{- end }}
+
+            {{- if .Values.maxConcurrentReadsForListUsers }}
+            - name: OPENFGA_MAX_CONCURRENT_READS_FOR_LIST_USERS
+              value: "{{ .Values.maxConcurrentReadsForListUsers }}"
+            {{- end }}
+
+            {{- if .Values.maxChecksPerBatchCheck }}
+            - name: OPENFGA_MAX_CHECKS_PER_BATCH_CHECK
+              value: "{{ .Values.maxChecksPerBatchCheck }}"
+            {{- end }}
+
+            {{- if .Values.maxConcurrentChecksPerBatchCheck }}
+            - name: OPENFGA_MAX_CONCURRENT_CHECKS_PER_BATCH_CHECK
+              value: "{{ .Values.maxConcurrentChecksPerBatchCheck }}"
+            {{- end }}
+
+            {{- if .Values.experimentals }}
+            - name: OPENFGA_EXPERIMENTALS
+              value: "{{ join "," .Values.experimentals }}"
+            {{- end }}
+
+            {{- if .Values.grpc.addr }}
+            - name: OPENFGA_GRPC_ADDR
+              value: "{{ .Values.grpc.addr }}"
+            {{- end }}
+
+            {{- if .Values.grpc.tls.enabled }}
+            - name: OPENFGA_GRPC_TLS_ENABLED
+              value: "{{ .Values.grpc.tls.enabled }}"
+
+            - name: OPENFGA_GRPC_TLS_CERT
+              value: {{ .Values.grpc.tls.cert }}
+
+            - name: OPENFGA_GRPC_TLS_KEY
+              value: {{ .Values.grpc.tls.key }}
+            {{- end }}
+
+            - name: OPENFGA_HTTP_ENABLED
+              value: "{{ .Values.http.enabled }}"
+
+            {{- if .Values.http.addr }}
+            - name: OPENFGA_HTTP_ADDR
+              value: "{{ .Values.http.addr }}"
+            {{- end }}
+
+            {{- if .Values.http.tls.enabled }}
+            - name: OPENFGA_HTTP_TLS_ENABLED
+              value: "{{ .Values.http.tls.enabled }}"
+
+            - name: OPENFGA_HTTP_TLS_CERT
+              value: {{ .Values.http.tls.cert }}
+
+            - name: OPENFGA_HTTP_TLS_KEY
+              value: {{ .Values.http.tls.key }}
+            {{- end }}
+
+            {{- if .Values.http.upstreamTimeout }}
+            - name: OPENFGA_HTTP_UPSTREAM_TIMEOUT
+              value: "{{ .Values.http.upstreamTimeout }}"
+            {{- end }}
+
+            {{- if .Values.http.corsAllowedOrigins }}
+            - name: OPENFGA_HTTP_CORS_ALLOWED_ORIGINS
+              value: "{{ include "common.tplvalues.render" ( dict "value" (join "," .Values.http.corsAllowedOrigins) "context" $ ) }}"
+
+            {{- end }}
+
+            {{- if .Values.http.corsAllowedHeaders }}
+            - name: OPENFGA_HTTP_CORS_ALLOWED_HEADERS
+              value: "{{ join "," .Values.http.corsAllowedHeaders }}"
+            {{- end }}
+
+            {{- if .Values.authn.method }}
+            - name: OPENFGA_AUTHN_METHOD
+              value: {{ .Values.authn.method }}
+            {{- end }}
+
+            {{- if .Values.authn.preshared.keysSecret }}
+            - name: OPENFGA_AUTHN_PRESHARED_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.authn.preshared.keysSecret | quote }}
+                  key: keys
+            {{- else if .Values.authn.preshared.keys }}
+            - name: OPENFGA_AUTHN_PRESHARED_KEYS
+              value: "{{ join "," .Values.authn.preshared.keys }}"
+            {{- end }}
+
+            {{- if .Values.authn.oidc.audience }}
+            - name: OPENFGA_AUTHN_OIDC_AUDIENCE
+              value: "{{ .Values.authn.oidc.audience }}"
+            {{- end }}
+
+            {{- if .Values.authn.oidc.issuer }}
+            - name: OPENFGA_AUTHN_OIDC_ISSUER
+              value: "{{ include "common.tplvalues.render" ( dict "value" .Values.authn.oidc.issuer "context" $ ) }}"
+            {{- end }}
+
+            - name: OPENFGA_PLAYGROUND_ENABLED
+              value: "{{ .Values.playground.enabled }}"
+            - name: OPENFGA_PLAYGROUND_PORT
+              value: "{{ .Values.playground.port }}"
+
+            {{- if .Values.profiler.enabled }}
+            - name: OPENFGA_PROFILER_ENABLED
+              value: "{{ .Values.profiler.enabled }}"
+            {{- end }}
+
+            {{- if .Values.log.format }}
+            - name: OPENFGA_LOG_FORMAT
+              value: {{ .Values.log.format }}
+            {{- end }}
+
+            {{- if .Values.log.level }}
+            - name: OPENFGA_LOG_LEVEL
+              value: {{ .Values.log.level }}
+            {{- end }}
+
+            {{- if .Values.log.timestampFormat }}
+            - name: OPENFGA_LOG_TIMESTAMP_FORMAT
+              value: {{ .Values.log.timestampFormat }}
+            {{- end }}
+
+            {{- if .Values.maxTuplesPerWrite }}
+            - name: OPENFGA_MAX_TUPLES_PER_WRITE
+              value: "{{ .Values.maxTuplesPerWrite }}"
+            {{- end }}
+
+            {{- if .Values.maxTypesPerAuthorizationModel }}
+            - name: OPENFGA_MAX_TYPES_PER_AUTHORIZATION_MODEL
+              value: "{{ .Values.maxTypesPerAuthorizationModel }}"
+            {{- end }}
+
+            {{- if .Values.maxAuthorizationModelSizeInBytes }}
+            - name: OPENFGA_MAX_AUTHORIZATION_MODEL_SIZE_IN_BYTES
+              value: "{{ .Values.maxAuthorizationModelSizeInBytes }}"
+            {{- end }}
+
+            {{- if .Values.changelogHorizonOffset }}
+            - name: OPENFGA_CHANGELOG_HORIZON_OFFSET
+              value: "{{ .Values.changelogHorizonOffset }}"
+            {{- end }}
+
+            {{- if .Values.resolveNodeLimit }}
+            - name: OPENFGA_RESOLVE_NODE_LIMIT
+              value: "{{ .Values.resolveNodeLimit }}"
+            {{- end }}
+
+            {{- if .Values.resolveNodeBreadthLimit }}
+            - name: OPENFGA_RESOLVE_NODE_BREADTH_LIMIT
+              value: "{{ .Values.resolveNodeBreadthLimit }}"
+            {{- end }}
+
+            {{- if .Values.listObjectsDeadline }}
+            - name: OPENFGA_LIST_OBJECTS_DEADLINE
+              value: "{{ .Values.listObjectsDeadline }}"
+            {{- end }}
+
+            {{- if ne .Values.listObjectsMaxResults nil }}
+            - name: OPENFGA_LIST_OBJECTS_MAX_RESULTS
+              value: "{{ .Values.listObjectsMaxResults }}"
+            {{- end }}
+
+            {{- if .Values.listUsersDeadline }}
+            - name: OPENFGA_LIST_USERS_DEADLINE
+              value: "{{ .Values.listUsersDeadline }}"
+            {{- end }}
+
+            {{- if ne .Values.listUsersMaxResults nil }}
+            - name: OPENFGA_LIST_USERS_MAX_RESULTS
+              value: "{{ .Values.listUsersMaxResults }}"
+            {{- end }}
+
+            {{- if .Values.requestTimeout }}
+            - name: OPENFGA_REQUEST_TIMEOUT
+              value: "{{ .Values.requestTimeout }}"
+            {{- end}}
+
+            {{- if .Values.checkQueryCache.enabled }}
+            - name: OPENFGA_CHECK_QUERY_CACHE_ENABLED
+              value: "{{ .Values.checkQueryCache.enabled }}"
+            {{- end }}
+
+            {{- if .Values.checkQueryCache.limit }}
+            - name: OPENFGA_CHECK_QUERY_CACHE_LIMIT
+              value: "{{ .Values.checkQueryCache.limit }}"
+            {{- end }}
+
+            {{- if .Values.checkQueryCache.ttl }}
+            - name: OPENFGA_CHECK_QUERY_CACHE_TTL
+              value: "{{ .Values.checkQueryCache.ttl }}"
+            {{- end }}
+
+            {{- if .Values.requestDurationDatastoreQueryCountBuckets }}
+            - name: OPENFGA_REQUEST_DURATION_DATASTORE_QUERY_COUNT_BUCKETS
+              value: "{{ join "," .Values.requestDurationDatastoreQueryCountBuckets }}"
+            {{- end }}
+
+            {{- if .Values.allowWriting1_0Models }}
+            - name: OPENFGA_ALLOW_WRITING_1_0_MODELS
+              value: "{{ .Values.allowWriting1_0Models }}"
+            {{- end }}
+
+            {{- if .Values.allowEvaluating1_0Models }}
+            - name: OPENFGA_ALLOW_EVALUATING_1_0_MODELS
+              value: "{{ .Values.allowEvaluating1_0Models }}"
+            {{- end }}
+
+            - name: OPENFGA_METRICS_ENABLED
+              value: "{{ .Values.telemetry.metrics.enabled }}"
+
+            {{- if .Values.telemetry.metrics.addr }}
+            - name: OPENFGA_METRICS_ADDR
+              value: "{{ .Values.telemetry.metrics.addr }}"
+            {{- end }}
+
+            {{- if .Values.telemetry.metrics.enableRPCHistograms }}
+            - name: OPENFGA_METRICS_ENABLE_RPC_HISTOGRAMS
+              value: "{{ .Values.telemetry.metrics.enableRPCHistograms }}"
+            {{- end }}
+
+            {{- if .Values.telemetry.trace.enabled }}
+            - name: OPENFGA_TRACE_ENABLED
+              value: "{{ .Values.telemetry.trace.enabled }}"
+            {{- end }}
+
+            {{- if .Values.telemetry.trace.otlp.endpoint }}
+            - name: OPENFGA_TRACE_OTLP_ENDPOINT
+              value: {{ .Values.telemetry.trace.otlp.endpoint }}
+            {{- end }}
+
+            {{- if .Values.telemetry.trace.otlp.tls.enabled }}
+            - name: OPENFGA_TRACE_OTLP_TLS_ENABLED
+              value: {{ .Values.telemetry.trace.otlp.tls.enabled }}
+            {{- end }}
+
+            {{- if .Values.telemetry.trace.sampleRatio }}
+            - name: OPENFGA_TRACE_SAMPLE_RATIO
+              value: "{{ .Values.telemetry.trace.sampleRatio }}"
+            {{- end }}
+
+            {{- with .Values.extraEnvVars }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+
+          {{- if .Values.customReadinessProbe }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customReadinessProbe "context" $) | nindent 12 }}
+          {{- else if .Values.readinessProbe.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.readinessProbe "enabled") "context" $) | nindent 12 }}
+          {{- if .Values.grpc.tls.enabled }}
+            exec:
+              command:
+              - grpc_health_probe
+              - -addr={{ .Values.grpc.addr }}
+              - -tls
+              - -tls-ca-cert={{ .Values.grpc.tls.ca }}
+              - -tls-client-cert={{ .Values.grpc.tls.cert }}
+              - -tls-client-key={{ .Values.grpc.tls.key }}
+          {{- else }}
+            grpc:
+              port: {{ (split ":" .Values.grpc.addr)._1 }}
+          {{- end }}
+          {{- end }}
+
+          {{- if .Values.customLivenessProbe }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customLivenessProbe "context" $) | nindent 12 }}
+          {{- else if .Values.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.livenessProbe "enabled") "context" $) | nindent 12 }}
+          {{- if .Values.grpc.tls.enabled }}
+            exec:
+              command:
+              - grpc_health_probe
+              - -addr={{ .Values.grpc.addr }}
+              - -tls
+              - -tls-ca-cert={{ .Values.grpc.tls.ca }}
+              - -tls-client-cert={{ .Values.grpc.tls.cert }}
+              - -tls-client-key={{ .Values.grpc.tls.key }}
+          {{- else }}
+            grpc:
+              port: {{ (split ":" .Values.grpc.addr)._1 }}
+          {{- end }}
+          {{- end }}
+
+          {{- if .Values.customStartupProbe }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customStartupProbe "context" $) | nindent 12 }}
+          {{- else if .Values.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.startupProbe "enabled") "context" $) | nindent 12 }}
+          {{- if .Values.grpc.tls.enabled }}
+            exec:
+              command:
+              - grpc_health_probe
+              - -addr={{ .Values.grpc.addr }}
+              - -tls
+              - -tls-ca-cert={{ .Values.grpc.tls.ca }}
+              - -tls-client-cert={{ .Values.grpc.tls.cert }}
+              - -tls-client-key={{ .Values.grpc.tls.key }}
+          {{- else }}
+            grpc:
+              port: {{ (split ":" .Values.grpc.addr)._1 }}
+          {{- end }}
+          {{- end }}
+
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          {{- with .Values.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          {{- with .Values.lifecycle }}
+          lifecycle:
+            {{- toYaml . | nindent 12 }}
+          {{- end}}
+
+        {{- if .Values.sidecars }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.sidecars "context" $) | nindent 8 }}
+        {{- end }}
+
+      {{- with .Values.extraVolumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if (semverCompare ">=1.18.0" .Capabilities.KubeVersion.Version) }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
