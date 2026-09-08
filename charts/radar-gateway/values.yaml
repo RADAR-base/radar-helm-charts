@@ -106,7 +106,7 @@ ingress:
 gatewayAPI:
   # -- Enable Gateway API HTTPRoute resource (alternative to ingress). Opt-in:
   # requires the Gateway API CRDs and a Gateway controller to be installed.
-  enabled: false
+  enabled: true
   # -- Annotations to add to the HTTPRoute
   annotations: {}
   # -- Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared
