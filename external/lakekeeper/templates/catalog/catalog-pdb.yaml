@@ -1,0 +1,21 @@
+{{- if .Values.catalog.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "iceberg-catalog.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "iceberg-catalog.labels" . | nindent 4 }}
+    app.kubernetes.io/component: catalog
+spec:
+  {{- if .Values.catalog.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ .Values.catalog.podDisruptionBudget.maxUnavailable }}
+  {{- end }}
+  {{- if .Values.catalog.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ .Values.catalog.podDisruptionBudget.minAvailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "iceberg-catalog.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: catalog
+{{- end }}

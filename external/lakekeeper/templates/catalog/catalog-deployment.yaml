@@ -1,0 +1,257 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "iceberg-catalog.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  {{- if .Values.catalog.annotations }}
+  annotations:
+    {{- toYaml .Values.catalog.annotations | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "iceberg-catalog.labels" . | nindent 4 }}
+    app.kubernetes.io/component: catalog
+spec:
+  replicas: {{ .Values.catalog.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      {{- include "iceberg-catalog.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: catalog
+  template:
+    metadata:
+      annotations:
+        checksum/secret-config-envs: {{ include (print $.Template.BasePath "/config/secret-config-envs.yaml") . | sha256sum }}
+        {{- if .Values.OPABridge.enabled }}
+        checksum/opa-config: {{ include (print $.Template.BasePath "/config/opa-bridge-config-secret.yaml") . | sha256sum }}
+        checksum/opa-policies: {{ include (print $.Template.BasePath "/config/opa-bridge-policies.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if .Values.catalog.podAnnotations -}}
+        {{- toYaml .Values.catalog.podAnnotations | nindent 8 }}
+        {{- end }}
+        {{- if .Values.catalog.safeToEvict }}
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+        {{- end }}
+        {{- if .Values.catalog.prometheus.setScrapeAnnotations }}
+        prometheus.io/port: {{ .Values.catalog.prometheus.port | quote }}
+        prometheus.io/scrape: "true"
+        {{- end }}
+      labels:
+        {{- include "iceberg-catalog.labels" . | nindent 8 }}
+        app.kubernetes.io/component: catalog
+        {{- with .Values.catalog.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      restartPolicy: Always
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.catalog.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.catalog.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.catalog.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml .Values.catalog.topologySpreadConstraints | nindent 8 }}
+      {{- end }}
+      {{- if .Values.catalog.affinity }}
+      affinity:
+        {{- toYaml .Values.catalog.affinity | nindent 8 }}
+      {{- end }}
+      {{- if .Values.catalog.tolerations }}
+      tolerations:
+        {{- toYaml .Values.catalog.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.catalog.priorityClassName }}
+      priorityClassName: {{ .Values.catalog.priorityClassName | quote }}
+      {{- end }}
+      serviceAccountName: {{ include "iceberg-catalog.serviceAccountName" . }}
+      {{- if .Values.catalog.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.catalog.podSecurityContext | nindent 8 }}
+      {{- end }}
+      initContainers:
+        {{- if .Values.catalog.extraInitContainers }}
+        {{- toYaml .Values.catalog.extraInitContainers | nindent 8 }}
+        {{- end }}
+        {{- include "iceberg-catalog.init_container.check_db" (dict "Release" .Release "Values" .Values "Chart" .Chart "awaitMigration" true) | indent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- include "iceberg-catalog.image" . | indent 10 }}
+          env:
+            {{- include "iceberg-catalog.env" . | indent 12 }}
+          envFrom:
+            {{- include "iceberg-catalog.envFrom" . | indent 12 }}
+            {{- if .Values.catalog.extraEnvFrom -}}
+            {{- tpl (toYaml .Values.catalog.extraEnvFrom) . | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8181
+              protocol: TCP
+            - name: metrics
+              containerPort: 9000
+              protocol: TCP
+          {{- if .Values.catalog.command }}
+          command:
+            {{- toYaml .Values.catalog.command | nindent 12 }}
+          {{- end }}
+          args:
+            - serve
+          {{- if .Values.catalog.livenessProbe.enabled }}
+          livenessProbe:
+            initialDelaySeconds: {{ .Values.catalog.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.catalog.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.catalog.livenessProbe.failureThreshold }}
+            timeoutSeconds: {{ .Values.catalog.livenessProbe.timeoutSeconds }}
+            httpGet:
+              path: /health
+              port: 8181
+          {{- end }}
+          {{- if .Values.catalog.readinessProbe.enabled }}
+          readinessProbe:
+            initialDelaySeconds: {{ .Values.catalog.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.catalog.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.catalog.readinessProbe.failureThreshold }}
+            timeoutSeconds: {{ .Values.catalog.readinessProbe.timeoutSeconds }}
+            httpGet:
+              path: /health
+              port: 8181
+          {{- end }}
+          resources:
+            {{- toYaml .Values.catalog.resources | nindent 12 }}
+          {{- with .Values.catalog.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- if .Values.OPABridge.enabled }}
+        - name: opa
+          image: {{ .Values.OPABridge.image.repository }}:{{ .Values.OPABridge.image.tag }}
+          imagePullPolicy: {{ .Values.OPABridge.image.pullPolicy }}
+          securityContext:
+            runAsUser: {{ .Values.OPABridge.image.uid }}
+            runAsGroup: {{ .Values.OPABridge.image.gid }}
+            readOnlyRootFilesystem: false
+          env:
+            - name: TRINO_ALLOW_UNMANAGED_CATALOGS
+              value: {{ .Values.OPABridge.allowUnmanagedCatalogs | quote }}
+            - name: LAKEKEEPER_URL
+              value: {{ .Values.OPABridge.lakekeeper.url | quote }}
+            - name: LAKEKEEPER_MAX_BATCH_CHECK_SIZE
+              value: {{ .Values.OPABridge.maxBatchCheckSize | quote }}
+          {{- if .Values.OPABridge.adminUsers }}
+            - name: TRINO_ADMIN_USERS
+              value: {{ .Values.OPABridge.adminUsers | join "," | quote }}
+          {{- end }}
+          {{- if .Values.OPABridge.lakekeeper.existingSecret }}
+            {{- /* Read credentials from existing secret */ -}}
+            - name: LAKEKEEPER_TOKEN_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.OPABridge.lakekeeper.existingSecret }}
+                  key: {{ .Values.OPABridge.lakekeeper.tokenEndpointSecretKey }}
+            - name: LAKEKEEPER_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.OPABridge.lakekeeper.existingSecret }}
+                  key: {{ .Values.OPABridge.lakekeeper.clientIdSecretKey }}
+            - name: LAKEKEEPER_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.OPABridge.lakekeeper.existingSecret }}
+                  key: {{ .Values.OPABridge.lakekeeper.clientSecretSecretKey }}
+            - name: LAKEKEEPER_SCOPE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.OPABridge.lakekeeper.existingSecret }}
+                  key: {{ .Values.OPABridge.lakekeeper.scopeSecretKey }}
+          {{- else }}
+            {{- /* Read credentials from values */ -}}
+            {{- if .Values.OPABridge.lakekeeper.tokenEndpoint }}
+            - name: LAKEKEEPER_TOKEN_ENDPOINT
+              value: {{ .Values.OPABridge.lakekeeper.tokenEndpoint | quote }}
+            {{- end }}
+            {{- if .Values.OPABridge.lakekeeper.clientId }}
+            - name: LAKEKEEPER_CLIENT_ID
+              value: {{ .Values.OPABridge.lakekeeper.clientId | quote }}
+            {{- end }}
+            {{- if .Values.OPABridge.lakekeeper.clientSecret }}
+            - name: LAKEKEEPER_CLIENT_SECRET
+              value: {{ .Values.OPABridge.lakekeeper.clientSecret | quote }}
+            {{- end }}
+            {{- if .Values.OPABridge.lakekeeper.scope }}
+            - name: LAKEKEEPER_SCOPE
+              value: {{ .Values.OPABridge.lakekeeper.scope | quote }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.OPABridge.extraEnv }}
+            {{- tpl (toYaml .) $ | nindent 12 }}
+          {{- end }}
+          {{- if .Values.OPABridge.extraEnvFrom }}
+          envFrom:
+            {{- tpl (toYaml .Values.OPABridge.extraEnvFrom) . | nindent 12 }}
+          {{- end }}
+          args:
+            - "run"
+            - "--server"
+            - "--ignore=.*" # exclude hidden dirs created by Kubernetes
+            - "--addr=:8282"
+            - "--config-file=/etc/opa/opa-config.yaml"
+          {{- range .Values.OPABridge.extraArgs }}
+            - {{ . | quote }}
+          {{- end }}
+            - "/policies"
+          ports:
+            - name: opa
+              containerPort: 8282
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              scheme: HTTP
+              port: 8282
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              scheme: HTTP
+              port: 8282
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.OPABridge.resources | nindent 12 }}
+          volumeMounts:
+            - name: opa-config
+              mountPath: /etc/opa
+              readOnly: true
+            - name: opa-policies
+              mountPath: /policies
+              readOnly: true
+            - name: opa-var-run
+              mountPath: /var/run/secrets
+      {{- end }}
+      {{- if .Values.catalog.extraContainers }}
+      {{- toYaml .Values.catalog.extraContainers | nindent 8 }}
+      {{- end }}
+      {{- if or .Values.OPABridge.enabled .Values.catalog.extraVolumes }}
+      volumes:
+      {{- if .Values.OPABridge.enabled }}
+        - name: opa-config
+          secret:
+            secretName: {{ include "iceberg-catalog.fullname" . }}-opa-config
+        - name: opa-policies
+          configMap:
+            name: {{ include "iceberg-catalog.fullname" . }}-opa-policies
+        - name: opa-var-run
+          emptyDir: {}
+      {{- end }}
+      {{- with .Values.catalog.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}

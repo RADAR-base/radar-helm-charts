@@ -1,0 +1,1253 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "global": {
+            "type": "object"
+        },
+        "image": {
+            "type": "object",
+            "properties": {
+                "repository": {
+                    "type": "string",
+                    "description": "The container repository to pull the main OpenFGA image from",
+                    "default": "openfga/openfga"
+                },
+                "tag": {
+                    "type": "string",
+                    "description": "Overrides the image tag of the main OpenFGA image whose default is the chart appVersion"
+                },
+                "pullPolicy": {
+                    "type": "string",
+                    "description": "The image pull policy",
+                    "default": "Always"
+                }
+            },
+            "additionalProperties": false
+        },
+        "replicaCount": {
+            "type": "number",
+            "description": "The number of OpenFGA server replicas (pods) to deploy",
+            "default": 3
+        },
+        "autoscaling": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable/disable horizontal pod autoscaling of the OpenFGA deployment",
+                    "default": false
+                },
+                "minReplicas": {
+                    "type": "number",
+                    "description": "The min number of OpenFGA replicas that the autoscaler will scale down to",
+                    "default": 1
+                },
+                "maxReplicas": {
+                    "type": "number",
+                    "description": "The max number of OpenFGA replicas that the autoscaler will scale up to",
+                    "default": 100
+                },
+                "targetCPUUtilizationPercentage": {
+                    "type": "number",
+                    "description": "The CPU utilization percentage at which the autoscaler will trigger a scale up event",
+                    "default": 80
+                },
+                "targetMemoryUtilizationPercentage": {
+                    "type": "number",
+                    "description": "The memory utilization percentage at which the autoscaler will trigger a scale up event",
+                    "default": 80
+                }
+            },
+            "additionalProperties": false
+        },
+        "commonLabels": {
+            "type": "object",
+            "description": "Common labels to apply to OpenFGA resources",
+            "default": {}
+        },
+        "fullnameOverride": {
+            "type": "string",
+            "description": "Overrides the default fully qualified app name",
+            "default": ""
+        },
+        "nameOverride": {
+            "type": "string",
+            "description": "Overrides the default name of the chart which defaults to the Chart name",
+            "default": ""
+        },
+        "securityContext": {
+            "type": "object",
+            "description": "Defines the container security context for the OpenFGA container. For more information see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container.",
+            "default": {}
+        },
+        "podSecurityContext": {
+            "type": "object",
+            "description": "Defines the pod security context for the OpenFGA pods. For more information see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod.",
+            "default": {}
+        },
+        "imagePullSecrets": {
+            "type": "array",
+            "description": "An optional list of references to secrets in the same namespace to use for pulling any of the images used by the pod spec. If specified, these secrets will be passed to individual puller implementations for them to use. For more information see https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod."
+        },
+        "nodeSelector": {
+            "type": "object",
+            "description": "Specifies the node which pods managed by the deployment will get assigned to. For more information see https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector.",
+            "default": {}
+        },
+        "affinity": {
+            "type": "object",
+            "description": "Specifies the deployment affinity which expands the types of constraints you can define on pods assignment and scheduling. For more information see https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity.",
+            "default": {}
+        },
+        "resources": {
+            "type": "object",
+            "description": "Specifies the pod resource constraints for the pods managed by the deployment. For more information see https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/.",
+            "default": {}
+        },
+        "lifecycle": {
+            "type": "object",
+            "description": "Specifies lifecycle hooks for the container. For more information see https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/.",
+            "default": {}
+        },
+        "tolerations": {
+            "type": "array",
+            "description": "Specifies the pod toleration constraints for the pod managed by the deployment. For more information see https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/.",
+            "default": []
+        },
+        "topologySpreadConstraints": {
+            "type": "array",
+            "description": "Specifies the topology spread to control how the pods are spread across your cluster. For more information see https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/.",
+            "default": []
+        },
+        "serviceAccount": {
+            "type": "object",
+            "properties": {
+                "create": {
+                    "type": "boolean",
+                    "description": "Specifies whether the service account should be created.",
+                    "default": true
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the service account to create.",
+                    "default": ""
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Map of annotations to add to the service account.",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "default": {}
+                }
+            }
+        },
+        "telemetry": {
+            "type": "object",
+            "properties": {
+                "trace": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "enable tracing",
+                            "default": "false"
+                        },
+                        "otlp": {
+                            "type": "object",
+                            "properties": {
+                                "endpoint": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "description": "the grpc endpoint of the OpenTelemetry 'otlp' trace collector"
+                                },
+                                "tls": {
+                                    "type": "object",
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean",
+                                            "description": "whether to use TLS connection for the trace collector",
+                                            "default": false
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "sampleRatio": {
+                            "type": [
+                                "number",
+                                "null"
+                            ],
+                            "description": "the fraction of traces to sample. 1 means all, 0 means none.",
+                            "default": null
+                        }
+                    }
+                },
+                "metrics": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "enable/disable prometheus metrics on the '/metrics' endpoint",
+                            "default": true
+                        },
+			"serviceMonitor": {
+		            "type": "object",
+			    "properties": {
+			        "enabled": {
+                                    "type": "boolean",
+                                    "description": "enable/disable installation of serviceMonitor custom resource",
+                                    "default": false
+			        },
+			        "additionalLabels": {
+			            "type": "object",
+			            "description": "additional labels to be added to the serivceMonitor resource",
+			            "default": {}
+			        },
+			        "annotations": {
+		                    "type": "object",
+			            "description": "annotations to be added to the serviceMonitor resource",
+			            "default": {}
+			        },
+			        "jobLabel": {
+			            "type": "string",
+			            "description": "the label to use to retrieve the job name from",
+			            "default": "app.kubernetes.io/name"
+			        },
+			        "namespace": {
+		                    "type": "string",
+			            "description": "namespace where the serviceMonitor resource should be installed to",
+			            "default": ""
+			        },
+			        "namespaceSelector": {
+			            "type": "object",
+			            "description": "which namespaces should be scraped",
+			            "default": {}
+			        },
+			        "scrapeInterval": {
+			            "type": "string",
+			            "description": "prometheus scrape interval",
+			            "default": "30s"
+			        },
+			        "scrapeTimeout": {
+			            "type": "string",
+			            "description": "prometheus scrape timeout",
+			            "default": "10s"
+			        },
+			        "targetLabels": {
+			            "type": "array",
+			            "description": "additional target labels to scrape",
+			            "default": []
+			        },
+			        "relabelings": {
+			            "type": "array",
+			            "description": "add job relabelings",
+			            "default": []
+			        },
+			        "metricRelabelings": {
+			            "type": "array",
+			            "description": "add metric relabelings",
+			            "default": []
+			        }
+			    }
+			},
+                        "addr": {
+                            "type": "string",
+                            "description": "the host:port address to serve the prometheus metrics server on",
+                            "default": "0.0.0.0:2112"
+                        },
+                        "enableRPCHistograms": {
+                            "type": [
+                                "boolean",
+                                "null"
+                            ],
+                            "description": "enables prometheus histogram metrics for RPC latency distributions"
+                        }
+                    }
+                }
+            }
+        },
+        "datastore": {
+            "type": "object",
+            "properties": {
+                "metrics": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "enable/disable datastore metrics",
+                            "default": false
+                        }
+                    }
+                },
+                "engine": {
+                    "type": "string",
+                    "enum": [
+                        "memory",
+                        "postgres",
+                        "mysql"
+                    ],
+                    "default": "memory"
+                },
+                "uri": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "the URI of the datastore, including database protocol and optional credentials (e.g. postgres://user:password@host:port/dbname)"
+                },
+                "username": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "the username to authenticate with the datastore (overwrites any username provided in the connection uri)"
+                },
+                "password": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "the password to authenticate with the datastore (overwrites any password provided in the connection uri)"
+                },
+                "uriSecret": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "the secret name where to get the datastore URI, it expects a key named uri to exist in the secret"
+                },
+                "existingSecret": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "the name of an existing secret that contains the datastore uri and credentials"
+                },
+                "secretKeys": {
+                    "type": "object",
+                    "properties": {
+                        "uriKey": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the key in the existing secret mapping to the datastore uri"
+                        },
+                        "usernameKey": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the key in the existing secret mapping to the datastore username"
+                        },
+                        "passwordKey": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the key in the existing secret mapping to the datastore password"
+                        }
+                    }
+                },
+                "maxCacheSize": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "description": "the maximum number of cache keys that the storage cache can store before evicting old keys"
+                },
+                "maxOpenConns": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "description": "the maximum number of open connections to the datastore"
+                },
+                "maxIdleConns": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "description": "the maximum number of connections to the datastore in the idle connection pool"
+                },
+                "connMaxIdleTime": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "the maximum amount of time (as a duration) a connection to the datastore may be idle",
+                    "format": "duration",
+                    "examples": [
+                        "30s",
+                        "1m",
+                        "200ms"
+                    ]
+                },
+                "connMaxLifetime": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "the maximum amount of time (as a duration) a connection to the datastore may be reused",
+                    "format": "duration",
+                    "examples": [
+                        "30s",
+                        "1m",
+                        "200ms"
+                    ]
+                },
+                "secondary": {
+                    "type": "object",
+                    "description": "Configuration for a secondary (read-replica) datastore.",
+                    "properties": {
+                        "engine": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the datastore engine for the secondary datastore (currently only postgres is supported)",
+                            "enum": [
+                                null,
+                                "postgres"
+                            ]
+                        },
+                        "uri": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the URI of the secondary datastore"
+                        },
+                        "uriSecret": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the secret name where to get the secondary datastore URI, it expects a key named uri to exist in the secret"
+                        },
+                        "username": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the username to authenticate with the secondary datastore"
+                        },
+                        "password": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the password to authenticate with the secondary datastore"
+                        },
+                        "existingSecret": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the name of an existing secret that contains the secondary datastore uri and credentials"
+                        },
+                        "secretKeys": {
+                            "type": "object",
+                            "properties": {
+                                "uriKey": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "description": "the key in the existing secret mapping to the secondary datastore uri"
+                                },
+                                "usernameKey": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "description": "the key in the existing secret mapping to the secondary datastore username"
+                                },
+                                "passwordKey": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "description": "the key in the existing secret mapping to the secondary datastore password"
+                                }
+                            }
+                        }
+                    }
+                },
+                "applyMigrations": {
+                    "type": "boolean",
+                    "description": "enable/disable the running of migrations in the datastore",
+                    "default": true
+                },
+                "migrationType": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "how the migrations will be run",
+                    "default": "job",
+                    "enum": [
+                        "job",
+                        "initContainer"
+                    ]
+                },
+                "waitForMigrations": {
+                    "type": "boolean",
+                    "description": "wait for migrations to complete before starting the server",
+                    "default": true
+                }
+            }
+        },
+        "postgresql": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "enable the bitnami/postgresql subchart and deploy Postgres",
+                    "default": false
+                }
+            }
+        },
+        "mysql": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "enable the bitnami/mysql subchart and deploy MySQL",
+                    "default": false
+                }
+            }
+        },
+        "grpc": {
+            "type": "object",
+            "properties": {
+                "addr": {
+                    "type": "string",
+                    "description": "the host:port address to serve the grpc server on.",
+                    "default": "0.0.0.0:8081"
+                },
+                "tls": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "enables or disables transport layer security (TLS)",
+                            "default": false
+                        },
+                        "ca": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the (absolute) file path of the CA certificate to use for the TLS connection"
+                        },
+                        "cert": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the (absolute) file path of the certificate to use for the TLS connection"
+                        },
+                        "key": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the (absolute) file path of the TLS key that should be used for the TLS connection"
+                        }
+                    }
+                }
+            }
+        },
+        "http": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "enables or disables the OpenFGA HTTP server. If this is set to true then 'grpc.enabled' must be set to true",
+                    "default": true
+                },
+                "addr": {
+                    "type": "string",
+                    "description": "the host:port address to serve the HTTP server on",
+                    "default": "0.0.0.0:8080"
+                },
+                "tls": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "enables or disables transport layer security (TLS)",
+                            "default": false
+                        },
+                        "cert": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the (absolute) file path of the certificate to use for the TLS connection"
+                        },
+                        "key": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the (absolute) file path of the TLS key that should be used for the TLS connection"
+                        }
+                    }
+                },
+                "upstreamTimeout": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "the timeout duration for proxying HTTP requests upstream to the grpc endpoint.",
+                    "format": "duration",
+                    "examples": [
+                        "5s",
+                        "1m",
+                        "200ms"
+                    ]
+                },
+                "corsAllowedOrigins": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "*"
+                    ]
+                },
+                "corsAllowedHeaders": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "*"
+                    ]
+                }
+            }
+        },
+        "authn": {
+            "type": "object",
+            "properties": {
+                "method": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "the authentication method to use",
+                    "enum": [
+                        null,
+                        "none",
+                        "preshared",
+                        "oidc"
+                    ]
+                },
+                "preshared": {
+                    "type": "object",
+                    "properties": {
+                        "keys": {
+                            "type": "array",
+                            "description": "one or more preshared keys to use for authentication (must be set if `authn.method=preshared')",
+                            "items": {
+                                "type": "string",
+                                "minItems": 1
+                            }
+                        },
+                        "keysSecret": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the secret name where to get the preshared keys, expects a key named keys to exist in the secret. Keys should be comma separated"
+                        }
+                    }
+                },
+                "oidc": {
+                    "type": "object",
+                    "properties": {
+                        "audience": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the OIDC 'audience' which tokens will be validated against (must be set if `authn.method=oidc`)"
+                        },
+                        "issuer": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "description": "the OIDC 'issuer' which tokens will be validated against (must be set if `authn.method=oidc`)"
+                        }
+                    }
+                }
+            }
+        },
+        "playground": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "enable/disable the OpenFGA Playground",
+                    "default": true
+                },
+                "port": {
+                    "type": "number",
+                    "description": "the port to serve the local OpenFGA Playground on",
+                    "default": 3000
+                }
+            }
+        },
+        "profiler": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "enable/disable pprof profiling",
+                    "default": false
+                },
+                "addr": {
+                    "type": "string",
+                    "description": "the host:port address to serve the pprof profiler server on",
+                    "default": "0.0.0.0:3001"
+                }
+            }
+        },
+        "log": {
+            "type": "object",
+            "properties": {
+                "level": {
+                    "type": "string",
+                    "description": "the log level to set (for production we recommend 'info' level)",
+                    "enum": [
+                        "debug",
+                        "info",
+                        "warn",
+                        "error",
+                        "panic",
+                        "fatal"
+                    ],
+                    "default": "info"
+                },
+                "format": {
+                    "type": "string",
+                    "description": "the log format to output logs in (for production we recommend 'json' format)",
+                    "enum": [
+                        "text",
+                        "json"
+                    ],
+                    "default": "json"
+                },
+                "timestampFormat": {
+                    "type": "string",
+                    "description": "The timestamp format to use for the log output",
+                    "enum": [
+                        "Unix",
+                        "ISO8601"
+                    ],
+                    "default": "Unix"
+                }
+            }
+        },
+        "checkQueryCache": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "when executing Check and ListObjects requests, enables caching. This will turn Check and ListObjects responses into eventually consistent responses",
+                    "default": "false"
+                },
+                "limit": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "description": "if caching of Check and ListObjects calls is enabled, this is the size limit (in items) of the cache",
+                    "default": "10000"
+                },
+                "ttl": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "if caching of Check and ListObjects is enabled, this is the TTL of each value",
+                    "format": "duration",
+                    "default": "10s"
+                }
+            }
+        },
+        "experimentals": {
+            "type": "array",
+            "description": "a list of experimental features to enable",
+            "default": [],
+            "examples": ["enable-check-optimizations","enable-access-control", "enable-list-objects-optimizations", "pipeline_list_objects"],
+            "items": {
+                "type": "string",
+                "enum": ["enable-check-optimizations","enable-access-control", "enable-list-objects-optimizations", "pipeline_list_objects"]
+            }
+        },
+        "maxTuplesPerWrite": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "the maximum allowed number of tuples per Write transaction"
+        },
+        "maxTypesPerAuthorizationModel": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "the maximum allowed number of type definitions per authorization model"
+        },
+        "maxAuthorizationModelSizeInBytes": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "the maximum size in bytes allowed for persisting an authorization model"
+        },
+        "maxConcurrentReadsForCheck": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "the maximum allowed number of concurrent reads in a single Check query",
+            "default": 4294967295
+        },
+        "maxConcurrentReadsForListObjects": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "the maximum allowed number of concurrent reads in a single ListObjects query",
+            "default": 4294967295
+        },
+        "maxConcurrentReadsForListUsers": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "the maximum allowed number of concurrent reads in a single ListUsers query",
+            "default": 4294967295
+        },
+        "maxChecksPerBatchCheck": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "the maximum allowed number of checks per batch check operation"
+        },
+        "maxConcurrentChecksPerBatchCheck": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "the maximum allowed number of concurrent checks per batch check operation"
+        },
+        "changelogHorizonOffset": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "the offset (in minutes) from the current time - changes that occur after this offset will not be included in the response of ReadChanges."
+        },
+        "resolveNodeLimit": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "defines how deeply nested an authorization model can be"
+        },
+        "resolveNodeBreadthLimit": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "defines how many nodes on a given level can be evaluated concurrently in a Check resolution tree.",
+            "default": 100
+        },
+        "listObjectsDeadline": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "the timeout deadline (as a duration) for serving ListObjects requests",
+            "format": "duration",
+            "examples": [
+                "3s",
+                "1m",
+                "200ms"
+            ]
+        },
+        "listObjectsMaxResults": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "the maximum results to return in ListObjects responses"
+        },
+        "listUsersDeadline": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "the timeout deadline (as a duration) for serving ListUsers requests",
+            "format": "duration",
+            "examples": [
+                "3s",
+                "1m",
+                "200ms"
+            ]
+        },
+        "listUsersMaxResults": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "description": "the maximum results to return in ListUsers responses"
+        },
+        "requestTimeout": {
+          "type": [
+              "string",
+              "null"
+          ],
+          "description": "The timeout duration for a request.",
+          "format": "duration",
+          "examples": [
+              "3s",
+              "1m",
+              "200ms"
+          ]
+        },
+        "requestDurationDatastoreQueryCountBuckets": {
+            "description": "datastore query count buckets used to label the histogram metric for measuring request duration.",
+            "type": "array",
+            "items": {
+                "minimum": 0,
+                "type": "integer"
+            },
+            "minItems": 1,
+            "default": [
+                50,
+                200
+            ]
+        },
+        "allowWriting1_0Models": {
+            "type": [
+                "boolean",
+                "null"
+            ],
+            "description": "allow calling WriteAuthorizationModel with models that have 1.0 schema version"
+        },
+        "allowEvaluating1_0Models": {
+            "type": [
+                "boolean",
+                "null"
+            ],
+            "description": "allow calling Check, Expand, ListObjects, Write Assertions with models that have 1.0 schema version"
+        },
+        "annotations": {
+            "type": "object",
+            "description": "Map of annotations to add to the deployment's manifest",
+            "additionalProperties": {
+                "type": "string"
+            },
+            "default": {}
+        },
+        "podAnnotations": {
+            "type": "object",
+            "description": "Map of annotations to add to the pods' manifest",
+            "additionalProperties": {
+                "type": "string"
+            },
+            "default": {}
+        },
+        "podExtraLabels": {
+            "type": "object",
+            "description": "Map of labels to add to the pods' manifest",
+            "additionalProperties": {
+                "type": "string"
+            },
+            "default": {}
+        },
+        "service": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "type": "object",
+                    "description": "Map of annotations to add to the service's manifest",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "default": {}
+                }
+            }
+        },
+        "ingress": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "type": "object",
+                    "description": "Map of annotations to add to the ingress' manifest",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "default": {}
+                }
+            }
+        },
+        "livenessProbe": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable liveness probes on OpenFGA containers."
+                },
+                "initialDelaySeconds": {
+                    "type": "number",
+                    "default": 60,
+                    "description": "Number of seconds after the container has started before liveness probes are initiated."
+                },
+                "periodSeconds": {
+                    "type": "number",
+                    "default": 10,
+                    "description": "How often (in seconds) to perform the probe."
+                },
+                "timeoutSeconds": {
+                    "type": "number",
+                    "default": 5,
+                    "duration": "Number of seconds after which the probe times out."
+                },
+                "failureThreshold": {
+                    "type": "number",
+                    "default": 12,
+                    "description": "Failure threshold for liveness probes."
+                },
+                "successThreshold": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Success threshold for liveness probes."
+                }
+            }
+        },
+        "readinessProbe": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable readiness probes on OpenFGA containers."
+                },
+                "initialDelaySeconds": {
+                    "type": "number",
+                    "default": 5,
+                    "description": "Number of seconds after the container has started before readiness probes are initiated."
+                },
+                "periodSeconds": {
+                    "type": "number",
+                    "default": 10,
+                    "description": "How often (in seconds) to perform the probe."
+                },
+                "timeoutSeconds": {
+                    "type": "number",
+                    "default": 5,
+                    "description": "Number of seconds after which the probe times out."
+                },
+                "failureThreshold": {
+                    "type": "number",
+                    "default": 6,
+                    "description": "Failure threshold for readiness probes."
+                },
+                "successThreshold": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Success threshold for readiness probes."
+                }
+            }
+        },
+        "startupProbe": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable startup probes on OpenFGA containers."
+                },
+                "initialDelaySeconds": {
+                    "type": "number",
+                    "default": 60,
+                    "description": "Number of seconds after the container has started before startup probes are initiated."
+                },
+                "periodSeconds": {
+                    "type": "number",
+                    "default": 10,
+                    "description": "How often (in seconds) to perform the probe."
+                },
+                "timeoutSeconds": {
+                    "type": "number",
+                    "default": 5,
+                    "description": "Number of seconds after which the probe times out."
+                },
+                "failureThreshold": {
+                    "type": "number",
+                    "default": 30,
+                    "description": "Failure threshold for readiness probes."
+                },
+                "successThreshold": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Success threshold for readiness probes."
+                }
+            }
+        },
+        "customLivenessProbe": {
+            "type": "object",
+            "default": null,
+            "description": "Overrides the default liveness probe with a custom one."
+        },
+        "customReadinessProbe": {
+            "type": "object",
+            "default": null,
+            "description": "Overrides the default readiness probe with a custom one."
+        },
+        "customStartupProbe": {
+            "type": "object",
+            "default": null,
+            "description": "Overrides the default startup probe with a custom one."
+        },
+        "sidecars": {
+            "type": "array",
+            "description": "add additional sidecar containers to the pods",
+            "default": []
+        },
+        "migrate": {
+            "type": "object",
+            "properties": {
+                "sidecars": {
+                    "type": "array",
+                    "description": "add additional sidecar containers to the migration job",
+                    "default": []
+                },
+                "extraVolumes": {
+                    "type": "array",
+                    "description": "add additional volumes to the migration job",
+                    "default": []
+                },
+                "extraVolumeMounts": {
+                    "type": "array",
+                    "description": "add additional volumeMounts to the migration job",
+                    "default": []
+                },
+                "extraInitContainers": {
+                    "type": "array",
+                    "description": "List of additional initContainers to add to the migration job",
+                    "items": {
+                        "type": "object"
+                    },
+                    "default": []
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Map of annotations to add to the migration job's manifest",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "default": {}
+                },
+                "timeout": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "A timeout for the time it takes the migrate process to connect to the database",
+                    "format": "duration",
+                    "default": "1m"
+                }
+            }
+        },
+        "extraEnvVars": {
+            "type": "array",
+            "description": "List of additional environment variables to add to the deployment's main container",
+            "items": {
+                "type": "object"
+            },
+            "default": []
+        },
+        "extraVolumeMounts": {
+            "type": "array",
+            "description": "List of additional volume mounts to add to the deployment",
+            "items": {
+                "type": "object"
+            },
+            "default": []
+        },
+        "extraVolumes": {
+            "type": "array",
+            "description": "List of additional volumes to add to the deployment",
+            "items": {
+                "type": "object"
+            },
+            "default": []
+        },
+        "extraInitContainers": {
+            "type": "array",
+            "description": "List of additional initContainers to add to the deployment",
+            "items": {
+                "type": "object"
+            },
+            "default": []
+        },
+        "initContainer": {
+            "type": "object",
+            "description": "",
+            "properties": {
+                "repository": {
+                    "type": "string",
+                    "description": "The container image repository to pull the initContainer from",
+                    "default": "groundnuty/k8s-wait-for"
+                },
+                "tag": {
+                    "type": "string",
+                    "description": "The specific initContainer image tag to pull",
+                    "default": "v1.6"
+                },
+                "pullPolicy": {
+                    "type": "string",
+                    "description": "The image pull policy to apply to the initContainer",
+                    "default": "IfNotPresent"
+                }
+            }
+        },
+        "testPodSpec": {
+            "type": "object",
+            "description": "Extra spec for the test pod to match cluster policy"
+        },
+        "testContainerSpec": {
+            "type": "object",
+            "description": "Extra spec for the test container to match cluster policy"
+        },
+        "common": {},
+        "extraObjects": {
+            "type": "array",
+            "items": {
+                "type": "object"
+            },
+            "default": []
+        },
+        "enabled": {
+            "type": "boolean",
+            "description": "This value is not used by this chart, but allows a common pattern of enabling/disabling subchart dependencies (where OpenFGA is a subchart)",
+            "default": false
+        }
+    },
+    "additionalProperties": false
+}

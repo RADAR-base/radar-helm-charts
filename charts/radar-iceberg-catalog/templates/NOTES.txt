@@ -1,0 +1,32 @@
+The Iceberg REST catalog is installed as release {{ .Release.Name }}.
+
+  Catalog endpoint (for connectors and query engines):
+      {{ include "radar-iceberg-catalog.lakekeeperUrl" . }}/catalog
+  Warehouse name:
+      {{ .Values.warehouse.name }}
+  Backing bucket:
+      {{ .Values.warehouse.bucket }} at {{ .Values.warehouse.endpoint }}
+
+Verify it is servable:
+
+  kubectl run -n {{ .Release.Namespace }} --rm -it --image=curlimages/curl:8.11.1 catalog-check -- \
+    curl -s "{{ include "radar-iceberg-catalog.lakekeeperUrl" . }}/catalog/v1/config?warehouse={{ .Values.warehouse.name }}"
+
+{{ if .Values.bootstrap.enabled -}}
+The bootstrap Job runs once per revision. If it failed, read its log:
+
+  kubectl logs -n {{ .Release.Namespace }} job/{{ include "radar-iceberg-catalog.fullname" . }}-bootstrap-{{ .Release.Revision }}
+{{- else -}}
+Bootstrap is disabled. The server must be bootstrapped and the warehouse created by hand
+before any table can be written.
+{{- end }}
+
+{{ if .Values.lakekeeper.postgresql.enabled -}}
+WARNING: this release uses the embedded Postgres from the upstream chart. That is fine for
+staging with mock data, and not suitable for production. For production, disable it and point
+`lakekeeper.externalDatabase` at a CloudNativePG cluster - see this chart's values.yaml.
+
+Either way: BACK THAT DATABASE UP. It holds the pointer to the current metadata file of every
+Iceberg table. Losing it does not lose a byte of data in the bucket, but it does lose the
+identity of every table.
+{{- end }}
