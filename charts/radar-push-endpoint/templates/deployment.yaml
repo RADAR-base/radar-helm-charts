@@ -55,7 +55,8 @@ spec:
             - name: "CONFIG_YML"
               value: "/etc/radar-push-endpoint/config.yml"
           ports:
-          - containerPort: 5556
+          - name: metrics
+            containerPort: 5556
             protocol: TCP
           resources:
             requests:
