@@ -3,7 +3,7 @@
 # radar-rest-sources-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-backend)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-backend)
 
-![Version: 1.5.12](https://img.shields.io/badge/Version-1.5.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.16](https://img.shields.io/badge/AppVersion-4.4.16-informational?style=flat-square)
+![Version: 1.5.13](https://img.shields.io/badge/Version-1.5.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.16](https://img.shields.io/badge/AppVersion-4.4.16-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -147,3 +147,11 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.google.clientSecret | string | `"Google-clientsecret"` | Google OAuth2 client secret (from Google Cloud Console > APIs & Services > Credentials) |
 | restSourceClients.google.scope | string | `"https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly https://www.googleapis.com/auth/googlehealth.sleep.readonly https://www.googleapis.com/auth/googlehealth.irn.readonly https://www.googleapis.com/auth/googlehealth.ecg.readonly https://www.googleapis.com/auth/googlehealth.settings.readonly https://www.googleapis.com/auth/googlehealth.location.readonly"` | List of scopes of the data that should be collected from Google Health. See https://developers.google.com/health/guides/authorization |
 | restSourceClients.google.oauthVersion | string | `"OAUTH2"` | OAuth version to use: OAUTH2 for standard OAuth2 flow with PKCE |
+| restSourceClients.dexcom.enable | bool | `false` | set to true, if Dexcom client should be used |
+| restSourceClients.dexcom.sourceType | string | `"Dexcom"` | Type of the data sources |
+| restSourceClients.dexcom.authorizationEndpoint | string | `"https://api.dexcom.eu/v3/oauth2/login"` | Authorization endpoint for Dexcom authentication and authorization. Dexcom is region-specific: use api.dexcom.eu outside the US, api.dexcom.com in the US, api.dexcom.jp in Japan, or sandbox-api.dexcom.com for the sandbox |
+| restSourceClients.dexcom.tokenEndpoint | string | `"https://api.dexcom.eu/v3/oauth2/token"` | Token endpoint to request access-token from Dexcom. Must be on the same regional host as the authorizationEndpoint, as the user-id lookup is derived from it |
+| restSourceClients.dexcom.clientId | string | `"Dexcom-clientid"` | Dexcom client id (from the app in the Dexcom developer portal) |
+| restSourceClients.dexcom.clientSecret | string | `"Dexcom-clientsecret"` | Dexcom client secret (from the app in the Dexcom developer portal). The redirect URI registered for that app must match the authorizer callback URL |
+| restSourceClients.dexcom.scope | string | `"offline_access"` | Scopes to collect from Dexcom. Only offline_access is currently accepted. See https://developer.dexcom.com/docs/dexcom/authentication/ |
+| restSourceClients.dexcom.oauthVersion | string | `"OAUTH2"` | OAuth version to use: OAUTH2 for standard OAuth2 flow. Dexcom has no token revocation endpoint; users revoke access from their Dexcom account permissions |
