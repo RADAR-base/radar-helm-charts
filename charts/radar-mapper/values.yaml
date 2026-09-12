@@ -1,0 +1,267 @@
+# Default values for radar-mapper.
+
+image:
+  # -- Image registry
+  registry: ghcr.io
+  # -- Image repository
+  repository: radar-base/radar-mapper/radar-mapper
+  # -- Image tag. Defaults to the chart appVersion.
+  tag:
+  # -- Image digest (overrides tag when set, e.g. sha256:aa...)
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optional image pull secrets
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  pullSecrets: []
+
+# -- String to partially override radar-mapper.fullname (will prepend the release name)
+nameOverride: ""
+# -- String to fully override radar-mapper.fullname
+fullnameOverride: ""
+
+# -- Labels to add to all deployed objects
+commonLabels: {}
+# -- Annotations to add to all deployed objects
+commonAnnotations: {}
+
+# ── CronJob ─────────────────────────────────────────────────────────────────
+# -- Cron schedule expression (UTC). Runs every 5 minutes for testing. Change for prod.
+schedule: "*/5 * * * *"
+
+# -- Forbid concurrent runs to prevent duplicate enrichment writes.
+concurrencyPolicy: Forbid
+
+# -- Number of failed Job records to retain for debugging.
+failedJobsHistoryLimit: 3
+
+# -- Number of successful Job records to retain.
+successfulJobsHistoryLimit: 1
+
+# -- Number of pod-level retries before the Job is marked as failed.
+# radar-mapper exits non-zero when enrichment fails; retrying is intentional.
+backoffLimit: 2
+
+# -- Deadline in seconds for a Job that has not started yet.
+startingDeadlineSeconds: 300
+
+# ── Pod settings ─────────────────────────────────────────────────────────────
+# -- Configure pod-level Security Context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Configure container-level Security Context
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+
+resources:
+  # -- CPU/Memory resource limits
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  # -- CPU/Memory resource requests
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Toleration labels for pod assignment
+tolerations: []
+
+# -- Affinity labels for pod assignment
+affinity: {}
+
+# -- Extra environment variables injected into the container
+extraEnvVars: []
+# - name: MY_VAR
+#   value: my-value
+
+# ── Credentials ──────────────────────────────────────────────────────────────
+# -- Name of an existing Secret to use for credentials.
+# When set, the chart does not create a Secret; supply your own with the keys:
+#   sourceS3AccessToken, sourceS3SecretKey,
+#   destS3AccessToken,   destS3SecretKey,
+#   mpClientSecret
+# Leave blank to let the chart create a Secret from the values below.
+existingSecret: ""
+
+# ── Source storage ───────────────────────────────────────────────────────────
+source:
+  # -- Storage backend: local or s3
+  type: s3
+  # -- Object-key prefix within the S3 bucket (or local filesystem path)
+  path: odm/
+  s3:
+    # -- S3 / MinIO endpoint URL
+    endpoint: "http://minio:9000"
+    # -- S3 bucket containing radar-output-restructure ODM output
+    bucket: radar-output-storage
+    # -- S3 access key (stored in Secret)
+    accessToken: ""
+    # -- S3 secret key (stored in Secret)
+    secretKey: ""
+
+# ── Destination storage ──────────────────────────────────────────────────────
+destination:
+  # -- Storage backend: local or s3
+  type: s3
+  # -- Object-key prefix within the S3 bucket (or local filesystem path)
+  path: enriched/
+  s3:
+    # -- S3 / MinIO endpoint URL
+    endpoint: "http://minio:9000"
+    # -- S3 bucket for enriched ODM output
+    bucket: radar-mapper-output
+    # -- S3 access key (stored in Secret)
+    accessToken: ""
+    # -- S3 secret key (stored in Secret)
+    secretKey: ""
+
+# ── Management Portal ────────────────────────────────────────────────────────
+managementPortal:
+  # -- Base URL of the Management Portal
+  url: "http://management-portal:8080/managementportal"
+  # -- OAuth2 client ID for radar-mapper (stored in ConfigMap)
+  clientId: radar_mapper
+  # -- OAuth2 client secret (stored in Secret)
+  clientSecret: ""
+  # -- OAuth2 token endpoint URL.
+  # Leave blank to derive it automatically as `{url}/oauth/token` (Management Portal built-in auth).
+  # Set to a Hydra URL for Hydra-based deployments, e.g.:
+  #   tokenUrl: "http://radar-hydra-public:4444/oauth2/token"
+  tokenUrl: "http://hydra-public:4444/oauth2/token"
+  # -- OAuth2 scope(s) to request. Optional; leave blank to omit from the token request.
+  scope: "SUBJECT.READ PROJECT.READ"
+  # -- OAuth2 audience. Optional; leave blank to omit from the token request.
+  audience: "res_ManagementPortal"
+
+# ── Enrichment ───────────────────────────────────────────────────────────────
+# Slots are applied in declaration order. Each slot's result is available to
+# subsequent slots. The event_name slot is required and must resolve to a valid
+# REDCap event name.
+enrichment:
+  - # -- Slot name, used as the key in enriched fields
+    name: record_id
+    # -- MappedRecord field to use as the lookup key
+    sourceField: SubjectKey
+    # -- Output field to write the enriched value into (defaults to slot name)
+    outputField: SubjectKey
+    provider:
+      # -- Provider type: management_portal or csv
+      type: management_portal
+      # -- RADAR project name(s) to fetch subjects from.
+      # Use a list for multiple projects; a single string is also accepted.
+      projects: []
+      # - MY-PROJECT
+      # - MY-PROJECT-PROXY
+      # -- Subject attribute key holding the REDCap record ID
+      subjectAttribute: REDCapRecordId
+    # -- Behaviour when a subject has no record_id attribute: warn, skip, or fail
+    onMissing: warn
+  - # -- Slot name, used as the key in enriched fields
+    name: event_name
+    # -- Ordered list of record fields to form the composite lookup key
+    sourceFields:
+      - StudyEventOID
+      - StudyOID
+    # -- Output field to write the enriched value into (defaults to slot name)
+    outputField: StudyEventOID
+    provider:
+      type: csv
+      path: /etc/radar-mapper/event-lookup.csv
+      keyColumns:
+        - questionnaireName
+        - projectId
+      valueColumn: eventName
+      # -- Inline content of the CSV file mounted at the provider path above.
+      # Format: questionnaireName,projectId,eventName
+      lookupCsv: |
+        questionnaireName,projectId,eventName
+        # Weekly|W1,MY-PROJECT,week_1_participant_arm_1
+        # Weekly|W6,MY-PROJECT,month_3_participant_arm_1
+    # -- Behaviour when no event name mapping is found: warn, skip, or fail
+    onMissing: warn
+
+  # ── Conditional enrichment with add_as_item and match ────────────────────
+  # Use add_as_item to inject the enriched value as an <ItemData> element.
+  # Use match to apply a slot only to records matching specific field values.
+  #
+  # - name: weekly_score
+  #   sourceField: SubjectKey
+  #   outputField: weekly_calculated_score
+  #   addAsItem: true
+  #   match:
+  #     FormOID: Weekly
+  #     StudyOID: MY-PROJECT
+  #   provider:
+  #     type: csv
+  #     path: /etc/radar-mapper/weekly-scores.csv
+  #     keyColumn: userId
+  #     valueColumn: score
+  #     lookupCsv: |
+  #       userId,score
+  #       1,85
+  #       2,90
+  #   onMissing: warn
+
+# ── Filter ───────────────────────────────────────────────────────────────────
+filter:
+  # -- Item OIDs to strip from every record before writing.
+  # The record is kept; only the matching items are removed.
+  # Use this for instruction or display-only items that should not appear in
+  # the destination output (e.g. pacq_instructions_1).
+  excludeItems: []
+  # - pacq_instructions_1
+  # - some_display_item
+
+# ── Network policy ───────────────────────────────────────────────────────────
+# -- Network policy defines pod egress rules.
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+    - Egress
+  egress:
+    # Allow external HTTPS (e.g. ghcr.io for image pulls handled by kubelet)
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 192.168.0.0/16
+              - 172.16.0.0/12
+    # Allow MinIO (source + destination S3)
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: minio
+    # Allow Management Portal
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: management-portal
+    # Allow DNS
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
