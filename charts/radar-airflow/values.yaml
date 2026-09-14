@@ -11,6 +11,20 @@ jwtSecret: ""
 # Leave empty to have the chart generate one on first install and reuse it thereafter.
 apiSecretKey: ""
 
+connectionSeeder:
+  # Run a post-install/post-upgrade job that (re)creates the Airflow connections listed in `connections`.
+  enabled: true
+
+# Airflow connections to seed. Each entry needs an `id` plus either a `uri`, a `json` payload,
+# or the connection fields directly (conn_type, host, login, password, port, extra, ...).
+# e.g.
+# - id: my_postgres
+#   uri: postgresql://user:pass@host:5432/db
+# - id: my_s3
+#   conn_type: aws
+#   extra: {"region_name": "eu-west-1"}
+connections: []
+
 airflow:
   airflowHome: /opt/airflow
   defaultAirflowRepository: apache/airflow

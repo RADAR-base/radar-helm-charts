@@ -32,6 +32,8 @@ A Helm chart for Airflow used by RADAR-base
 | fernetKey | string | `""` |  |
 | jwtSecret | string | `""` |  |
 | apiSecretKey | string | `""` |  |
+| connectionSeeder.enabled | bool | `true` |  |
+| connections | list | `[]` |  |
 | airflow.airflowHome | string | `"/opt/airflow"` |  |
 | airflow.defaultAirflowRepository | string | `"apache/airflow"` |  |
 | airflow.defaultAirflowTag | string | `"3.1.8"` |  |
