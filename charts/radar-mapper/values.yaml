@@ -175,7 +175,6 @@ enrichment:
     outputField: StudyEventOID
     provider:
       type: csv
-      path: /etc/radar-mapper/event-lookup.csv
       keyColumns:
         - questionnaireName
         - projectId

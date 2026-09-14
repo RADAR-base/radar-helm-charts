@@ -21,10 +21,8 @@ annotations:
 type: application
 home: "https://radar-base.org"
 maintainers:
-  - email: pauline.conde@kcl.ac.uk
+  - email: mpgxvii@gmail.com
     name: Pauline Conde
-  - email: yatharth.ranjan@kcl.ac.uk
-    name: Yatharth Ranjan
 dependencies:
   - name: common
     repository: https://radar-base.github.io/radar-helm-charts

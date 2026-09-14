@@ -72,7 +72,8 @@ data:
           {{- end }}
           subject_attribute: {{ .provider.subjectAttribute | quote }}
           {{- else if eq .provider.type "csv" }}
-          path: {{ .provider.path | quote }}
+          {{- $csvPath := .provider.path | default (printf "/etc/radar-mapper/%s.csv" .name) }}
+          path: {{ $csvPath | quote }}
           {{- if .provider.keyColumn }}
           key_column: {{ .provider.keyColumn | quote }}
           {{- end }}
@@ -111,7 +112,8 @@ data:
   # file at the path specified in its provider config.
   {{- range .Values.enrichment }}
   {{- if .provider.lookupCsv }}
-  {{ base .provider.path }}: |
+  {{- $csvPath := .provider.path | default (printf "/etc/radar-mapper/%s.csv" .name) }}
+  {{ base $csvPath }}: |
 {{ .provider.lookupCsv | indent 4 }}
   {{- end }}
   {{- end }}

@@ -84,7 +84,6 @@ A Helm chart for RADAR-base radar-mapper. Reads CDISC ODM XML files produced by 
 | enrichment[1].sourceFields | list | `["StudyEventOID","StudyOID"]` | Ordered list of record fields to form the composite lookup key |
 | enrichment[1].outputField | string | `"StudyEventOID"` | Output field to write the enriched value into (defaults to slot name) |
 | enrichment[1].provider.type | string | `"csv"` |  |
-| enrichment[1].provider.path | string | `"/etc/radar-mapper/event-lookup.csv"` |  |
 | enrichment[1].provider.keyColumns[0] | string | `"questionnaireName"` |  |
 | enrichment[1].provider.keyColumns[1] | string | `"projectId"` |  |
 | enrichment[1].provider.valueColumn | string | `"eventName"` |  |
