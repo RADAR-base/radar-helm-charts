@@ -36,7 +36,7 @@ A Helm chart for Airflow used by RADAR-base
 | airflow.defaultAirflowRepository | string | `"apache/airflow"` |  |
 | airflow.defaultAirflowTag | string | `"3.1.8"` |  |
 | airflow.airflowVersion | string | `"3.1.8"` |  |
-| airflow.executor | string | `"KubernetesExecutor"` |  |
+| airflow.executor | string | `"CeleryExecutor"` |  |
 | airflow.nodeSelector | object | `{}` |  |
 | airflow.affinity | object | `{}` |  |
 | airflow.tolerations | list | `[]` |  |

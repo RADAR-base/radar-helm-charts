@@ -16,7 +16,7 @@ airflow:
   defaultAirflowRepository: apache/airflow
   defaultAirflowTag: "3.1.8"
   airflowVersion: "3.1.8"
-  executor: "KubernetesExecutor"
+  executor: "CeleryExecutor"
 
   # Select certain nodes for airflow pods.
   nodeSelector: {}
