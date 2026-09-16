@@ -3,7 +3,11 @@
 {{- if $connector.enabled }}
 {{- $connectorName := required (printf "connectors[%d].name is required" $i) $connector.name -}}
 {{- $connectorId := include "radar-distributed-kafka.connectorId" $connectorName -}}
-{{- $connectorType := lower (required (printf "connectors[%d].type is required" $i) $connector.type) -}}
+{{- $replicas := $root.Values.replicaCount -}}
+{{- if hasKey $connector "replicaCount" -}}
+{{- $replicas = $connector.replicaCount -}}
+{{- end -}}
+{{- $groupId := include "radar-distributed-kafka.connectorGroupId" (dict "context" $root "connector" $connector "connectorId" $connectorId) -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,7 +18,7 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" $root.Values.commonAnnotations "context" $root ) | nindent 4 }}
   {{- end }}
 spec:
-  replicas: {{ $root.Values.replicaCount }}
+  replicas: {{ $replicas }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "radar-distributed-kafka.name" $root }}
@@ -24,6 +28,7 @@ spec:
     metadata:
       annotations:
         checksum/configmap: {{ include (print $root.Template.BasePath "/configmap.yaml") $root | sha256sum }}
+        checksum/secret: {{ include (print $root.Template.BasePath "/secret.yaml") $root | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "radar-distributed-kafka.name" $root }}
         app.kubernetes.io/instance: {{ $root.Release.Name }}
@@ -60,22 +65,31 @@ spec:
             - name: plugin-dir
               mountPath: {{ default "/opt/connect-plugins" $root.Values.pluginInstallation.pluginPath | quote }}
       {{- end }}
+      {{- if $root.Values.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" $root.Values.affinity "context" $root ) | nindent 8 }}
+      {{- else }}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
+          # Spread the replicas of this connector across nodes first, so that losing a
+          # node cannot take down every worker that can run it.
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: {{ include "radar-distributed-kafka.name" $root }}
+                  app.kubernetes.io/instance: {{ $root.Release.Name }}
+                  app.kubernetes.io/component: {{ $connectorId }}
+              topologyKey: "kubernetes.io/hostname"
+          # Then spread the different connectors of this release.
           - weight: 1
             podAffinityTerm:
               labelSelector:
-                matchExpressions:
-                  - key: "app.kubernetes.io/name"
-                    operator: In
-                    values:
-                    - {{ include "radar-distributed-kafka.name" $root }}
-                  - key: "app.kubernetes.io/instance"
-                    operator: In
-                    values:
-                    - {{ $root.Release.Name }}
+                matchLabels:
+                  app.kubernetes.io/name: {{ include "radar-distributed-kafka.name" $root }}
+                  app.kubernetes.io/instance: {{ $root.Release.Name }}
               topologyKey: "kubernetes.io/hostname"
+      {{- end }}
       containers:
         - name: {{ $root.Chart.Name }}
           securityContext:
@@ -113,14 +127,22 @@ spec:
           {{- end }}
           - name: CONNECT_REST_PORT
             value: "8083"
+          # Each connector runs in its own single-connector Connect cluster, so that its
+          # tasks can only be assigned to the replicas of this Deployment.
           - name: CONNECT_GROUP_ID
-            value: "default"
+            value: {{ $groupId | quote }}
           - name: CONNECT_CONFIG_STORAGE_TOPIC
-            value: "default.config"
+            value: {{ printf "%s.config" $groupId | quote }}
           - name: CONNECT_OFFSET_STORAGE_TOPIC
-            value: "default.offsets"
+            value: {{ printf "%s.offsets" $groupId | quote }}
           - name: CONNECT_STATUS_STORAGE_TOPIC
-            value: "default.status"
+            value: {{ printf "%s.status" $groupId | quote }}
+          - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+            value: {{ include "radar-distributed-kafka.internalTopicReplicationFactor" $root | quote }}
+          - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+            value: {{ include "radar-distributed-kafka.internalTopicReplicationFactor" $root | quote }}
+          - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+            value: {{ include "radar-distributed-kafka.internalTopicReplicationFactor" $root | quote }}
           - name: CONNECT_KEY_CONVERTER
             value: "io.confluent.connect.avro.AvroConverter"
           - name: CONNECT_VALUE_CONVERTER
@@ -161,18 +183,6 @@ spec:
             value: "{{ $root.Values.kafkaHeapOpts }}"
           - name: CONNECT_LOG4J_LOGGERS
             value: "org.reflections=ERROR"
-          {{- if eq $connectorType "s3" }}
-          - name: AWS_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
-                key: awsAccessKey
-          - name: AWS_SECRET_KEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
-                key: awsSecretKey
-          {{- end }}
           {{- with $root.Values.extraEnvVars }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
@@ -201,7 +211,7 @@ spec:
               command:
               - /bin/sh
               - /etc/kafka-connect/connector/healthcheck.sh
-              - {{ $connectorName | quote }}
+              - worker
             initialDelaySeconds: {{ $root.Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ $root.Values.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ $root.Values.livenessProbe.timeoutSeconds }}
@@ -216,6 +226,7 @@ spec:
               command:
               - /bin/sh
               - /etc/kafka-connect/connector/healthcheck.sh
+              - connector
               - {{ $connectorName | quote }}
             initialDelaySeconds: {{ $root.Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ $root.Values.readinessProbe.periodSeconds }}
@@ -231,6 +242,7 @@ spec:
               command:
               - /bin/sh
               - /etc/kafka-connect/connector/healthcheck.sh
+              - connector
               - {{ $connectorName | quote }}
             initialDelaySeconds: {{ $root.Values.startupProbe.initialDelaySeconds }}
             periodSeconds: {{ $root.Values.startupProbe.periodSeconds }}
@@ -248,9 +260,15 @@ spec:
               mountPath: {{ default "/opt/connect-plugins" $root.Values.pluginInstallation.pluginPath | quote }}
             {{- end }}
       volumes:
+        # Scripts come from the ConfigMap and the merged connector config (which may
+        # contain secretProperties) from the Secret, mounted in the same directory.
         - name: config
-          configMap:
-            name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
+          projected:
+            sources:
+              - configMap:
+                  name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
+              - secret:
+                  name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
         {{- if $root.Values.pluginInstallation.enabled }}
         - name: plugin-dir
           emptyDir: {}
@@ -259,10 +277,6 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with $root.Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
     {{- with $root.Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}

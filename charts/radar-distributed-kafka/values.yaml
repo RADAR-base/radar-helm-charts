@@ -1,7 +1,10 @@
 # Default values for radar-distributed-kafka.
 # This is a YAML-formatted file.
 
-# -- Number of replicas per connector deployment
+# -- Default number of replicas per connector deployment. Individual entries in
+# `connectors` may override this with their own `replicaCount`.
+# Replicas are Connect workers: they provide failover and headroom for tasks, but a
+# connector's parallelism is set by its `maxTasks`, not by this value.
 replicaCount: 1
 
 image:
@@ -125,7 +128,8 @@ startupProbe:
   # -- Failure threshold for startupProbe
   failureThreshold: 30
 
-# -- Number of deployed Kafka broker instances
+# -- Number of deployed Kafka broker instances. Sets the replication factor of the
+# Connect internal config/offset/status topics, capped at 3.
 kafka_num_brokers: 3
 
 kafka:
@@ -178,20 +182,31 @@ connectors:
     type: s3-source
     # -- Kafka topic where this source writes records.
     topic: connect_s3_default
+    # -- Number of Connect workers for this connector. Overrides the top-level
+    # `replicaCount`. Adds failover, not throughput -- raise `maxTasks` for throughput.
+    replicaCount: 1
     # -- Number of tasks for this connector
     maxTasks: 1
+    # -- Connect worker group id. Defaults to `<release>-<connector>`, giving this
+    # connector its own single-connector Connect cluster. Only set this to keep an
+    # existing group -- changing it abandons the offsets committed under the old one.
+    # groupId: ""
     # -- Extra connector properties specific to this connector entry
     connectorClass: io.lenses.streamreactor.connect.aws.s3.source.S3SourceConnector
     keyConverter: org.apache.kafka.connect.storage.StringConverter
     valueConverter: io.confluent.connect.avro.AvroConverter
-    tasksMax: 1
+    # -- Connector properties
     properties:
       "connect.s3.kcql": "INSERT INTO connect_s3_default SELECT * FROM s3-source-bucket:input STOREAS `AVRO`"
       "connect.s3.aws.auth.mode": "Credentials"
-      "connect.s3.aws.access.key": ""
-      "connect.s3.aws.secret.key": ""
       "connect.s3.aws.region": "us-east-1"
       "connect.s3.source.extension.includes": "avro"
+    # -- Sensitive connector properties, such as credentials. These are merged into
+    # `properties` (taking precedence on duplicate keys) to form the final connector
+    # config, which is stored in a Kubernetes Secret instead of the ConfigMap.
+    secretProperties:
+      "connect.s3.aws.access.key": ""
+      "connect.s3.aws.secret.key": ""
     # -- Optional source offsets to seed when this connector is first created, in the
     # format accepted by the Connect `PATCH /connectors/<name>/offsets` API (a list of
     # partition/offset maps; all values must be strings). When set, the connector is

@@ -34,7 +34,7 @@ A Helm chart for running distributed Kafka source connectors with per-source con
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| replicaCount | int | `1` | Number of replicas per connector deployment |
+| replicaCount | int | `1` | Default number of replicas per connector deployment. Individual entries in `connectors` may override this with their own `replicaCount`. Replicas are Connect workers: they provide failover and headroom for tasks, but a connector's parallelism is set by its `maxTasks`, not by this value. |
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"confluentinc/cp-server-connect"` | Image repository Default uses Confluent's Kafka Connect image. For production, use a custom image that already contains the connector plugins you enable in `connectors`. |
 | image.tag | string | `"7.8.0"` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
@@ -79,7 +79,7 @@ A Helm chart for running distributed Kafka source connectors with per-source con
 | startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
 | startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
-| kafka_num_brokers | int | `3` | Number of deployed Kafka broker instances |
+| kafka_num_brokers | int | `3` | Number of deployed Kafka broker instances. Sets the replication factor of the Connect internal config/offset/status topics, capped at 3. |
 | kafka.url | string | `"SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094"` | Kafka broker URLs |
 | kafka.security | object | `{"env":[{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_PRODUCER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_PRODUCER_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_CONSUMER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_CONSUMER_SASL_MECHANISM","value":"SCRAM-SHA-512"}],"jaasSecret":{"key":"sasl.jaas.config","name":"shared-service-user"}}` | Security related env vars set in pods. |
 | kafka.security.env | list | `[{"name":"CONNECT_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_PRODUCER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_PRODUCER_SASL_MECHANISM","value":"SCRAM-SHA-512"},{"name":"CONNECT_CONSUMER_SECURITY_PROTOCOL","value":"SASL_PLAINTEXT"},{"name":"CONNECT_CONSUMER_SASL_MECHANISM","value":"SCRAM-SHA-512"}]` | Env vars set for authentication with Kafka brokers. |
@@ -93,7 +93,10 @@ A Helm chart for running distributed Kafka source connectors with per-source con
 | connectors[0].enabled | bool | `true` | Whether this connector entry should be deployed |
 | connectors[0].type | string | `"s3-source"` | Source connector type. Currently only `s3` is supported. |
 | connectors[0].topic | string | `"connect_s3_default"` | Kafka topic where this source writes records. |
+| connectors[0].replicaCount | int | `1` | Number of Connect workers for this connector. Overrides the top-level `replicaCount`. Adds failover, not throughput -- raise `maxTasks` for throughput. |
 | connectors[0].maxTasks | int | `1` | Number of tasks for this connector |
 | connectors[0].connectorClass | string | `"io.lenses.streamreactor.connect.aws.s3.source.S3SourceConnector"` | Extra connector properties specific to this connector entry |
+| connectors[0].properties | object | `{"connect.s3.aws.auth.mode":"Credentials","connect.s3.aws.region":"us-east-1","connect.s3.kcql":"INSERT INTO connect_s3_default SELECT * FROM s3-source-bucket:input STOREAS `AVRO`","connect.s3.source.extension.includes":"avro"}` | Connector properties |
+| connectors[0].secretProperties | object | `{"connect.s3.aws.access.key":"","connect.s3.aws.secret.key":""}` | Sensitive connector properties, such as credentials. These are merged into `properties` (taking precedence on duplicate keys) to form the final connector config, which is stored in a Kubernetes Secret instead of the ConfigMap. |
 | connectors[0].initialOffsets | list | `[]` | Optional source offsets to seed when this connector is first created, in the format accepted by the Connect `PATCH /connectors/<name>/offsets` API (a list of partition/offset maps; all values must be strings). When set, the connector is created in STOPPED state, the offsets are applied, and it is then resumed — letting a source start from a chosen watermark instead of the beginning. Only applied when the connector does not yet exist in the Connect cluster. |
 | networkpolicy | object | `{"egress":[{"to":[{"ipBlock":{"cidr":"0.0.0.0/0","except":["10.0.0.0/8","192.168.0.0/16","172.16.0.0/12"]}}]},{"ports":[{"port":53,"protocol":"UDP"},{"port":53,"protocol":"TCP"}],"to":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"{{ .Release.Namespace }}"}},"podSelector":{"matchLabels":{"app.kubernetes.io/name":"radar-kafka-kafka-bootstrap"}}},{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"{{ .Release.Namespace }}"}},"podSelector":{"matchLabels":{"app.kubernetes.io/name":"radar-kafka-schema-registry"}}},{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"kube-system"}},"podSelector":{"matchLabels":{"k8s-app":"kube-dns"}}}]}],"policyTypes":["Egress"]}` | Network policy defines who can access this application and who this application has access to |

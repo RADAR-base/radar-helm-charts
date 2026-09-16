@@ -3,18 +3,6 @@
 {{- if $configData.enabled }}
 {{- $connectorName := required (printf "connectors[%d].name is required" $i) $configData.name -}}
 {{- $connectorId := include "radar-distributed-kafka.connectorId" $connectorName }}
-{{- $config := deepCopy $configData.properties -}}
-{{- $_ := set $config "kafka.topic" $configData.topic -}}
-{{- $_ := set $config "connector.class" $configData.connectorClass -}}
-{{- $_ := set $config "key.converter" $configData.keyConverter -}}
-{{- $_ := set $config "value.converter" $configData.valueConverter -}}
-{{- if and (contains "Avro" $configData.keyConverter) (not (hasKey $config "key.converter.schema.registry.url")) -}}
-{{- $_ := set $config "key.converter.schema.registry.url" $root.Values.schemaRegistry.url -}}
-{{- end -}}
-{{- if and (contains "Avro" $configData.valueConverter) (not (hasKey $config "value.converter.schema.registry.url")) -}}
-{{- $_ := set $config "value.converter.schema.registry.url" $root.Values.schemaRegistry.url -}}
-{{- end -}}
-{{- $_ := set $config "tasks.max" ($configData.maxTasks | toString) }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -30,11 +18,7 @@ data:
     {{- range $key, $value := $configData.properties }}
     {{ $key }}:{{ $value }}
     {{- end }}
-  connector.json: |-
-    {{- $config | toPrettyJson | nindent 4 }}
   {{- if $configData.initialOffsets }}
-  connector-create.json: |-
-    {{- dict "name" $connectorName "config" $config "initial_state" "STOPPED" | toPrettyJson | nindent 4 }}
   initial-offsets.json: |-
     {{- dict "offsets" $configData.initialOffsets | toPrettyJson | nindent 4 }}
   {{- end }}
@@ -77,6 +61,33 @@ data:
         "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/config" >/dev/null
     }
 
+    # Returns 0 when this pod created the connector, 2 when another replica won the
+    # race, 1 when creation genuinely failed.
+    create_connector() {
+      RETRY_N=0
+      while true; do
+        HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+          -H "Content-Type: application/json" \
+          --data "@${CONNECTOR_DIR}/connector-create.json" \
+          "${CONNECT_URL}/connectors" || echo 000)
+        case "$HTTP_CODE" in
+          2??)
+            return 0
+            ;;
+          409)
+            echo "Connector ${CONNECTOR_NAME} was created by another replica"
+            return 2
+            ;;
+        esac
+        RETRY_N=$((RETRY_N + 1))
+        if [ "$RETRY_N" -ge 5 ]; then
+          echo "Failed to create connector ${CONNECTOR_NAME} (HTTP ${HTTP_CODE})" >&2
+          return 1
+        fi
+        sleep "$RETRY_INTERVAL_SECONDS"
+      done
+    }
+
     seed_offsets_and_resume() {
       retry curl -sf -X PATCH \
         -H "Content-Type: application/json" \
@@ -98,22 +109,47 @@ data:
         fi
       else
         # First registration: create in STOPPED state, seed offsets, then start.
-        retry curl -sf -X POST \
-          -H "Content-Type: application/json" \
-          --data "@${CONNECTOR_DIR}/connector-create.json" \
-          "${CONNECT_URL}/connectors" >/dev/null
-        seed_offsets_and_resume
+        # With more than one replica every pod races to create the connector. The
+        # winner seeds the offsets; a loser gets 409 Conflict and must not treat that
+        # as an error, or its postStart hook fails and the container is killed.
+        RC=0
+        create_connector || RC=$?
+        if [ "$RC" -eq 0 ]; then
+          seed_offsets_and_resume
+        elif [ "$RC" -ne 2 ]; then
+          exit 1
+        fi
       fi
     else
       update_config
     fi
   healthcheck.sh: |
     #!/bin/sh
-    CONNECTOR_NAME="$1"
-    STATUS=$(curl -sf "localhost:8083/connectors/${CONNECTOR_NAME}/status" | grep -o '\"state\":\"[^\"]*\"')
-    if echo "$STATUS" | tr '\\n' ',' | grep -q FAILED; then
+    # Usage: healthcheck.sh worker
+    #        healthcheck.sh connector <connector-name>
+    #
+    # Connect's REST API answers with the state of the whole cluster, not of the pod
+    # being probed. Liveness therefore only asks whether this worker process is still
+    # serving, because restarting a healthy worker cannot repair a connector that
+    # failed on another replica -- it would just restart every replica in turn.
+    # Connector state is a readiness concern: it takes the pod out of the Service
+    # without killing it.
+    MODE="$1"
+    CONNECT_URL="http://localhost:${CONNECT_REST_PORT:-8083}"
+
+    if [ "$MODE" = "worker" ]; then
+      curl -sf "${CONNECT_URL}/connectors" >/dev/null || exit 1
+      exit 0
+    fi
+
+    CONNECTOR_NAME="$2"
+    STATUS=$(curl -sf "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/status") || exit 1
+    STATES=$(echo "$STATUS" | grep -o '"state":"[^"]*"')
+    if echo "$STATES" | grep -q '"state":"FAILED"'; then
       exit 1
-    elif [ "$(echo "$STATUS" | grep RUNNING | wc -l)" -le 1 ]; then
+    fi
+    # The connector itself plus at least one task must be RUNNING.
+    if [ "$(echo "$STATES" | grep -c '"state":"RUNNING"')" -le 1 ]; then
       exit 1
     fi
 
