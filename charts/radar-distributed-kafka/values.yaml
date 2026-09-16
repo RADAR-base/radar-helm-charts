@@ -1,0 +1,253 @@
+# Default values for radar-distributed-kafka.
+# This is a YAML-formatted file.
+
+# -- Default number of replicas per connector deployment. Individual entries in
+# `connectors` may override this with their own `replicaCount`.
+# Replicas are Connect workers: they provide failover and headroom for tasks, but a
+# connector's parallelism is set by its `maxTasks`, not by this value.
+replicaCount: 1
+
+image:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
+  # Default uses Confluent's Kafka Connect image. For production, use a custom image
+  # that already contains the connector plugins you enable in `connectors`.
+  repository: confluentinc/cp-server-connect
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "7.8.0"
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  pullSecrets: []
+
+# -- String to partially override radar-distributed-kafka.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override radar-distributed-kafka.fullname template with a string
+fullnameOverride: ""
+
+# -- Configure connector pods' Security Context
+podSecurityContext: {}
+
+# -- JVM options for Kafka Connect
+kafkaHeapOpts: "-Xms1g -Xmx2g"
+
+# -- Configure connector containers' Security Context
+securityContext: {}
+
+service:
+  # -- Kubernetes Service type
+  type: ClusterIP
+  # -- Connector REST API port
+  port: 8083
+
+resources:
+  # -- CPU/Memory resource requests
+  requests:
+    cpu: 100m
+    memory: 1Gi
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Toleration labels for pod assignment
+tolerations: []
+
+# -- Affinity labels for pod assignment
+affinity: {}
+
+# -- Additional environment variables to pass to all connectors
+extraEnvVars: []
+
+pluginInstallation:
+  # -- Install connector plugins at startup using an init container.
+  enabled: true
+  # -- Directory where plugins are installed and then mounted into the Kafka Connect container.
+  pluginPath: /opt/connect-plugins
+  # -- Confluent Hub package coordinates to install (for example `confluentinc/kafka-connect-s3:latest`).
+  confluentHubPackages: []
+  # -- URLs of connector plugin zip archives to download and extract into the plugin directory
+  # (for example Lenses stream-reactor releases from GitHub).
+  archiveUrls:
+    - https://github.com/lensesio/stream-reactor/releases/download/11.7.8/kafka-connect-aws-s3-11.7.8.zip
+  # -- Optional image override for the plugin installer init container.
+  # By default the chart uses the same image as `image`.
+  initContainerImage: {}
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for livenessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Custom startupProbe that overrides the default one
+customStartupProbe: {}
+
+startupProbe:
+  # -- Enable startupProbe
+  enabled: true
+  # -- Initial delay seconds for startupProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for startupProbe
+  periodSeconds: 10
+  # -- Timeout seconds for startupProbe
+  timeoutSeconds: 10
+  # -- Success threshold for startupProbe
+  successThreshold: 1
+  # -- Failure threshold for startupProbe
+  failureThreshold: 30
+
+# -- Number of deployed Kafka broker instances. Sets the replication factor of the
+# Connect internal config/offset/status topics, capped at 3.
+kafka_num_brokers: 3
+
+kafka:
+  # -- Kafka broker URLs
+  url: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
+  # -- Security related env vars set in pods.
+  security:
+    # -- Env vars set for authentication with Kafka brokers.
+    env:
+      - name: CONNECT_SECURITY_PROTOCOL
+        value: SASL_PLAINTEXT
+      - name: CONNECT_SASL_MECHANISM
+        value: SCRAM-SHA-512
+      - name: CONNECT_PRODUCER_SECURITY_PROTOCOL
+        value: SASL_PLAINTEXT
+      - name: CONNECT_PRODUCER_SASL_MECHANISM
+        value: SCRAM-SHA-512
+      - name: CONNECT_CONSUMER_SECURITY_PROTOCOL
+        value: SASL_PLAINTEXT
+      - name: CONNECT_CONSUMER_SASL_MECHANISM
+        value: SCRAM-SHA-512
+    # -- Secret for the Kafka SASL JAAS configuration
+    jaasSecret:
+      name: shared-service-user
+      key: sasl.jaas.config
+
+schemaRegistry:
+  # -- Schema registry URL
+  url: http://radar-kafka-schema-registry:8081
+
+# -- Additional properties injected into all connector property files
+# @default -- {}
+commonConnectorProperties: {}
+
+connectorRegistration:
+  # -- Automatically register/update connector config at pod startup
+  enabled: true
+  # -- Maximum time in seconds to wait for Connect REST API before failing startup
+  maxWaitSeconds: 120
+  # -- Interval in seconds between readiness checks for Connect REST API
+  retryIntervalSeconds: 3
+
+# -- List of source connector definitions. Each enabled entry is deployed as a separate Kafka Connect worker.
+# @default -- Check values.yaml
+connectors:
+  - name: s3-avro-source
+    # -- Whether this connector entry should be deployed
+    enabled: true
+    # -- Source connector type. Currently only `s3` is supported.
+    type: s3-source
+    # -- Kafka topic where this source writes records.
+    topic: connect_s3_default
+    # -- Number of Connect workers for this connector. Overrides the top-level
+    # `replicaCount`. Adds failover, not throughput -- raise `maxTasks` for throughput.
+    replicaCount: 1
+    # -- Number of tasks for this connector
+    maxTasks: 1
+    # -- Connect worker group id. Defaults to `<release>-<connector>`, giving this
+    # connector its own single-connector Connect cluster. Only set this to keep an
+    # existing group -- changing it abandons the offsets committed under the old one.
+    # groupId: ""
+    # -- Extra connector properties specific to this connector entry
+    connectorClass: io.lenses.streamreactor.connect.aws.s3.source.S3SourceConnector
+    keyConverter: org.apache.kafka.connect.storage.StringConverter
+    valueConverter: io.confluent.connect.avro.AvroConverter
+    # -- Connector properties
+    properties:
+      "connect.s3.kcql": "INSERT INTO connect_s3_default SELECT * FROM s3-source-bucket:input STOREAS `AVRO`"
+      "connect.s3.aws.auth.mode": "Credentials"
+      "connect.s3.aws.region": "us-east-1"
+      "connect.s3.source.extension.includes": "avro"
+    # -- Sensitive connector properties, such as credentials. These are merged into
+    # `properties` (taking precedence on duplicate keys) to form the final connector
+    # config, which is stored in a Kubernetes Secret instead of the ConfigMap.
+    secretProperties:
+      "connect.s3.aws.access.key": ""
+      "connect.s3.aws.secret.key": ""
+    # -- Optional source offsets to seed when this connector is first created, in the
+    # format accepted by the Connect `PATCH /connectors/<name>/offsets` API (a list of
+    # partition/offset maps; all values must be strings). When set, the connector is
+    # created in STOPPED state, the offsets are applied, and it is then resumed —
+    # letting a source start from a chosen watermark instead of the beginning.
+    # Only applied when the connector does not yet exist in the Connect cluster.
+    initialOffsets: []
+
+# -- Network policy defines who can access this application and who this application has access to
+networkpolicy:
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-kafka-schema-registry'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
