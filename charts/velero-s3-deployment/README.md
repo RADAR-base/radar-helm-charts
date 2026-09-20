@@ -3,7 +3,7 @@
 # velero-s3-deployment
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/velero-s3-deployment)](https://artifacthub.io/packages/helm/radar-base/velero-s3-deployment)
 
-![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2024-11-21T17-21-54Z](https://img.shields.io/badge/AppVersion-RELEASE.2024--11--21T17--21--54Z-informational?style=flat-square)
+![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2024-11-21T17-21-54Z](https://img.shields.io/badge/AppVersion-RELEASE.2024--11--21T17--21--54Z-informational?style=flat-square)
 
 A Helm chart for Velero S3 deployment, this chart holds resources used by Velero with a deployment to mirror the local object storage to a remote object storage.
 
@@ -37,7 +37,7 @@ A Helm chart for Velero S3 deployment, this chart holds resources used by Velero
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | objectStorageBackupReplicaCount | int | `1` | Number of replicas for object storage backup pod, should be 1 |
-| mc_image.registry | string | `"docker.io"` | Image registry |
+| mc_image.registry | string | `"quay.io"` | Image registry |
 | mc_image.repository | string | `"minio/mc"` | Image repository |
 | mc_image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | mc_image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
