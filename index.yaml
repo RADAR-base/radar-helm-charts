@@ -24270,6 +24270,34 @@ entries:
   velero-s3-deployment:
   - apiVersion: v2
     appVersion: RELEASE.2024-11-21T17-21-54Z
+    created: "2026-09-21T09:33:44.14518482Z"
+    dependencies:
+    - name: velero
+      repository: https://radar-base.github.io/radar-helm-charts
+      version: 2.30.1
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Velero S3 deployment, this chart holds resources
+      used by Velero with a deployment to mirror the local object storage to a remote
+      object storage.
+    digest: 7c15618f019a1923c26da47003fd674825a5b47bff214e43705affd527d170ac
+    home: https://velero.io
+    maintainers:
+    - email: pim@thehyve.nl
+      name: Pim van Nierop
+      url: https://www.thehyve.nl/experts/pim-van-nierop
+    name: velero-s3-deployment
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/velero-s3-deployment
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.4.3/velero-s3-deployment-0.4.3.tgz
+    version: 0.4.3
+  - apiVersion: v2
+    appVersion: RELEASE.2024-11-21T17-21-54Z
     created: "2025-04-14T15:30:59.473995361Z"
     dependencies:
     - name: velero
@@ -24625,4 +24653,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-07T14:17:13.789840311Z"
+generated: "2026-09-21T09:33:44.146365031Z"
