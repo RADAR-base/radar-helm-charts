@@ -7,7 +7,7 @@ objectStorageBackupReplicaCount: 1
 
 mc_image:
   # -- Image registry
-  registry: docker.io
+  registry: quay.io
   # -- Image repository
   repository: minio/mc
   # -- Image tag (immutable tags are recommended)
