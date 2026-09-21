@@ -78,7 +78,10 @@ chart-managed keys are set on top. Pass `dict "context" $root "connector" $conne
 {{- range $key, $value := ($connector.secretProperties | default dict) -}}
 {{- $_ := set $config $key $value -}}
 {{- end -}}
+{{- /* Sink connectors take `topics` / `topics.regex` in `properties` and have no `topic`. */ -}}
+{{- if $connector.topic -}}
 {{- $_ := set $config "kafka.topic" $connector.topic -}}
+{{- end -}}
 {{- $_ := set $config "connector.class" $connector.connectorClass -}}
 {{- $_ := set $config "key.converter" $connector.keyConverter -}}
 {{- $_ := set $config "value.converter" $connector.valueConverter -}}
