@@ -45,6 +45,7 @@ A Helm chart for running distributed Kafka source connectors with per-source con
 | fullnameOverride | string | `""` | String to fully override radar-distributed-kafka.fullname template with a string |
 | podSecurityContext | object | `{}` | Configure connector pods' Security Context |
 | kafkaHeapOpts | string | `"-Xms1g -Xmx2g"` | JVM options for Kafka Connect |
+| pluginDiscovery | string | `""` | Kafka Connect plugin discovery mode (`plugin.discovery`). Empty keeps Connect's default (`hybrid_warn`). `service_load` skips the slow reflective class scan, but only finds plugins that ship ServiceLoader manifests -- the Lenses stream-reactor plugins do not. |
 | securityContext | object | `{}` | Configure connector containers' Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
 | service.port | int | `8083` | Connector REST API port |
@@ -52,6 +53,8 @@ A Helm chart for running distributed Kafka source connectors with per-source con
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |
+| podDisruptionBudget.enabled | bool | `false` | Create a PodDisruptionBudget per connector. Worth enabling wherever nodes are drained automatically (cluster autoscaler, Karpenter consolidation, node upgrades), so that the replicas of one connector are not evicted at the same time. |
+| podDisruptionBudget.maxUnavailable | int | `1` | How many pods of a single connector may be unavailable during a voluntary disruption. |
 | extraEnvVars | list | `[]` | Additional environment variables to pass to all connectors |
 | pluginInstallation.enabled | bool | `true` | Install connector plugins at startup using an init container. |
 | pluginInstallation.pluginPath | string | `"/opt/connect-plugins"` | Directory where plugins are installed and then mounted into the Kafka Connect container. |

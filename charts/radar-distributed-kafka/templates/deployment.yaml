@@ -181,6 +181,10 @@ spec:
             value: {{ default 3 $root.Values.connectorRegistration.retryIntervalSeconds | quote }}
           - name: KAFKA_HEAP_OPTS
             value: "{{ $root.Values.kafkaHeapOpts }}"
+          {{- with $root.Values.pluginDiscovery }}
+          - name: CONNECT_PLUGIN_DISCOVERY
+            value: {{ . | quote }}
+          {{- end }}
           - name: CONNECT_LOG4J_LOGGERS
             value: "org.reflections=ERROR"
           {{- with $root.Values.extraEnvVars }}

@@ -35,6 +35,11 @@ podSecurityContext: {}
 # -- JVM options for Kafka Connect
 kafkaHeapOpts: "-Xms1g -Xmx2g"
 
+# -- Kafka Connect plugin discovery mode (`plugin.discovery`). Empty keeps Connect's default
+# (`hybrid_warn`). `service_load` skips the slow reflective class scan, but only finds plugins
+# that ship ServiceLoader manifests -- the Lenses stream-reactor plugins do not.
+pluginDiscovery: ""
+
 # -- Configure connector containers' Security Context
 securityContext: {}
 
@@ -58,6 +63,15 @@ tolerations: []
 
 # -- Affinity labels for pod assignment
 affinity: {}
+
+podDisruptionBudget:
+  # -- Create a PodDisruptionBudget per connector. Worth enabling wherever nodes are
+  # drained automatically (cluster autoscaler, Karpenter consolidation, node upgrades),
+  # so that the replicas of one connector are not evicted at the same time.
+  enabled: false
+  # -- How many pods of a single connector may be unavailable during a voluntary
+  # disruption.
+  maxUnavailable: 1
 
 # -- Additional environment variables to pass to all connectors
 extraEnvVars: []
