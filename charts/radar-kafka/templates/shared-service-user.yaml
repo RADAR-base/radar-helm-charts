@@ -40,6 +40,17 @@ spec:
           - Alter
           - Create
           - Describe
+      # Needed by the Iceberg sink (radar-distributed-kafka): its commit coordinator writes to
+      # its control topic with a transactional producer, which Kafka authorizes on the
+      # transactional id rather than on the topic.
+      - type: allow
+        resource:
+          type: transactionalId
+          name: '*'
+          patternType: literal
+        operations:
+          - Write
+          - Describe
       # Needed by ksql server
       - type: allow
         resource:
