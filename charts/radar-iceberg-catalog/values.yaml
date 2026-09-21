@@ -87,6 +87,12 @@ bootstrap:
 # See its own README for the full set.
 # @default -- check `values.yaml`
 lakekeeper:
+  # RADAR-Kubernetes installs every release with `helm --wait`. Lakekeeper's pods wait for the
+  # database migration, and by default that migration is a post-install hook, which Helm only
+  # runs AFTER the wait — so the install would hang until it times out. `true` makes the
+  # migration an ordinary Job instead (the upstream chart's own advice).
+  helmWait: true
+
   catalog:
     replicas: 2
 
@@ -132,6 +138,14 @@ networkpolicy:
       podSelector:
         matchLabels:
           app.kubernetes.io/name: 'minio'
+  # The catalog database: the embedded Postgres, or a CloudNativePG cluster in production.
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+    ports:
+      - port: 5432
+        protocol: TCP
   - to:
     - namespaceSelector:
         matchLabels:
