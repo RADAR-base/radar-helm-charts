@@ -1,0 +1,772 @@
+# -- (list of <html><a href="https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/">image pull secrets</a></html>)
+# pull secrets for private repositories
+imagePullSecrets: []
+# -- Override the name of the chart.
+# @default -- `<chart-name>`
+nameOverride: ""
+# -- Override the fully qualified chart name.
+# @default -- `<release-name>-<chart-name>`
+fullnameOverride: ""
+
+# -- kubernetes cluster domain name.
+# Used for service discovery in the catalog.
+clusterDomain: "cluster.local"
+
+# -- Additional labels to add to all resources
+additionalLabels:
+  {}
+
+# -- If true, set the annotation helm-hook-enabled: "false" for jobs that need to run before the catalog is started.
+# If this is false, helm install --wait will not work.
+helmWait: false
+
+lakekeeper:
+  # -- Lakekeeper Edition to use (core|plus).
+  # Lakekeeper Plus requires a valid license.
+  edition: "core"
+
+  # -- License key for Lakekeeper Plus.
+  # We strongly recommend using a Kubernetes secret instead by setting
+  # `lakekeeper.useLicenseSecret: true` and creating the secret separately.
+  # If both licenseKey and useLicenseSecret are set, the secret takes precedence.
+  licenseKey: ""
+  # -- If true, the license key is stored in a Kubernetes secret.
+  # If false, the license key is passed as an environment variable.
+  # We recommend setting this to true.
+  useLicenseSecret: true
+  # -- Name of the secret to store the license key.
+  # Only used if `lakekeeper.useLicenseSecret` is true.
+  licenseSecretName: "lakekeeper-license"
+  # -- Key within the secret to store the license key.
+  # Only used if `lakekeeper.useLicenseSecret` is true.
+  licenseSecretKey: "license-key"
+
+catalog:
+  image:
+    # -- The image repository to pull from
+    repository: ~
+    # -- The image tag to pull
+    tag: ~
+    # -- The image pull policy
+    pullPolicy: IfNotPresent
+    # -- 65532 = nonroot of google container distroless
+    uid: 65532
+    # -- 65534 = nobody of google container distroless
+    gid: 65534
+
+  # -- Number of replicas to deploy. Replicas are stateless.
+  replicas: &catalog_replicas 1
+
+  # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#resourcerequirements-v1-core">resource requirements</a></html>)
+  # resources for the catalog container of the catalog pod
+  resources: {}
+  # ---- EXAMPLE ----
+  # resources:
+  #   limits:
+  #     cpu: 100m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
+
+  # -- (<html><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector">)
+  # node selector configs for the catalog Pods
+  nodeSelector: {}
+
+  # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#affinity-v1-core">affinity</a></html>)
+  # -- affinity for the catalog Pods
+  affinity: {}
+
+  # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#toleration-v1-core">toleration</a></html>)
+  # tolerations for the catalog Pods
+  tolerations: []
+
+  # -- (<html><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/">topologySpreadConstraints</a></html>)
+  # topology spread constraints the catalog Pods
+  topologySpreadConstraints: []
+
+  # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#podsecuritycontext-v1-core">podsecuritycontext-v1-core</a></html>)
+  # security context for the catalog Pods.
+  # `runAsUser` and `runAsGroup` are ignored for the catalog container, please set with `catalog.image.uid` and `catalog.image.gid`
+  podSecurityContext:
+    {}
+    # # ---- EXAMPLE ----
+    # podSecurityContext:
+    #   runAsNonRoot: true
+    #   seccompProfile:
+    #     type: RuntimeDefault
+
+  # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#podsecuritycontext-v1-core">podsecuritycontext-v1-core</a></html>)
+  # security context for the catalog container.
+  # `runAsUser` is ignored, please set with `catalog.image.uid`, `runAsGroup` is ignored, please set with `catalog.image.gid`
+  containerSecurityContext:
+    {}
+    # # ---- EXAMPLE ----
+    # containerSecurityContext
+    #   allowPrivilegeEscalation: false
+    #   readOnlyRootFilesystem: true
+    #   capabilities:
+    #     drop:
+    #       - all
+
+  # -- Labels for the catalog Deployment
+  labels: {}
+
+  # -- Pod labels for the catalog Deployment
+  podLabels: {}
+
+  # -- Kubernetes priority class for scheduling
+  priorityClassName: ~
+
+  # -- Annotations for the catalog Deployment
+  annotations: {}
+
+  # -- Pod annotations for the catalog Deployment
+  podAnnotations: {}
+
+  # -- (list of <html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#envvar-v1-core">envvar-v1-core</a></html>)
+  # extra variables for the catalog Pods
+  extraEnv: []
+
+  # -- (list of <html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#envfromsource-v1-core">envfromsource-v1-core</a></html>)
+  # extra variables for the catalog Pods
+  extraEnvFrom: []
+
+  # -- Configuration options for the catalog.
+  # Please check the documentation for the available options.
+  # https://docs.lakekeeper.io/docs/nightly/configuration/
+  # Configuration items are mounted as environment variables.
+  config: {}
+  # ---- EXAMPLE ----
+  # config:
+  #   LAKEKEEPER__BASE_URI: "https://data.example.com"
+  #   You only need to set LAKEKEEPER__BASE_URI if Lakekeeper is running behind a proxy that does not set x-forwarded-for / x-forwarded-host headers
+  #   or if you want to force the same base url for all Iceberg clients interacting with a catalog
+  #   More information regarding request routing can be found here: https://docs.lakekeeper.io/docs/latest/configuration/?h=x+forwar
+  #   LAKEKEEPER__USE_X_FORWARDED_HEADERS can be set to `false` to disable usage for x-forwarded headers
+
+  # -- if we add the annotation: "cluster-autoscaler.kubernetes.io/safe-to-evict" = "true"
+  safeToEvict: true
+
+  podDisruptionBudget:
+    # -- if a PodDisruptionBudget resource is created for the catalog
+    enabled: false
+
+    # -- the maximum unavailable pods/percentage for the catalog
+    maxUnavailable: ""
+
+    # -- the minimum available pods/percentage for the catalog
+    minAvailable: ""
+
+  livenessProbe:
+    # -- if the liveness probes of the catalog Pods are enabled
+    enabled: true
+    initialDelaySeconds: 1
+    periodSeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 5
+
+  # configuration of the readiness probes of the catalog pods
+  readinessProbe:
+    # -- if the readiness probes of the catalog Pods are enabled
+    enabled: true
+    initialDelaySeconds: 1
+    periodSeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 5
+
+  autoscaling:
+    # -- if the HorizontalPodAutoscaler is enabled for the catalog Pods
+    enabled: false
+    # -- maximum number of replicas for the catalog Pods
+    maxReplicas: 2
+    # -- metrics for the HorizontalPodAutoscaler
+    metrics: []
+  # ____ EXAMPLE _______________
+  #   autoscaling:
+  #     enabled: true
+  #     maxReplicas: 16
+  #     metrics:
+  #     - type: Resource
+  #       resource:
+  #         name: memory
+  #         target:
+  #           type: Utilization
+  #           averageUtilization: 80
+
+  # -- how many seconds to wait after SIGTERM before SIGKILL of the catalog.
+  # Default is 60 seconds.
+  terminationPeriod: 60
+
+  # -- (list of <html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#container-v1-core">containers</a></html>)
+  # extra containers for the catalog Pods
+  extraContainers: []
+
+  # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#container-v1-core">container</a></html>)
+  # extra init-containers for the catalog Pods
+  extraInitContainers: []
+
+  # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#volumemount-v1-core">volume mount</a></html>)
+  # extra VolumeMounts for the catalog Pods
+  extraVolumeMounts: []
+  # ---- EXAMPLE ----
+  # extraVolumeMounts:
+  # - name: foo
+  #   mountPath: "/etc/foo"
+  #   readOnly: true
+
+  # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#volume-v1-core">volume</a></html>)
+  # extra Volumes for the catalog Pods
+  extraVolumes: []
+  # ---- EXAMPLE ----
+  # extraVolumes:
+  # - name: foo
+  #   secret:
+  #     secretName: mysecret
+  #     optional: false
+
+  # -- Overwrite the command of the catalog container.
+  # If not set, the default entrypoint of the image is used
+  command: []
+
+  dbMigrations:
+    # -- if the db-migrations Job is created.
+    # if `false`, you have to MANUALLY run `airflow db upgrade` when required
+    enabled: true
+
+    # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#resourcerequirements-v1-core">resource requirements</a></html>)
+    # resources for the catalog container of the catalog pod
+    resources: {}
+    # ---- EXAMPLE ----
+    # resources:
+    #   limits:
+    #     cpu: 100m
+    #     memory: 128Mi
+    #   requests:
+    #     cpu: 100m
+    #     memory: 128Mi
+
+    # -- Labels for the catalog migration job
+    labels: {}
+
+    # -- Labels for the migration pod
+    podLabels: {}
+
+    # -- Annotations for the migration job
+    annotations: {}
+
+    # -- Annotations for the migration pod
+    podAnnotations: {}
+
+    # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#container-v1-core">container</a></html>)
+    # extra init-containers for the migration Pod
+    extraInitContainers: []
+
+    # Other configurations are equal to the `catalog` section
+
+  initContainers:
+    checkDb:
+      # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#resourcerequirements-v1-core">resource requirements</a></html>)
+      # resource requests/limits for the "check-db" init-containers
+      resources: {}
+
+  # configs for the (backend) Service of the catalog Pods (REST-API)
+  service:
+    # -- catalog service annotations
+    annotations: {}
+    # -- catalog service session affinity
+    sessionAffinity: "None"
+    # -- catalog service session affinity config
+    sessionAffinityConfig: {}
+    # -- catalog service type
+    type: ClusterIP
+    # -- catalog service external port
+    externalPort: 8181
+    # -- catalog service ip of the load balancer service.
+    # Only used when `type: LoadBalancer`
+    loadBalancerIP: ""
+    # -- Source ip ranges for the catalog services.
+    # Only used when `type: LoadBalancer`
+    loadBalancerSourceRanges: []
+    # -- catalog service node port
+    # Only used when `type: NodePort`
+    nodePort:
+      http: ""
+      metrics: ""
+
+  ingress:
+    # -- if we should deploy Ingress resources
+    enabled: false
+
+    # -- annotations for the catalog Ingress
+    annotations: {}
+
+    # -- additional labels for the catalog Ingress
+    labels: {}
+
+    # -- the path for the catalog Ingress.
+    # To host the catalog at the url
+    # `https://data.example.com/iceberg-catalog`, set `path: "/iceberg-catalog"`.
+    # If a path is set, the ingress must strip the path before forwarding to the service!
+    # This helm-chart does not take care of this, as it depends on the type of Ingress Controller used.
+    # For example, for NGINX Ingress Controller, set the annotation
+    # `nginx.ingress.kubernetes.io/rewrite-target: /`
+    path: ""
+
+    # -- the hostname for the catalog Ingress.
+    # For example, `data.example.com`.
+    host: ""
+
+    # -- the Ingress Class for the catalog Ingress
+    ingressClassName: ""
+
+    tls:
+      # -- enable TLS termination for the catalog Ingress
+      enabled: false
+
+      # -- the name of a pre-created Secret containing a TLS private key and certificate
+      secretName: ""
+
+  prometheus:
+    # -- Adds the prometheus.io/port and prometheus.io/scrape annotations to the catalog Pods.
+    setScrapeAnnotations: false
+    port: 9000
+
+serviceAccount:
+  # -- Specifies whether a service account should be created.
+  # If `false`, you must create the you must create the service account outside this chart with name: `serviceAccount.name`
+  create: true
+
+  # -- Option to opt-out of the default behavior of service account token auto-mounting.
+  automount: true
+
+  # -- Name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname
+  name: ""
+
+  # -- Annotations to add to the service account
+  annotations: {}
+  # ____ EXAMPLE _______________
+  #   # EKS - IAM Roles for Service Accounts
+  #   annotations:
+  #     eks.amazonaws.com/role-arn: "arn:aws:iam::XXXXXXXXXX:role/<<MY-ROLE-NAME>>"
+  #
+
+secretBackend:
+  # -- the type of secret store to use.
+  # Available values: "Postgres", "KV2"
+  type: "Postgres"
+
+  # postgres specific configurations.
+  postgres:
+    # -- Name of the secret containing the encryption key.
+    # If not set, a random key is generated and stored in a secret.
+    # We recommend setting this to a pre-existing secret. If you loose the key, you loose
+    # access to all secrets.
+    # If this secret is not set here, we use helm's lookup function to not change the key on every upgrade.
+    # This is incompatible with some kubernetes tools such as ArgoCD: https://github.com/argoproj/argo-cd/issues/5202
+    # Please ensure that you have the `encryptionKeySecret` field set if helm's lookup is not supported in your tool.
+    encryptionKeySecret: ""
+    # -- Name of the key within `encryptionKeySecret` containing the encryption key string
+    encryptionKeySecretKey: "encryptionKey"
+
+  # kv2 specific configurations
+  kv2:
+    # -- the URL of the KV2 secret store
+    url: ""
+    # -- user name for authentication
+    user: ""
+    # -- password for authentication
+    # consider using a secret for the password
+    password: ""
+    # -- path to the secret mount in the KV2 secret store.
+    secretMount: "kv/data/iceberg"
+    # -- the name of a pre-created secret containing the KV2 user
+    userSecret: ""
+    # -- the key within `kv2.userSecret` containing the user string
+    userSecretKey: "username"
+    # -- the name of a pre-created secret containing the KV2 password
+    passwordSecret: ""
+    # -- the key within `kv2.passwordSecret` containing the password string
+    passwordSecretKey: "password"
+
+postgresql:
+
+  # -- if the `groundhog2k/postgres` chart is used.
+  # [WARNING] embedded Postgres is NOT recommended for production. Use an external database instead.
+  # set to `false` if using `externalDatabase.*`
+  enabled: true
+
+  nameOverride: "lakekeeper-pg"
+
+  service:
+    port: 5432
+
+  settings:
+    # -- Optional existing secret for the Postgrest superuser
+    existingSecret:
+    superuser:
+      # -- Superuser name (if no existingSecret was specified) - defaults to "postgres"
+      value:
+      # -- Key of existingSecret for the Superuser name
+      secretKey:
+    superuserPassword:
+      # -- Password of Superuser (if no existingSecret was specified)
+      value: "password"
+      # -- Key of existingSecret for the Superuser password
+      secretKey:
+
+  userDatabase:
+    # -- Optional existing secret with database name, user and password
+    existingSecret:
+    name:
+      # -- Name of the user database (if no existingSecret was specified) - defaults to "lakekeeper"
+      value: "lakekeeper"
+      # -- Key of the existingSecret with database name
+      secretKey:
+    user:
+      # -- User name with full access to user database (if no existingSecret was specified) - defaults to "lakekeeper"
+      value: "lakekeeper"
+      # -- Key of the existingSecret with database user
+      secretKey:
+    password:
+      # -- Password of created user (if no existingSecret was specified) - defaults to "password"
+      value: "password"
+      # -- Key of the existingSecret with password of created user
+      secretKey:
+
+  storage:
+    # -- Size for new PVC, when no existing PVC is used
+    # if `null`, data will be LOST as postgres Pods restart
+    requestedSize: 5Gi
+    # Default access mode (ReadWriteOnce)
+    accessModes:
+      - ReadWriteOnce
+    # -- the StorageClass used by the PVC
+    className:
+
+externalDatabase:
+  # -- the type of external database.
+  # allowed values: "postgres"
+  type: postgres
+
+  # -- hostname to use for read instances of the external database
+  host_read: "localhost"
+
+  # -- hostname to use for write instances of the external database.
+  # For single read/write instances, this should be the same as `host_read`
+  host_write: "localhost"
+
+  # port of the external database
+  port: 5432
+
+  # the database/scheme to use within the external database
+  database: catalog
+
+  # the username for the external database
+  user: catalog
+
+  # the name of a pre-created secret containing the external database user
+  # - if set, this overrides `externalDatabase.user`
+  userSecret: ""
+
+  # the key within `externalDatabase.userSecret` containing the user string
+  userSecretKey: "postgresql-user"
+
+  # the password for the external database
+  # - [WARNING] to avoid storing the password in plain-text within your values,
+  #   create a Kubernetes secret and use `externalDatabase.passwordSecret`
+  password: ""
+
+  # the name of a pre-created secret containing the external database password
+  # - if set, this overrides `externalDatabase.password`
+  passwordSecret: ""
+
+  # the key within `externalDatabase.passwordSecret` containing the password string
+  passwordSecretKey: "postgresql-password"
+
+  # Additional connection properties can be specified via environment variables
+  # in the `catalog.extraEnv` list
+
+auth:
+  # -- Configuration for the authentication of the catalog.
+  # If `auth.oauth2.providerUri` is not set and `auth.kubernetes.enabled` is false,
+  # authentication is disabled.
+  oauth2:
+    # -- If set, access to rest endpoints is secured via an external OIDC-capable IdP.
+    # The IdP must expose `{provider_url}/.well-known/openid-configuration`
+    # and the openid-configuration needs to have the jwks_uri and issuer defined.
+    # For keycloak set: https://keycloak.local/realms/test
+    # For Entra-ID set: https://login.microsoftonline.com/{your-tenant-id}/v2.0
+    providerUri: ""
+    # -- The expected Audience of the OIDC App of lakekeeper.
+    # The aud (audience) claim of the JWT token must match this value. Typically this is
+    # the Client ID.
+    audience: ""
+    # -- Additional allow OIDC issuers.
+    # The issuer defined in the issuer field of the ``.well-known/openid-configuration``
+    # is always trusted. `additionalIssuers` has no effect if `providerUri` is not set.
+    additionalIssuers: []
+
+    ui:
+      # -- Client ID used for the Authorization Code Flow of the UI.
+      # Required if Authentication is enabled.
+      clientID: ""
+      # -- Space separated scopes to request
+      scopes: ""
+      # -- Resource to request
+      resource: ""
+
+  k8s:
+    # -- If true, kubernetes service accounts can authenticate to Lakekeeper.
+    # This option is compatible with `auth.oauth2` - multiple IdPs (OIDC and Kubernetes)
+    # can be enabled simultaneously.
+    enabled: false
+    # -- The expected Audience of the Kubernetes Service Account.
+    # The aud (audience) claim of the JWT token must match this value.
+    # If oauth2 and kubernetes authentication are enabled, this value must be specified.
+    # Most clusters can use the default value of `https://kubernetes.default.svc`.
+    audience: ""
+    # -- If true, will set LAKEKEEPER__KUBERNETES_AUTHENTICATION_ACCEPT_LEGACY_SERVICEACCOUNT to true
+    # This option will allow accepting tokens with `iss` claim set to kubernetes/serviceaccount
+    legacyEnabled: false
+    # -- If true and `auth.k8s.enabled` is true, a ClusterRoleBinding is created
+    # that allows lakekeeper to introspect tokens.
+    createClusterRoleBinding: true
+
+authz:
+  # -- type of the authorization backend.
+  # Available values: "openfga", "allowall", "cedar"
+  # Authorization must not change after bootstrapping!
+  # If type "openfga" is chose, consider setting `internalOpenFGA` to true
+  # to deploy an OpenFGA instance as a subchart.
+  backend: "allowall"
+
+  # The following values are only required if an external
+  # openfga instance is used as the authorization backend.
+  # An external instance is used if `authz.backend` is set to "openfga"
+  # and `internalOpenFGA` is set to false.
+  openfga:
+    # -- OpenFGA Endpoint (gRPC)
+    # Set automatically if `internalOpenFGA` is true.
+    endpoint: ""
+    # -- Name of the Store to use in OpenFGA
+    # Defaults to "lakekeeper"
+    store: ""
+    # -- API Key used to authenticate with OpenFGA.
+    # This is used for pre-shared key authentication.cc
+    # If `clientId` is set, the `apiKey` is ignored.
+    apiKey: ""
+    # -- Client ID used to authenticate with OpenFGA.
+    # This is used for OIDC authentication.
+    clientId: ""
+    # -- Client Secret used to authenticate with OpenFGA.
+    # This is used for OIDC authentication.
+    clientSecret: ""
+    # -- the name of a pre-created secret containing the OIDC Client ID
+    clientIdSecret: ""
+    # -- the key within `openfga.clientIdSecret` containing the client-id string
+    clientIdSecretKey: "client-id"
+    # -- the name of a pre-created secret containing the OIDC Client Secret
+    clientSecretSecret: ""
+    # -- the key within `openfga.clientSecretSecret` containing the client-secret string
+    clientSecretSecretKey: "client-secret"
+    # -- OIDC token endpoint used to authenticate with OpenFGA.
+    # Used when exchanging client credentials for an access token for OpenFGA.
+    # Required if Client ID is set.
+    tokenEndpoint: ""
+
+# -- if an OpenFGA instance is deployed as a subchart.
+# When setting `internalOpenFGA` to true, the `openfga` subchart is deployed.
+internalOpenFGA: false
+
+# The subchart is only deployed if `internalOpenFGA` is set to true.
+# All following values belong to the `openfga` subchart.
+# Please check the [OpenFGA Chart](https://github.com/openfga/helm-charts/tree/main/charts/openfga)
+# for more information.
+# By default the openfga API is not secured. We recommend to secure the API or use
+# network policies to restrict access.
+openfga:
+  # By default, we use the same number of replicas as the catalog
+  replicaCount: *catalog_replicas
+
+  migrate:
+    annotations:
+      helm.sh/hook: "post-install, post-upgrade, post-rollback"
+      argocd.argoproj.io/hook: Sync
+      argocd.argoproj.io/sync-wave: "0"
+
+  datastore:
+    engine: postgres
+    migrationType: initContainer
+    uriSecret: lakekeeper-openfga-pg-svcbind-postgres
+
+  extraEnvVars:
+    - name: OPENFGA_CACHE_CONTROLLER_ENABLED
+      value: "true"
+    - name: OPENFGA_CHECK_QUERY_CACHE_ENABLED
+      value: "true"
+    - name: OPENFGA_CHECK_ITERATOR_CACHE_ENABLED
+      value: "true"
+    - name: OPENFGA_LIST_OBJECTS_ITERATOR_CACHE_ENABLED
+      value: "false"
+
+  postgresql:
+    # If not set, postgresql of openfga collides with names of
+    # lakekeeper postgres. If changed, also change the `uriSecret` in `datastore`.
+    fullnameOverride: lakekeeper-openfga-pg
+    enabled: true
+
+    serviceBindings:
+      enabled: true
+
+    global:
+      security:
+        # Required due to our own postsgresql image
+        allowInsecureImages: true
+    image:
+      registry: quay.io
+      repository: lakekeeper/postgresql
+      tag: 15.4.0-debian-11-r45
+
+OPABridge:
+  # -- if the Lakekeeper OPA Bridge is deployed. OPA is launched as a sidecar container.
+  enabled: false
+
+  image:
+    # -- The image repository to pull from
+    repository: openpolicyagent/opa
+    # -- The image tag to pull
+    tag: 1.16.1
+    # -- The image pull policy
+    pullPolicy: IfNotPresent
+    # -- User ID for the OPA container. Any non-zero number works with
+    # the default OPA image.
+    uid: 64287
+    # -- Group ID for the OPA container. Any non-zero number works with
+    # the default OPA image.
+    gid: 64287
+
+  # -- (<html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#resourcerequirements-v1-core">resource requirements</a></html>)
+  # resources for the OPA sidecar container of the catalog pod
+  resources: {}
+  # ---- EXAMPLE ----
+  # resources:
+  #   limits:
+  #     cpu: 100m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
+
+  # -- (list of <html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#envvar-v1-core">envvar-v1-core</a></html>)
+  # extra variables for the OPA container
+  extraEnv: []
+
+  # -- (list of <html><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/#envfromsource-v1-core">envfromsource-v1-core</a></html>)
+  # extra variables for the OPA container
+  extraEnvFrom: []
+
+  # -- Additional arguments to pass to the OPA "run --server" command.
+  # These are appended to the default command arguments.
+  extraArgs: []
+  # ---- EXAMPLE ----
+  # extraArgs:
+  #   - "--log-level=debug"
+  #   - "--log-format=text"
+
+  # -- Additional configuration options for OPA.
+  # Please check the OPA documentation for the available options.
+  opaConfig: {}
+  # ---- EXAMPLE ----
+  #   decision_logs:
+  #     console: true
+
+  # -- Allow access to unmanaged catalogs (catalogs not configured in trino_catalog).
+  # When Trino has multiple authorizers configured, ALL authorizers must allow an action for it to succeed.
+  # If Trino uses catalogs managed by other authorizers (not Lakekeeper), set this to true.
+  allowUnmanagedCatalogs: false
+
+  # -- Maximum number of checks per batch-check request to Lakekeeper.
+  # Lakekeeper server limit is 1000.
+  maxBatchCheckSize: 1000
+
+  # -- Trino admin users with full access to all system schemas/tables across all catalogs,
+  # including FilterViewQueryOwnedBy for all users.
+  # Specify Trino user IDs (typically OIDC subject) as a list.
+  adminUsers: []
+  # ---- EXAMPLE ----
+  # adminUsers:
+  #   - "admin-user-id"
+  #   - "another-admin-id"
+
+  # -- Configuration for connecting to Lakekeeper instance.
+  lakekeeper:
+    # -- The URL where OPA can reach the Lakekeeper instance.
+    url: "http://localhost:8181"
+    # -- The URL of the token endpoint of the identity provider.
+    # Example: http://localhost:30080/realms/iceberg/protocol/openid-connect/token
+    tokenEndpoint: ""
+    # -- The client ID used for authentication with the IdP (Client Credentials Flow).
+    clientId: ""
+    # -- The client secret used for authentication with the IdP (Client Credentials Flow).
+    clientSecret: ""
+    # -- The scope specified in the client credentials flow.
+    scope: "lakekeeper"
+
+    # -- Name of an existing secret containing Lakekeeper authentication credentials.
+    # If set, tokenEndpoint, clientId, clientSecret, and scope will be read from this secret.
+    existingSecret: ""
+    # -- Key within existingSecret containing the token endpoint
+    tokenEndpointSecretKey: "tokenEndpoint"
+    # -- Key within existingSecret containing the client ID
+    clientIdSecretKey: "clientId"
+    # -- Key within existingSecret containing the client secret
+    clientSecretSecretKey: "clientSecret"
+    # -- Key within existingSecret containing the scope
+    scopeSecretKey: "scope"
+
+  # -- Trino catalog to Lakekeeper warehouse mappings.
+  # Each entry maps a Trino catalog name to a Lakekeeper warehouse.
+  catalogs: []
+  # ---- EXAMPLE ----
+  # catalogs:
+  #   - trinoCatalog: "dev"
+  #     lakekeeperWarehouse: "development"
+  #   - trinoCatalog: "prod"
+  #     lakekeeperWarehouse: "production"
+
+  # -- Custom OPA policies.
+  # Map of policy filenames to policy content.
+  customPolicies: {}
+  # ---- EXAMPLE ----
+  # customPolicies:
+  #   my-policy.rego: |
+  #     package myapp
+  #
+  #     allow if {
+  #       input.user == "admin"
+  #     }
+
+  # configs for the OPA Bridge Service
+  service:
+    # -- OPA service annotations
+    annotations: {}
+    # -- OPA service session affinity
+    sessionAffinity: "None"
+    # -- OPA service session affinity config
+    sessionAffinityConfig: {}
+    # -- OPA service type
+    type: ClusterIP
+    # -- OPA service external port
+    externalPort: 8282
+    # -- OPA service ip of the load balancer service.
+    # Only used when `type: LoadBalancer`
+    loadBalancerIP: ""
+    # -- Source ip ranges for the OPA services.
+    # Only used when `type: LoadBalancer`
+    loadBalancerSourceRanges: []
+    # -- OPA service node port
+    # Only used when `type: NodePort`
+    nodePort:
+      opa: ""

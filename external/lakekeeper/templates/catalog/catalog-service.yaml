@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "iceberg-catalog.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  {{- if .Values.catalog.service.annotations }}
+  annotations:
+    {{- toYaml .Values.catalog.service.annotations | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "iceberg-catalog.labels" . | nindent 4 }}
+    app.kubernetes.io/component: catalog
+spec:
+  type: {{ .Values.catalog.service.type }}
+  sessionAffinity: {{ .Values.catalog.service.sessionAffinity }}
+  {{- if .Values.catalog.service.sessionAffinityConfig }}
+  sessionAffinityConfig:
+    {{- toYaml .Values.catalog.service.sessionAffinityConfig | nindent 4 }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.catalog.service.externalPort | default 8181 }}
+      targetPort: http
+      protocol: TCP
+      {{- if and (eq .Values.catalog.service.type "NodePort") (.Values.catalog.service.nodePort.http) }}
+      nodePort: {{ .Values.catalog.service.nodePort.http }}
+      {{- end }}
+      name: http
+    {{- if .Values.catalog.prometheus.setScrapeAnnotations }}
+    - port: {{ .Values.catalog.prometheus.port }}
+      targetPort: metrics
+      protocol: TCP
+      {{- if and (eq .Values.catalog.service.type "NodePort") (.Values.catalog.service.nodePort.metrics) }}
+      nodePort: {{ .Values.catalog.service.nodePort.metrics }}
+      {{- end }}
+      name: metrics
+    {{- end }}
+  selector:
+    {{- include "iceberg-catalog.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: catalog
+  {{- if eq .Values.catalog.service.type "LoadBalancer" }}
+  {{- if .Values.catalog.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.catalog.service.loadBalancerIP | quote }}
+  {{- end }}
+  {{- if .Values.catalog.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.catalog.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- end }}
