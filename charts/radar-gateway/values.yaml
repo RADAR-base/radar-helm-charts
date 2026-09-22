@@ -109,7 +109,7 @@ gatewayAPI:
   enabled: false
   # -- Annotations to add to the HTTPRoute
   annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   # -- Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared
   # resource and must be created separately (not by this chart).
   parentRef:
