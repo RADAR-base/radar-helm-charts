@@ -13,7 +13,7 @@ image:
   #  radar-base/managementportal/management-portal
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 2.1.32
+  tag: 2.1.39
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy
