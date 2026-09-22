@@ -92,7 +92,7 @@ A Helm chart for running distributed Kafka source connectors with per-source con
 | connectorRegistration.enabled | bool | `true` | Automatically register/update connector config at pod startup |
 | connectorRegistration.maxWaitSeconds | int | `120` | Maximum time in seconds to wait for Connect REST API before failing startup |
 | connectorRegistration.retryIntervalSeconds | int | `3` | Interval in seconds between readiness checks for Connect REST API |
-| connectors | list | Check values.yaml | List of source connector definitions. Each enabled entry is deployed as a separate Kafka Connect worker. |
+| connectors | list | Check values.yaml | List of connector definitions, source or sink. Each enabled entry is deployed as a separate Kafka Connect worker. |
 | connectors[0].enabled | bool | `true` | Whether this connector entry should be deployed |
 | connectors[0].type | string | `"s3-source"` | Source connector type. Currently only `s3` is supported. |
 | connectors[0].topic | string | `"connect_s3_default"` | Kafka topic where this source writes records. |
