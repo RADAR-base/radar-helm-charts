@@ -235,12 +235,13 @@ connectors:
   # own with `image` set and `pluginInstallation.enabled: false`.
   - name: iceberg-sink
     # Whether this connector entry should be deployed
-    enabled: false
+    enabled: true
     type: iceberg-sink
     # Number of Connect workers for this connector. Keep it at or below `maxTasks`.
     replicaCount: 3
-    # Ceiling on tasks, not a target: one task consumes many partitions
-    maxTasks: 16
+    # 12 = partitions per RADAR topic. With Kafka's default RangeAssignor, partitions are
+    # shared out topic by topic, so tasks beyond 12 would get nothing.
+    maxTasks: 12
     connectorClass: org.apache.iceberg.connect.IcebergSinkConnector
     keyConverter: io.confluent.connect.avro.AvroConverter
     valueConverter: io.confluent.connect.avro.AvroConverter
@@ -290,9 +291,6 @@ connectors:
       # The image's startup script waits for this many brokers (its default is 3).
       - name: KAFKA_BROKERS
         value: "1"
-      # Spread all topic-partitions evenly over the tasks, not topic by topic.
-      - name: CONNECT_CONSUMER_PARTITION_ASSIGNMENT_STRATEGY
-        value: "org.apache.kafka.clients.consumer.CooperativeStickyAssignor"
       # Warehouse credentials, from the Secret the radar-iceberg-catalog release creates.
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
@@ -369,9 +367,6 @@ connectors:
       # The image's startup script waits for this many brokers (its default is 3).
       - name: KAFKA_BROKERS
         value: "1"
-      # Spread all topic-partitions evenly over the tasks, not topic by topic.
-      - name: CONNECT_CONSUMER_PARTITION_ASSIGNMENT_STRATEGY
-        value: "org.apache.kafka.clients.consumer.CooperativeStickyAssignor"
       # Warehouse credentials, from the Secret the radar-iceberg-catalog release creates.
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
