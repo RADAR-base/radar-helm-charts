@@ -1,3 +1,5 @@
+serverName: localhost
+
 # -- Number of radar-console frontend replicas to deploy
 replicaCount: 1
 
@@ -8,7 +10,7 @@ image:
   repository: peymanm/radarbase-console
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 0.0.5
+  tag: 0.0.45
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy
@@ -73,8 +75,6 @@ ingress:
 configMap:
   mounted: true
   mountPath: /usr/share/nginx/html/assets
-  data:
-    frontend-config.json: {}
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious

@@ -1,0 +1,133 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  {{- $labels := include "common.tplvalues.merge" (dict "values" (list .Values.configMap.labels .Values.commonLabels) "context" .) | fromYaml }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
+  {{- $annotations := include "common.tplvalues.merge" (dict "values" (list .Values.configMap.annotations .Values.commonAnnotations) "context" .) | fromYaml }}
+  {{- if $annotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  frontend-config.json: |-
+    {
+      "mainNavigation": {
+        "internal": {
+          "questionnaire": true,
+          "audit": true,
+          "revision": true,
+          "health": true,
+          "metrics": true,
+          "log": true
+        },
+        "external": {
+          "systemLogs": {
+            "url": "http://grafana.{{ .Values.serverName }}"
+          },
+          "_systemStatus": {
+            "url": "http://graylog.{{ .Values.serverName }}"
+          },
+          "uploadPortal": {
+            "url": "http://{{ .Values.serverName }}/upload"
+          },
+          "dataStorage": {
+            "url": "https://s3.{{ .Values.serverName }}"
+          },
+          "grafana": {
+            "url": "http://grafana.{{ .Values.serverName }}"
+          },
+          "website": {
+            "url": "https://radar-base.org/"
+          },
+          "wiki": {
+            "url": "https://radar-base.atlassian.net/wiki/spaces/RAD/overview"
+          }
+        }
+      },
+      "localization": {
+        "translationsBaseUrl": "assets/i18n/",
+        "locales": [
+          {
+            "code": "en",
+            "locale": "en-GB",
+            "label": "English",
+            "shortLabel": "EN",
+            "dateFormat": "dd/mm/yyyy"
+          },
+          {
+            "code": "nl",
+            "locale": "nl-NL",
+            "label": "Nederlands",
+            "shortLabel": "NL",
+            "dateFormat": "dd-mm-yyyy"
+          }
+        ]
+      },
+      "branding": {
+        "logo": "assets/images/rb-logo-full-white.svg",
+        "theme": {
+          "light": {
+            "primary": "#004F6E",
+            "on-primary": "#ffffff",
+            "accent": "#22A2C9",
+            "on-accent": "#ffffff",
+            "tertiary": "#22A2C9",
+            "on-tertiary": "#ffffff"
+          },
+          "dark": {
+            "primary": "#22A2C9",
+            "on-primary": "#ffffff",
+            "accent": "#22A2C9",
+            "on-accent": "#ffffff",
+            "tertiary": "#004F6E",
+            "on-tertiary": "#ffffff"
+          }
+        }
+      },
+      "entities": {
+        "project": {
+          "fields": {
+            "location": true,
+            "description": true,
+            "startDate": true,
+            "endDate": true,
+            "projectStatus": true,
+            "sourceTypes": true,
+            "humanReadableProjectName": true,
+            "attributes": true,
+            "attributes.Privacy-policy-url": true,
+            "attributes.Work-package": true,
+            "attributes.Phase": true,
+            "attributes.External-project-url": true,
+            "attributes.External-project-id": true
+          }
+        },
+        "subject": {
+          "fields": {
+            "personName": true,
+            "externalLink": true,
+            "dateOfBirth": true,
+            "group": true,
+            "status": true,
+            "sources": true,
+            "attributes": true,
+            "attributes.participant_group": true,
+            "attributes.humanReadableIdentifier": true,
+            "enrollmentDate": true,
+            "createdBy": true,
+            "createdDate": true,
+            "lastModifiedBy": true,
+            "lastModifiedDate": true
+          },
+          "extraFields": []
+        },
+        "source": {
+          "fields": {
+            "expectedSourceName": true,
+            "attributes": true,
+            "attributes.External-identifier": true
+          }
+        }
+      }
+    }
