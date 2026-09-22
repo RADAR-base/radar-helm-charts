@@ -192,6 +192,13 @@ update-strimzi-registry-operator:
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-trino:
+	@echo "Updating trino"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://trinodb.github.io/charts
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-trivy:
 	@echo "Updating trivy"
 	@rm -rf external/$(patsubst update-%,%,$@)
