@@ -286,22 +286,15 @@ connectors:
       # -1 = the broker's default replication factor
       "errors.deadletterqueue.topic.replication.factor": "-1"
       "errors.deadletterqueue.context.headers.enable": "true"
+    # Warehouse credentials for writing the data files (the S3 access key pair).
+    secretProperties:
+      "iceberg.catalog.s3.access-key-id": ""
+      "iceberg.catalog.s3.secret-access-key": ""
     # Extra environment variables for this connector's pods
     extraEnvVars:
       # The image's startup script waits for this many brokers (its default is 3).
       - name: KAFKA_BROKERS
         value: "1"
-      # Warehouse credentials, from the Secret the radar-iceberg-catalog release creates.
-      - name: AWS_ACCESS_KEY_ID
-        valueFrom:
-          secretKeyRef:
-            name: radar-iceberg-catalog-warehouse
-            key: AWS_ACCESS_KEY_ID
-      - name: AWS_SECRET_ACCESS_KEY
-        valueFrom:
-          secretKeyRef:
-            name: radar-iceberg-catalog-warehouse
-            key: AWS_SECRET_ACCESS_KEY
 
   # The seven topics whose event time is a string (`dateTime` or `date`). Same as above plus
   # three stock transforms that parse the string and rename it to `time`. Kept separate
@@ -362,22 +355,15 @@ connectors:
       # -1 = the broker's default replication factor
       "errors.deadletterqueue.topic.replication.factor": "-1"
       "errors.deadletterqueue.context.headers.enable": "true"
+    # Warehouse credentials for writing the data files (the S3 access key pair).
+    secretProperties:
+      "iceberg.catalog.s3.access-key-id": ""
+      "iceberg.catalog.s3.secret-access-key": ""
     # Extra environment variables for this connector's pods
     extraEnvVars:
       # The image's startup script waits for this many brokers (its default is 3).
       - name: KAFKA_BROKERS
         value: "1"
-      # Warehouse credentials, from the Secret the radar-iceberg-catalog release creates.
-      - name: AWS_ACCESS_KEY_ID
-        valueFrom:
-          secretKeyRef:
-            name: radar-iceberg-catalog-warehouse
-            key: AWS_ACCESS_KEY_ID
-      - name: AWS_SECRET_ACCESS_KEY
-        valueFrom:
-          secretKeyRef:
-            name: radar-iceberg-catalog-warehouse
-            key: AWS_SECRET_ACCESS_KEY
 
 # -- Network policy defines who can access this application and who this application has access to
 networkpolicy:
