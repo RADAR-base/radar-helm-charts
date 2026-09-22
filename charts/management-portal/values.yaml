@@ -382,6 +382,11 @@ managementportal:
   oauth_clients_file: /secrets/oauth_client_details.csv
   # -- Base URL managementportal calls from inside the application container
   base_url: ''
+  radar_console:
+    # -- Use the new radar-console frontend for study management
+    enabled: false
+
+
 
 # Configurations of the SMTP server to send activation emails from Management Portal
 smtp:

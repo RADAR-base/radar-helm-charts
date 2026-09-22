@@ -147,6 +147,12 @@ spec:
             value: {{ .Values.managementportal.common_privacy_policy_url }}
           - name: SPRING_APPLICATION_JSON
             value: '{"managementportal":{"oauth":{"checkingKeyAliases":["{{ .Values.managementportal.oauth_checking_key_aliases_0 }}","{{ .Values.managementportal.oauth_checking_key_aliases_1 }}"]}}}'
+          - name: MANAGEMENTPORTAL_COMMON_USE_CONSOLE
+            value: {{ .Values.managementportal.radar_console.enabled }}
+          {{- if .Values.managementportal.radar_console.enabled }}
+          - name: MANAGEMENTPORTAL_COMMON_CONSOLE_BASE_URL
+            value: "{{ .Values.advertised_protocol }}://{{ .Values.server_name }}/radarbase-console"
+          {{- end }}
           - name: JHIPSTER_SLEEP # gives time for the database to boot before the application
             value: "0"
           - name: JAVA_OPTS  # maximum heap size for the JVM running ManagementPortal, increase this as necessary

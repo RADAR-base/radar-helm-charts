@@ -121,6 +121,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | managementportal.common_admin_password | string | `"xxx"` | Admin password of the default admin user created by the system |
 | managementportal.oauth_clients_file | string | `"/secrets/oauth_client_details.csv"` | The file where the OAuth2 client details are stored |
 | managementportal.base_url | string | `""` | Base URL managementportal calls from inside the application container |
+| managementportal.radar_console.enabled | bool | `false` | Use the new radar-console frontend for study management |
 | smtp.enabled | bool | `false` | set to true, if SMTP server should be enabled. Required to be true for production setup |
 | smtp.host | string | `"smtp"` | Hostname of the SMTP server |
 | smtp.port | int | `25` | Port of the SMTP server |
