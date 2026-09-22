@@ -186,7 +186,7 @@ connectorRegistration:
   # -- Interval in seconds between readiness checks for Connect REST API
   retryIntervalSeconds: 3
 
-# -- List of source connector definitions. Each enabled entry is deployed as a separate Kafka Connect worker.
+# -- List of connector definitions, source or sink. Each enabled entry is deployed as a separate Kafka Connect worker.
 # @default -- Check values.yaml
 connectors:
   - name: s3-avro-source
@@ -228,6 +228,161 @@ connectors:
     # letting a source start from a chosen watermark instead of the beginning.
     # Only applied when the connector does not yet exist in the Connect cluster.
     initialOffsets: []
+
+  # Apache Iceberg sink: one Iceberg table per topic, in the `radar` namespace. Both Iceberg
+  # entries are disabled here because they need an image with the Iceberg plugin and RADAR's
+  # transform jar, and `image` applies to the whole release, so they run in a release of their
+  # own with `image` set and `pluginInstallation.enabled: false`.
+  - name: iceberg-sink
+    # Whether this connector entry should be deployed
+    enabled: false
+    type: iceberg-sink
+    # Number of Connect workers for this connector. Keep it at or below `maxTasks`.
+    replicaCount: 3
+    # Ceiling on tasks, not a target: one task consumes many partitions
+    maxTasks: 16
+    connectorClass: org.apache.iceberg.connect.IcebergSinkConnector
+    keyConverter: io.confluent.connect.avro.AvroConverter
+    valueConverter: io.confluent.connect.avro.AvroConverter
+    # Connector properties. Every value must be a string.
+    properties:
+      # addNamespace renames the topic to `radar.<topic>` and insertTopic copies it into
+      # `_topic`, which the sink uses as the table name. Both must run before mergeKey,
+      # which copies the key (projectId, userId, sourceId) and a `timestamp` into the value.
+      # convertNumeric turns the double epoch-seconds fields into timestamps, so the tables
+      # can be partitioned by day(time).
+      "transforms": "addNamespace,insertTopic,mergeKey,convertNumeric"
+      "transforms.addNamespace.type": "org.apache.kafka.connect.transforms.RegexRouter"
+      "transforms.addNamespace.regex": "(.*)"
+      "transforms.addNamespace.replacement": "radar.$1"
+      "transforms.insertTopic.type": "org.apache.kafka.connect.transforms.InsertField$Value"
+      "transforms.insertTopic.topic.field": "_topic"
+      "transforms.mergeKey.type": "org.radarbase.kafka.connect.transforms.MergeKey"
+      "transforms.convertNumeric.type": "org.radarbase.kafka.connect.transforms.TimestampConverter"
+      "transforms.convertNumeric.fields": "time,timeReceived,timeCompleted,startTime,endTime"
+      # Every topic with a numeric `time`. The lookahead leaves out the two Kafka Streams
+      # outputs and the seven string-date topics of the next entry; the family list keeps
+      # internal and control topics out. Never use a bare `.*`.
+      "topics.regex": "(?!android_phone_usage_event_(output|aggregated)$|connect_fitbit_(sleep_classic|sleep_stages|resting_heart_rate)$|push_googlehealth_(sleep_classic|sleep_stage|daily_resting_heart_rate|daily_sleep_temperature_derivations)$)(android|active|application|canedge|certh|connect|dreem|notification|push|questionnaire|sensorkit|task|thincit)_.*"
+      "iceberg.tables.dynamic-enabled": "true"
+      "iceberg.tables.route-field": "_topic"
+      "iceberg.tables.auto-create-enabled": "true"
+      "iceberg.tables.evolve-schema-enabled": "true"
+      "iceberg.tables.schema-force-optional": "true"
+      "iceberg.tables.default-partition-by": "projectId,day(time)"
+      "iceberg.catalog.type": "rest"
+      "iceberg.catalog.uri": "http://radar-iceberg-catalog-lakekeeper:8181/catalog"
+      "iceberg.catalog.warehouse": "radar"
+      "iceberg.catalog.io-impl": "org.apache.iceberg.aws.s3.S3FileIO"
+      "iceberg.catalog.s3.endpoint": "http://minio:9000"
+      "iceberg.catalog.s3.path-style-access": "true"
+      "iceberg.catalog.client.region": "local-01"
+      # One commit (a new snapshot and a batch of Parquet files) every 5 minutes
+      "iceberg.control.commit.interval-ms": "300000"
+      "errors.tolerance": "all"
+      "errors.log.enable": "true"
+      "errors.deadletterqueue.topic.name": "dead_letter_queue_iceberg"
+      # -1 = the broker's default replication factor
+      "errors.deadletterqueue.topic.replication.factor": "-1"
+      "errors.deadletterqueue.context.headers.enable": "true"
+    # Extra environment variables for this connector's pods
+    extraEnvVars:
+      # The image's startup script waits for this many brokers (its default is 3).
+      - name: KAFKA_BROKERS
+        value: "1"
+      # Spread all topic-partitions evenly over the tasks, not topic by topic.
+      - name: CONNECT_CONSUMER_PARTITION_ASSIGNMENT_STRATEGY
+        value: "org.apache.kafka.clients.consumer.CooperativeStickyAssignor"
+      # Warehouse credentials, from the Secret the radar-iceberg-catalog release creates.
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: radar-iceberg-catalog-warehouse
+            key: AWS_ACCESS_KEY_ID
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: radar-iceberg-catalog-warehouse
+            key: AWS_SECRET_ACCESS_KEY
+
+  # The seven topics whose event time is a string (`dateTime` or `date`). Same as above plus
+  # three stock transforms that parse the string and rename it to `time`. Kept separate
+  # because nine push_garmin_* topics have both `time` and `date`, and the rename would
+  # collide there.
+  - name: iceberg-sink-string-dates
+    # Whether this connector entry should be deployed
+    enabled: false
+    type: iceberg-sink
+    # Number of Connect workers for this connector
+    replicaCount: 1
+    # Seven low-volume topics; one task is enough
+    maxTasks: 1
+    connectorClass: org.apache.iceberg.connect.IcebergSinkConnector
+    keyConverter: io.confluent.connect.avro.AvroConverter
+    valueConverter: io.confluent.connect.avro.AvroConverter
+    # Connector properties. Every value must be a string.
+    properties:
+      "topics": "connect_fitbit_sleep_classic,connect_fitbit_sleep_stages,connect_fitbit_resting_heart_rate,push_googlehealth_sleep_classic,push_googlehealth_sleep_stage,push_googlehealth_daily_resting_heart_rate,push_googlehealth_daily_sleep_temperature_derivations"
+      "transforms": "addNamespace,insertTopic,mergeKey,convertNumeric,convertDateTime,convertDate,renameEventTime"
+      "transforms.addNamespace.type": "org.apache.kafka.connect.transforms.RegexRouter"
+      "transforms.addNamespace.regex": "(.*)"
+      "transforms.addNamespace.replacement": "radar.$1"
+      "transforms.insertTopic.type": "org.apache.kafka.connect.transforms.InsertField$Value"
+      "transforms.insertTopic.topic.field": "_topic"
+      "transforms.mergeKey.type": "org.radarbase.kafka.connect.transforms.MergeKey"
+      "transforms.convertNumeric.type": "org.radarbase.kafka.connect.transforms.TimestampConverter"
+      "transforms.convertNumeric.fields": "time,timeReceived,timeCompleted,startTime,endTime"
+      # Device local time with no zone, parsed as UTC: the calendar day is kept.
+      "transforms.convertDateTime.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value"
+      "transforms.convertDateTime.field": "dateTime"
+      "transforms.convertDateTime.target.type": "Timestamp"
+      "transforms.convertDateTime.format": "yyyy-MM-dd'T'HH:mm:ss"
+      "transforms.convertDate.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value"
+      "transforms.convertDate.field": "date"
+      "transforms.convertDate.target.type": "Timestamp"
+      "transforms.convertDate.format": "yyyy-MM-dd"
+      "transforms.renameEventTime.type": "org.apache.kafka.connect.transforms.ReplaceField$Value"
+      "transforms.renameEventTime.renames": "dateTime:time,date:time"
+      "iceberg.tables.dynamic-enabled": "true"
+      "iceberg.tables.route-field": "_topic"
+      "iceberg.tables.auto-create-enabled": "true"
+      "iceberg.tables.evolve-schema-enabled": "true"
+      "iceberg.tables.schema-force-optional": "true"
+      "iceberg.tables.default-partition-by": "projectId,day(time)"
+      "iceberg.catalog.type": "rest"
+      "iceberg.catalog.uri": "http://radar-iceberg-catalog-lakekeeper:8181/catalog"
+      "iceberg.catalog.warehouse": "radar"
+      "iceberg.catalog.io-impl": "org.apache.iceberg.aws.s3.S3FileIO"
+      "iceberg.catalog.s3.endpoint": "http://minio:9000"
+      "iceberg.catalog.s3.path-style-access": "true"
+      "iceberg.catalog.client.region": "local-01"
+      # One commit (a new snapshot and a batch of Parquet files) every 5 minutes
+      "iceberg.control.commit.interval-ms": "300000"
+      "errors.tolerance": "all"
+      "errors.log.enable": "true"
+      "errors.deadletterqueue.topic.name": "dead_letter_queue_iceberg"
+      # -1 = the broker's default replication factor
+      "errors.deadletterqueue.topic.replication.factor": "-1"
+      "errors.deadletterqueue.context.headers.enable": "true"
+    # Extra environment variables for this connector's pods
+    extraEnvVars:
+      # The image's startup script waits for this many brokers (its default is 3).
+      - name: KAFKA_BROKERS
+        value: "1"
+      # Spread all topic-partitions evenly over the tasks, not topic by topic.
+      - name: CONNECT_CONSUMER_PARTITION_ASSIGNMENT_STRATEGY
+        value: "org.apache.kafka.clients.consumer.CooperativeStickyAssignor"
+      # Warehouse credentials, from the Secret the radar-iceberg-catalog release creates.
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: radar-iceberg-catalog-warehouse
+            key: AWS_ACCESS_KEY_ID
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: radar-iceberg-catalog-warehouse
+            key: AWS_SECRET_ACCESS_KEY
 
 # -- Network policy defines who can access this application and who this application has access to
 networkpolicy:
