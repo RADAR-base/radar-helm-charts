@@ -1,0 +1,33 @@
+apiVersion: v2
+appVersion: "0.1.0"
+description: >
+  A Helm chart for RADAR-base radar-mapper. Reads CDISC ODM XML files produced
+  by radar-output-restructure, enriches subject identifiers and REDCap event
+  names via Management Portal and CSV lookup tables, and writes enriched ODM XML
+  ready for REDCap import. Runs as a Kubernetes CronJob.
+name: radar-mapper
+version: 0.0.1
+icon: "http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png"
+sources:
+  - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-mapper
+  - https://github.com/RADAR-base/radar-mapper
+keywords:
+  - radar-base
+  - remote-trial
+  - redcap
+  - odm
+annotations:
+  artifacthub.io/license: Apache-2.0
+type: application
+home: "https://radar-base.org"
+maintainers:
+  - email: pauline.conde@kcl.ac.uk
+    name: Pauline Conde
+  - email: yatharth.ranjan@kcl.ac.uk
+    name: Yatharth Ranjan
+dependencies:
+  - name: common
+    repository: https://radar-base.github.io/radar-helm-charts
+    tags:
+      - bitnami-common
+    version: 2.x.x
