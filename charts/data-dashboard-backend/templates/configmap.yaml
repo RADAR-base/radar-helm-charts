@@ -3,9 +3,9 @@ kind: ConfigMap
 metadata:
   name: {{ template "common.names.fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  labels: {{ include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
   {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  annotations: {{ include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data:
   dashboard.yml: |
@@ -23,3 +23,16 @@ data:
       dialect: {{ .Values.jdbc.dialect }}
       properties:
         {{ .Values.jdbc.properties | toYaml | indent 8 | trim }}
+    hazelcast:
+      enable: true
+      network:
+        port: 5801
+        join:
+          multicastConfig:
+            enabled: false
+          kubernetesConfig:
+            enabled: true
+            properties:
+              service-name: {{ template "common.names.fullname" . }}
+              service-port: 5801
+              namespace: {{ include "common.names.namespace" . | quote }}

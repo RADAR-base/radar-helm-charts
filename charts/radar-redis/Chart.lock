@@ -2,8 +2,8 @@ dependencies:
 - name: common
   repository: https://radar-base.github.io/radar-helm-charts
   version: 2.27.0
-- name: redis-cluster
-  repository: file://../../external/redis-cluster
-  version: 0.17.1
-digest: sha256:bdbe9198a52e7c7611443c64292b7659d1942b3763c25bb480fe4ad5563c64bb
-generated: "2025-10-15T10:26:12.430090333+02:00"
+- name: redis-operator
+  repository: file://../../external/redis-operator
+  version: 0.22.2
+digest: sha256:960786ec9a6f82680592eddb84adeea8027f6b7ba657cd9270c6082207cc4959
+generated: "2025-12-02T13:27:09.894277012+01:00"

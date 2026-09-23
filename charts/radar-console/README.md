@@ -36,10 +36,11 @@ A Helm chart for the frontend application of RADAR-base console application.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| serverName | string | `"localhost"` |  |
 | replicaCount | int | `1` | Number of radar-console frontend replicas to deploy |
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"peymanm/radarbase-console"` | Image repository |
-| image.tag | string | `"0.0.5"` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"0.0.45"` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
@@ -63,9 +64,8 @@ A Helm chart for the frontend application of RADAR-base console application.
 | ingress.existingSecret | string | `"radar-base-tls"` | TLS Secret Name |
 | configMap.mounted | bool | `true` |  |
 | configMap.mountPath | string | `"/usr/share/nginx/html/assets"` |  |
-| configMap.data."frontend-config.json" | object | `{}` |  |
-| resources.limits | object | `{"cpu":"200m","memory":"512Mi"}` | CPU/Memory resource limits |
-| resources.requests | object | `{"cpu":"100m","memory":"128Mi"}` | CPU/Memory resource requests |
+| resources.limits | object | `{"cpu":"200m"}` | CPU/Memory resource limits |
+| resources.requests | object | `{"cpu":"10m","memory":"5Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
 | affinity | object | `{}` | Affinity labels for pod assignment |

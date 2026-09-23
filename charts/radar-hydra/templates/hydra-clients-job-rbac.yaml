@@ -1,0 +1,59 @@
+# ServiceAccount for hydra-clients-job
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-hydra-clients-job-sa
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: radar-hydra
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: hydra-clients-job
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+automountServiceAccountToken: true
+
+---
+# Role for hydra-clients-job
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Release.Name }}-hydra-clients-job-role
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: radar-hydra
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: hydra-clients-job
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list"]
+
+---
+# RoleBinding for hydra-clients-job
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Name }}-hydra-clients-job-rolebinding
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: radar-hydra
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: hydra-clients-job
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Release.Name }}-hydra-clients-job-sa
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ .Release.Name }}-hydra-clients-job-role
+  apiGroup: rbac.authorization.k8s.io

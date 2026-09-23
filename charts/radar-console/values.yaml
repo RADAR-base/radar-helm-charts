@@ -1,3 +1,5 @@
+serverName: localhost
+
 # -- Number of radar-console frontend replicas to deploy
 replicaCount: 1
 
@@ -72,130 +74,7 @@ ingress:
 
 configMap:
   mounted: true
-  mountPath: /usr/share/nginx/html/config-assets
-  data:
-    frontend-config.json: |
-      {
-        "mainNavigation": {
-          "internal": {
-            "questionnaire": true,
-            "audit": true,
-            "revision": true,
-            "health": true,
-            "metrics": true,
-            "log": true
-          },
-          "external": {
-            "systemLogs": {
-              "url": "http://grafana.localhost"
-            },
-            "_systemStatus": {
-              "url": "http://graylog.localhost"
-            },
-            "uploadPortal": {
-              "url": "http://localhost/upload"
-            },
-            "dataStorage": {
-              "url": "https://s3.localhost"
-            },
-            "grafana": {
-              "url": "http://grafana.localhost"
-            },
-            "website": {
-              "url": "https://radar-base.org/"
-            },
-            "wiki": {
-              "url": "https://radar-base.atlassian.net/wiki/spaces/RAD/overview"
-            }
-          }
-        },
-        "localization": {
-          "translationsBaseUrl": "assets/i18n/",
-          "locales": [
-            {
-              "code": "en",
-              "locale": "en-GB",
-              "label": "English",
-              "shortLabel": "EN",
-              "dateFormat": "dd/mm/yyyy"
-            },
-            {
-              "code": "nl",
-              "locale": "nl-NL",
-              "label": "Nederlands",
-              "shortLabel": "NL",
-              "dateFormat": "dd-mm-yyyy"
-            }
-          ]
-        },
-        "branding": {
-          "logo": "assets/images/rb-logo-full-white.svg",
-          "theme": {
-            "light": {
-              "primary": "#004F6E",
-              "on-primary": "#ffffff",
-              "accent": "#22A2C9",
-              "on-accent": "#ffffff",
-              "tertiary": "#22A2C9",
-              "on-tertiary": "#ffffff"
-            },
-            "dark": {
-              "primary": "#22A2C9",
-              "on-primary": "#ffffff",
-              "accent": "#22A2C9",
-              "on-accent": "#ffffff",
-              "tertiary": "#004F6E",
-              "on-tertiary": "#ffffff"
-            }
-          }
-        },
-        "entities": {
-          "project": {
-            "fields": {
-              "location": true,
-              "description": true,
-              "startDate": true,
-              "endDate": true,
-              "projectStatus": true,
-              "sourceTypes": true,
-              "humanReadableProjectName": true,
-              "attributes": true,
-              "attributes.Privacy-policy-url": true,
-              "attributes.Work-package": true,
-              "attributes.Phase": true,
-              "attributes.External-project-url": true,
-              "attributes.External-project-id": true
-            }
-          },
-          "subject": {
-            "fields": {
-              "personName": true,
-              "externalLink": true,
-              "dateOfBirth": true,
-              "group": true,
-              "status": true,
-              "sources": true,
-              "attributes": true,
-              "attributes.participant_group": true,
-              "attributes.humanReadableIdentifier": true,
-              "enrollmentDate": true,
-              "createdBy": true,
-              "createdDate": true,
-              "lastModifiedBy": true,
-              "lastModifiedDate": true
-            },
-            "extraFields": []
-          },
-          "source": {
-            "fields": {
-              "expectedSourceName": true,
-              "attributes": true,
-              "attributes.External-identifier": true
-            }
-          }
-        }
-      }
-
+  mountPath: /usr/share/nginx/html/assets
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -206,11 +85,10 @@ resources:
   # -- CPU/Memory resource limits
   limits:
     cpu: 200m
-    memory: 512Mi
   # -- CPU/Memory resource requests
   requests:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 10m
+    memory: 5Mi
 
 # -- Node labels for pod assignment
 nodeSelector: {}

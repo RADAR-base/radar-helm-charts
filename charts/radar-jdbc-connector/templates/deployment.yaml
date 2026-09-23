@@ -104,6 +104,11 @@ spec:
               secretKeyRef:
                 name: {{ .Values.secret.jaas.name }}
                 key: {{ .Values.secret.jaas.key }}
+          - name: CONNECT_PRODUCER_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.jaas.name }}
+                key: {{ .Values.secret.jaas.key }}
           {{- end }}
           - name: CONNECT_LOG4J_ROOT_LOGLEVEL
             value: {{ .Values.logLevel.root | quote }}

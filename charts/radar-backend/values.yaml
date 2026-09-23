@@ -88,13 +88,13 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
+          app.kubernetes.io/name: 'kafka'
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-schema-registry'
+          app: 'radar-kafka-schema-registry'
   - to:
     - namespaceSelector:
         matchLabels:
@@ -111,9 +111,19 @@ networkpolicy:
 # command: "monitor"
 # command: "stream"
 
+envVars:
+  STREAM_SECURITY_PROTOCOL: SASL_PLAINTEXT
+  STREAM_SASL_MECHANISM: SCRAM-SHA-512
+
+secret:
+  # -- Secret for the Kafka SASL JAAS configuration
+  jaas:
+    name: shared-service-user
+    key: sasl.jaas.config
+
 zookeeper:
 kafka: radar-kafka-kafka-bootstrap:9094
-rest_proxy: http://cp-kafka-rest:8082
+rest_proxy:
 schema_registry: http://radar-kafka-schema-registry:8081
 kafka_num_brokers: "3"
 
@@ -124,3 +134,101 @@ smtp:
 
 persistence:
   enabled: false
+  existingClaim:
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  storageClass:
+
+config:
+  stream:
+    threads_per_priority:
+      low: 1
+      normal: 2
+      high: 4
+    properties:
+      max.request.size: 3500042 #Set message.max.bytes for kafka brokers higher than or equal to this value
+      retries: 15
+      session.timeout.ms: 50000
+      commit.interval.ms: 300000
+      request.timeout.ms: 10860000
+      state.cleanup.delay.ms: 10860000
+    streams:
+#      - class: org.radarbase.stream.empatica.E4AccelerationStream
+#      - class: org.radarbase.stream.empatica.E4BatteryLevelStream
+#      - class: org.radarbase.stream.empatica.E4BloodVolumePulseStream
+#      - class: org.radarbase.stream.empatica.E4ElectroDermalActivityStream
+#      - class: org.radarbase.stream.empatica.E4HeartRateStream
+#      - class: org.radarbase.stream.empatica.E4InterBeatIntervalStream
+#      - class: org.radarbase.stream.empatica.E4TemperatureStream
+      - class: org.radarbase.stream.phone.PhoneAccelerationStream
+      - class: org.radarbase.stream.phone.PhoneBatteryStream
+      - class: org.radarbase.stream.phone.PhoneUsageStream
+      - class: org.radarbase.stream.phone.PhoneUsageAggregationStream
+    source_statistics:
+#      - name: Empatica E4
+#        topics:
+#          - android_empatica_e4_blood_volume_pulse_1min
+#        output_topic: source_statistics_empatica_e4
+#      - name: Biovotion VSM1
+#        topics:
+#          - android_biovotion_vsm1_acceleration_1min
+#        output_topic: source_statistics_biovotion_vsm1
+      - name: RADAR pRMT
+        topics:
+          - android_phone_acceleration_1min
+          - android_phone_bluetooth_devices
+          - android_phone_sms
+          - android_phone_call
+          - android_phone_contacts
+          - android_phone_usage_event
+          - android_phone_relative_location
+        output_topic: source_statistics_android_phone
+  battery_monitor:
+    level: LOW
+    notify: # Each project can have a number of email addresses
+      - project_id: s1
+        email_address:
+          - notifier1@email
+      - project_id: s2
+        email_address:
+          - notifier2@email
+    email_host: "{{ .Values.smtp.host }}"
+    email_port: "{{ .Values.smtp.port }}"
+    email_user: "{{ .Values.smtp.user }}"
+    topics:
+      - android_empatica_e4_battery_level
+  disconnect_monitor:
+    notify: # Each project can have a number of email addresses
+      - project_id: s1
+        email_address:
+          - notifier1@email
+      - project_id: s2
+        email_address:
+          - notifier2@email
+    email_host: "{{ .Values.smtp.host }}"
+    email_port: "{{ .Values.smtp.port }}"
+    email_user: "{{ .Values.smtp.user }}"
+    topics:
+      - android_empatica_e4_temperature
+    timeout: 1800  # seconds after which a stream is set disconnected
+    alert_repetitions: 2  # number of additional emails to send after the first
+  statistics_monitors:
+#    - name: Empatica E4
+#      topics:
+#        - android_empatica_e4_blood_volume_pulse_1min
+#      output_topic: source_statistics_empatica_e4
+#    - name: Biovotion VSM1
+#      topics:
+#        - android_biovotion_vsm1_acceleration_1min
+#      output_topic: source_statistics_biovotion_vsm1
+    - name: RADAR pRMT
+      topics:
+        - android_phone_acceleration_1min
+        - android_phone_bluetooth_devices
+        - android_phone_sms
+        - android_phone_call
+        - android_phone_contacts
+        - android_phone_usage_event
+        - android_phone_relative_location
+      output_topic: source_statistics_android_phone
+  persistence_path: /var/lib/radar/data

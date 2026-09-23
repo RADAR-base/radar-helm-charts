@@ -30,6 +30,15 @@ nameOverride: ""
 # -- String to fully override fullname template with a string
 fullnameOverride: ""
 
+namespace: default
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
 # -- Configure pod's Security Context
 podSecurityContext: {}
   # fsGroup: 2000
@@ -236,4 +245,4 @@ jdbc:
     # -- Must be _true_ for compatibility with table created by jdbc-connector
     hibernate.globally_quoted_identifiers: true
     # -- Must be _CamelCaseToUppercaseColumnNamingStrategy_ for compatibility with table created by jdbc-connector
-    hibernate.physical_naming_strategy: org.radarbase.datadashboard.api.domain.model.CamelCaseToUppercaseColumnNamingStrategy
+    hibernate.physical_naming_strategy: org.radarbase.datadashboard.backend.domain.hibernate.CamelCaseToUppercaseColumnNamingStrategy

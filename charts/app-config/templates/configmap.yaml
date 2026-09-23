@@ -19,7 +19,7 @@ data:
     isJmxEnabled: false
 
     inject:
-      enhancerFactory: org.radarbase.appconfig.inject.ManagementPortalEnhancerFactory
+      enhancerFactory: org.radarbase.appconfig.inject.ApplicationEnhancerFactory
 
     auth:
       managementPortal:
@@ -31,6 +31,7 @@ data:
       dialect: {{ .Values.jdbc.dialect }}
 
     hazelcast:
+      enable: true
       network:
         port: 5801
         join:

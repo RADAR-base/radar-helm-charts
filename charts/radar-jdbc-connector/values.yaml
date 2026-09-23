@@ -75,18 +75,19 @@ affinity: {}
 # -- Additional environment variables to pass to the connector. These can be used to pass supported kafka and connect specific [configs](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#kconnect-long-configuration)
 extraEnvVars:
   # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
-  # Needed by kafka_init script.
+  - name: CONNECT_CONSUMER_SECURITY_PROTOCOL
+    value: SASL_PLAINTEXT
+  - name: CONNECT_PRODUCER_SECURITY_PROTOCOL
+    value: SASL_PLAINTEXT  # Needed by kafka_init script.
   - name: CONNECT_SECURITY_PROTOCOL
     value: SASL_PLAINTEXT
   # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  - name: CONNECT_CONSUMER_SASL_MECHANISM
+    value: SCRAM-SHA-512
+  - name: CONNECT_PRODUCER_SASL_MECHANISM
+    value: SCRAM-SHA-512
   # Needed by kafka_init script.
   - name: CONNECT_SASL_MECHANISM
-    value: SCRAM-SHA-512
-  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
-  - name: CONNECT_CONSUMER_SECURITY_PROTOCOL
-    value: SASL_PLAINTEXT
-  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
-  - name: CONNECT_CONSUMER_SASL_MECHANISM
     value: SCRAM-SHA-512
 
 secret:
@@ -218,12 +219,18 @@ source:
   tableWhitelist: ""
   # -- Prefix to prepend to table names to generate the name of the Kafka topic to publish data to.
   topicPrefix: ""
-  # -- How to detect new values in a table.
+  # -- Policy to use when cleaning up topics. Can be delete or compact.
+  topicCleanupPolicy: delete
+  # -- How to detect new rows in a table (can be incrementing, timestamp, or timestamp+incrementing)
   mode: incrementing
   # -- When using mode incrementing, which column to use as incrementing. If empty, autodetection will be used.
   incrementingColumnName: ""
+  # -- When using mode timestamp, which column to use as timestamp. If empty, autodetection will be used.
+  timestampColumnName: ""
   # -- Field to use as key for the records. If empty, no key is used.
   keyField: ""
+  # -- Query to use to read data from the database. Can be used instead of tableWhitelist.
+  query: ""
   persistence:
     # -- Whether to enable persistence for storing offsets
     enabled: true
@@ -303,6 +310,11 @@ timescaledb:
       initdb:
         database: database_name
         owner: database_name
+
+    postgresql:
+      parameters:
+        # -- Can be decreased to save disk space. 1GB default was chosen to prevent missing wal files during recovery.
+        wal_keep_size: 1GB
 
     backups:
       enabled: true

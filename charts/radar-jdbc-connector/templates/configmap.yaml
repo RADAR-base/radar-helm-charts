@@ -36,7 +36,7 @@ data:
 
     {{- with .Values.sink }}
     insert.mode = {{ .insertMode }}
-    # Topics that will be consumed
+    # Topics that will be consume`d
     topics = {{ .topics }}
     table.name.format = {{ .tableNameFormat }}
     auto.create = {{ .autoCreate }}
@@ -63,16 +63,26 @@ data:
     {{- if .schema }}
     schema.pattern = {{ .schema }}
     {{- end }}
-    table.whitelist = {{ .tableWhitelist }}
     topic.prefix = {{ .topicPrefix }}
     mode = {{ .mode }}
-    incrementing.column.name = {{ .incrementingColumnName }}
+    {{ with .incrementingColumnName}}
+    incrementing.column.name = {{ . }}
+    {{- end }}
+    {{ with .timestampColumnName}}
+    timestamp.column.name = {{ . }}
+    {{- end }}
+    {{- with .topicCleanupPolicy }}
+    topic.creation.default.cleanup.policy = {{ . }}
+    {{- end }}
+    {{- if .query }}
+    query = {{ .query }}
+    {{- else }}
+    table.whitelist = {{ .tableWhitelist }}
+    {{- end }}
     {{- if .keyField }}
-    transforms=createKey,extractField
+    transforms=createKey
     transforms.createKey.type = org.apache.kafka.connect.transforms.ValueToKey
     transforms.createKey.fields = {{ .keyField }}
-    transforms.extractField.type = org.apache.kafka.connect.transforms.ExtractField$Key
-    transforms.extractField.field = {{ .keyField }}
     {{- end }}
     {{- end }}
     {{/*-1 means use default configured by the kafka broker.

@@ -2,7 +2,7 @@
 
 # data-dashboard-backend
 
-![Version: 0.6.1](https://img.shields.io/badge/Version-0.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.3](https://img.shields.io/badge/AppVersion-0.2.3-informational?style=flat-square)
+![Version: 0.6.2](https://img.shields.io/badge/Version-0.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.4](https://img.shields.io/badge/AppVersion-0.2.4-informational?style=flat-square)
 
 API for data in the data dashboard
 
@@ -42,6 +42,9 @@ API for data in the data dashboard
 | image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
 | nameOverride | string | `""` | String to partially override fullname template with a string (will prepend the release name) |
 | fullnameOverride | string | `""` | String to fully override fullname template with a string |
+| namespace | string | `"default"` |  |
+| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| serviceAccount.name | string | `nil` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | podSecurityContext | object | `{}` | Configure pod's Security Context |
 | securityContext | object | `{}` | Configure container's Security Context |
 | service.type | string | `"ClusterIP"` | Kubernetes Service type |
@@ -98,4 +101,4 @@ API for data in the data dashboard
 | jdbc.driver | string | `"org.postgresql.Driver"` | JDBC Driver to connect to the database. |
 | jdbc.dialect | string | `"org.hibernate.dialect.PostgreSQLDialect"` | Hibernate dialect to use for JDBC Connection |
 | jdbc.properties."hibernate.globally_quoted_identifiers" | bool | `true` | Must be _true_ for compatibility with table created by jdbc-connector |
-| jdbc.properties."hibernate.physical_naming_strategy" | string | `"org.radarbase.datadashboard.api.domain.model.CamelCaseToUppercaseColumnNamingStrategy"` | Must be _CamelCaseToUppercaseColumnNamingStrategy_ for compatibility with table created by jdbc-connector |
+| jdbc.properties."hibernate.physical_naming_strategy" | string | `"org.radarbase.datadashboard.backend.domain.hibernate.CamelCaseToUppercaseColumnNamingStrategy"` | Must be _CamelCaseToUppercaseColumnNamingStrategy_ for compatibility with table created by jdbc-connector |
