@@ -80,8 +80,7 @@ gatewayAPI:
   # requires the Gateway API CRDs and a Gateway controller to be installed.
   enabled: false
   # -- Annotations to add to the HTTPRoute
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+  annotations: {}
   # -- Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared
   # resource and must be created separately (not by this chart).
   parentRef:
