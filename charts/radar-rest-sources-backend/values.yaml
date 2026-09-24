@@ -278,8 +278,10 @@ postgres:
 # subscriptions are created, deleted and reconciled here.
 restSourceClientSubscriptions:
   googlehealth:
-    # -- Master switch for per-user subscription management, without having to unset the service account
-    enabled: true
+    # -- Master switch for per-user subscription management, without having to unset the service account.
+    # Requires a Rest Source Auth backend image with Google Health subscription support; the default tag (chart
+    # appVersion) does not have it yet and refuses to start with this config, so pin `image.tag` before enabling.
+    enabled: false
     # -- Base URL of the Google Health API
     apiBaseUrl: "https://health.googleapis.com/v4"
     # -- Google Cloud project that owns the Health API subscriber. Required when
