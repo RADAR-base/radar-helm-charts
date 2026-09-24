@@ -3,7 +3,7 @@
 # radar-rest-sources-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-backend)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-backend)
 
-![Version: 1.5.12](https://img.shields.io/badge/Version-1.5.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.16](https://img.shields.io/badge/AppVersion-4.4.16-informational?style=flat-square)
+![Version: 1.5.13](https://img.shields.io/badge/Version-1.5.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.16](https://img.shields.io/badge/AppVersion-4.4.16-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -98,7 +98,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
-| restSourceClientSubscriptions.googlehealth.enabled | bool | `true` | Master switch for per-user subscription management, without having to unset the service account |
+| restSourceClientSubscriptions.googlehealth.enabled | bool | `false` | Master switch for per-user subscription management, without having to unset the service account. Requires a Rest Source Auth backend image with Google Health subscription support; the default tag (chart appVersion) does not have it yet and refuses to start with this config, so pin `image.tag` before enabling. |
 | restSourceClientSubscriptions.googlehealth.apiBaseUrl | string | `"https://health.googleapis.com/v4"` | Base URL of the Google Health API |
 | restSourceClientSubscriptions.googlehealth.googleCloudProjectId | string | `""` | Google Cloud project that owns the Health API subscriber. Required when `restSourceClientSubscriptions.googlehealth.enabled` is true. |
 | restSourceClientSubscriptions.googlehealth.subscriberId | string | `"radar-pep"` | Subscriber id the per-user subscriptions hang off. MUST match `googlehealth.subscriberId` in the radar-push-endpoint chart, which registers that subscriber. |

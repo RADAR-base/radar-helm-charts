@@ -89,9 +89,10 @@ data:
           bloodPressureEnabled: {{ .Values.garmin.backfill.bloodPressureEnabled }}
           healthSnapshotEnabled: {{ .Values.garmin.backfill.healthSnapshotEnabled }}
           heartRateVariabilityEnabled: {{ .Values.garmin.backfill.heartRateVariabilityEnabled }}
+      {{- if .Values.googlehealth.enabled }}
+      # Only rendered when enabled: PushEndpoint builds without the Google Health integration reject the key.
       googlehealth:
-        enabled: {{ .Values.googlehealth.enabled }}
-        {{- if .Values.googlehealth.enabled }}
+        enabled: true
 
         # --- Rest Source Auth (user repository) ---
         userRepositoryClass: {{ .Values.googlehealth.userRepositoryClass }}
@@ -132,4 +133,4 @@ data:
           maxThreads: {{ .Values.googlehealth.backfill.maxThreads }}
           chunkSizeDays: {{ .Values.googlehealth.backfill.chunkSizeDays }}
           iterationIntervalMinutes: {{ .Values.googlehealth.backfill.iterationIntervalMinutes }}
-        {{- end }}
+      {{- end }}
