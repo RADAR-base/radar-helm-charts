@@ -3,7 +3,7 @@
 # radar-rest-sources-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-backend)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-backend)
 
-![Version: 1.5.12](https://img.shields.io/badge/Version-1.5.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.16](https://img.shields.io/badge/AppVersion-4.4.16-informational?style=flat-square)
+![Version: 1.5.13](https://img.shields.io/badge/Version-1.5.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.16](https://img.shields.io/badge/AppVersion-4.4.16-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -58,6 +58,23 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
+| gatewayAPI.enabled | bool | `false` | Enable Gateway API HTTPRoute resource (alternative to ingress). Opt-in: requires the Gateway API CRDs and a Gateway controller to be installed. NOTE: the ingress's cookie-based session affinity (nginx.ingress.kubernetes.io/affinity and related session-cookie-* annotations) has no HTTPRoute-annotation equivalent and is NOT replicated here; Gateway API session persistence is a separate, still-experimental field. |
+| gatewayAPI.annotations | object | `{}` | Annotations to add to the HTTPRoute |
+| gatewayAPI.parentRef | object | `{"name":"radar-base-k8s-gateway","namespace":""}` | Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared resource and must be created separately (not by this chart). |
+| gatewayAPI.parentRef.name | string | `"radar-base-k8s-gateway"` | Name of the Gateway |
+| gatewayAPI.parentRef.namespace | string | `""` | Namespace of the Gateway (defaults to the release namespace when empty) |
+| gatewayAPI.hostnames | list | `["{{ .Values.serverName }}"]` | Hostnames the HTTPRoutes accept requests for (must intersect the Gateway listener hostnames). String values support Helm templating (tpl); defaults to serverName so deployments override it the same way as ingress.hosts. |
+| gatewayAPI.https | object | `{"port":443,"sectionName":""}` | HTTPS listener on the Gateway that the main route attaches to |
+| gatewayAPI.https.port | int | `443` | Listener port (empty attaches to all matching listeners) |
+| gatewayAPI.https.sectionName | string | `""` | Listener sectionName on the Gateway (optional) |
+| gatewayAPI.pathType | string | `"PathPrefix"` | Path match type (PathPrefix, Exact or RegularExpression) |
+| gatewayAPI.path | string | `"/rest-sources/backend"` | Path to match within the URL structure |
+| gatewayAPI.filters | list | `[]` | Additional HTTPRoute filters (e.g. URLRewrite, RequestHeaderModifier) |
+| gatewayAPI.httpsRedirect | object | `{"enabled":true,"port":80,"sectionName":"","statusCode":301}` | HTTP->HTTPS redirect route (equivalent to nginx force-TLS behaviour) |
+| gatewayAPI.httpsRedirect.enabled | bool | `true` | Enable a second HTTPRoute that 301-redirects HTTP traffic to HTTPS |
+| gatewayAPI.httpsRedirect.port | int | `80` | HTTP listener port on the Gateway to attach the redirect to |
+| gatewayAPI.httpsRedirect.sectionName | string | `""` | Listener sectionName on the Gateway (optional) |
+| gatewayAPI.httpsRedirect.statusCode | int | `301` | Redirect HTTP status code |
 | resources.requests | object | `{"cpu":"100m","memory":"400Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
