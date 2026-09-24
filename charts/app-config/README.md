@@ -60,7 +60,7 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
 | gatewayAPI.enabled | bool | `false` | Enable Gateway API HTTPRoute resource (alternative to ingress). Opt-in: requires the Gateway API CRDs and a Gateway controller to be installed. |
-| gatewayAPI.annotations | object | `{"cert-manager.io/cluster-issuer":"letsencrypt-prod"}` | Annotations to add to the HTTPRoute |
+| gatewayAPI.annotations | object | `{}` | Annotations to add to the HTTPRoute |
 | gatewayAPI.parentRef | object | `{"name":"radar-base-k8s-gateway","namespace":""}` | Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared resource and must be created separately (not by this chart). |
 | gatewayAPI.parentRef.name | string | `"radar-base-k8s-gateway"` | Name of the Gateway |
 | gatewayAPI.parentRef.namespace | string | `""` | Namespace of the Gateway (defaults to the release namespace when empty) |
