@@ -87,6 +87,7 @@ data:
 
     redis:
       uri: "{{ .Values.redis.uri }}"
+      timeoutMs: {{ .Values.redis.timeoutMs | int }}
       lockPrefix: radar-output/lock
 
     # Compression characteristics

@@ -164,8 +164,9 @@ source:
     # -- Interval in seconds to also include empty directories during sync with the storage (in seconds).
     # This values should be only changed in specific scenarios (e.g. e2e testing).
     emptyDirectorySyncInterval: 900
-    # -- Interval in seconds for incremental directory scans of the storage (in seconds).
-    # This value should be only changed in specific scenarios (e.g. e2e testing).
+    # -- Minimum interval in seconds between incremental scans of the storage for new files, in between full syncs.
+    # Set to 0 to scan on every worker run. Higher values reduce list operations on the storage,
+    # but new files may only be processed after this interval.
     incrementalSyncInterval: 3600
 
 target:
@@ -213,6 +214,9 @@ target:
 redis:
   # -- URL of the redis database
   uri: redis://radar-redis-replication-master:6379
+  # -- Connection and socket timeout of the redis connection (milliseconds).
+  # Increase it if reading the stored offsets of large topics times out.
+  timeoutMs: 5000
 
 worker:
   # -- Scanning interval (seconds)
