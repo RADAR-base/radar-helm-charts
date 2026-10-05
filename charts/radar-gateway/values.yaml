@@ -133,7 +133,22 @@ gatewayAPI:
   path: /kafka
   # -- Additional HTTPRoute filters (e.g. URLRewrite, RequestHeaderModifier)
   # @default -- check values.yaml
-  filters: []
+  filters:
+    # CORS equivalent to nginx ingress annotations (enable-cors + cors-allow-headers,
+    # remaining values match ingress-nginx's implicit defaults for parity)
+    - type: ResponseHeaderModifier
+      responseHeaderModifier:
+        add:
+          - name: Access-Control-Allow-Origin
+            value: "*"
+          - name: Access-Control-Allow-Methods
+            value: "GET, PUT, POST, DELETE, PATCH, OPTIONS"
+          - name: Access-Control-Allow-Headers
+            value: "DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Content-Encoding"
+          - name: Access-Control-Allow-Credentials
+            value: "true"
+          - name: Access-Control-Max-Age
+            value: "1728000"
     # - type: URLRewrite
     #   urlRewrite:
     #     path:
