@@ -7,6 +7,6 @@ dependencies:
   version: 0.46.0
 - name: strimzi-registry-operator
   repository: file://../../external/strimzi-registry-operator
-  version: 2.1.0
-digest: sha256:0f069892543ae132129c0644b8bf55cbe209b1645f74d77dd366cbee406c77ab
-generated: "2025-06-17T10:31:35.935680647+02:00"
+  version: 2.1.3
+digest: sha256:fd22cbe11662041e2c3d9de27c8390caddff552fd5f19dece1aec752715dd212
+generated: "2026-10-05T11:28:34.146612831+02:00"

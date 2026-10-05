@@ -3,7 +3,7 @@
 # radar-kafka
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-kafka)](https://artifacthub.io/packages/helm/radar-base/radar-kafka)
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
+![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![AppVersion: 3.9.0](https://img.shields.io/badge/AppVersion-3.9.0-informational?style=flat-square)
 
 Apache Kafka for RADAR-base using the Strimzi Operator
 
@@ -37,7 +37,7 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | Repository | Name | Version |
 |------------|------|---------|
 | file://../../external/strimzi-kafka-operator | strimzi-kafka-operator | 0.46.0 |
-| file://../../external/strimzi-registry-operator | strimzi-registry-operator | 2.1.0 |
+| file://../../external/strimzi-registry-operator | strimzi-registry-operator | 2.1.3 |
 | https://radar-base.github.io/radar-helm-charts | common | 2.x.x |
 
 ## Values
@@ -57,9 +57,9 @@ Consult the [documentation](https://github.com/lsst-sqre/strimzi-registry-operat
 | metrics.prometheusRules | object | `{"consumerGroupLagDelta":20000}` | Custom parameters to selected prometheus rules |
 | metrics.prometheusRules.consumerGroupLagDelta | int | `20000` | Threshold of backpressure (number of messages not handled by consumer group) warning for consumer groups. |
 | strimzi-kafka-operator | object | check `values.yaml` | Values for kafka operator ref: https://strimzi.io/docs/operators/latest/deploying#assembly-operators-str |
-| strimzi-registry-operator | object | `{"clusterName":"radar","operatorNamespace":"default"}` | Values for schema registry operator ref: https://github.com/lsst-sqre/strimzi-registry-operator |
-| strimzi-registry-operator.clusterName | string | `"radar"` | Keep in sync with 'fullnameOverride' |
-| strimzi-registry-operator.operatorNamespace | string | `"default"` | Keep in sync with namespace used by deployment |
+| strimzi-registry-operator | object | `{"clusterName":"radar-kafka","clusterNamespace":"default"}` | Values for schema registry operator ref: https://github.com/lsst-sqre/strimzi-registry-operator |
+| strimzi-registry-operator.clusterName | string | `"radar-kafka"` | Name of the Strimzi Kafka cluster (the Kafka resource, i.e. the fullname of this release). Must match the `strimzi.io/cluster` label of the Strimzi secrets, otherwise the operator ignores certificate renewals and the schema registry keystore expires. Keep in sync with 'fullnameOverride' |
+| strimzi-registry-operator.clusterNamespace | string | `"default"` | Namespace of the Strimzi Kafka cluster and the schema registry. Keep in sync with the release namespace |
 | kafka | object | `{"cruiseControl":{"addRebalanceTemplate":true,"enabled":false,"goals":[],"javaOptions":{"-Xms":"128m","-Xmx":"256m"},"resources":{},"skipHardGoalCheck":true},"insyncReplicas":2,"javaOptions":{"-Xms":"512m","-Xmx":"1G"},"metadataVersion":"3.9-IV0","nodePool":{"jvmOptions":{"-Xms":"512m","-Xmx":"1G"},"resources":{}},"partitions":9,"podSecurityContext":{},"replicas":3,"replicationFactor":3,"resources":{"requests":{}},"securityContext":{},"storage":{"size":"10Gi"},"topicOperator":{"jvmOptions":{"-Xms":"64m","-Xmx":"128m"},"resources":{}},"userOperator":{"jvmOptions":{"-Xms":"64m","-Xmx":"128m"},"resources":{}}}` | Values for Kafka cluster deployed by Strimzi kafka operator |
 | kafka.replicas | int | `3` | Number of Kafka brokers |
 | kafka.replicationFactor | int | `3` | Number of replicas for Kafka topics |
