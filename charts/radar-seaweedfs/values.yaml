@@ -1,0 +1,183 @@
+# -- String to partially override the fullname template (will maintain the release name).
+# The SeaweedFS services are named after the fullname, e.g. `<fullname>-filer`.
+nameOverride: ""
+# -- String to fully override the fullname template
+fullnameOverride: ""
+
+image:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
+  repository: chrislusf/seaweedfs
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
+
+# -- Replication of data volumes in the format "XYZ", where X, Y and Z are the number of extra copies in other data
+# centers, in other racks and on other servers in the same rack. All volume servers of this chart run in the same
+# data center and rack, so only Z has effect. "001" keeps one extra copy on another volume server, which needs at
+# least 2 volume servers. Use "000" for a single volume server.
+replication: "001"
+
+master:
+  # -- Number of master servers. Use an odd number (1, 3 or 5) for raft consensus.
+  replicas: 3
+  # -- Maximum size of a single volume in MB. When a volume is full, a new one is created. If empty, it is derived
+  # from `volume.storage.size` and `volume.maxVolumes`, so that all volume slots fit on the volume server PVCs.
+  volumeSizeLimitMB:
+  # -- Number of volumes (times the number of copies) that is created for a bucket when it runs out of writable
+  # volumes, including its first write. Every bucket needs this many free volume slots on the volume servers.
+  # SeaweedFS's default is 7.
+  volumeGrowthCount: 2
+  persistence:
+    # -- Size of the master PVC, which holds the raft log and snapshots.
+    size: 1Gi
+    # -- Storage class of the master PVC. Uses the cluster default if empty.
+    storageClassName:
+  # -- Resource requests of the master servers, e.g. `{cpu: 100m, memory: 128Mi}`
+  requests: {}
+  # -- Resource limits of the master servers
+  limits: {}
+
+volume:
+  # -- Number of volume servers. Must be at least 1 + the Z in `replication`.
+  replicas: 2
+  # -- Number of volume slots of each volume server. Each bucket takes `master.volumeGrowthCount` slots on its
+  # first write and more as its volumes fill up. Writes to a bucket fail when no slot is free.
+  maxVolumes: 32
+  storage:
+    # -- Size of the PVC of each volume server. Replicated data is stored on multiple volume servers, so the
+    # usable capacity is `replicas * size / (1 + Z)` with Z from `replication`.
+    size: 20Gi
+    # -- Storage class of the volume server PVCs. Uses the cluster default if empty.
+    storageClassName:
+  # -- Resource requests of the volume servers, e.g. `{cpu: 100m, memory: 256Mi}`
+  requests: {}
+  # -- Resource limits of the volume servers
+  limits: {}
+
+filer:
+  # -- Number of filers
+  replicas: 2
+  persistence:
+    # -- Size of the PVC of each filer, which holds the file metadata (leveldb2 store).
+    size: 2Gi
+    # -- Storage class of the filer PVCs. Uses the cluster default if empty.
+    storageClassName:
+  # -- Resource requests of the filers, e.g. `{cpu: 100m, memory: 256Mi}`
+  requests: {}
+  # -- Resource limits of the filers
+  limits: {}
+
+s3:
+  # -- S3 identities, keyed by name. Each identity has `credentials.accessKey`, `credentials.secretKey` and a list
+  # of `actions`: `Admin`, `Read`, `Write`, `List` or `Tagging`, optionally limited to a bucket (e.g.
+  # `Read:radar-output-storage`). Every identity must have credentials: without any identity, SeaweedFS would
+  # allow anonymous access.
+  # @default -- `radar` identity with read/write access to all buckets, credentials must be set
+  identities:
+    radar:
+      actions: ["Read", "Write", "List", "Tagging"]
+      credentials:
+        accessKey: ""
+        secretKey: ""
+    # read-output:
+    #   actions: ["Read:radar-output-storage", "List:radar-output-storage"]
+    #   credentials:
+    #     accessKey: ""
+    #     secretKey: ""
+  # -- Number of S3 gateways
+  replicas: 1
+  # -- Resource requests of the S3 gateways, e.g. `{cpu: 100m, memory: 256Mi}`
+  requests: {}
+  # -- Resource limits of the S3 gateways
+  limits: {}
+  ingress:
+    # -- Expose the S3 API through an ingress
+    enabled: false
+    # -- Ingress class name
+    className: nginx
+    # -- Host name of the S3 API, e.g. `api.s3.example.com`
+    host: ""
+    # -- Ingress annotations
+    # @default -- check `values.yaml`
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/proxy-buffering: "off"
+      nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    # -- Enable TLS with a certificate in secret `<fullname>-s3-tls`
+    tls: true
+
+# -- S3 buckets to create. They are created as operator `Bucket` resources with reclaim policy `Retain`, so
+# removing a bucket from this list (or uninstalling the chart) does not delete its data.
+buckets:
+  - radar-output-storage
+  - radar-intermediate-storage
+  - cloudnative-postgresql
+
+waitForBuckets:
+  # -- Run a post-install/upgrade hook Job that waits until the volume servers have free slots, the S3 gateway is
+  # up and all buckets exist, so that services that need the storage (e.g. the S3 sink connector) are not started
+  # before it is usable.
+  enabled: true
+  # -- Maximum time in seconds to wait for the buckets
+  timeoutSeconds: 300
+  image:
+    # -- Image registry of the wait job
+    registry: docker.io
+    # -- Image repository of the wait job
+    repository: curlimages/curl
+    # -- Image tag of the wait job
+    tag: 8.22.0
+
+admin:
+  # -- Deploy the SeaweedFS admin UI (`weed admin`), a web console for the cluster and its buckets
+  enabled: false
+  credentials:
+    # -- Admin UI user name
+    user: admin
+    # -- Admin UI password. Required when the admin UI is enabled.
+    password: ""
+  ingress:
+    # -- Expose the admin UI through an ingress
+    enabled: false
+    # -- Ingress class name
+    className: nginx
+    # -- Host name of the admin UI, e.g. `s3.example.com`
+    host: ""
+    # -- Ingress annotations
+    # @default -- check `values.yaml`
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    # -- Enable TLS with a certificate in secret `<fullname>-admin-tls`
+    tls: true
+
+metrics:
+  # -- Expose Prometheus metrics on all SeaweedFS components. The operator creates a ServiceMonitor for each
+  # component if the Prometheus operator CRDs are installed.
+  enabled: false
+  # -- Metrics port
+  port: 9327
+
+networkPolicy:
+  # -- Restrict access to the SeaweedFS pods. Other pods can only reach the S3 API, the admin UI and the metrics
+  # port; the filer, master and volume server APIs, which do not authenticate requests, are only reachable from
+  # the SeaweedFS pods themselves, the SeaweedFS operator and this chart's jobs.
+  enabled: true
+  # -- Labels of the SeaweedFS operator pods, which need access to the masters and filers.
+  operatorPodLabels:
+    app.kubernetes.io/name: seaweedfs-operator
+  # -- Extra ingress rules, e.g. to give a backup job access to the filer API
+  extraIngress: []
