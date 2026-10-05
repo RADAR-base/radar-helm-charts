@@ -3,7 +3,7 @@
 # app-config
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/app-config)](https://artifacthub.io/packages/helm/radar-base/app-config)
 
-![Version: 1.7.2](https://img.shields.io/badge/Version-1.7.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.2](https://img.shields.io/badge/AppVersion-0.6.2-informational?style=flat-square)
+![Version: 1.7.3](https://img.shields.io/badge/Version-1.7.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.2](https://img.shields.io/badge/AppVersion-0.6.2-informational?style=flat-square)
 
 A Helm chart for RADAR-base application config (app-config) backend service which is used as mobile app configuration engine with per-project and per-user configuration.
 
@@ -59,6 +59,23 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
 | ingress.tls.secretName | string | `"radar-base-tls"` | TLS Secret Name |
+| gatewayAPI.enabled | bool | `false` | Enable Gateway API HTTPRoute resource (alternative to ingress). Opt-in: requires the Gateway API CRDs and a Gateway controller to be installed. |
+| gatewayAPI.annotations | object | `{}` | Annotations to add to the HTTPRoute |
+| gatewayAPI.parentRef | object | `{"name":"radar-base-k8s-gateway","namespace":""}` | Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared resource and must be created separately (not by this chart). |
+| gatewayAPI.parentRef.name | string | `"radar-base-k8s-gateway"` | Name of the Gateway |
+| gatewayAPI.parentRef.namespace | string | `""` | Namespace of the Gateway (defaults to the release namespace when empty) |
+| gatewayAPI.hostnames | list | `["{{ .Values.serverName }}"]` | Hostnames the HTTPRoutes accept requests for (must intersect the Gateway listener hostnames). String values support Helm templating (tpl); defaults to serverName so deployments override it the same way as ingress.hosts. |
+| gatewayAPI.https | object | `{"port":443,"sectionName":""}` | HTTPS listener on the Gateway that the main route attaches to |
+| gatewayAPI.https.port | int | `443` | Listener port (empty attaches to all matching listeners) |
+| gatewayAPI.https.sectionName | string | `""` | Listener sectionName on the Gateway (optional) |
+| gatewayAPI.pathType | string | `"ImplementationSpecific"` | Path match type (PathPrefix, Exact or RegularExpression) |
+| gatewayAPI.path | string | `"/appconfig/api"` | Path to match within the URL structure |
+| gatewayAPI.filters | list | `[]` | Additional HTTPRoute filters (e.g. URLRewrite, RequestHeaderModifier) |
+| gatewayAPI.httpsRedirect | object | `{"enabled":true,"port":80,"sectionName":"","statusCode":301}` | HTTP->HTTPS redirect route (equivalent to nginx force-TLS behaviour) |
+| gatewayAPI.httpsRedirect.enabled | bool | `true` | Enable a second HTTPRoute that 301-redirects HTTP traffic to HTTPS |
+| gatewayAPI.httpsRedirect.port | int | `80` | HTTP listener port on the Gateway to attach the redirect to |
+| gatewayAPI.httpsRedirect.sectionName | string | `""` | Listener sectionName on the Gateway (optional) |
+| gatewayAPI.httpsRedirect.statusCode | int | `301` | Redirect HTTP status code |
 | resources.limits | object | `{"cpu":2}` | CPU/Memory resource limits |
 | resources.requests | object | `{"cpu":"100m","memory":"768Mi"}` | CPU/Memory resource requests |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
@@ -91,6 +108,7 @@ A Helm chart for RADAR-base application config (app-config) backend service whic
 | clientId | string | `"radar_appconfig"` | OAuth2 client id |
 | clientSecret | string | `"secret"` | OAuth2 client secret |
 | managementportal_url | string | `"http://management-portal:8080/managementportal"` | URL of the Management Portal |
+| serverName | string | `"localhost"` | Resolvable server name, needed for the Gateway API HTTPRoute hostnames |
 | jdbc.url | string | `nil` | JDBC Connection url of the database. |
 | jdbc.urlSecret | object | `{"key":"jdbc-uri","name":"radar-cloudnative-postgresql-appconfig"}` | Kubernetes secret containing the database JDBC Connection url (disables use of 'url' value). |
 | jdbc.user | string | `nil` | Username of the database |
