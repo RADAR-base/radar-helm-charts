@@ -47,7 +47,6 @@ jobs:
           # In this action we only scan 'external' dependencies of the RADAR-base deployment.
           # RADAR-base services are scanned in the respective GitHub repositories.
           # Notes on charts:
-          # - elasticsearch: not scanned (was excluded because of SARIF errors with Snyk).
           # - velero: we do not offer this chart as part of the official release and therefore do not check for vulnerabilities.
           INCLUDE_CHARTS: charts/cc-schema-registry-proxy
             charts/cert-manager-lets-encrypt
@@ -59,6 +58,7 @@ jobs:
             charts/radar-nifi
             charts/radar-redis
             external/cloudnativepg-operator
+            external/elasticsearch
             external/fluent-bit
             external/kubecost
             external/graylog
