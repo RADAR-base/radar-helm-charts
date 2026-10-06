@@ -116,7 +116,7 @@ jobs:
         env:
           DOCKER_IMAGE: ${{ matrix.DOCKER_IMAGE }}
         run: |
-          trivy image --quiet --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed \
+          trivy image --quiet --scanners vuln --severity HIGH,CRITICAL \
             --ignorefile .trivyignore.yaml --format json --output trivy.json "$DOCKER_IMAGE"
           jq --arg id "$DOCKER_IMAGE" '[{
             ArtifactID: $id,
@@ -172,4 +172,4 @@ jobs:
                     or (($scanned | index($image)) and ($vulnerable | index($image) | not)))
                 | .number' \
             | xargs -r -I{} gh issue close --repo "$GITHUB_REPOSITORY" {} \
-                --comment "Resolved: the image has no fixable HIGH/CRITICAL vulnerabilities left, or the charts no longer deploy it."
+                --comment "Resolved: the image has no HIGH/CRITICAL vulnerabilities left, or the charts no longer deploy it."
