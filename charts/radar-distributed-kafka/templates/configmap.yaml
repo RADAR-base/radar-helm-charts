@@ -1,0 +1,157 @@
+{{- $root := . -}}
+{{- range $i, $configData := .Values.connectors }}
+{{- if $configData.enabled }}
+{{- $connectorName := required (printf "connectors[%d].name is required" $i) $configData.name -}}
+{{- $connectorId := include "radar-distributed-kafka.connectorId" $connectorName }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
+  namespace: {{ include "common.names.namespace" $root | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $root.Values.commonLabels "context" $root ) | nindent 4 }}
+  {{- if $root.Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $root.Values.commonAnnotations "context" $root ) | nindent 4 }}
+  {{- end }}
+data:
+  connector.yaml: |-
+    {{- range $key, $value := $configData.properties }}
+    {{ $key }}:{{ $value }}
+    {{- end }}
+  {{- if $configData.initialOffsets }}
+  initial-offsets.json: |-
+    {{- dict "offsets" $configData.initialOffsets | toPrettyJson | nindent 4 }}
+  {{- end }}
+  register-connector.sh: |
+    #!/bin/sh
+    set -eu
+
+    CONNECTOR_NAME="$1"
+    CONNECTOR_CONFIG_FILE="$2"
+    CONNECTOR_DIR=$(dirname "$CONNECTOR_CONFIG_FILE")
+    MAX_WAIT_SECONDS="${CONNECTOR_REGISTRATION_MAX_WAIT_SECONDS:-120}"
+    RETRY_INTERVAL_SECONDS="${CONNECTOR_REGISTRATION_RETRY_INTERVAL_SECONDS:-3}"
+    CONNECT_URL="http://localhost:${CONNECT_REST_PORT:-8083}"
+    ELAPSED=0
+
+    until curl -sf "${CONNECT_URL}/connectors" >/dev/null; do
+      if [ "$ELAPSED" -ge "$MAX_WAIT_SECONDS" ]; then
+        echo "Timed out waiting for Kafka Connect at ${CONNECT_URL}" >&2
+        exit 1
+      fi
+      sleep "$RETRY_INTERVAL_SECONDS"
+      ELAPSED=$((ELAPSED + RETRY_INTERVAL_SECONDS))
+    done
+
+    retry() {
+      RETRY_N=0
+      until "$@"; do
+        RETRY_N=$((RETRY_N + 1))
+        if [ "$RETRY_N" -ge 5 ]; then
+          return 1
+        fi
+        sleep "$RETRY_INTERVAL_SECONDS"
+      done
+    }
+
+    update_config() {
+      retry curl -sf -X PUT \
+        -H "Content-Type: application/json" \
+        --data "@${CONNECTOR_CONFIG_FILE}" \
+        "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/config" >/dev/null
+    }
+
+    # Returns 0 when this pod created the connector, 2 when another replica won the
+    # race, 1 when creation genuinely failed.
+    create_connector() {
+      RETRY_N=0
+      while true; do
+        HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+          -H "Content-Type: application/json" \
+          --data "@${CONNECTOR_DIR}/connector-create.json" \
+          "${CONNECT_URL}/connectors" || echo 000)
+        case "$HTTP_CODE" in
+          2??)
+            return 0
+            ;;
+          409)
+            echo "Connector ${CONNECTOR_NAME} was created by another replica"
+            return 2
+            ;;
+        esac
+        RETRY_N=$((RETRY_N + 1))
+        if [ "$RETRY_N" -ge 5 ]; then
+          echo "Failed to create connector ${CONNECTOR_NAME} (HTTP ${HTTP_CODE})" >&2
+          return 1
+        fi
+        sleep "$RETRY_INTERVAL_SECONDS"
+      done
+    }
+
+    seed_offsets_and_resume() {
+      retry curl -sf -X PATCH \
+        -H "Content-Type: application/json" \
+        --data "@${CONNECTOR_DIR}/initial-offsets.json" \
+        "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/offsets" >/dev/null
+      retry curl -sf -X PUT "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/resume" >/dev/null
+    }
+
+    if [ -f "${CONNECTOR_DIR}/initial-offsets.json" ]; then
+      if curl -sf "${CONNECT_URL}/connectors/${CONNECTOR_NAME}" >/dev/null; then
+        update_config
+        # Recover from a partially applied first registration: connector left
+        # STOPPED with no offsets recorded means the watermark was never seeded.
+        # A connector with recorded offsets is never re-seeded or auto-resumed.
+        STATE=$(curl -sf "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/status" | tr -d ' ' | grep -o '"state":"[A-Z]*"' | head -1 || true)
+        OFFSET_COUNT=$(curl -sf "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/offsets" | grep -c '"partition"' || true)
+        if [ "$STATE" = '"state":"STOPPED"' ] && [ "${OFFSET_COUNT:-1}" -eq 0 ]; then
+          seed_offsets_and_resume
+        fi
+      else
+        # First registration: create in STOPPED state, seed offsets, then start.
+        # With more than one replica every pod races to create the connector. The
+        # winner seeds the offsets; a loser gets 409 Conflict and must not treat that
+        # as an error, or its postStart hook fails and the container is killed.
+        RC=0
+        create_connector || RC=$?
+        if [ "$RC" -eq 0 ]; then
+          seed_offsets_and_resume
+        elif [ "$RC" -ne 2 ]; then
+          exit 1
+        fi
+      fi
+    else
+      update_config
+    fi
+  healthcheck.sh: |
+    #!/bin/sh
+    # Usage: healthcheck.sh worker
+    #        healthcheck.sh connector <connector-name>
+    #
+    # Connect's REST API answers with the state of the whole cluster, not of the pod
+    # being probed. Liveness therefore only asks whether this worker process is still
+    # serving, because restarting a healthy worker cannot repair a connector that
+    # failed on another replica -- it would just restart every replica in turn.
+    # Connector state is a readiness concern: it takes the pod out of the Service
+    # without killing it.
+    MODE="$1"
+    CONNECT_URL="http://localhost:${CONNECT_REST_PORT:-8083}"
+
+    if [ "$MODE" = "worker" ]; then
+      curl -sf "${CONNECT_URL}/connectors" >/dev/null || exit 1
+      exit 0
+    fi
+
+    CONNECTOR_NAME="$2"
+    STATUS=$(curl -sf "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/status") || exit 1
+    STATES=$(echo "$STATUS" | grep -o '"state":"[^"]*"')
+    if echo "$STATES" | grep -q '"state":"FAILED"'; then
+      exit 1
+    fi
+    # The connector itself plus at least one task must be RUNNING.
+    if [ "$(echo "$STATES" | grep -c '"state":"RUNNING"')" -le 1 ]; then
+      exit 1
+    fi
+
+{{- end }}
+{{- end }}

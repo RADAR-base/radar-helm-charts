@@ -1,0 +1,29 @@
+{{- $root := . -}}
+{{- if .Values.podDisruptionBudget.enabled }}
+{{- range $i, $connector := .Values.connectors }}
+{{- if $connector.enabled }}
+{{- $connectorName := required (printf "connectors[%d].name is required" $i) $connector.name -}}
+{{- $connectorId := include "radar-distributed-kafka.connectorId" $connectorName -}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
+  namespace: {{ include "common.names.namespace" $root | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $root.Values.commonLabels "context" $root ) | nindent 4 }}
+  {{- if $root.Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $root.Values.commonAnnotations "context" $root ) | nindent 4 }}
+  {{- end }}
+spec:
+  # maxUnavailable rather than minAvailable: with a single replica minAvailable would
+  # block every voluntary eviction, so node drains and autoscaler consolidation would
+  # stall on this connector.
+  maxUnavailable: {{ $root.Values.podDisruptionBudget.maxUnavailable }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "radar-distributed-kafka.name" $root }}
+      app.kubernetes.io/instance: {{ $root.Release.Name }}
+      app.kubernetes.io/component: {{ $connectorId }}
+---
+{{- end }}
+{{- end }}
+{{- end }}
