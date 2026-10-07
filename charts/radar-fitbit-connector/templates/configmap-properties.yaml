@@ -38,8 +38,8 @@ data:
     fitbit.sleep.stages.topic={{ .Values.routes.sleepStages.topic }}
     fitbit.sleep.classic.enabled={{ .Values.routes.sleepClassic.enabled }}
     fitbit.sleep.classic.topic={{ .Values.routes.sleepClassic.topic }}
-    fitbit.timezone.enabled={{ .Values.routes.timezone.enabled }}
-    fitbit.timezone.topic={{ .Values.routes.timezone.topic }}
+    fitbit.time.zone.enabled={{ .Values.routes.timezone.enabled }}
+    fitbit.time.zone.topic={{ .Values.routes.timezone.topic }}
     fitbit.activity.log.enabled={{ .Values.routes.activityLog.enabled }}
     fitbit.activity.log.topic={{ .Values.routes.activityLog.topic }}
     fitbit.intraday.calories.enabled={{ .Values.routes.intradayCalories.enabled }}
