@@ -49,6 +49,7 @@ data:
       index:
         fullSyncInterval: {{ .index.fullSyncInterval | int }}
         emptyDirectorySyncInterval: {{ .index.emptyDirectorySyncInterval | int }}
+        incrementalSyncInterval: {{ .index.incrementalSyncInterval | int }}
     {{- end }}
 
     {{- with .Values.target }}
@@ -86,6 +87,7 @@ data:
 
     redis:
       uri: "{{ .Values.redis.uri }}"
+      timeoutMs: {{ .Values.redis.timeoutMs | int }}
       lockPrefix: radar-output/lock
 
     # Compression characteristics
