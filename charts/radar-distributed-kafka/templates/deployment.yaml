@@ -7,7 +7,7 @@
 {{- if hasKey $connector "replicaCount" -}}
 {{- $replicas = $connector.replicaCount -}}
 {{- end -}}
-{{- $groupId := include "radar-distributed-kafka.connectorGroupId" (dict "context" $root "connector" $connector "connectorId" $connectorId) -}}
+{{- $groupId := include "radar-distributed-kafka.connectorGroupId" (dict "context" $root "connector" $connector "connectorId" $connectorId) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

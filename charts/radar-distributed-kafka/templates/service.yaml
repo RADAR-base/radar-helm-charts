@@ -2,7 +2,7 @@
 {{- range $i, $connector := .Values.connectors }}
 {{- if $connector.enabled }}
 {{- $connectorName := required (printf "connectors[%d].name is required" $i) $connector.name -}}
-{{- $connectorId := include "radar-distributed-kafka.connectorId" $connectorName -}}
+{{- $connectorId := include "radar-distributed-kafka.connectorId" $connectorName }}
 apiVersion: v1
 kind: Service
 metadata:
