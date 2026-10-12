@@ -134,22 +134,32 @@ data:
     # failed on another replica -- it would just restart every replica in turn.
     # Connector state is a readiness concern: it takes the pod out of the Service
     # without killing it.
+    #
+    # Failure reasons are printed so they show up in the kubelet "probe failed" event.
     MODE="$1"
     CONNECT_URL="http://localhost:${CONNECT_REST_PORT:-8083}"
 
+    if ! curl -sf "${CONNECT_URL}/connectors" >/dev/null; then
+      echo "Connect REST API not reachable at ${CONNECT_URL} (worker still starting?)"
+      exit 1
+    fi
     if [ "$MODE" = "worker" ]; then
-      curl -sf "${CONNECT_URL}/connectors" >/dev/null || exit 1
       exit 0
     fi
 
     CONNECTOR_NAME="$2"
-    STATUS=$(curl -sf "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/status") || exit 1
+    if ! STATUS=$(curl -sf "${CONNECT_URL}/connectors/${CONNECTOR_NAME}/status"); then
+      echo "Connector ${CONNECTOR_NAME} not registered yet (or not yet known to this worker)"
+      exit 1
+    fi
     STATES=$(echo "$STATUS" | grep -o '"state":"[^"]*"')
     if echo "$STATES" | grep -q '"state":"FAILED"'; then
+      echo "Connector ${CONNECTOR_NAME} or one of its tasks FAILED: ${STATUS}"
       exit 1
     fi
     # The connector itself plus at least one task must be RUNNING.
     if [ "$(echo "$STATES" | grep -c '"state":"RUNNING"')" -le 1 ]; then
+      echo "Connector ${CONNECTOR_NAME} has no RUNNING task yet (rebalance pending?): ${STATUS}"
       exit 1
     fi
 

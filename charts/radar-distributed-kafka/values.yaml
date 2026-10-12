@@ -90,6 +90,16 @@ pluginInstallation:
   # -- Optional image override for the plugin installer init container.
   # By default the chart uses the same image as `image`.
   initContainerImage: {}
+  persistence:
+    # -- Store installed plugins on a PersistentVolumeClaim shared by all connector pods instead
+    # of a per-pod emptyDir, so they are downloaded once rather than on every pod start.
+    # Plugins are kept in a sub-directory keyed on the configured package list, so changing
+    # `confluentHubPackages` or `archiveUrls` triggers a fresh install. The volume must be
+    # writable by the installer, e.g. set `podSecurityContext.fsGroup: 1000` for the Confluent image.
+    enabled: false
+    existingClaim: ""
+    accessMode: ReadWriteMany
+    size: 2Gi
 
 # -- Custom livenessProbe that overrides the default one
 customLivenessProbe: {}

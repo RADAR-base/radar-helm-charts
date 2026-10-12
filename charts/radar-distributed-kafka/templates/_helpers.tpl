@@ -22,6 +22,25 @@ Return the plugin installer image, defaulting to the main connector image.
 {{- end -}}
 
 {{/*
+Return the name of the PVC holding the installed connector plugins.
+*/}}
+{{- define "radar-distributed-kafka.pluginClaimName" -}}
+{{- if .Values.pluginInstallation.persistence.existingClaim -}}
+{{- .Values.pluginInstallation.persistence.existingClaim -}}
+{{- else -}}
+{{- printf "%s-plugins" (include "radar-distributed-kafka.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the sub-directory of the plugin volume for the configured plugin set, so that
+changing the package list installs into a fresh directory instead of reusing stale plugins.
+*/}}
+{{- define "radar-distributed-kafka.pluginSetId" -}}
+{{- list .Values.pluginInstallation.confluentHubPackages .Values.pluginInstallation.archiveUrls | toJson | sha256sum | trunc 16 -}}
+{{- end -}}
+
+{{/*
 Return the proper Docker Image Registry Secret Names
 */}}
 {{- define "radar-distributed-kafka.imagePullSecrets" -}}

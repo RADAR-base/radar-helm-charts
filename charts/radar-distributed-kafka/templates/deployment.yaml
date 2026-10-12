@@ -46,24 +46,52 @@ spec:
             - /bin/sh
             - -ec
             - |
-              PLUGIN_DIR={{ default "/opt/connect-plugins" $root.Values.pluginInstallation.pluginPath | quote }}
-              mkdir -p "${PLUGIN_DIR}"
+              {{- if $root.Values.pluginInstallation.persistence.enabled }}
+              # The plugin volume is shared by all connector pods. Each plugin set is installed
+              # once into its own sub-directory: a pod installs into a private staging directory
+              # and renames it into place, so concurrently starting pods cannot see a partial
+              # install. A pod that loses the race discards its copy.
+              PLUGIN_DIR="/plugin-store/{{ include "radar-distributed-kafka.pluginSetId" $root }}"
+              if [ -f "${PLUGIN_DIR}/.installed" ]; then
+                echo "Connector plugins already installed in ${PLUGIN_DIR}; skipping installation"
+                exit 0
+              fi
+              INSTALL_DIR="/plugin-store/.staging-${HOSTNAME}"
+              rm -rf "${INSTALL_DIR}"
+              {{- else }}
+              INSTALL_DIR={{ default "/opt/connect-plugins" $root.Values.pluginInstallation.pluginPath | quote }}
+              {{- end }}
+              mkdir -p "${INSTALL_DIR}"
               {{- range $pkg := $root.Values.pluginInstallation.confluentHubPackages }}
               echo "Installing connector plugin {{ $pkg }}"
-              confluent-hub install --no-prompt --component-dir "${PLUGIN_DIR}" {{ $pkg | quote }}
+              confluent-hub install --no-prompt --component-dir "${INSTALL_DIR}" {{ $pkg | quote }}
               {{- end }}
               {{- range $url := $root.Values.pluginInstallation.archiveUrls }}
               echo "Downloading connector plugin archive {{ $url }}"
               curl -fsSL --retry 3 -o /tmp/plugin-archive.zip {{ $url | quote }}
-              python3 -m zipfile -e /tmp/plugin-archive.zip "${PLUGIN_DIR}/"
+              python3 -m zipfile -e /tmp/plugin-archive.zip "${INSTALL_DIR}/"
               rm -f /tmp/plugin-archive.zip
               {{- end }}
               {{- if and (empty $root.Values.pluginInstallation.confluentHubPackages) (empty $root.Values.pluginInstallation.archiveUrls) }}
               echo "No connector plugins configured; skipping installation"
               {{- end }}
+              {{- if $root.Values.pluginInstallation.persistence.enabled }}
+              touch "${INSTALL_DIR}/.installed"
+              # rename(2) onto a non-empty directory fails, so only one pod's install wins.
+              if mv -T "${INSTALL_DIR}" "${PLUGIN_DIR}" 2>/dev/null; then
+                echo "Installed connector plugins into ${PLUGIN_DIR}"
+              else
+                echo "Connector plugins were installed into ${PLUGIN_DIR} by another pod; discarding this copy"
+                rm -rf "${INSTALL_DIR}"
+              fi
+              {{- end }}
           volumeMounts:
             - name: plugin-dir
+              {{- if $root.Values.pluginInstallation.persistence.enabled }}
+              mountPath: /plugin-store
+              {{- else }}
               mountPath: {{ default "/opt/connect-plugins" $root.Values.pluginInstallation.pluginPath | quote }}
+              {{- end }}
       {{- end }}
       {{- if $root.Values.affinity }}
       affinity: {{- include "common.tplvalues.render" ( dict "value" $root.Values.affinity "context" $root ) | nindent 8 }}
@@ -262,6 +290,10 @@ spec:
             {{- if $root.Values.pluginInstallation.enabled }}
             - name: plugin-dir
               mountPath: {{ default "/opt/connect-plugins" $root.Values.pluginInstallation.pluginPath | quote }}
+              {{- if $root.Values.pluginInstallation.persistence.enabled }}
+              subPath: {{ include "radar-distributed-kafka.pluginSetId" $root }}
+              readOnly: true
+              {{- end }}
             {{- end }}
       volumes:
         # Scripts come from the ConfigMap and the merged connector config (which may
@@ -275,7 +307,12 @@ spec:
                   name: {{ include "radar-distributed-kafka.fullname" $root }}-{{ $connectorId }}
         {{- if $root.Values.pluginInstallation.enabled }}
         - name: plugin-dir
+          {{- if $root.Values.pluginInstallation.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "radar-distributed-kafka.pluginClaimName" $root }}
+          {{- else }}
           emptyDir: {}
+          {{- end }}
         {{- end }}
       {{- with $root.Values.nodeSelector }}
       nodeSelector:

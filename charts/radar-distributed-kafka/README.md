@@ -3,7 +3,7 @@
 # radar-distributed-kafka
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-distributed-kafka)](https://artifacthub.io/packages/helm/radar-base/radar-distributed-kafka)
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 7.8.5](https://img.shields.io/badge/AppVersion-7.8.5-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 7.8.5](https://img.shields.io/badge/AppVersion-7.8.5-informational?style=flat-square)
 
 A Helm chart for running distributed Kafka source connectors with per-source configuration blocks.
 
@@ -61,6 +61,10 @@ A Helm chart for running distributed Kafka source connectors with per-source con
 | pluginInstallation.confluentHubPackages | list | `[]` | Confluent Hub package coordinates to install (for example `confluentinc/kafka-connect-s3:latest`). |
 | pluginInstallation.archiveUrls | list | `["https://github.com/lensesio/stream-reactor/releases/download/11.7.8/kafka-connect-aws-s3-11.7.8.zip"]` | URLs of connector plugin zip archives to download and extract into the plugin directory (for example Lenses stream-reactor releases from GitHub). |
 | pluginInstallation.initContainerImage | object | `{}` | Optional image override for the plugin installer init container. By default the chart uses the same image as `image`. |
+| pluginInstallation.persistence.enabled | bool | `false` | Store installed plugins on a PersistentVolumeClaim shared by all connector pods instead of a per-pod emptyDir, so they are downloaded once rather than on every pod start. Plugins are kept in a sub-directory keyed on the configured package list, so changing `confluentHubPackages` or `archiveUrls` triggers a fresh install. The volume must be writable by the installer, e.g. set `podSecurityContext.fsGroup: 1000` for the Confluent image. |
+| pluginInstallation.persistence.existingClaim | string | `""` |  |
+| pluginInstallation.persistence.accessMode | string | `"ReadWriteMany"` |  |
+| pluginInstallation.persistence.size | string | `"2Gi"` |  |
 | customLivenessProbe | object | `{}` | Custom livenessProbe that overrides the default one |
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
