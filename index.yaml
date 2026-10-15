@@ -6836,6 +6836,39 @@ entries:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
     appVersion: 2.4.7
+    created: "2026-10-15T16:13:26.203554554Z"
+    dependencies:
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for the backend application of RADAR-base Appserver
+    digest: e63e2b0208e90df1dd2b9a91e2fd608d1e0dbd456c1c088b5197b0444a4d2ad5
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    name: radar-appserver
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-appserver
+    - https://github.com/RADAR-base/RADAR-Appserver
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-appserver-0.10.4/radar-appserver-0.10.4.tgz
+    version: 0.10.4
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 2.4.7
     created: "2026-03-31T14:34:35.520695531Z"
     dependencies:
     - name: common
@@ -7757,6 +7790,41 @@ entries:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-appserver-0.0.1/radar-appserver-0.0.1.tgz
     version: 0.0.1
   radar-appserver-jersey:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 2.4.7
+    created: "2026-10-15T16:13:26.394412399Z"
+    dependencies:
+    - name: common
+      repository: https://radar-base.github.io/radar-helm-charts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for the backend application of RADAR-base Appserver
+    digest: df7af89298417ff7a650daa41b3c36076e1064aceef65a380caa83941e466552
+    home: https://radar-base.org
+    icon: http://radar-base.org/wp-content/uploads/2022/09/Logo_RADAR-Base-RGB.png
+    keywords:
+    - radar-base
+    - remote-trial
+    maintainers:
+    - email: yatharth.ranjan@kcl.ac.uk
+      name: Yatharth Ranjan
+      url: https://www.kcl.ac.uk/people/yatharth-ranjan
+    - email: pauline.conde@kcl.ac.uk
+      name: Pauline Conde
+      url: https://www.kcl.ac.uk/people/pauline-conde
+    - email: aditya.mishra@kcl.ac.uk
+      name: Aditya Mishra
+    name: radar-appserver-jersey
+    sources:
+    - https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/radar-appserver
+    - https://github.com/RADAR-base/RADAR-Appserver
+    type: application
+    urls:
+    - https://github.com/RADAR-base/radar-helm-charts/releases/download/radar-appserver-jersey-0.1.1/radar-appserver-jersey-0.1.1.tgz
+    version: 0.1.1
   - annotations:
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
@@ -24811,4 +24879,4 @@ entries:
     urls:
     - https://github.com/RADAR-base/radar-helm-charts/releases/download/velero-s3-deployment-0.1.0/velero-s3-deployment-0.1.0.tgz
     version: 0.1.0
-generated: "2026-10-15T16:00:52.327755921Z"
+generated: "2026-10-15T16:13:26.395606955Z"
