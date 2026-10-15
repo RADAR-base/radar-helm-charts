@@ -149,11 +149,6 @@ gatewayAPI:
             value: "true"
           - name: Access-Control-Max-Age
             value: "1728000"
-    # - type: URLRewrite
-    #   urlRewrite:
-    #     path:
-    #       type: ReplacePrefixMatch
-    #       replacePrefixMatch: /kafka
   # -- HTTP->HTTPS redirect route (equivalent to nginx force-TLS behaviour)
   httpsRedirect:
     # -- Enable a second HTTPRoute that 301-redirects HTTP traffic to HTTPS
