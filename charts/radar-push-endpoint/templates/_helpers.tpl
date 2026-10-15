@@ -13,6 +13,7 @@ Return the proper image name
 {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global "chart" .Chart ) }}
 {{- end -}}
 
+{{/*
 Return the proper exporter image name
 */}}
 {{- define "radar-push-endpoint.image-exporter" -}}
