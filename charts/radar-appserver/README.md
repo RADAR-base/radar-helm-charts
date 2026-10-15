@@ -25,6 +25,7 @@ A Helm chart for the backend application of RADAR-base Appserver
 * Kubernetes 1.28+
 * Kubectl 1.28+
 * Helm 3.1.0+
+* When `gatewayAPI.enabled=true`: the Gateway API CRDs and a Gateway Controller (e.g. NGINX Gateway Fabric) must already be installed in the cluster, and the shared parent Gateway `radar-base-k8s-gateway` must exist — it can be created via the [gateway-api](https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/gateway-api) chart
 
 ## Requirements
 
