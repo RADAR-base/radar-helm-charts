@@ -20,6 +20,11 @@
 * When `gatewayAPI.enabled=true`: the Gateway API CRDs and a Gateway Controller (e.g. NGINX Gateway Fabric) must already be installed in the cluster, and the shared parent Gateway `radar-base-k8s-gateway` must exist — it can be created via the [gateway-api](https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/gateway-api) chart
 {{- end }}
 
+{{ define "common.prerequisiteswithhpaandgatewayapi" -}}
+{{ template "common.prerequisiteswithhpa" . }}
+* When `gatewayAPI.enabled=true`: the Gateway API CRDs and a Gateway Controller (e.g. NGINX Gateway Fabric) must already be installed in the cluster, and the shared parent Gateway `radar-base-k8s-gateway` must exist — it can be created via the [gateway-api](https://github.com/RADAR-base/radar-helm-charts/tree/main/charts/gateway-api) chart
+{{- end }}
+
 {{ define "common.header" -}}
 {{ template "chart.header" . }}[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/{{ template "chart.name" . }})](https://artifacthub.io/packages/helm/radar-base/{{ template "chart.name" . }})
 {{- end }}
