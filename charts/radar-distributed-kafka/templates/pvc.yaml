@@ -1,0 +1,25 @@
+{{- $persistence := .Values.pluginInstallation.persistence }}
+{{- if and .Values.pluginInstallation.enabled $persistence.enabled (not $persistence.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "radar-distributed-kafka.pluginClaimName" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ $persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ $persistence.size | quote }}
+{{- if $persistence.storageClass }}
+{{- if (eq "-" $persistence.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: {{ $persistence.storageClass | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
