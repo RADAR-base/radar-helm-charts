@@ -1,0 +1,14 @@
+{{- range .Values.buckets }}
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: {{ printf "%s-%s" (include "common.names.fullname" $) . | trunc 63 | trimSuffix "-" }}
+  namespace: {{ include "common.names.namespace" $ | quote }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  name: {{ . | quote }}
+  clusterRef:
+    name: {{ include "common.names.fullname" $ }}
+  reclaimPolicy: Retain
+{{- end }}

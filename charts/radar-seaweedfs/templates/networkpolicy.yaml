@@ -1,0 +1,40 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels: {{- include "radar-seaweedfs.clusterPodLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+  ingress:
+    # All ports: other SeaweedFS pods of this cluster, the operator and this chart's jobs.
+    - from:
+        - podSelector:
+            matchLabels: {{- include "radar-seaweedfs.clusterPodLabels" . | nindent 14 }}
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels: {{- toYaml .Values.networkPolicy.operatorPodLabels | nindent 14 }}
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: wait-for-buckets
+    # Authenticated or read-only endpoints: S3 API, admin UI and metrics.
+    - ports:
+        - port: 8333
+          protocol: TCP
+        {{- if .Values.admin.enabled }}
+        - port: 23646
+          protocol: TCP
+        {{- end }}
+        {{- if .Values.metrics.enabled }}
+        - port: {{ .Values.metrics.port }}
+          protocol: TCP
+        {{- end }}
+    {{- with .Values.networkPolicy.extraIngress }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+{{- end }}

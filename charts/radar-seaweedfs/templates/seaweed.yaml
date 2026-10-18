@@ -1,0 +1,117 @@
+{{- $fullname := include "common.names.fullname" . }}
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Seaweed
+metadata:
+  name: {{ $fullname }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  image: {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global "chart" .Chart) }}
+  imagePullPolicy: {{ .Values.image.pullPolicy }}
+  {{- with .Values.image.pullSecrets }}
+  imagePullSecrets:
+    {{- range . }}
+    - name: {{ . }}
+    {{- end }}
+  {{- end }}
+  volumeServerDiskCount: 1
+  master:
+    replicas: {{ .Values.master.replicas }}
+    defaultReplication: {{ .Values.replication | quote }}
+    volumeSizeLimitMB: {{ include "radar-seaweedfs.volumeSizeLimitMB" . }}
+    config: |
+      [master.volume_growth]
+      copy_1 = {{ .Values.master.volumeGrowthCount }}
+      copy_2 = {{ .Values.master.volumeGrowthCount }}
+      copy_3 = {{ .Values.master.volumeGrowthCount }}
+      copy_other = 1
+    persistence:
+      enabled: true
+      resources:
+        requests:
+          storage: {{ .Values.master.persistence.size }}
+      {{- with .Values.master.persistence.storageClassName }}
+      storageClassName: {{ . }}
+      {{- end }}
+    {{- with .Values.master.requests }}
+    requests: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.master.limits }}
+    limits: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- if .Values.metrics.enabled }}
+    metricsPort: {{ .Values.metrics.port }}
+    {{- end }}
+  volume:
+    replicas: {{ .Values.volume.replicas }}
+    maxVolumeCounts: {{ .Values.volume.maxVolumes }}
+    rack: rack1
+    dataCenter: dc1
+    requests:
+      storage: {{ .Values.volume.storage.size }}
+      {{- with .Values.volume.requests }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+    {{- with .Values.volume.limits }}
+    limits: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.volume.storage.storageClassName }}
+    storageClassName: {{ . }}
+    {{- end }}
+    {{- if .Values.metrics.enabled }}
+    metricsPort: {{ .Values.metrics.port }}
+    {{- end }}
+  filer:
+    replicas: {{ .Values.filer.replicas }}
+    persistence:
+      enabled: true
+      resources:
+        requests:
+          storage: {{ .Values.filer.persistence.size }}
+      {{- with .Values.filer.persistence.storageClassName }}
+      storageClassName: {{ . }}
+      {{- end }}
+    config: |
+      [leveldb2]
+      enabled = true
+      dir = "/data/filerldb2"
+    # The S3 API is served by the standalone gateway below.
+    s3:
+      enabled: false
+    {{- with .Values.filer.requests }}
+    requests: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.filer.limits }}
+    limits: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- if .Values.metrics.enabled }}
+    metricsPort: {{ .Values.metrics.port }}
+    {{- end }}
+  s3:
+    replicas: {{ .Values.s3.replicas }}
+    configSecret:
+      name: {{ $fullname }}-s3-config
+      key: s3_config.json
+    {{- if .Values.s3.ingress.enabled }}
+    ingress: {{- include "radar-seaweedfs.ingress" (dict "ingress" .Values.s3.ingress "tlsSecret" (printf "%s-s3-tls" $fullname) "context" $) | nindent 6 }}
+    {{- end }}
+    {{- with .Values.s3.requests }}
+    requests: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.s3.limits }}
+    limits: {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- if .Values.metrics.enabled }}
+    metricsPort: {{ .Values.metrics.port }}
+    {{- end }}
+  {{- if .Values.admin.enabled }}
+  admin:
+    credentialsSecret:
+      name: {{ $fullname }}-admin
+    {{- if .Values.admin.ingress.enabled }}
+    ingress: {{- include "radar-seaweedfs.ingress" (dict "ingress" .Values.admin.ingress "tlsSecret" (printf "%s-admin-tls" $fullname) "context" $) | nindent 6 }}
+    {{- end }}
+    {{- if .Values.metrics.enabled }}
+    metricsPort: {{ .Values.metrics.port }}
+    {{- end }}
+  {{- end }}
