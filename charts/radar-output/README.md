@@ -3,7 +3,7 @@
 # radar-output
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-output)](https://artifacthub.io/packages/helm/radar-base/radar-output)
 
-![Version: 1.2.10](https://img.shields.io/badge/Version-1.2.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.6](https://img.shields.io/badge/AppVersion-3.0.6-informational?style=flat-square)
+![Version: 1.2.11](https://img.shields.io/badge/Version-1.2.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 3.0.7](https://img.shields.io/badge/AppVersion-3.0.7-informational?style=flat-square)
 
 A Helm chart for RADAR-base output restructure service. This application reads data from intermediate storage and restructure the data into project-> subject-id-> data topic -> data split per hour. This service offers few options to choose the source and target of the pipeline.
 
@@ -77,6 +77,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | source.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
 | source.index.fullSyncInterval | int | `3600` | Interval in seconds to synchronize the index with the storage (in seconds). This values should be only changed in specific scenarios (e.g. e2e testing). |
 | source.index.emptyDirectorySyncInterval | int | `900` | Interval in seconds to also include empty directories during sync with the storage (in seconds). This values should be only changed in specific scenarios (e.g. e2e testing). |
+| source.index.incrementalSyncInterval | int | `3600` | Minimum interval in seconds between incremental scans of the storage for new files, in between full syncs. Set to 0 to scan on every worker run. Higher values reduce list operations on the storage, but new files may only be processed after this interval. |
 | target.type | string | `"s3"` | Type of the output storage of the RADAR-base pipeline (e.g., s3 or azure) |
 | target.s3.endpoint | string | `"http://minio:9000"` | s3 endpoint of the output storage |
 | target.s3.accessToken | string | `"access_key"` | s3 access-key of the output storage |
@@ -97,6 +98,7 @@ A Helm chart for RADAR-base output restructure service. This application reads d
 | target.azure.writeTimeout | string | `nil` | Azure HTTP write timeout in seconds |
 | target.azure.readTimeout | string | `nil` | Azure HTTP read timeout in seconds |
 | redis.uri | string | `"redis://radar-redis-replication-master:6379"` | URL of the redis database |
+| redis.timeoutMs | int | `5000` | Connection and socket timeout of the redis connection (milliseconds). Increase it if reading the stored offsets of large topics times out. |
 | worker.interval | int | `90` | Scanning interval (seconds) |
 | worker.cacheSize | int | `300` | Maximum number of files and converters to keep open while processing |
 | worker.cacheOffsetsSize | int | `500000` | Maximum number of offsets in cache. |
