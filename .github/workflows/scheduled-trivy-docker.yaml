@@ -1,9 +1,15 @@
-name: Snyk scheduled Docker image scan for external dependencies
+name: Trivy scheduled Docker image scan for external dependencies
 
 on:
   schedule:
     - cron: '0 3 * * 1'
   workflow_dispatch:
+
+env:
+  # Label of the issues created for vulnerable images, see the report job.
+  ISSUE_LABEL: vulnerability
+  # GitHub user the new issues are assigned to; empty for none.
+  ISSUE_ASSIGNEE: ''
 
 jobs:
 
@@ -41,9 +47,6 @@ jobs:
           # In this action we only scan 'external' dependencies of the RADAR-base deployment.
           # RADAR-base services are scanned in the respective GitHub repositories.
           # Notes on charts:
-          # - elasticsearch:
-          #   FIXME: the elasticsearch image gives sarif related errors, so it is excluded for now.
-          #        we need a better way to handle this.
           # - velero: we do not offer this chart as part of the official release and therefore do not check for vulnerabilities.
           INCLUDE_CHARTS: charts/cc-schema-registry-proxy
             charts/cert-manager-lets-encrypt
@@ -55,6 +58,7 @@ jobs:
             charts/radar-nifi
             charts/radar-redis
             external/cloudnativepg-operator
+            external/elasticsearch
             external/fluent-bit
             external/kubecost
             external/graylog
@@ -97,47 +101,75 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJson(needs.collect-docker-images.outputs.matrix) }}
     steps:
-      - name: Run Snyk to check for vulnerabilities
-        continue-on-error: true
-        uses: snyk/actions/docker@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          image: ${{ matrix.DOCKER_IMAGE }}
-          args: >-
-            --fail-on=upgradable
-            --severity-threshold=high
-            --policy-path=.snyk
-            --org=radar-base
-            --json-file-output=snyk.json
+          sparse-checkout: .trivyignore.yaml
+          sparse-checkout-cone-mode: false
 
-      # Detected vulnerabilities will appear on Github as Issues
-      - name: Report new vulnerabilities
-        uses: thehyve/report-vulnerability@master
-        if: success() || failure()
+      - uses: aquasecurity/setup-trivy@81e514348e19b6112ce2a7e3ecbafe19c1e1f567 # v0.3.1
         with:
-          report-file: snyk.json
-          timestamp: ${{ github.run_id }}
-          # Long labels trigger an error on Github.
-          category: ${{ matrix.DOCKER_IMAGE_SHORT }}
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          version: v0.74.0
+          cache: true
 
-  # This step is a temporary fix for closing obsolete issues.
-  # It can be removed when using an improved version of the thehyve/report-vulnerability action.
-  close-old-snyk-issues:
-    needs: scan
+      # Writes the report format of thehyve/vulnerability-scanning's create-issue action.
+      - name: Run Trivy to check for vulnerabilities
+        env:
+          DOCKER_IMAGE: ${{ matrix.DOCKER_IMAGE }}
+        run: |
+          trivy image --quiet --scanners vuln --severity HIGH,CRITICAL \
+            --ignorefile .trivyignore.yaml --format json --output trivy.json "$DOCKER_IMAGE"
+          jq --arg id "$DOCKER_IMAGE" '[{
+            ArtifactID: $id,
+            vulnerabilities: [.Results[]? | .Vulnerabilities[]? | {Title, VulnerabilityID, Severity}] | unique
+          }]' trivy.json > result.json
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: scan-${{ strategy.job-index }}
+          path: result.json
+
+  report:
+    needs: [collect-docker-images, scan]
+    # Also report when some images failed to scan.
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     permissions:
       issues: write
-      contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          fetch-depth: 0
-      - name: Close previous Snyk issues without current run label
+          pattern: scan-*
+          path: results
+
+      - name: Merge scan results
+        run: jq -s 'add' results/*/result.json > scan_result.json
+
+      # Detected vulnerabilities will appear on GitHub as one issue per image.
+      - name: Report new vulnerabilities
+        uses: thehyve/vulnerability-scanning/.github/actions/create-issue@b187734700d0ac484d8f17ed3450cc846c723d71 # main 2026-05-28
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.ISSUE_LABEL }}
+          assignee: ${{ env.ISSUE_ASSIGNEE }}
+          file-name: scan_result.json
+
+      # create-issue never closes issues. Close the ones for images that are no longer deployed, or that were
+      # scanned in this run and came out clean. Images whose scan failed keep their issue.
+      - name: Close resolved issues
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LABEL: Snyk-timestamp:${{ github.run_id }}
-        run: .github/bin/close_gh_issues
+          MATRIX: ${{ needs.collect-docker-images.outputs.matrix }}
+        run: |
+          gh issue list --repo "$GITHUB_REPOSITORY" --state open --label "$ISSUE_LABEL" --limit 500 \
+              --json number,title \
+            | jq -r --argjson matrix "$MATRIX" --slurpfile results scan_result.json '
+                ($matrix.include | map(.DOCKER_IMAGE)) as $listed
+                | ($results[0] | map(.ArtifactID)) as $scanned
+                | ($results[0] | map(select(.vulnerabilities | length > 0) | .ArtifactID)) as $vulnerable
+                | .[]
+                | (.title | sub("^Vulnerability detected in "; "")) as $image
+                | select(($listed | index($image) | not)
+                    or (($scanned | index($image)) and ($vulnerable | index($image) | not)))
+                | .number' \
+            | xargs -r -I{} gh issue close --repo "$GITHUB_REPOSITORY" {} \
+                --comment "Resolved: the image has no HIGH/CRITICAL vulnerabilities left, or the charts no longer deploy it."

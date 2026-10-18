@@ -138,7 +138,7 @@ parent chart being available in the Helm repository.
    This will create a new directory in the `external` directory with the name of the chart. See `Makefile` for
    examples.
 2. Add helm chart as a new `update-<chart-name>` section in the `Makefile`.
-3. Register the new chart in the `.github/workflows/scheduled-snyk-docker.yaml` for vulnerability scanning by adding the
+3. Register the new chart in the `.github/workflows/scheduled-trivy-docker.yaml` for vulnerability scanning by adding the
    chart name to the `INCLUDE_CHARTS` environmental variable in the _set-matrix_ step. When the docker image is not directly
    listed in the _deployment.yaml_ file (i.e., when the image is deployed via an Operator), add the image name to the
    `INCLUDE_IMAGES` environmental variable.
