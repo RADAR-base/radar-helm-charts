@@ -1,0 +1,27 @@
+{{- if .Values.jobs.compaction.enabled }}
+---
+{{ include "radar-iceberg-maintenance.cronjob" (dict
+      "context"  $
+      "name"     "compaction"
+      "schedule" .Values.jobs.compaction.schedule
+      "sql"      (printf "ALTER TABLE __TABLE__ EXECUTE optimize(file_size_threshold => '%s')" .Values.jobs.compaction.fileSizeThreshold)
+   ) }}
+{{- end }}
+{{- if .Values.jobs.expireSnapshots.enabled }}
+---
+{{ include "radar-iceberg-maintenance.cronjob" (dict
+      "context"  $
+      "name"     "expire-snapshots"
+      "schedule" .Values.jobs.expireSnapshots.schedule
+      "sql"      (printf "ALTER TABLE __TABLE__ EXECUTE expire_snapshots(retention_threshold => '%s')" .Values.jobs.expireSnapshots.retentionThreshold)
+   ) }}
+{{- end }}
+{{- if .Values.jobs.removeOrphanFiles.enabled }}
+---
+{{ include "radar-iceberg-maintenance.cronjob" (dict
+      "context"  $
+      "name"     "remove-orphan-files"
+      "schedule" .Values.jobs.removeOrphanFiles.schedule
+      "sql"      (printf "ALTER TABLE __TABLE__ EXECUTE remove_orphan_files(retention_threshold => '%s')" .Values.jobs.removeOrphanFiles.retentionThreshold)
+   ) }}
+{{- end }}

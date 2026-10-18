@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "radar-iceberg-maintenance.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  run-maintenance.sh: |
+    #!/bin/sh
+    # Run one Iceberg maintenance chore over every table in the schema.
+    #
+    # Tables are discovered at run time unless TABLES is set, so tables the sink auto-creates
+    # later are maintained without changing any values.
+    #
+    # One table failing does not abandon the rest: failures are counted and reported at the
+    # end, so a single bad table shows up without silently skipping the other 300.
+    set -u
+
+    : "${TRINO_URL:?}" "${TRINO_CATALOG:?}" "${TRINO_SCHEMA:?}" "${SQL_TEMPLATE:?}" "${CHORE:?}"
+
+    TRINO_OPTS="--server ${TRINO_URL} --catalog ${TRINO_CATALOG} --schema ${TRINO_SCHEMA} --user ${TRINO_USER}"
+    if [ -n "${TRINO_PASSWORD:-}" ]; then
+      TRINO_OPTS="${TRINO_OPTS} --password"
+      export TRINO_PASSWORD
+    fi
+
+    run_sql() {
+      # shellcheck disable=SC2086
+      trino ${TRINO_OPTS} --output-format TSV --execute "$1"
+    }
+
+    if [ -n "${TABLES:-}" ]; then
+      TABLE_LIST="${TABLES}"
+      echo "==> ${CHORE}: using the configured table list"
+    else
+      echo "==> ${CHORE}: discovering tables in ${TRINO_CATALOG}.${TRINO_SCHEMA}"
+      TABLE_LIST=$(run_sql "SHOW TABLES") || {
+        echo "could not list tables - is Trino up and is the schema right?" >&2
+        exit 1
+      }
+    fi
+
+    if [ -z "${TABLE_LIST}" ]; then
+      echo "    no tables found; nothing to do"
+      exit 0
+    fi
+
+    TOTAL=0
+    FAILED=0
+    FAILED_TABLES=""
+    for TABLE in ${TABLE_LIST}; do
+      TOTAL=$((TOTAL + 1))
+      SQL=$(echo "${SQL_TEMPLATE}" | sed "s/__TABLE__/\"${TABLE}\"/g")
+      echo "--> ${TABLE}"
+      if ! run_sql "${SQL}"; then
+        FAILED=$((FAILED + 1))
+        FAILED_TABLES="${FAILED_TABLES} ${TABLE}"
+        echo "    FAILED: ${TABLE}" >&2
+      fi
+    done
+
+    echo "==> ${CHORE}: ${TOTAL} table(s), ${FAILED} failure(s)"
+    if [ "${FAILED}" -gt 0 ]; then
+      echo "    failed tables:${FAILED_TABLES}" >&2
+      exit 1
+    fi
