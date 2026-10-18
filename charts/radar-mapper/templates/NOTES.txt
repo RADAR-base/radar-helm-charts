@@ -1,0 +1,32 @@
+radar-mapper has been deployed as a CronJob scheduled at: {{ .Values.schedule }}
+
+To trigger a run immediately:
+  kubectl create job --from=cronjob/{{ include "common.names.fullname" . }} {{ include "common.names.fullname" . }}-manual -n {{ .Release.Namespace }}
+
+To watch the most recent job:
+  kubectl get jobs -n {{ .Release.Namespace }} -l app.kubernetes.io/name={{ include "radar-mapper.name" . }}
+
+To view logs:
+  kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/name={{ include "radar-mapper.name" . }} --tail=100
+
+{{- if not .Values.existingSecret }}
+
+NOTE: S3 and Management Portal credentials are currently stored in a ConfigMap
+({{ include "common.names.fullname" . }}). For production deployments, consider
+pre-creating a Kubernetes Secret containing 'mapper.yml' with credentials embedded
+and setting existingSecret to its name. This keeps credentials in an encrypted
+Kubernetes Secret rather than a plain ConfigMap.
+{{- end }}
+
+{{- $hasOnlyComments := false }}
+{{- range .Values.enrichment }}
+{{- if and .provider.lookupCsv (contains "#" .provider.lookupCsv) }}
+{{- $hasOnlyComments = true }}
+{{- end }}
+{{- end }}
+{{- if $hasOnlyComments }}
+
+NOTE: The event-lookup.csv appears to contain only comments. Update
+eventName.lookupCsv in your values with the actual questionnaire→event mappings
+before expecting the mapper to produce output.
+{{- end }}
