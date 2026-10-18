@@ -1,0 +1,39 @@
+# Official Lakekeeper Helm-Chart
+{{ template "chart.description" . }}
+
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/lakekeeper&color=3f6ec6&labelColor=&logoColor=white)](https://artifacthub.io/packages/helm/lakekeeper/lakekeeper)
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+Please check our [Documentation](http://docs.lakekeeper.io), the [Lakekeeper Repository](https://github.com/lakekeeper/lakekeeper) and the [`values.yaml`](https://github.com/lakekeeper/lakekeeper-charts/blob/main/charts/lakekeeper/values.yaml) for more information.
+
+## ⚠️ Important Notice: Migration from Bitnami to groundhog2k
+
+This Chart used to rely on the Bitnami PostgreSQL Helm chart for postgres for both Lakekeeper and OpenFGA. Due to the [Bitnami Secure Images initiative](https://news.broadcom.com/app-dev/broadcom-introduces-bitnami-secure-images-for-production-ready-containerized-applications), this was no longer possible. We now moved to [`groundhog2k/posgres`](https://github.com/groundhog2k/helm-charts) with Chart Version `0.8.0`.
+
+**Changes:**
+- Version `0.7.1`: Transition from Bitnami images to self-hosted images on Quay.io to ensure deployment stability
+- Version `0.8.0`: Migration to [`groundhog2k/posgres`](https://github.com/groundhog2k/helm-charts).
+
+**Important notes:**
+- No automatic migration will be provided by this chart
+- **Back up your database before updating to prevent data loss**
+- As noted in the installation section and [Production Checklist](https://docs.lakekeeper.io/docs/nightly/production/), the databases included with this chart are **not production-ready**
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```bash
+helm repo add lakekeeper https://lakekeeper.github.io/lakekeeper-charts/
+helm install my-lakekeeper lakekeeper/lakekeeper
+```
+
+⚠️ This chart by default deploys the "postgresql" subchart. This setup is not production ready. For production deployments, please deploy an external database, set `postgresql.enabled` to false and use the `externalDatabase.*` parameters to configure the connection. To deploy production ready Databases on Kubernetes, we recommend to use the [`CloudNativePGOperator`](https://cloudnative-pg.io/).
+
+For potential additional steps that are required for upgrades, please check the [Changelog](./Changelog)
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

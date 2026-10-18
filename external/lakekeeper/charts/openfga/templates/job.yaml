@@ -1,0 +1,82 @@
+{{- if and (has .Values.datastore.engine (list "postgres" "mysql")) .Values.datastore.applyMigrations (eq .Values.datastore.migrationType "job") -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "openfga.fullname" . }}-migrate
+  labels:
+    {{- include "openfga.labels" . | nindent 4 }}
+  {{- with .Values.migrate.labels }}
+    {{- toYaml . | nindent 4}}
+  {{- end}}
+  {{- with .Values.migrate.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  template:
+    metadata:
+      {{- with .Values.migrate.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "openfga.labels" . | nindent 8 }}
+      {{- with .Values.migrate.labels }}
+        {{- toYaml . | nindent 8}}
+      {{- end}}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "openfga.serviceAccountName" . }}
+      {{- with .Values.migrate.extraInitContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: migrate-database
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          args: ["migrate"]
+          env:
+            {{- include "openfga.datastore.envConfig" . | nindent 12 }}
+
+            {{- if .Values.migrate.timeout }}
+            - name: OPENFGA_TIMEOUT
+              value: "{{ .Values.migrate.timeout }}"
+            {{- end }}
+
+            {{- with .Values.extraEnvVars }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+
+          resources:
+            {{- toYaml .Values.datastore.migrations.resources | nindent 12 }}
+          {{- with .Values.migrate.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        {{- if .Values.migrate.sidecars }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.migrate.sidecars "context" $) | nindent 8 }}
+        {{- end }}
+      restartPolicy: Never
+      {{- with .Values.migrate.extraVolumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  backoffLimit: 1
+{{- end }}

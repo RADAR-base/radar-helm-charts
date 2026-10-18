@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "openfga.fullname" . }}-test-connection"
+  labels:
+    {{- include "openfga.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  {{- with .Values.imagePullSecrets }}
+  imagePullSecrets:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
+  containers:
+    - name: grpc-health-probe
+      image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+      imagePullPolicy: {{ .Values.image.pullPolicy }}
+      command: ["grpc_health_probe", '-addr={{ include "openfga.fullname" . }}:{{ (split ":" .Values.grpc.addr)._1 }}']
+      {{- with .Values.testContainerSpec }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+  restartPolicy: Never
+  {{- with .Values.testPodSpec }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
