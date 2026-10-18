@@ -116,7 +116,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | postgres.connection_parameters | string | `""` | Additional JDBC connection parameters e.g. sslmode=verify-full. Ignored when using 'urlSecret'. |
 | postgres.ssl.enabled | bool | `false` | set to true of the connecting to postgres using SSL |
 | postgres.ssl.keystorepassword | string | `"keystorepassword"` |  |
-| restSourceClientSubscriptions.googlehealth.enabled | bool | `true` | Master switch for per-user subscription management, without having to unset the service account |
+| restSourceClientSubscriptions.googlehealth.enabled | bool | `false` | Master switch for per-user subscription management, without having to unset the service account. Requires a Rest Source Auth backend image with Google Health subscription support; the default tag (chart appVersion) does not have it yet and refuses to start with this config, so pin `image.tag` before enabling. |
 | restSourceClientSubscriptions.googlehealth.apiBaseUrl | string | `"https://health.googleapis.com/v4"` | Base URL of the Google Health API |
 | restSourceClientSubscriptions.googlehealth.googleCloudProjectId | string | `""` | Google Cloud project that owns the Health API subscriber. Required when `restSourceClientSubscriptions.googlehealth.enabled` is true. |
 | restSourceClientSubscriptions.googlehealth.subscriberId | string | `"radar-pep"` | Subscriber id the per-user subscriptions hang off. MUST match `googlehealth.subscriberId` in the radar-push-endpoint chart, which registers that subscriber. |
