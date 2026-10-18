@@ -54,10 +54,12 @@ strimzi-kafka-operator:
 # -- Values for schema registry operator
 # ref: https://github.com/lsst-sqre/strimzi-registry-operator
 strimzi-registry-operator:
-  # -- Keep in sync with 'fullnameOverride'
-  clusterName: radar
-  # -- Keep in sync with namespace used by deployment
-  operatorNamespace: default
+  # -- Name of the Strimzi Kafka cluster (the Kafka resource, i.e. the fullname of this release). Must match the
+  # `strimzi.io/cluster` label of the Strimzi secrets, otherwise the operator ignores certificate renewals and the
+  # schema registry keystore expires. Keep in sync with 'fullnameOverride'
+  clusterName: radar-kafka
+  # -- Namespace of the Strimzi Kafka cluster and the schema registry. Keep in sync with the release namespace
+  clusterNamespace: default
 
 # -- Values for Kafka cluster deployed by Strimzi kafka operator
 kafka:
