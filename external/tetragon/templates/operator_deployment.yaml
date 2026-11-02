@@ -1,0 +1,120 @@
+{{- if .Values.tetragonOperator.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  {{- with .Values.tetragonOperator.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels: 
+    {{- include "tetragon-operator.labels" . | nindent 4 }}
+    {{- with .Values.tetragonOperator.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  name: {{ include "tetragon-operator.name" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "tetragon-operator.selectorLabels" . | nindent 6 }}
+  replicas: {{ .Values.tetragonOperator.replicas | int64 }}
+  template:
+    metadata:
+      {{- with .Values.tetragonOperator.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels: 
+        {{- include "tetragon-operator.labels" . | nindent 8 }}
+        {{- with .Values.tetragonOperator.extraPodLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+      - name: {{ include "tetragon-operator.name" . }}
+        command:
+          - /usr/bin/tetragon-operator
+        args:
+          - serve
+          - --config-dir=/etc/tetragon/operator.conf.d/
+        {{- if .Values.tetragonOperator.prometheus.enabled }}
+          - {{ printf "--metrics-bind-address=%v:%v" .Values.tetragonOperator.prometheus.address .Values.tetragonOperator.prometheus.port | quote }}
+        {{- end }}
+        image: {{ .Values.tetragonOperator.image.override | default (printf "%v:%v" .Values.tetragonOperator.image.repository .Values.tetragonOperator.image.tag) | quote }}
+        imagePullPolicy: {{ .Values.tetragonOperator.image.pullPolicy | quote }}
+        volumeMounts:
+          - mountPath: /etc/tetragon/operator.conf.d/
+            name: tetragon-operator-config
+            readOnly: true
+          {{- with .Values.tetragonOperator.extraVolumeMounts }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+        {{- if .Values.tetragonOperator.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.tetragonOperator.containerSecurityContext | nindent 10 }}
+        {{- else if .Values.tetragonOperator.securityContext }}
+        securityContext:
+          {{- toYaml .Values.tetragonOperator.securityContext | nindent 10 }}
+        {{- end }}
+        {{- if .Values.tetragonOperator.prometheus.enabled }}
+        ports:
+          - name: metrics
+            containerPort: {{ .Values.tetragonOperator.prometheus.port | int64 }}
+            protocol: TCP
+        {{- end }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        {{- with .Values.tetragonOperator.resources }}
+        resources:
+          {{- toYaml . | trim | nindent 10 }}
+        {{- end }}
+      {{- with .Values.tetragonOperator.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tetragonOperator.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tetragonOperator.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tetragonOperator.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tetragonOperator.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "tetragon-operator.serviceAccount" . }}
+      {{- if (semverCompare ">= 1.33-0" .Capabilities.KubeVersion.Version) }}
+      hostUsers: {{ include "tetragon.bool" .Values.tetragonOperator.hostUsers }}
+      {{- end }}
+      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: tetragon-operator-config
+          configMap:
+            name: {{ include "tetragon-operator.configMapName" . }}
+      {{- with .Values.tetragonOperator.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- with .Values.tetragonOperator.strategy }}
+  strategy:
+    {{- toYaml . | trim | nindent 4 }}
+  {{- end }}
+{{- end }}
