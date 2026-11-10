@@ -3,7 +3,7 @@
 # radar-push-endpoint
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-push-endpoint)](https://artifacthub.io/packages/helm/radar-base/radar-push-endpoint)
 
-![Version: 0.6.8](https://img.shields.io/badge/Version-0.6.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
+![Version: 0.6.9](https://img.shields.io/badge/Version-0.6.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
 
 A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming data from Push or Subscription based WEB APIs. It performs authentication, authorization and content validation. For more details of the configurations, see https://github.com/RADAR-base/RADAR-PushEndpoint.
 
@@ -59,7 +59,7 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | disable_tls | bool | `false` | Reconfigure Ingress to not force TLS |
 | ingress.enabled | bool | `true` | Enable ingress controller resource |
 | ingress.annotations | object | check values.yaml | Annotations that define default ingress class, certificate issuer and deny access to sensitive URLs |
-| ingress.path | string | `"/push-endpoint"` | Path within the url structure |
+| ingress.path | string | `"/push-endpoint/?(.*)"` | Path within the url structure. The `(.*)` group is the `$1` of the `rewrite-target` annotation, so the two must be changed together. |
 | ingress.pathType | string | `"ImplementationSpecific"` | Ingress Path type |
 | ingress.ingressClassName | string | `"nginx"` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+) |
 | ingress.hosts | list | `["localhost"]` | Hosts to accept requests from |
@@ -141,9 +141,9 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | googlehealth.enabled | bool | `false` | Whether to enable the Google Health API integration (webhook receiver, subscriber registration and backfill). Only supported from chart version 0.6.8 onwards, and requires a PushEndpoint image that includes the Google Health integration. |
 | googlehealth.userRepositoryClass | string | `"org.radarbase.push.integration.google.user.GoogleHealthServiceUserRepository"` | The user repository to use for getting list of users and their authorization information |
 | googlehealth.userRepositoryUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/"` | The base url of the user repository (the Rest Source Auth backend) |
-| googlehealth.userRepositoryClientId | string | `"radar_pushendpoint"` | The client ID to access the user repository |
+| googlehealth.userRepositoryClientId | string | `"radar_push_endpoint"` | The client ID to access the user repository |
 | googlehealth.userRepositoryClientSecret | string | `"secret"` | The client secret to access the user repository |
-| googlehealth.userRepositoryTokenUrl | string | `"http://radar-rest-sources-backend:8080/rest-sources/backend/token/"` | The token URL to authenticate against the user repository |
+| googlehealth.userRepositoryTokenUrl | string | `"http://management-portal:8080/managementportal/oauth/token"` | The token URL to authenticate against the user repository |
 | googlehealth.apiBaseUrl | string | `"https://health.googleapis.com/v4"` | Base URL of the Google Health API |
 | googlehealth.googleCloudProjectId | string | `""` | Google Cloud project that owns the Health API subscriber. Required when `googlehealth.enabled` is true. |
 | googlehealth.subscriberId | string | `"radar-pep"` | Subscriber id registered with Google. MUST be unique per deployment (e.g. radar-pep-stage) and MUST match `googleHealth.subscriberId` in the radar-rest-sources-backend chart, which hangs the per-user subscriptions off this subscriber. |
