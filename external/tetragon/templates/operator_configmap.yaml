@@ -1,0 +1,24 @@
+{{- if .Values.tetragonOperator.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tetragon-operator.configMapName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "tetragon-operator.labels" . | nindent 4 }}
+data:
+  {{- if eq .Values.crds.installMethod "operator" }}
+  skip-crd-creation: "false"
+  {{- else }}
+  skip-crd-creation: "true"
+  {{- end }}
+  skip-pod-info-crd: {{ not .Values.tetragonOperator.podInfo.enabled | quote }}
+  skip-tracing-policy-crd: {{ not .Values.tetragonOperator.tracingPolicy.enabled | quote }}
+  force-update-crds: {{ .Values.tetragonOperator.forceUpdateCRDs | quote }}
+  leader-election: {{ .Values.tetragonOperator.failoverLease.enabled | quote }}
+  leader-election-namespace: {{ .Values.tetragonOperator.failoverLease.namespace | quote }}
+  leader-election-lease-duration: {{ .Values.tetragonOperator.failoverLease.leaseDuration | quote }}
+  leader-election-renew-deadline: {{ .Values.tetragonOperator.failoverLease.leaseRenewDeadline | quote }}
+  leader-election-retry-period: {{ .Values.tetragonOperator.failoverLease.leaseRetryPeriod | quote }}
+  {{- include "operatorconfigmap.extra" . | nindent 2 }}
+{{- end }}

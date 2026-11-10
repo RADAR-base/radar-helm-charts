@@ -192,6 +192,18 @@ update-strimzi-registry-operator:
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
+# tetragon's crds-yaml/ (tracingpolicies, tracingpoliciesnamespaced) is ~10k
+# lines each and only used by the chart's installMethod: "helm" path, which we
+# don't use (CRDs are managed by the tetragon-operator / applied manually
+# instead). We strip crds-yaml/ after each pull so it doesn't linger in the repo.
+update-tetragon:
+	@echo "Updating tetragon"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://helm.cilium.io
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@rm -rf external/$(patsubst update-%,%,$@)/crds-yaml
+	@echo ""
+
 update-trivy:
 	@echo "Updating trivy"
 	@rm -rf external/$(patsubst update-%,%,$@)

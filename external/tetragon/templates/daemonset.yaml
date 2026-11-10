@@ -1,0 +1,132 @@
+{{- if .Values.tetragon.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  {{- with .Values.daemonSetAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+  {{- with .Values.daemonSetLabelsOverride}}
+    {{- toYaml . | nindent 4 }}
+  {{- else }}
+    {{- include "tetragon.labels" . | nindent 4 }}
+  {{- end }}
+  name: {{ include "tetragon.name" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+    {{- with .Values.selectorLabelsOverride }}
+      {{- toYaml . | nindent 6 }}
+    {{- else }}
+      {{- include "tetragon.selectorLabels" . | nindent 6 }}
+    {{- end }}
+  template:
+    metadata:
+      annotations:
+        checksum/configmap: {{ toJson .Values.tetragon | sha256sum }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+      {{- with .Values.podLabelsOverride }}
+        {{- toYaml . | nindent 8 }}
+      {{- else }}
+        {{- include "tetragon.labels" . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "tetragon.serviceAccount" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+      {{- if not .Values.tetragon.securityContext.privileged }}
+      {{- include "container.mount-bpf-fs" . | nindent 6 }}
+      {{- end }}
+      {{- include "initcontainers.extra" . | nindent 6 }}
+      containers:
+{{- if eq .Values.export.mode "stdout" }}
+      {{- include "container.export.stdout" . | nindent 6 -}}
+{{- end }}
+      {{- include "container.tetragon" . | nindent 6 -}}
+      {{- include "containers.extra" . | nindent 6 -}}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      hostNetwork: {{ include "tetragon.bool" .Values.hostNetwork }}
+      {{- if (semverCompare ">= 1.33-0" .Capabilities.KubeVersion.Version) }}
+      hostUsers: true
+      {{- end }}
+      dnsPolicy: {{ .Values.dnsPolicy | quote }}
+      terminationGracePeriodSeconds: 1
+      volumes:
+      - name: cilium-run
+        hostPath:
+          path: /var/run/cilium
+          type: DirectoryOrCreate
+      - name: tetragon-run
+        hostPath:
+          path: /var/run/tetragon
+          type: DirectoryOrCreate
+      - name: export-logs
+        hostPath:
+          path: {{ .Values.exportDirectory | quote }}
+          type: DirectoryOrCreate
+      - name: tetragon-config
+        configMap:
+          name: {{ include "tetragon.configMapName" . }}
+      - name: bpf-maps
+        hostPath:
+          path: /sys/fs/bpf
+          type: DirectoryOrCreate
+      - name: host-proc
+        hostPath:
+          path: {{ .Values.tetragon.hostProcPath | quote }}
+          type: Directory
+{{- if and (.Values.tetragon.cri.enabled) (.Values.tetragon.cri.socketHostPath) }}
+      - name: cri-socket
+        hostPath:
+          path: {{ dir .Values.tetragon.cri.socketHostPath | quote }}
+          type: Directory
+{{- end }}
+{{- if and .Values.tetragon.grpc.enabled .Values.tetragon.grpc.tls.enabled }}
+      - name: tetragon-grpc-tls
+        secret:
+          secretName: {{ .Values.tetragon.grpc.tls.server.existingSecret | default (include "tetragon.grpcTlsSecretName" .) }}
+          defaultMode: 0400
+{{- end }}
+      {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+{{- range .Values.extraHostPathMounts }}
+      - name: {{ .name }}
+        hostPath:
+          path: {{ .mountPath }}
+{{- end }}
+      {{- include "volumes.extra" . | nindent 6 }}
+{{- with .Values.updateStrategy }}
+  updateStrategy:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}
