@@ -385,11 +385,11 @@ googlehealth:
   # -- The base url of the user repository (the Rest Source Auth backend)
   userRepositoryUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend/"
   # -- The client ID to access the user repository
-  userRepositoryClientId: "radar_pushendpoint"
+  userRepositoryClientId: "radar_push_endpoint"
   # -- The client secret to access the user repository
   userRepositoryClientSecret: "secret"
   # -- The token URL to authenticate against the user repository
-  userRepositoryTokenUrl: "http://radar-rest-sources-backend:8080/rest-sources/backend/token/"
+  userRepositoryTokenUrl: "http://management-portal:8080/managementportal/oauth/token"
   # -- Base URL of the Google Health API
   apiBaseUrl: "https://health.googleapis.com/v4"
   # -- Google Cloud project that owns the Health API subscriber. Required when `googlehealth.enabled` is true.
