@@ -79,6 +79,9 @@ ingress:
   # @default -- check values.yaml
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    # The app serves under /push/integrations/. This maps the public /push-endpoint/<rest> to
+    # /push/integrations/<rest>, where $1 is the <rest> captured by `ingress.path`.
+    nginx.ingress.kubernetes.io/rewrite-target: /push/integrations/$1
     nginx.ingress.kubernetes.io/server-snippet: |
       location /push-endpoint/garmin {
         # set client body size to 20M #
@@ -93,8 +96,9 @@ ingress:
         allow 198.233.176.0/24;
         deny all;
       }
-  # -- Path within the url structure
-  path: "/push-endpoint"
+  # -- Path within the url structure. The `(.*)` group is the `$1` of the `rewrite-target` annotation,
+  # so the two must be changed together.
+  path: "/push-endpoint/?(.*)"
   # -- Ingress Path type
   pathType: ImplementationSpecific
   # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
