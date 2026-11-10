@@ -2,7 +2,7 @@
 
 # radar-nifi
 
-![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 3.1.1](https://img.shields.io/badge/Version-3.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -123,6 +123,29 @@ A Helm chart for Kubernetes
 | ingress.backend | string | `"{{ include \"common.names.fullname\" . }}-nifi-cluster-headless"` |  |
 | ingress.tls | bool | `true` |  |
 | ingress.existingSecret | string | `"radar-nifi-tls"` |  |
+| gatewayAPI.enabled | bool | `false` | Enable Gateway API HTTPRoute resource (alternative to ingress). Opt-in: requires the Gateway API CRDs and a Gateway controller to be installed. |
+| gatewayAPI.annotations | object | `{}` | Annotations to add to the HTTPRoute |
+| gatewayAPI.parentRef | object | `{"name":"radar-base-k8s-gateway","namespace":""}` | Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared resource and must be created separately (not by this chart). |
+| gatewayAPI.parentRef.name | string | `"radar-base-k8s-gateway"` | Name of the Gateway |
+| gatewayAPI.parentRef.namespace | string | `""` | Namespace of the Gateway (defaults to the release namespace when empty) |
+| gatewayAPI.hostnames | list | `["nifi.{{ .Values.serverName }}"]` | Hostnames the HTTPRoutes accept requests for (must intersect the Gateway listener hostnames). String values support Helm templating (tpl); defaults to serverName so deployments override it the same way as ingress.hosts. |
+| gatewayAPI.https | object | `{"port":443,"sectionName":""}` | HTTPS listener on the Gateway that the main route attaches to |
+| gatewayAPI.https.port | int | `443` | Listener port (empty attaches to all matching listeners) |
+| gatewayAPI.https.sectionName | string | `""` | Listener sectionName on the Gateway (optional) |
+| gatewayAPI.pathType | string | `"PathPrefix"` | Path match type (PathPrefix, Exact or RegularExpression) |
+| gatewayAPI.path | string | `"/"` | Path to match within the URL structure |
+| gatewayAPI.backend | object | check values.yaml | Backend Service (the NiFi headless service) and port the route forwards to |
+| gatewayAPI.filters | list | `[]` | Additional HTTPRoute filters (e.g. URLRewrite, RequestHeaderModifier) NOTE: the ingress's cookie-based session affinity (nginx.ingress.kubernetes.io/affinity and related session-cookie-* annotations) has no HTTPRoute equivalent and is NOT replicated here; configure it with your Gateway controller's policies if required. |
+| gatewayAPI.backendTLS | object | `{"caCertificateRefs":[{"group":"","kind":"ConfigMap","name":"radar-nifi-ca"}],"enabled":true,"hostname":"nifi.{{ $.Values.serverName }}","wellKnownCACertificates":"System"}` | TLS from the gateway to the NiFi pods (equivalent to nginx.ingress.kubernetes.io/backend-protocol: HTTPS). Creates a BackendTLSPolicy targeting the backend Service. NiFi uses a self-signed certificate, so the CA must be provided as a ConfigMap (key ca.crt) in the release namespace. |
+| gatewayAPI.backendTLS.enabled | bool | `true` | Create the BackendTLSPolicy |
+| gatewayAPI.backendTLS.hostname | string | `"nifi.{{ $.Values.serverName }}"` | Certificate hostname to validate against the NiFi server certificate |
+| gatewayAPI.backendTLS.wellKnownCACertificates | string | `"System"` | Well-known CA bundle (System); ignored when caCertificateRefs is set |
+| gatewayAPI.backendTLS.caCertificateRefs | list | `[{"group":"","kind":"ConfigMap","name":"radar-nifi-ca"}]` | CA ConfigMap references used to validate the NiFi certificate |
+| gatewayAPI.httpsRedirect | object | `{"enabled":true,"port":80,"sectionName":"","statusCode":301}` | HTTP->HTTPS redirect route (equivalent to nginx force-TLS behaviour) |
+| gatewayAPI.httpsRedirect.enabled | bool | `true` | Enable a second HTTPRoute that 301-redirects HTTP traffic to HTTPS |
+| gatewayAPI.httpsRedirect.port | int | `80` | HTTP listener port on the Gateway to attach the redirect to |
+| gatewayAPI.httpsRedirect.sectionName | string | `""` | Listener sectionName on the Gateway (optional) |
+| gatewayAPI.httpsRedirect.statusCode | int | `301` | Redirect HTTP status code |
 | flowLoader | object | `{"configMap":{"data":""},"enabled":false}` | Flow loader Job configuration (not functional at the moment, included for reference). Set enabled=true to run a one-shot Job that loads a flow into NiFi after startup. |
 
 ----------------------------------------------

@@ -49,3 +49,19 @@ Selector labels - matches the grafana subchart pods
 app.kubernetes.io/name: grafana
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Name of the Service created by the grafana subchart (mirrors the subchart's "grafana.fullname" helper)
+*/}}
+{{- define "radar-grafana.grafanaServiceName" -}}
+{{- if .Values.grafana.fullnameOverride }}
+{{- .Values.grafana.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default "grafana" .Values.grafana.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+{{- end }}
