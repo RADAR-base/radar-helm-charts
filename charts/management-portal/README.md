@@ -65,7 +65,7 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | gatewayAPI.parentRef | object | `{"name":"radar-base-k8s-gateway","namespace":""}` | Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared resource and must be created separately (not by this chart). |
 | gatewayAPI.parentRef.name | string | `"radar-base-k8s-gateway"` | Name of the Gateway |
 | gatewayAPI.parentRef.namespace | string | `""` | Namespace of the Gateway (defaults to the release namespace when empty) |
-| gatewayAPI.hostnames | list | `["{{ .Values.serverName }}"]` | Hostnames the HTTPRoutes accept requests for (must intersect the Gateway listener hostnames). String values support Helm templating (tpl); defaults to serverName so deployments override it the same way as ingress.hosts. |
+| gatewayAPI.hostnames | list | `["{{ .Values.server_name }}"]` | Hostnames the HTTPRoutes accept requests for (must intersect the Gateway listener hostnames). String values support Helm templating (tpl); defaults to server_name so deployments override it the same way as ingress.hosts. |
 | gatewayAPI.https | object | `{"port":443,"sectionName":""}` | HTTPS listener on the Gateway that the main route attaches to |
 | gatewayAPI.https.port | int | `443` | Listener port (empty attaches to all matching listeners) |
 | gatewayAPI.https.sectionName | string | `""` | Listener sectionName on the Gateway (optional) |
@@ -148,7 +148,6 @@ A Helm chart for RADAR-Base Management Portal to manage projects and participant
 | smtp.starttls | bool | `false` | set to true,if ttls should be enabled |
 | smtp.auth | bool | `true` | set to true, if the account should be authenticated before sending emails |
 | oauth_clients | object | check `values.yaml` | OAuth2 Client configuration |
-| serverName | string | `"localhost"` |  |
 
 ## OAuth Client Configuration
 List of OAuth client configurations supported by RADAR-base. Each client should be enabled separately, if relevant and used in the installation.

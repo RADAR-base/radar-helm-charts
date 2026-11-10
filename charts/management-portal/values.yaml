@@ -90,9 +90,9 @@ gatewayAPI:
     namespace: ""
   # -- Hostnames the HTTPRoutes accept requests for (must intersect the Gateway
   # listener hostnames). String values support Helm templating (tpl); defaults to
-  # serverName so deployments override it the same way as ingress.hosts.
+  # server_name so deployments override it the same way as ingress.hosts.
   hostnames:
-    - "{{ .Values.serverName }}"
+    - "{{ .Values.server_name }}"
   # -- HTTPS listener on the Gateway that the main route attaches to
   https:
     # -- Listener port (empty attaches to all matching listeners)
@@ -733,5 +733,3 @@ oauth_clients:
     authorized_grant_types:
       - client_credentials
     access_token_validity: 900
-
-serverName: localhost
