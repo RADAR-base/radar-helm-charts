@@ -160,6 +160,64 @@ kafka:
   # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str
   securityContext: {}
 
+# -- Gateway API HTTPRoute for the schema registry (alternative to schema-registry.ingress).
+# Opt-in: requires the Gateway API CRDs and a Gateway controller to be installed.
+gatewayAPI:
+  # -- Enable Gateway API HTTPRoute resource for the schema registry
+  enabled: false
+  # -- Annotations to add to the HTTPRoute
+  annotations: {}
+  # -- Parent Gateway that the HTTPRoute attaches to. The Gateway itself is a shared
+  # resource and must be created separately (not by this chart).
+  parentRef:
+    # -- Name of the Gateway
+    name: radar-base-k8s-gateway
+    # -- Namespace of the Gateway (defaults to the release namespace when empty)
+    namespace: ""
+  # -- Hostnames the HTTPRoutes accept requests for (must intersect the Gateway
+  # listener hostnames). String values support Helm templating (tpl); defaults to
+  # server_name so deployments override it the same way as schema-registry.ingress.hosts.
+  hostnames:
+    - "{{ .Values.server_name }}"
+  # -- HTTPS listener on the Gateway that the main route attaches to
+  https:
+    # -- Listener port (empty attaches to all matching listeners)
+    port: 443
+    # -- Listener sectionName on the Gateway (optional)
+    sectionName: ""
+  # -- Path match type (PathPrefix, Exact or RegularExpression)
+  pathType: PathPrefix
+  # -- Path to match within the URL structure
+  path: /schema
+  # -- HTTP method the route is restricted to (empty matches all methods).
+  # Equivalent to the ingress configuration-snippet `limit_except GET { deny all; }`.
+  method: GET
+  # -- Additional HTTPRoute filters (e.g. URLRewrite, RequestHeaderModifier).
+  # Equivalent to the ingress annotation: strips the /schema prefix
+  # (nginx.ingress.kubernetes.io/rewrite-target: /$1).
+  # @default -- check values.yaml
+  filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /
+  # -- Backend Service reference for the schema registry Service created by
+  # strimzi-registry-operator (the named "schema-registry" port on that Service).
+  backendRef:
+    # -- Port number of the schema registry Service (Confluent Schema Registry REST API default)
+    port: 8081
+  # -- HTTP->HTTPS redirect route (equivalent to nginx force-TLS behaviour)
+  httpsRedirect:
+    # -- Enable a second HTTPRoute that 301-redirects HTTP traffic to HTTPS
+    enabled: true
+    # -- HTTP listener port on the Gateway to attach the redirect to
+    port: 80
+    # -- Listener sectionName on the Gateway (optional)
+    sectionName: ""
+    # -- Redirect HTTP status code
+    statusCode: 301
+
 # -- Values for schema registry deployed by strimzi-registry-operator
 # ref: https://github.com/lsst-sqre/strimzi-registry-operator
 # @default -- check `values.yaml`
