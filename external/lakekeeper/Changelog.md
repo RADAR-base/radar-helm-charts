@@ -1,0 +1,289 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Changed
+
+### Added
+
+## [0.11.0] - 2026-05-11
+
+### Changed
+* Update OPA docker tag to v1.16.1
+
+### Added
+* Render `catalog.extraEnv`, `catalog.extraEnvFrom`, `OPABridge.extraEnv` and `OPABridge.extraEnvFrom` through `tpl` so values can reference other chart values / templates
+
+### Fixed
+
+## [0.10.1] - 2026-04-05
+
+### Fixed
+* Fix OPA Bridge sidecar failing to start with OPA >= 1.13 due to read-only root filesystem in Chainguard base image
+* Fix internal OpenFGA endpoint DNS resolution on clusters with custom DNS search domains (use absolute FQDN)
+
+### Changed
+* Move OPA config mount from `/run/secrets` to `/etc/opa` to avoid conflict with `/var/run` symlink
+
+## [0.10.0] - 2026-04-05
+
+### Changed
+* Default to Lakekeeper Community v0.12.0, Enterprise v0.11.3
+* Update OPA bridge policies to Lakekeeper 0.12 with batch check
+* Update OPA docker tag to v1.15.1
+* Update OpenFGA Chart to v0.2.62 / OpenFGA v1.14.0
+* Update Postgres Chart to v1.5.13, Postgres 17.9
+* Remove trailing whitespace from .rego files to improve k8s formatting
+
+### Added
+* Add support for `CreateViewWithSelectFromColumns` operation in OPA bridge (requires table read permissions)
+* Allow Superset access to system tables to create new datasets
+* Add Service Port for Prometheus Metrics
+* Add support for Trino ADD_FILES function
+* Add explicit `namespace` to all namespace-scoped resource templates (#120)
+
+### Fixed
+
+## [0.9.0] - 2026-01-02
+
+### Changed
+* Default to Lakekeeper Community v0.11.1, Plus v0.11.0
+* Update OpenFGA Chart to v0.2.50 / OpenFGA 1.11.2
+* Update Postgres Chart to v1.5.12, Postgres 17.7
+
+### Added
+* Add support for Lakekeeper's OPA bridge via `OPABridge` configuraiton options
+* Add support for "cedar" Authorizer - extend RBAC permissions to `get configmaps` in Namespace
+
+### Fixed
+
+## [0.8.1] - 2025-11-03
+
+### Added
+* Add option to fetch OpenFGA Client Credentials from Kubernetes Secret
+
+### Fixed
+* Update Lakekeeper to v0.10.4
+* Unpin openfga image version to avoid the image version drifting from the helm chart version
+* Fix default `extraEnvVars` indentation in OpenFGA subchart to enable cache
+
+## [0.8.0] - 2025-10-09
+
+### Changed
+* Migrate from bitnami postgresql chart to groundhog2k (No migration provided)
+* Update Lakekeeper to v0.10.2
+* Update OpenFGA to v1.10.2 / Chart to v0.2.44
+* Enable OpenFGA Caching by default
+* Disable OpenFGA Playground by default
+* Change `ICEBERG_REST__` config prefix to `LAKEKEEPER__` for all environment variables (Lakekeeper still supports the old prefix for backwards compatibility)
+
+### Added
+* Add support for setting `priorityClassName` for Lakekeeper Catalog Pods
+* Expose Metrics Port 9000 for Catalog Pods
+* Add boolean `catalog.prometheus.setScrapeAnnotations` configuration option to set prometheus scrape labels
+* Option to use Lakekeeper Plus image (requires license)
+
+### Fixed
+
+## [0.7.1] - 2025-08-15
+
+### Changed
+* Update Lakekeeper to v0.9.5
+* Update Postgres Chart to 16.7.26
+* Switch to Lakekeeper copies of bitnami images for postgressql to avoid breaking deployments when bitnami removes all tags but the `latest` as part of their [Secure Image initiative](https://news.broadcom.com/app-dev/broadcom-introduces-bitnami-secure-images-for-production-ready-containerized-applications). Check the README for more information.
+
+### Added
+* Expose Metrics Port 9000 for Catalog Pods
+* Add boolean `catalog.prometheus.setScrapeAnnotations` configuration option to set prometheus scrape labels
+
+## [0.7.0] - 2025-07-03
+
+### Changed
+* Update Lakekeeper to v0.9.2
+* Change order of initContainers: `extraInitContainers` now precede the DB-Check
+* Update OpenFGA Chart to v0.2.35 / Application to v1.8.16
+* Update Postgres to 16.7.15
+
+### Added
+* Add option to set Kubernetes Authentication Audience
+
+### Fixed
+* Correctly mount "extraContainers" in the 
+
+## [0.6.0] - 2025-05-09
+
+### Fixed
+* Volume mounting in the database migration job pod
+* Downgrade OpenFGA to 0.8.6 due to a [knwon bug](https://github.com/lakekeeper/lakekeeper/issues/1068) in Version 0.8.11
+
+### Changed
+* Upgrade Lakekeeper to Version 0.8.5, better support for Postgres 17, fix `x-forwarded-host` header usage
+* `BASE_URI` is no longer added per default. Lakekeeper now uses the HOST header as well as `x-forwarded-xxx` headers
+
+
+## [0.5.4] - 2025-05-05
+
+### Fixed
+* Missing Volume mount in the database migration job pod
+
+### Changed
+
+## [0.5.3] - 2025-05-03
+
+### Fixed
+* Corrected Helm templates to use `.Values.catalog.extraEnvFrom` instead of the incorrect `.Values.catalog.envFrom` to match the `values.yaml`
+
+### Changed
+* Update Lakekeeper to Version 0.8.4
+* Update OpenFGA dependency to Chart Version 0.2.29, OpenFGA v1.8.11
+* Update Postgres dependency to Chart Version 16.6.6
+
+## [0.5.2] - 2025-04-18
+
+### Changed
+* Update Lakekeeper to Version 0.8.3 (fixes UI issue where setting permissions doesn't work)
+
+## [0.5.1] - 2025-04-17
+
+### Changed
+* Update Lakekeeper to Version 0.8.2
+* Add `auth.k8s.legacyEnabled` configuration value
+
+### Fixed
+* Changes to db-migration.yaml Job spec:
+  * Reference `.Values.catalog.dbMigrations.resources` instead of `.Values.catalog.resources`
+  * Reference `.Values.catalog.dbMigrations.podAnnotations` instead of `.Values.catalog.podAnnotations`
+* Use `LAKEKEEPER` prefix for openid configuration options
+
+## [0.5.0] - 2025-04-08
+
+### Changed
+* Change default of `openfga.datastore.migrationType` to `initContainer` so openfga migrations are run in an init container when `internalOpenFGA` is `true`. [Relevant openfga PR/Issue](https://github.com/openfga/helm-charts/pull/157). Thanks @eklesel!
+* Update Lakekeeper to Version 0.8.0
+* Update OpenFGA to Chart 0.2.26, Version v1.8.9
+* Upgrade PostgreSQL Chart to 16.6.2
+
+## [0.4.3] - 2025-03-04
+
+### Migrating from 0.3.0: 
+Please check notes for 0.4.1
+
+### Changed
+* Update Lakekeeper to Version `0.7.4`
+
+## [0.4.3] - 2025-03-04
+
+### Migrating from 0.3.0: 
+Please check notes for 0.4.1
+
+### Changed
+* Update Lakekeeper to Version `0.7.3`
+
+## [0.4.2] - 2025-02-28
+
+### Migrating from 0.3.0: 
+Please check notes for 0.4.1
+
+### Changed
+* Update Lakekeeper to Version `0.7.2`
+
+## [0.4.1] - 2025-02-26
+
+### Migrating from 0.3.0: 
+
+As we changed the pod-selectors of Lakekeeper's deployment according to Kubernetes [Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/) (thanks @nlamirault), the deployment needs to be synced using the `--force` option.
+
+### Changed
+* Update Lakekeeper to Version `0.7.1`
+* Improve values.yaml descriptions regarding PG encryption key
+* Prevent postgres encryption secret being created if a secret is specified
+* Better ArgoCD compatibility via Annotations for OpenFGA & DB migrate job to avoid deadlocks.
+* Disable `helmWait` by default.
+* Add hook annotations to DB migration independent of `helmWait` value. (except `helm-hook-enabled: false`)
+* Update openfga sub-chart to `0.2.23`
+* Update postgres sub-chart to `16.4.14`
+* Support all Kubernetes recommended labels
+
+## [0.4.0] - 2025-02-26
+Non existant
+
+## [0.3.2] - 2025-01-27
+
+### Changed
+* Update Lakekeeper to Version `0.6.2`
+
+## [0.3.1] - 2025-01-27
+
+### Changed
+* Update Lakekeeper to Version `0.6.1`
+* Update PostgreSQL to `16.4.5`
+* Update OpenFGA to `0.2.21`
+
+## [0.3.0] - 2025-01-17
+
+### Changed
+* Update Lakekeeper to Version `0.6.0`
+* Update PostgreSQL to `16.4.3`
+
+
+## [0.2.1] - 2024-12-17
+
+### Added
+* Update Lakekeeper to Version `0.5.2`
+
+### Fixed
+* Deployment under root-path "/" with built-in ingress
+* `externalDatabase.userSecret` was not beeing used
+* `auth.oauth2.ui.scopes` had no effect
+
+### Changed
+
+
+## [0.2.0] - 2024-12-09
+
+### Added
+* `audience`, `additionalIssuers` and `ui` for `auth.oauth2`
+* Kubernetes Authentication (`auth.k8s`) including a ClusterRoleBinding to validate tokens
+* Authorization configuration `authz`
+* Dependency on OpenFGA HelmChart if `internalOpenFGA` is true
+* Bootstrapping Test
+
+### Fixed
+
+### Changed
+* Upgrade Lakekeeper to Version `0.5.1`
+* Upgrade Postgres dependency to `16.2.5`
+* Renamed `auth.oauth2.client_id` to `auth.oauth2.audience`
+* Renamed `auth.oauth2.provider_uri` to `auth.oauth2.providerUri`
+
+
+## [0.1.5] - 2024-11-13
+
+### Fixed
+* `extraEnv` are added twice
+* Bump Lakekeeper to Version 0.4.3 - Fixes a bug where remote signing is not working with AWS S3
+
+
+## [0.1.4] - 2024-10-28
+
+### Fixed
+Bump Lakekeeper to Version 0.4.2 - Azure performance improvements & Support for self-signed S3 certificates
+
+## [0.1.3] - 2024-10-23
+
+### Fixed
+Fixed `extraVolumeMounts` not attached to migrate job
+
+## [0.1.2] - 2024-10-15
+
+### Changed
+Bump Lakekeeper to Version 0.4.1 - GCP fixes
+
+## [0.1.0] - 2024-10-04
+
+Initial Release with Version 0.4.0 migrated from the tip-catalog charts!

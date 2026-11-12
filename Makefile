@@ -112,6 +112,13 @@ update-ory-commons:
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-lakekeeper:
+	@echo "Updating lakekeeper"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://lakekeeper.github.io/lakekeeper-charts/
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-minio:
 	@echo "Updating minio"
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
