@@ -264,6 +264,9 @@ networkpolicy:
       podSelector:
         matchLabels:
           app.kubernetes.io/name: ingress-nginx
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
   egress:
   - to:
     - ipBlock:
@@ -278,19 +281,19 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-schema-registry'
+          app: cp-kafka
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
+          app: cp-schema-registry
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: 'radar-redis'
+          app.kubernetes.io/name: redis
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
