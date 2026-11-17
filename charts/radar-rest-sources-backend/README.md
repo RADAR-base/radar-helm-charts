@@ -39,7 +39,7 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | replicaCount | int | `2` | Number of radar-rest-sources-backend replicas to deploy |
 | image.registry | string | `"ghcr.io"` | Image registry |
 | image.repository | string | `"radar-base/radar-rest-source-auth/radar-rest-source-auth-backend"` | Image repository |
-| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"4.5.0"` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |

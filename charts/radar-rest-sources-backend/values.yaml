@@ -12,7 +12,7 @@ image:
   repository: radar-base/radar-rest-source-auth/radar-rest-source-auth-backend
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag:
+  tag: 4.5.0
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy
