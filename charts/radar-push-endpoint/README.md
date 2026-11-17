@@ -41,7 +41,7 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | replicaCount | int | `2` | Number of radar-push-endpoint replicas to deploy |
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"radarbase/radar-push-endpoint"` | Image repository |
-| image.tag | string | `nil` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"1.0.0"` | Image tag (immutable tags are recommended) Overrides the image tag whose default is the chart appVersion. |
 | image.digest | string | `""` | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.pullSecrets | list | `[]` | Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace. e.g: pullSecrets:   - myRegistryKeySecretName  |
