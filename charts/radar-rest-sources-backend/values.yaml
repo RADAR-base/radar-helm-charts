@@ -220,20 +220,30 @@ networkpolicy:
       podSelector:
         matchLabels:
           app.kubernetes.io/name: ingress-nginx
-  - from:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
           app.kubernetes.io/name: management-portal
-  - from:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
           app.kubernetes.io/name: radar-push-endpoint
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-fitbit-connector
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-oura-connector
   egress:
   - to:
     - ipBlock:
@@ -242,6 +252,16 @@ networkpolicy:
         - 10.0.0.0/8
         - 192.168.0.0/16
         - 172.16.0.0/12
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/8
+    - ipBlock:
+        cidr: 172.16.0.0/12
+    - ipBlock:
+        cidr: 192.168.0.0/16
+    ports:
+      - port: 5432
+        protocol: TCP
   - to:
     - namespaceSelector:
         matchLabels:
@@ -255,6 +275,12 @@ networkpolicy:
       podSelector:
         matchLabels:
           app.kubernetes.io/name: 'radar-redis'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: redis
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'

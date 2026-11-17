@@ -11,6 +11,6 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-{{ include "radar-rest-sources-backend.labels" . | indent 6 }}
+{{ include "radar-rest-sources-backend.selectorLabels" . | indent 6 }}
     {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
 {{- end -}}
