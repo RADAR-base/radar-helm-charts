@@ -64,6 +64,7 @@ jobs:
             external/strimzi-kafka-operator
             external/strimzi-registry-operator
             external/redis-operator
+            external/trivy-operator
           # Any image that matches any of these patterns will be included for scanning.
           # Reasons:
           # - ghcr.io/cloudnative-pg/postgresql:16: deployed via operator so image tag not specifies in the chart in this repo.
