@@ -199,6 +199,13 @@ update-trivy:
 	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-trivy-operator:
+	@echo "Updating trivy-operator"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://aquasecurity.github.io/helm-charts/
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-velero:
 	@echo "Updating velero"
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
