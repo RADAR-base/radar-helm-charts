@@ -196,7 +196,7 @@ livenessProbe:
   # -- Period seconds for livenessProbe
   periodSeconds: 30
   # -- Timeout seconds for livenessProbe
-  timeoutSeconds: 5
+  timeoutSeconds: 30
   # -- Success threshold for livenessProbe
   successThreshold: 1
   # -- Failure threshold for livenessProbe
@@ -213,7 +213,7 @@ readinessProbe:
   # -- Period seconds for readinessProbe
   periodSeconds: 30
   # -- Timeout seconds for readinessProbe
-  timeoutSeconds: 5
+  timeoutSeconds: 30
   # -- Success threshold for readinessProbe
   successThreshold: 1
   # -- Failure threshold for readinessProbe
@@ -230,7 +230,7 @@ startupProbe:
   # -- Period seconds for startupProbe
   periodSeconds: 10
   # -- Timeout seconds for startupProbe
-  timeoutSeconds: 10
+  timeoutSeconds: 30
   # -- Success threshold for startupProbe
   successThreshold: 1
   # -- Failure threshold for startupProbe
