@@ -34,12 +34,18 @@ spec:
   {{- end }}
   rules:
     - matches:
+      {{- if .Values.gatewayAPI.methods }}
+      {{- range .Values.gatewayAPI.methods }}
+        - path:
+            type: {{ $.Values.gatewayAPI.pathType | default "PathPrefix" }}
+            value: {{ $.Values.gatewayAPI.path | quote }}
+          method: {{ . }}
+      {{- end }}
+      {{- else }}
         - path:
             type: {{ .Values.gatewayAPI.pathType | default "PathPrefix" }}
             value: {{ .Values.gatewayAPI.path | quote }}
-          {{- with .Values.gatewayAPI.method }}
-          method: {{ . }}
-          {{- end }}
+      {{- end }}
       {{- with .Values.gatewayAPI.filters }}
       filters: {{- include "common.tplvalues.render" ( dict "value" . "context" $ ) | nindent 8 }}
       {{- end }}

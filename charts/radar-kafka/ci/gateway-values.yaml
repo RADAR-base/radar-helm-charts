@@ -1,0 +1,5 @@
+gatewayAPI:
+  enabled: true
+schema-registry:
+  ingress:
+    enabled: false

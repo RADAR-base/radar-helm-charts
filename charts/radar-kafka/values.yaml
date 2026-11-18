@@ -189,9 +189,13 @@ gatewayAPI:
   pathType: PathPrefix
   # -- Path to match within the URL structure
   path: /schema
-  # -- HTTP method the route is restricted to (empty matches all methods).
-  # Equivalent to the ingress configuration-snippet `limit_except GET { deny all; }`.
-  method: GET
+  # -- HTTP methods the route is restricted to (empty list matches all methods).
+  # Equivalent to the ingress configuration-snippet `limit_except GET { deny all; }`,
+  # which (per nginx) implicitly also allows HEAD, plus OPTIONS for CORS preflight.
+  methods:
+    - GET
+    - HEAD
+    - OPTIONS
   # -- Additional HTTPRoute filters (e.g. URLRewrite, RequestHeaderModifier).
   # Equivalent to the ingress annotation: strips the /schema prefix
   # (nginx.ingress.kubernetes.io/rewrite-target: /$1).
@@ -202,6 +206,18 @@ gatewayAPI:
         path:
           type: ReplacePrefixMatch
           replacePrefixMatch: /
+    # CORS parity with nginx.ingress.kubernetes.io/enable-cors on schema-registry.ingress
+    - type: ResponseHeaderModifier
+      responseHeaderModifier:
+        add:
+          - name: Access-Control-Allow-Origin
+            value: "*"
+          - name: Access-Control-Allow-Methods
+            value: "GET, OPTIONS"
+          - name: Access-Control-Allow-Headers
+            value: "DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Content-Encoding"
+          - name: Access-Control-Max-Age
+            value: "1728000"
   # -- Backend Service reference for the schema registry Service created by
   # strimzi-registry-operator (the named "schema-registry" port on that Service).
   backendRef:
@@ -223,7 +239,7 @@ gatewayAPI:
 # @default -- check `values.yaml`
 schema-registry:
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: nginx
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
