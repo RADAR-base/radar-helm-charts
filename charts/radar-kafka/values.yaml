@@ -160,7 +160,7 @@ kafka:
   # ref: https://strimzi.io/docs/operators/latest/deploying#assembly-security-providers-str
   securityContext: {}
 
-# -- Gateway API HTTPRoute for the schema registry (alternative to schema-registry.ingress).
+# -- Gateway API HTTPRoute for the schema registry (alternative to ingress).
 # Opt-in: requires the Gateway API CRDs and a Gateway controller to be installed.
 gatewayAPI:
   # -- Enable Gateway API HTTPRoute resource for the schema registry
@@ -176,7 +176,7 @@ gatewayAPI:
     namespace: ""
   # -- Hostnames the HTTPRoutes accept requests for (must intersect the Gateway
   # listener hostnames). String values support Helm templating (tpl); defaults to
-  # server_name so deployments override it the same way as schema-registry.ingress.hosts.
+  # server_name so deployments override it the same way as ingress.hosts.
   hostnames:
     - "{{ .Values.server_name }}"
   # -- HTTPS listener on the Gateway that the main route attaches to
@@ -206,7 +206,7 @@ gatewayAPI:
         path:
           type: ReplacePrefixMatch
           replacePrefixMatch: /
-    # CORS parity with nginx.ingress.kubernetes.io/enable-cors on schema-registry.ingress
+    # CORS parity with nginx.ingress.kubernetes.io/enable-cors on ingress
     - type: ResponseHeaderModifier
       responseHeaderModifier:
         add:
@@ -234,30 +234,31 @@ gatewayAPI:
     # -- Redirect HTTP status code
     statusCode: 301
 
+# -- Ingress for the schema registry (alternative to gatewayAPI).
+ingress:
+  enabled: false
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      limit_except GET {
+        deny all;
+      }
+  hosts:
+    - host: '{{ $.Values.server_name }}'
+      paths: ["/schema/?(.*)"]
+  pathType: ImplementationSpecific
+  tls:
+    - secretName: radar-base-tls
+      hosts:
+        - '{{ $.Values.server_name }}'
+
 # -- Values for schema registry deployed by strimzi-registry-operator
 # ref: https://github.com/lsst-sqre/strimzi-registry-operator
 # @default -- check `values.yaml`
 schema-registry:
-  ingress:
-    enabled: false
-    ingressClassName: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      nginx.ingress.kubernetes.io/enable-cors: "true"
-      nginx.ingress.kubernetes.io/rewrite-target: /$1
-      nginx.ingress.kubernetes.io/configuration-snippet: |
-        limit_except GET {
-          deny all;
-        }
-    hosts:
-      - host: '{{ $.Values.server_name }}'
-        paths: ["/schema/?(.*)"]
-    pathType: ImplementationSpecific
-    tls:
-      - secretName: radar-base-tls
-        hosts:
-          - '{{ $.Values.server_name }}'
-
   topic:
     replicationFactor: 3
     config:
