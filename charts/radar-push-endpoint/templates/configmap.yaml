@@ -10,7 +10,7 @@ metadata:
 data:
   healthcheck.sh: |
      #!/bin/sh
-     STATUS=$(curl -s --max-time 4 localhost:{{ .Values.service.port }}/push/integrations/health)
+     STATUS=$(curl -s --max-time 25 localhost:{{ .Values.service.port }}/push/integrations/health)
      if ! (echo "$STATUS" | grep -Fq '"kafka":{"status":"UP"'); then
        exit 1
      fi

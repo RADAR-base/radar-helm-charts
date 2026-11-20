@@ -12,7 +12,7 @@ image:
   repository: radarbase/radar-push-endpoint
   # -- Image tag (immutable tags are recommended)
   # Overrides the image tag whose default is the chart appVersion.
-  tag:
+  tag: 1.0.0
   # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   digest: ""
   # -- Image pull policy
@@ -196,7 +196,7 @@ livenessProbe:
   # -- Period seconds for livenessProbe
   periodSeconds: 30
   # -- Timeout seconds for livenessProbe
-  timeoutSeconds: 5
+  timeoutSeconds: 30
   # -- Success threshold for livenessProbe
   successThreshold: 1
   # -- Failure threshold for livenessProbe
@@ -213,7 +213,7 @@ readinessProbe:
   # -- Period seconds for readinessProbe
   periodSeconds: 30
   # -- Timeout seconds for readinessProbe
-  timeoutSeconds: 5
+  timeoutSeconds: 30
   # -- Success threshold for readinessProbe
   successThreshold: 1
   # -- Failure threshold for readinessProbe
@@ -230,7 +230,7 @@ startupProbe:
   # -- Period seconds for startupProbe
   periodSeconds: 10
   # -- Timeout seconds for startupProbe
-  timeoutSeconds: 10
+  timeoutSeconds: 30
   # -- Success threshold for startupProbe
   successThreshold: 1
   # -- Failure threshold for startupProbe
@@ -264,6 +264,9 @@ networkpolicy:
       podSelector:
         matchLabels:
           app.kubernetes.io/name: ingress-nginx
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
   egress:
   - to:
     - ipBlock:
