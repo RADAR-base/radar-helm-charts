@@ -442,6 +442,47 @@ restSourceClients:
     # -- OAuth version to use: OAUTH2 for standard OAuth2 flow
     oauthVersion: OAUTH2
 
+  huawei:
+    # -- set to true, if Huawei Health Kit client should be used
+    enable: false
+    # -- Type of the data sources
+    sourceType: Huawei
+    # -- Authorization endpoint for Huawei ID authentication and authorization
+    authorizationEndpoint: https://oauth-login.cloud.huawei.com/oauth2/v2/authorize
+    # -- Token endpoint to request access-token from Huawei
+    tokenEndpoint: https://oauth-login.cloud.huawei.com/oauth2/v3/token
+    # -- Huawei Health Kit app (client) id
+    clientId: Huawei-clientid
+    # -- Huawei Health Kit app (client) secret
+    clientSecret: Huawei-clientsecret
+    # -- List of Health Kit scopes of the data that should be collected by the radar-huawei-connector,
+    # space separated. `openid` is prepended by the authorizer. `historydata.open.year` gives access
+    # to one year of history. For details, please refer to
+    # https://developer.huawei.com/consumer/en/doc/HMSCore-References/scope-mapping-0000001050071707
+    scope: >-
+      https://www.huawei.com/healthkit/step.read
+      https://www.huawei.com/healthkit/distance.read
+      https://www.huawei.com/healthkit/calories.read
+      https://www.huawei.com/healthkit/activity.read
+      https://www.huawei.com/healthkit/activehours.read
+      https://www.huawei.com/healthkit/activityrecord.read
+      https://www.huawei.com/healthkit/dailyactivitysummary.read
+      https://www.huawei.com/healthkit/strength.read
+      https://www.huawei.com/healthkit/heartrate.read
+      https://www.huawei.com/healthkit/hearthealth.read
+      https://www.huawei.com/healthkit/oxygensaturation.read
+      https://www.huawei.com/healthkit/pulmonary.read
+      https://www.huawei.com/healthkit/stress.read
+      https://www.huawei.com/healthkit/sleep.read
+      https://www.huawei.com/healthkit/bloodglucose.read
+      https://www.huawei.com/healthkit/bloodpressure.read
+      https://www.huawei.com/healthkit/bodytemperature.read
+      https://www.huawei.com/healthkit/bodyfat.read
+      https://www.huawei.com/healthkit/heightweight.read
+      https://www.huawei.com/healthkit/historydata.open.year
+    # -- OAuth version to use: OAUTH2 for standard OAuth2 flow
+    oauthVersion: OAUTH2
+
   google:
     # -- set to true, if Google Health client should be used
     enable: true
