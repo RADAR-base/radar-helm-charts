@@ -1,0 +1,433 @@
+# Default values for radar-huawei-connector.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of radar-huawei-connector replicas to deploy
+replicaCount: 1
+
+image:
+  # -- Image registry
+  registry: ghcr.io
+  # -- Image repository
+  repository: radar-base/radar-rest-connector/kafka-connect-huawei-source
+  # -- Image tag (immutable tags are recommended)
+  # Overrides the image tag whose default is the chart appVersion.
+  tag:
+  # -- Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  digest: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # e.g:
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  #
+  pullSecrets: []
+
+# -- String to partially override radar-huawei-connector.fullname template with a string (will prepend the release name)
+nameOverride: ""
+# -- String to fully override radar-huawei-connector.fullname template with a string
+fullnameOverride: ""
+
+# -- Configure radar-huawei-connector pods' Security Context.
+# fsGroup 1000 (the image's appuser) makes the logs volume, which holds the offsets file,
+# writable by the connector.
+podSecurityContext:
+  fsGroup: 1000
+
+# -- Configure radar-huawei-connector containers' Security Context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # -- Kubernetes Service type
+  type: ClusterIP
+  # -- radar-huawei-connector port
+  port: 8083
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  # -- CPU/Memory resource requests
+  requests:
+    cpu: 100m
+    memory: 1Gi
+
+persistence:
+  # -- Enable persistence using PVC
+  enabled: true
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  ##
+  ## If you want to reuse an existing claim, you can pass the name of the PVC using
+  ## the existingClaim variable
+  # existingClaim: your-claim
+
+  # -- PVC Access Mode for radar-huawei-connector volume
+  accessMode: ReadWriteOnce
+  # -- PVC Storage Request for radar-huawei-connector volume
+  size: 5Gi
+  # -- Overrides the user of the Huawei connector logs, for example, `"1000:1000"`.
+  fsUserOverride: null
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Toleration labels for pod assignment
+tolerations: []
+
+# -- Affinity labels for pod assignment
+affinity: {}
+
+secret:
+  # -- Secret for the Kafka SASL JAAS configuration
+  jaas:
+    name: shared-service-user
+    key: sasl.jaas.config
+
+# -- Extra environment variables
+extraEnvVars:
+  # -- Protocol used to communicate with brokers. Valid values are: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  - name: CONNECT_SECURITY_PROTOCOL
+    value: SASL_PLAINTEXT
+  - name: CONNECT_PRODUCER_SECURITY_PROTOCOL
+    value: SASL_PLAINTEXT
+  # -- Mechanism used to authenticate with SASL. Valid values are: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512.
+  - name: CONNECT_SASL_MECHANISM
+    value: SCRAM-SHA-512
+  - name: CONNECT_PRODUCER_SASL_MECHANISM
+    value: SCRAM-SHA-512
+
+# -- Custom livenessProbe that overrides the default one
+customLivenessProbe: {}
+
+livenessProbe:
+  # -- Enable livenessProbe
+  enabled: true
+  # -- Initial delay seconds for livenessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for livenessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for livenessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for livenessProbe
+  successThreshold: 1
+  # -- Failure threshold for livenessProbe
+  failureThreshold: 3
+
+# -- Custom readinessProbe that overrides the default one
+customReadinessProbe: {}
+
+readinessProbe:
+  # -- Enable readinessProbe
+  enabled: true
+  # -- Initial delay seconds for readinessProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for readinessProbe
+  periodSeconds: 30
+  # -- Timeout seconds for readinessProbe
+  timeoutSeconds: 5
+  # -- Success threshold for readinessProbe
+  successThreshold: 1
+  # -- Failure threshold for readinessProbe
+  failureThreshold: 3
+
+# -- Custom startupProbe that overrides the default one
+customStartupProbe: {}
+
+startupProbe:
+  # -- Enable startupProbe
+  enabled: true
+  # -- Initial delay seconds for startupProbe
+  initialDelaySeconds: 5
+  # -- Period seconds for startupProbe
+  periodSeconds: 10
+  # -- Timeout seconds for startupProbe
+  timeoutSeconds: 10
+  # -- Success threshold for startupProbe
+  successThreshold: 1
+  # -- Failure threshold for startupProbe
+  failureThreshold: 30
+
+# -- Network policy defines who can access this application and who this applications has access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Ingress
+  - Egress
+  # The Kafka Connect REST API exposes the connector configuration, including its secrets, and the
+  # probes reach it over localhost, so only the chart's own `helm test` pod may connect.
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: '{{ include "radar-huawei-connector.name" . }}'
+          app.kubernetes.io/instance: '{{ .Release.Name }}'
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+        - 172.16.0.0/12
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-kafka-kafka-bootstrap'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-kafka-schema-registry'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'radar-rest-sources-backend'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'management-portal'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+
+# -- URI of Zookeeper instances of the cluster
+zookeeper:
+# -- URI of Kafka brokers of the cluster
+kafka: SASL_PLAINTEXT://radar-kafka-kafka-bootstrap:9094
+# -- Number of Kafka brokers. This is used to validate the cluster availability at connector init.
+kafka_num_brokers: "3"
+# -- URL of the Kafka schema registry
+schema_registry: http://radar-kafka-schema-registry:8081
+
+kafka_wait:
+  # -- Whether to wait before the specified number of brokers are available.
+  enabled: true
+  # -- Kafka connection properties file contents during wait. If empty, all environment variables starting with
+  # `CONNECT_` will be used.
+  properties: ""
+
+# -- Base URL of the rest-sources-authorizer-backend service
+radar_rest_sources_backend_url: http://radar-rest-sources-backend:8080/rest-sources/backend/
+# -- Number of connector tasks to be used in connector.properties
+connector_num_tasks: "4"
+# -- Huawei Health Kit API client (app) ID.
+huawei_api_client: ""
+# -- Huawei Health Kit API client (app) secret. Stored in the chart's Secret, unless `existingSecret` is set.
+huawei_api_secret: ""
+# -- Base URL of the Huawei Health Kit API, without the /healthkit/<version> path.
+# `https://health-api.cloud.huawei.com` serves the same data.
+huawei_api_url: https://hihealthbase-dre.things.dbankcloud.cn
+# -- Seconds to wait before polling a user's data type again once all its data has been collected.
+user_poll_interval: 1800
+# -- ISO-8601 duration. Devices can sync days late, so a time window without data is only marked as
+# collected once it is older than this.
+late_sync_window: P14D
+# -- ISO-8601 period. Huawei serves one year of history (the historydata.open.year scope), counted
+# back from when the user authorized access; data before that is not requested. Empty for no limit.
+max_history: P1Y
+# -- Kafka topic for empty records that store the progress of time windows without data, so a
+# restart does not request them again. Best configured as a compacted topic.
+heartbeat_topic: connect_huawei_heartbeat
+
+heartbeat_topic_init:
+  # -- Create `heartbeat_topic` in an init container before the connector starts, if it does not exist yet.
+  # Kafka topic auto-creation would make it a regular, uncompacted topic.
+  enabled: true
+  # -- Topic configs to create `heartbeat_topic` with. Partition count and replication factor are the broker
+  # defaults.
+  configs:
+    cleanup.policy: compact
+  # -- CPU/Memory resource requests of the init container
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+# -- OAuth2 client id from Management Portal
+oauthClientId: radar_huawei_connector
+# -- OAuth2 client secret from Management Portal. Stored in the chart's Secret, unless `existingSecret` is set.
+oauthClientSecret: secret
+# -- Existing Secret with the keys `huaweiApiSecret` and `oauthClientSecret`. If set, `huawei_api_secret` and
+# `oauthClientSecret` are ignored. The connector reads them from environment variables, through Kafka Connect's
+# EnvVarConfigProvider, so they are not stored in the properties ConfigMap.
+existingSecret: ""
+# -- OAuth2 Auth URL for connector client to get access tokens
+auth_url: http://management-portal:8080/managementportal/oauth/token
+# -- URL of Management Portal. This will be used to create URLs to access Management Portal
+managementportal_url: http://management-portal:8080/managementportal
+
+# -- Class name of the user repository. This should be the same as the one used in the connector.
+user_repository_class: HuaweiServiceUserRepository
+
+# -- Huawei data types to collect, by connector route key (`huawei.<key>.enabled`). Set `topic` on a
+# route to override its default Kafka topic (`connect_huawei_<key>`). Disabled routes fail for
+# every user against the live Health Kit API.
+# @default -- check `values.yaml`
+routes:
+  cgm_blood_glucose:
+    enabled: true
+  cgm_blood_glucose_statistics:
+    enabled: true
+  # Huawei rejects the data type with 400 "no default dataCollector found".
+  daily_activity_summary:
+    enabled: false
+  active_hours:
+    enabled: true
+  active_hours_statistics:
+    enabled: true
+  continuous_activity_fragment:
+    enabled: true
+  # Huawei rejects the data type with 400 "Invalid dataTypeName.".
+  continuous_activity_statistics:
+    enabled: false
+  continuous_altitude_statistics:
+    enabled: true
+  continuous_blood_glucose_statistics:
+    enabled: true
+  continuous_breathe_rate_statistics:
+    enabled: true
+  continuous_body_blood_pressure_statistics:
+    enabled: true
+  # Huawei rejects the data type with 400 "Invalid dataTypeName.".
+  continuous_body_temperature_rest_statistics:
+    enabled: false
+  # Huawei rejects the data type with 400 "Invalid dataTypeName.".
+  continuous_calories_bmr_statistics:
+    enabled: false
+  # Huawei rejects the data type with 400 "Invalid dataTypeName.".
+  continuous_exercise_heart_rate_statistics:
+    enabled: false
+  # Huawei rejects the data type with 400 "Invalid dataTypeName.".
+  continuous_power_statistics:
+    enabled: false
+  # Huawei rejects the data type with 400 "Invalid dataTypeName.".
+  continuous_speed_statistics:
+    enabled: false
+  # Huawei rejects the data type with 400 "Invalid dataTypeName.".
+  continuous_steps_rate_statistics:
+    enabled: false
+  # Huawei rejects the data type with 400 "Invalid dataTypeName.".
+  continuous_stroke_rate_statistics:
+    enabled: false
+  instantaneous_resting_heart_rate_statistics:
+    enabled: true
+  instantaneous_stress_statistics:
+    enabled: true
+  vo2max_statistics:
+    enabled: true
+  continuous_heart_rate_statistics:
+    enabled: true
+  continuous_body_temperature_statistics:
+    enabled: true
+  continuous_skin_temperature_statistics:
+    enabled: true
+  continuous_body_fat_rate_statistics:
+    enabled: true
+  instantaneous_body_temperature:
+    enabled: true
+  instantaneous_skin_temperature:
+    enabled: true
+  instantaneous_heart_rate:
+    enabled: true
+  instantaneous_spo2:
+    enabled: true
+  continuous_calories_burnt:
+    enabled: true
+  # Huawei rejects the data type with 400 "no default dataCollector found".
+  continuous_calories_consumed:
+    enabled: false
+  continuous_calories_burnt_total:
+    enabled: true
+  continuous_distance_delta:
+    enabled: true
+  continuous_distance_total:
+    enabled: true
+  continuous_ecg_detail:
+    enabled: true
+  continuous_exercise_intensity:
+    enabled: true
+  continuous_exercise_intensity_statistics:
+    enabled: true
+  continuous_exercise_intensity_v2:
+    enabled: true
+  continuous_exercise_intensity_v2_statistics:
+    enabled: true
+  continuous_sleep_fragment:
+    enabled: true
+  continuous_spo2_statistics:
+    enabled: true
+  continuous_steps_delta:
+    enabled: true
+  continuous_steps_total:
+    enabled: true
+  # Needs a Health Kit scope that the rest-sources-authorizer does not request.
+  emotion:
+    enabled: false
+  # Huawei answers 403 "no permission" unless it has granted this record type to the Huawei app.
+  health_record_dynamic_bp:
+    enabled: false
+  health_record_bradycardia:
+    enabled: true
+  health_record_tachycardia:
+    enabled: true
+  # Huawei answers 403 "no permission" unless it has granted this record type to the Huawei app.
+  health_record_hyperthermia:
+    enabled: false
+  # Huawei answers 403 "no permission" unless it has granted this record type to the Huawei app.
+  health_record_low_spo2_alert:
+    enabled: false
+  # Needs a Health Kit scope that the rest-sources-authorizer does not request.
+  health_record_menstrual_cycle:
+    enabled: false
+  health_record_sleep:
+    enabled: true
+  heart_rate_variability:
+    enabled: true
+  resting_calories_statistics:
+    enabled: true
+  sleep_on_off_bed_record:
+    enabled: true
+  # Huawei rejects the data type with 400 "no default dataCollector found".
+  sleep_respiratory_detail:
+    enabled: false
+  # Huawei rejects the data type with 400 "no default dataCollector found".
+  sleep_respiratory_event:
+    enabled: false
+  vo2max:
+    enabled: true
