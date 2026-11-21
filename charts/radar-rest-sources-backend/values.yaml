@@ -362,7 +362,7 @@ restSourceClientSubscriptions:
     reconcileIntervalMinutes: 5
     # -- If a single reconcile pass would delete more orphaned subscriptions than this, it skips deletion and
     # warns instead. Zero or less disables the cap.
-    reconcileMaxDeletesPerPass: 50
+    reconcileMaxDeletesPerPass: 20
     # -- Google service-account JSON used to manage the subscriptions. Without it, subscription management
     # stays inactive. The chart mounts it at a fixed path, so only the key itself is configurable.
     serviceAccountKey: ""
