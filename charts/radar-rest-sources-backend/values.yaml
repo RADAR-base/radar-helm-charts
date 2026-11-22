@@ -357,12 +357,16 @@ restSourceClientSubscriptions:
     googleCloudProjectId: ""
     # -- Subscriber id the per-user subscriptions hang off. MUST match `googlehealth.subscriberId` in the
     # radar-push-endpoint chart, which registers that subscriber.
-    subscriberId: "radar-pep"
+    subscriberId: "radar-push-endpoint-stage"
     # -- How often, in minutes, the background reconcile compares local state against Google's subscriptions
     reconcileIntervalMinutes: 5
     # -- If a single reconcile pass would delete more orphaned subscriptions than this, it skips deletion and
     # warns instead. Zero or less disables the cap.
     reconcileMaxDeletesPerPass: 20
+    # -- Subscriber ids of other deployments in the same Google Cloud project. A Google account already
+    # subscribed under one of them is refused, as only one subscriber gets its notifications.
+    siblingSubscriberIds:
+      - radar-push-endpoint-dev
     # -- Google service-account JSON used to manage the subscriptions. Without it, subscription management
     # stays inactive. The chart mounts it at a fixed path, so only the key itself is configurable.
     serviceAccountKey: ""
