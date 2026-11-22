@@ -164,7 +164,7 @@ A Helm chart for RADAR-base Push Endpoint. REST Gateway to Kafka, for incoming d
 | googlehealth.userRepositoryTokenUrl | string | `"http://management-portal:8080/managementportal/oauth/token"` | The token URL to authenticate against the user repository |
 | googlehealth.apiBaseUrl | string | `"https://health.googleapis.com/v4"` | Base URL of the Google Health API |
 | googlehealth.googleCloudProjectId | string | `""` | Google Cloud project that owns the Health API subscriber. Required when `googlehealth.enabled` is true. |
-| googlehealth.subscriberId | string | `"radar-pep"` | Subscriber id registered with Google. MUST be unique per deployment (e.g. radar-pep-stage) and MUST match `googleHealth.subscriberId` in the radar-rest-sources-backend chart, which hangs the per-user subscriptions off this subscriber. |
+| googlehealth.subscriberId | string | `"radar-push-endpoint-stage"` | Subscriber id registered with Google. MUST be unique per deployment (e.g. radar-pep-stage) and MUST match `googleHealth.subscriberId` in the radar-rest-sources-backend chart, which hangs the per-user subscriptions off this subscriber. |
 | googlehealth.subscriberEndpointUri | string | `""` | Publicly reachable URL Google delivers webhook PINGs to, e.g. https://<serverName>/push-endpoint/googlehealth/notifications |
 | googlehealth.subscriberSecret | string | `""` | 32+ byte random string. Google echoes it back as the Authorization header on every PING. |
 | googlehealth.subscriptionCreatePolicy | string | `"MANUAL"` | How Google creates per-user subscriptions for this subscriber (MANUAL or AUTOMATIC). Keep MANUAL: the Rest Source Auth backend creates and deletes the subscriptions explicitly. |
