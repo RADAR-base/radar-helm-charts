@@ -1,0 +1,4 @@
+gatewayAPI:
+  enabled: true
+ingress:
+  enabled: false
