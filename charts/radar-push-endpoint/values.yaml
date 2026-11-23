@@ -446,7 +446,7 @@ googlehealth:
   # -- Subscriber id registered with Google. MUST be unique per deployment (e.g. radar-pep-stage) and MUST
   # match `googleHealth.subscriberId` in the radar-rest-sources-backend chart, which hangs the per-user
   # subscriptions off this subscriber.
-  subscriberId: "radar-push-endpoint-stage"
+  subscriberId: ""
   # -- Publicly reachable URL Google delivers webhook PINGs to, e.g.
   # https://<serverName>/push-endpoint/googlehealth/notifications
   subscriberEndpointUri: ""
