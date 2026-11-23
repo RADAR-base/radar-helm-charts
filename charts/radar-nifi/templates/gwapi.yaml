@@ -96,7 +96,7 @@ spec:
   validation:
     hostname: {{ ( tpl .Values.gatewayAPI.backendTLS.hostname $ ) | quote }}
     {{- if .Values.gatewayAPI.backendTLS.caCertificateRefs }}
-    caCertificateRefs: {{- toYaml .Values.gatewayAPI.backendTLS.caCertificateRefs | nindent 6 }}
+    caCertificateRefs: {{- tpl (toYaml .Values.gatewayAPI.backendTLS.caCertificateRefs) $ | nindent 6 }}
     {{- else }}
     wellKnownCACertificates: {{ .Values.gatewayAPI.backendTLS.wellKnownCACertificates | default "System" }}
     {{- end }}
