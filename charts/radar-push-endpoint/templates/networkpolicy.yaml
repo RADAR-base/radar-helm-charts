@@ -11,6 +11,6 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-{{ include "radar-push-endpoint.labels" . | indent 6 }}
+{{ include "radar-push-endpoint.selectorLabels" . | indent 6 }}
     {{- tpl (toYaml .Values.networkpolicy) .  | nindent 2 }}
 {{- end -}}
