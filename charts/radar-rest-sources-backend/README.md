@@ -3,7 +3,7 @@
 # radar-rest-sources-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-backend)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-backend)
 
-![Version: 1.5.13](https://img.shields.io/badge/Version-1.5.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.16](https://img.shields.io/badge/AppVersion-4.4.16-informational?style=flat-square)
+![Version: 1.5.14](https://img.shields.io/badge/Version-1.5.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.16](https://img.shields.io/badge/AppVersion-4.4.16-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -157,6 +157,14 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClients.oura.clientSecret | string | `"Oura-clientsecret"` | Oura client secret |
 | restSourceClients.oura.scope | string | `"daily session heartrate workout tag personal email spo2 ring_configuration"` | List of scopes of the data that should be collected from Oura. For details, please refer to https://cloud.ouraring.com/docs/authentication |
 | restSourceClients.oura.oauthVersion | string | `"OAUTH2"` | OAuth version to use: OAUTH2 for standard OAuth2 flow |
+| restSourceClients.huawei.enable | bool | `false` | set to true, if Huawei Health Kit client should be used |
+| restSourceClients.huawei.sourceType | string | `"Huawei"` | Type of the data sources |
+| restSourceClients.huawei.authorizationEndpoint | string | `"https://oauth-login.cloud.huawei.com/oauth2/v2/authorize"` | Authorization endpoint for Huawei ID authentication and authorization |
+| restSourceClients.huawei.tokenEndpoint | string | `"https://oauth-login.cloud.huawei.com/oauth2/v3/token"` | Token endpoint to request access-token from Huawei |
+| restSourceClients.huawei.clientId | string | `"Huawei-clientid"` | Huawei Health Kit app (client) id |
+| restSourceClients.huawei.clientSecret | string | `"Huawei-clientsecret"` | Huawei Health Kit app (client) secret |
+| restSourceClients.huawei.scope | string | `"https://www.huawei.com/healthkit/step.read https://www.huawei.com/healthkit/distance.read https://www.huawei.com/healthkit/calories.read https://www.huawei.com/healthkit/activity.read https://www.huawei.com/healthkit/activehours.read https://www.huawei.com/healthkit/activityrecord.read https://www.huawei.com/healthkit/dailyactivitysummary.read https://www.huawei.com/healthkit/strength.read https://www.huawei.com/healthkit/heartrate.read https://www.huawei.com/healthkit/hearthealth.read https://www.huawei.com/healthkit/oxygensaturation.read https://www.huawei.com/healthkit/pulmonary.read https://www.huawei.com/healthkit/stress.read https://www.huawei.com/healthkit/sleep.read https://www.huawei.com/healthkit/bloodglucose.read https://www.huawei.com/healthkit/bloodpressure.read https://www.huawei.com/healthkit/bodytemperature.read https://www.huawei.com/healthkit/bodyfat.read https://www.huawei.com/healthkit/heightweight.read https://www.huawei.com/healthkit/historydata.open.year"` | List of Health Kit scopes of the data that should be collected by the radar-huawei-connector, space separated. `openid` is prepended by the authorizer. `historydata.open.year` gives access to one year of history. For details, please refer to https://developer.huawei.com/consumer/en/doc/HMSCore-References/scope-mapping-0000001050071707 |
+| restSourceClients.huawei.oauthVersion | string | `"OAUTH2"` | OAuth version to use: OAUTH2 for standard OAuth2 flow |
 | restSourceClients.google.enable | bool | `true` | set to true, if Google Health client should be used |
 | restSourceClients.google.sourceType | string | `"GoogleHealth"` | Type of the data sources |
 | restSourceClients.google.authorizationEndpoint | string | `"https://accounts.google.com/o/oauth2/v2/auth"` | Authorization endpoint for Google authentication and authorization |

@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "common.names.fullname" . }}-properties
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  source-huawei.properties: |
+    name=radar-huawei-source
+    connector.class=org.radarbase.connect.rest.huawei.HuaweiSourceConnector
+    tasks.max={{ .Values.connector_num_tasks }}
+    huawei.api.client={{ .Values.huawei_api_client }}
+    huawei.api.secret=${env:HUAWEI_API_SECRET}
+    huawei.api.url={{ .Values.huawei_api_url }}
+    huawei.user.poll.interval={{ .Values.user_poll_interval }}
+    huawei.late.sync.window={{ .Values.late_sync_window }}
+    huawei.max.history={{ .Values.max_history }}
+    huawei.heartbeat.topic={{ .Values.heartbeat_topic }}
+    huawei.user.repository.class=org.radarbase.connect.rest.huawei.user.{{ .Values.user_repository_class }}
+    huawei.user.repository.url={{ .Values.radar_rest_sources_backend_url }}
+    huawei.user.repository.client.id={{ .Values.oauthClientId }}
+    huawei.user.repository.client.secret=${env:HUAWEI_USER_REPOSITORY_CLIENT_SECRET}
+    huawei.user.repository.oauth2.token.url={{ .Values.auth_url }}
+    {{- range $key, $route := .Values.routes }}
+    huawei.{{ $key }}.enabled={{ $route.enabled }}
+    {{- if $route.topic }}
+    huawei.{{ $key }}.topic={{ $route.topic }}
+    {{- end }}
+    {{- end }}
+  {{- if .Values.heartbeat_topic_init.enabled }}
+  create-heartbeat-topic.sh: |
+    #!/bin/bash
+    # Creates the connector's heartbeat topic if it does not exist yet.
+    set -eu
+    config="${COMMAND_CONFIG_FILE_PATH:-}"
+    if [ -z "$config" ]; then
+      config="$(mktemp)"
+      if [ -n "${CONNECT_SECURITY_PROTOCOL:-}" ]; then
+        echo "security.protocol=${CONNECT_SECURITY_PROTOCOL}" >> "$config"
+      fi
+      if [ -n "${CONNECT_SASL_MECHANISM:-}" ]; then
+        echo "sasl.mechanism=${CONNECT_SASL_MECHANISM}" >> "$config"
+      fi
+      if [ -n "${CONNECT_SASL_JAAS_CONFIG:-}" ]; then
+        echo "sasl.jaas.config=${CONNECT_SASL_JAAS_CONFIG}" >> "$config"
+      fi
+    fi
+    exec kafka-topics --bootstrap-server "${CONNECT_BOOTSTRAP_SERVERS}" --command-config "$config" \
+      --create --if-not-exists --topic {{ .Values.heartbeat_topic | quote }}
+    {{- range $key, $value := .Values.heartbeat_topic_init.configs }} \
+      --config {{ printf "%s=%v" $key $value | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if and .Values.kafka_wait.enabled .Values.kafka_wait.properties }}
+  kafka-wait.properties: |
+    {{ .Values.kafka_wait.properties | indent 4 }}
+  {{- end }}
