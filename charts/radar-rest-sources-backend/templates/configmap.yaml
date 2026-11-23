@@ -69,10 +69,6 @@ data:
         subscriberId: {{ $googlehealth.subscriberId }}
         reconcileIntervalMinutes: {{ $googlehealth.reconcileIntervalMinutes }}
         reconcileMaxDeletesPerPass: {{ $googlehealth.reconcileMaxDeletesPerPass }}
-        {{- with $googlehealth.siblingSubscriberIds }}
-        siblingSubscriberIds:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
         # MUST stay identical to the Push Endpoint's pushIntegration.googlehealth.triggerDataTypes.
         dataTypes:
           {{- range $googlehealth.dataTypes }}
