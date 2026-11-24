@@ -166,7 +166,7 @@ livenessProbe:
   # -- Period seconds for livenessProbe
   periodSeconds: 30
   # -- Timeout seconds for livenessProbe
-  timeoutSeconds: 3
+  timeoutSeconds: 30
   # -- Success threshold for livenessProbe
   successThreshold: 1
   # -- Failure threshold for livenessProbe
@@ -181,9 +181,9 @@ readinessProbe:
   # -- Initial delay seconds for readinessProbe
   initialDelaySeconds: 5
   # -- Period seconds for readinessProbe
-  periodSeconds: 15
+  periodSeconds: 30
   # -- Timeout seconds for readinessProbe
-  timeoutSeconds: 3
+  timeoutSeconds: 30
   # -- Success threshold for readinessProbe
   successThreshold: 1
   # -- Failure threshold for readinessProbe
@@ -200,7 +200,7 @@ startupProbe:
   # -- Period seconds for startupProbe
   periodSeconds: 10
   # -- Timeout seconds for startupProbe
-  timeoutSeconds: 10
+  timeoutSeconds: 30
   # -- Success threshold for startupProbe
   successThreshold: 1
   # -- Failure threshold for startupProbe
@@ -220,20 +220,36 @@ networkpolicy:
       podSelector:
         matchLabels:
           app.kubernetes.io/name: ingress-nginx
-  - from:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
           app.kubernetes.io/name: management-portal
-  - from:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
           app.kubernetes.io/name: radar-push-endpoint
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-fitbit-connector
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-oura-connector
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: radar-self-enrolment-ui
   egress:
   - to:
     - ipBlock:
@@ -242,6 +258,16 @@ networkpolicy:
         - 10.0.0.0/8
         - 192.168.0.0/16
         - 172.16.0.0/12
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/8
+    - ipBlock:
+        cidr: 172.16.0.0/12
+    - ipBlock:
+        cidr: 192.168.0.0/16
+    ports:
+      - port: 5432
+        protocol: TCP
   - to:
     - namespaceSelector:
         matchLabels:
@@ -260,7 +286,19 @@ networkpolicy:
           kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
       podSelector:
         matchLabels:
+          app.kubernetes.io/name: redis
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
           app.kubernetes.io/name: 'management-portal'
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: hydra
   - to:
     - namespaceSelector:
         matchLabels:
@@ -331,12 +369,12 @@ restSourceClientSubscriptions:
     googleCloudProjectId: ""
     # -- Subscriber id the per-user subscriptions hang off. MUST match `googlehealth.subscriberId` in the
     # radar-push-endpoint chart, which registers that subscriber.
-    subscriberId: "radar-pep"
+    subscriberId: ""
     # -- How often, in minutes, the background reconcile compares local state against Google's subscriptions
     reconcileIntervalMinutes: 5
     # -- If a single reconcile pass would delete more orphaned subscriptions than this, it skips deletion and
     # warns instead. Zero or less disables the cap.
-    reconcileMaxDeletesPerPass: 50
+    reconcileMaxDeletesPerPass: 20
     # -- Google service-account JSON used to manage the subscriptions. Without it, subscription management
     # stays inactive. The chart mounts it at a fixed path, so only the key itself is configurable.
     serviceAccountKey: ""

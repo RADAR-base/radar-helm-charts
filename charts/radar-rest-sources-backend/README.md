@@ -3,7 +3,7 @@
 # radar-rest-sources-backend
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/radar-rest-sources-backend)](https://artifacthub.io/packages/helm/radar-base/radar-rest-sources-backend)
 
-![Version: 1.5.13](https://img.shields.io/badge/Version-1.5.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.16](https://img.shields.io/badge/AppVersion-4.4.16-informational?style=flat-square)
+![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.0](https://img.shields.io/badge/AppVersion-4.5.0-informational?style=flat-square)
 
 A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 
@@ -85,21 +85,21 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | livenessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for livenessProbe |
 | livenessProbe.periodSeconds | int | `30` | Period seconds for livenessProbe |
-| livenessProbe.timeoutSeconds | int | `3` | Timeout seconds for livenessProbe |
+| livenessProbe.timeoutSeconds | int | `30` | Timeout seconds for livenessProbe |
 | livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | customReadinessProbe | object | `{}` | Custom readinessProbe that overrides the default one |
 | readinessProbe.enabled | bool | `true` | Enable readinessProbe |
 | readinessProbe.initialDelaySeconds | int | `5` | Initial delay seconds for readinessProbe |
-| readinessProbe.periodSeconds | int | `15` | Period seconds for readinessProbe |
-| readinessProbe.timeoutSeconds | int | `3` | Timeout seconds for readinessProbe |
+| readinessProbe.periodSeconds | int | `30` | Period seconds for readinessProbe |
+| readinessProbe.timeoutSeconds | int | `30` | Timeout seconds for readinessProbe |
 | readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | customStartupProbe | object | `{}` | Custom startupProbe that overrides the default one |
 | startupProbe.enabled | bool | `true` | Enable startupProbe |
 | startupProbe.initialDelaySeconds | int | `5` | Initial delay seconds for startupProbe |
 | startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
-| startupProbe.timeoutSeconds | int | `10` | Timeout seconds for startupProbe |
+| startupProbe.timeoutSeconds | int | `30` | Timeout seconds for startupProbe |
 | startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
 | startupProbe.failureThreshold | int | `30` | Failure threshold for startupProbe |
 | networkpolicy | object | check `values.yaml` | Network policy defines who can access this application and who this applications has access to |
@@ -119,9 +119,9 @@ A Helm chart for the backend application of RADAR-base Rest Sources Authorizer
 | restSourceClientSubscriptions.googlehealth.enabled | bool | `true` | Master switch for per-user subscription management, without having to unset the service account |
 | restSourceClientSubscriptions.googlehealth.apiBaseUrl | string | `"https://health.googleapis.com/v4"` | Base URL of the Google Health API |
 | restSourceClientSubscriptions.googlehealth.googleCloudProjectId | string | `""` | Google Cloud project that owns the Health API subscriber. Required when `restSourceClientSubscriptions.googlehealth.enabled` is true. |
-| restSourceClientSubscriptions.googlehealth.subscriberId | string | `"radar-pep"` | Subscriber id the per-user subscriptions hang off. MUST match `googlehealth.subscriberId` in the radar-push-endpoint chart, which registers that subscriber. |
+| restSourceClientSubscriptions.googlehealth.subscriberId | string | `""` | Subscriber id the per-user subscriptions hang off. MUST match `googlehealth.subscriberId` in the radar-push-endpoint chart, which registers that subscriber. |
 | restSourceClientSubscriptions.googlehealth.reconcileIntervalMinutes | int | `5` | How often, in minutes, the background reconcile compares local state against Google's subscriptions |
-| restSourceClientSubscriptions.googlehealth.reconcileMaxDeletesPerPass | int | `50` | If a single reconcile pass would delete more orphaned subscriptions than this, it skips deletion and warns instead. Zero or less disables the cap. |
+| restSourceClientSubscriptions.googlehealth.reconcileMaxDeletesPerPass | int | `20` | If a single reconcile pass would delete more orphaned subscriptions than this, it skips deletion and warns instead. Zero or less disables the cap. |
 | restSourceClientSubscriptions.googlehealth.serviceAccountKey | string | `""` | Google service-account JSON used to manage the subscriptions. Without it, subscription management stays inactive. The chart mounts it at a fixed path, so only the key itself is configurable. |
 | restSourceClientSubscriptions.googlehealth.dataTypes | list | `["steps","heart-rate","heart-rate-variability","daily-resting-heart-rate","respiratory-rate-sleep-summary","daily-sleep-temperature-derivations","sleep","exercise","floors","sedentary-period","activity-level"]` | Data types each per-user subscription subscribes to. MUST stay identical to `googlehealth.triggerDataTypes` in the radar-push-endpoint chart, which configures the shared subscriber these subscriptions hang off — a type present here but not there never yields a webhook trigger. Only valid trigger types may be listed; anything else makes Google reject the create outright. |
 | redis.uri | string | `"redis://radar-redis-replication-master:6379"` | URI of the redis database |
