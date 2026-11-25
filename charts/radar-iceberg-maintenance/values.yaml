@@ -1,0 +1,137 @@
+# Default values for radar-iceberg-maintenance.
+#
+# An Iceberg table is not self-maintaining. A streaming sink committing every few minutes
+# produces many small files and one snapshot per commit; left alone, query planning slows
+# down, storage keeps every superseded byte, and deleted rows stay physically present.
+#
+# This chart runs the three standard chores as Trino SQL on a schedule:
+#
+#   optimize          merge small files into large, well-organised ones
+#   expire_snapshots  drop old table versions and physically delete what they alone held
+#   remove_orphan_files  delete files no snapshot references (left by crashed commits)
+#
+# Each job discovers the tables itself with `SHOW TABLES`, so tables created later by the
+# sink's auto-create are picked up without a values change.
+
+# -- String to partially override the fullname template (will prepend the release name)
+nameOverride: ""
+# -- String to fully override the fullname template
+fullnameOverride: ""
+
+# -- Labels added to all resources of this chart
+commonLabels: {}
+# -- Annotations added to all resources of this chart
+commonAnnotations: {}
+
+image:
+  # -- Image registry. The Trino image ships the CLI these jobs use.
+  registry: docker.io
+  # -- Image repository
+  repository: trinodb/trino
+  # -- Image tag. Keep aligned with the deployed Trino server version.
+  tag: "480"
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets
+  pullSecrets: []
+
+trino:
+  # -- Trino coordinator URL these jobs submit SQL to
+  url: http://trino:8080
+  # -- Trino catalog holding the Iceberg tables
+  catalog: iceberg
+  # -- Schema (Iceberg namespace) holding the tables
+  schema: radar
+  # -- User the jobs authenticate as. Its queries appear in the Trino audit log under this
+  # name, so keep it distinct from any human account.
+  user: iceberg-maintenance
+  # -- Optional Secret providing a password for `trino.user`, set as TRINO_PASSWORD
+  passwordSecret:
+    # -- Name of an existing Secret. Empty disables password authentication.
+    name: ""
+    # -- Key within that Secret
+    key: password
+
+# -- Restrict maintenance to these tables. Empty means "every table in the schema",
+# discovered at run time with SHOW TABLES.
+tables: []
+
+# -- CPU/Memory resources for the maintenance pods. These jobs submit SQL and wait; the work
+# happens on the Trino workers.
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+jobs:
+  compaction:
+    # -- Merge small files. The most valuable of the three for a streaming sink.
+    enabled: true
+    # -- Cron schedule. Off-peak: compaction and the sink both write, and although Iceberg's
+    # atomic swap makes a conflict a retry rather than a corruption, there is no reason to
+    # provoke retries during the busy part of the day.
+    schedule: "0 2 * * *"
+    # -- Files below this size are candidates for rewriting
+    fileSizeThreshold: 128MB
+  expireSnapshots:
+    # -- Drop snapshots older than the retention window and delete what only they referenced.
+    enabled: true
+    # -- Cron schedule
+    schedule: "30 3 * * *"
+    # -- How much history to keep. This is a GOVERNANCE parameter, not a tuning knob: it is
+    # simultaneously how far back time travel reaches and how long after a DELETE the rows
+    # physically survive. Agree it, then set it here.
+    retentionThreshold: 7d
+  removeOrphanFiles:
+    # -- Delete files that no snapshot references, left behind by interrupted commits.
+    enabled: true
+    # -- Cron schedule. Weekly is enough.
+    schedule: "0 5 * * 0"
+    # -- Safety margin. Must comfortably exceed the sink's commit interval, or this deletes
+    # files belonging to a commit that is still in progress.
+    retentionThreshold: 7d
+
+# -- Number of successful finished jobs to retain
+successfulJobsHistoryLimit: 3
+# -- Number of failed finished jobs to retain
+failedJobsHistoryLimit: 3
+# -- Deadline in seconds for starting the job if it misses its scheduled time
+startingDeadlineSeconds: 300
+# -- Number of retries before a job is considered failed
+backoffLimit: 2
+# -- Concurrency policy. Forbid: never run two of the same chore at once.
+concurrencyPolicy: Forbid
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+# -- Toleration labels for pod assignment
+tolerations: []
+# -- Affinity labels for pod assignment
+affinity: {}
+
+# -- Network policy defines who can access this application and who this application has
+# access to
+# @default -- check `values.yaml`
+networkpolicy:
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: '{{ .Release.Namespace }}'
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: 'trino'
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
