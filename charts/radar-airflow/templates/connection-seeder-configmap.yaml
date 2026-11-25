@@ -1,0 +1,76 @@
+{{- if and .Values.connectionSeeder.enabled .Values.connections }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-airflow-connection-seeder
+  labels:
+    app.kubernetes.io/name: radar-airflow
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  connections.json: |
+{{ toJson .Values.connections | nindent 4 }}
+  seed_connections.py: |
+    import json
+    import subprocess
+    from pathlib import Path
+
+
+    def build_payload(connection):
+        if "uri" in connection and connection["uri"]:
+            return "uri", str(connection["uri"])
+
+        if "json" in connection:
+            value = connection["json"]
+            if isinstance(value, str):
+                return "json", value
+            return "json", json.dumps(value)
+
+        if "config" in connection:
+            cfg = connection["config"]
+            if isinstance(cfg, str):
+                return "json", cfg
+            payload = {k: v for k, v in connection.items() if k not in {"id", "uri", "json", "config"}}
+            if isinstance(cfg, dict):
+                payload.update(cfg)
+            return "json", json.dumps(payload)
+
+        payload = {k: v for k, v in connection.items() if k not in {"id", "uri", "json", "config"}}
+        return "json", json.dumps(payload)
+
+
+    def run(cmd):
+        result = subprocess.run(cmd, text=True, capture_output=True)
+        return result.returncode, result.stdout, result.stderr
+
+
+    def main():
+        connections = json.loads(Path("/opt/radar-airflow-seeder/connections.json").read_text())
+        for connection in connections:
+            conn_id = connection.get("id")
+            if not conn_id:
+                continue
+
+            run(["airflow", "connections", "delete", conn_id])
+
+            mode, payload = build_payload(connection)
+            add_cmd = ["airflow", "connections", "add", conn_id]
+            if mode == "uri":
+                add_cmd.extend(["--conn-uri", payload])
+            else:
+                add_cmd.extend(["--conn-json", payload])
+
+            code, out, err = run(add_cmd)
+            if code != 0:
+                raise RuntimeError(
+                    f"Failed to seed connection '{conn_id}'.\n"
+                    f"Command: {' '.join(add_cmd)}\n"
+                    f"stdout: {out}\n"
+                    f"stderr: {err}"
+                )
+
+            print(f"Seeded connection: {conn_id}")
+
+
+    if __name__ == "__main__":
+        main()
+{{- end }}

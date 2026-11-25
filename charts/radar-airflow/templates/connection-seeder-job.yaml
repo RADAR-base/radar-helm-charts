@@ -1,0 +1,43 @@
+{{- if and .Values.connectionSeeder.enabled .Values.connections }}
+{{- $airflowCtx := dict "Values" .Values.airflow "Release" .Release "Chart" (dict "Name" "airflow") }}
+{{- $metadataSecretName := default (printf "%s-metadata" (include "airflow.fullname" $airflowCtx)) .Values.airflow.data.metadataSecretName }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-airflow-connection-seeder
+  labels:
+    app.kubernetes.io/name: radar-airflow
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "3"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: radar-airflow
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: connection-seeder
+          image: '{{ .Values.airflow.images.airflow.repository | default .Values.airflow.defaultAirflowRepository }}:{{ .Values.airflow.images.airflow.tag | default .Values.airflow.defaultAirflowTag }}'
+          imagePullPolicy: {{ .Values.airflow.images.airflow.pullPolicy | default "IfNotPresent" }}
+          command: ["python", "/opt/radar-airflow-seeder/seed_connections.py"]
+          env:
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $metadataSecretName }}
+                  key: connection
+          volumeMounts:
+            - name: seeder-data
+              mountPath: /opt/radar-airflow-seeder
+              readOnly: true
+      volumes:
+        - name: seeder-data
+          configMap:
+            name: {{ .Release.Name }}-airflow-connection-seeder
+{{- end }}
