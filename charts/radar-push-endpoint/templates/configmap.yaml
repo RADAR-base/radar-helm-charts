@@ -105,7 +105,7 @@ data:
         googleCloudProjectId: {{ .Values.googlehealth.googleCloudProjectId | quote }}
 
         # --- Subscriber (deployment-wide; per-user subscriptions live in Rest Source Auth) ---
-        subscriberId: {{ .Values.googlehealth.subscriberId }}
+        subscriberId: {{ .Values.googlehealth.subscriberId | quote }}
         subscriberEndpointUri: {{ .Values.googlehealth.subscriberEndpointUri | quote }}
         subscriberSecret: {{ .Values.googlehealth.subscriberSecret | quote }}
         serviceAccountKeyPath: /etc/google/gha-service-account.json
