@@ -240,7 +240,7 @@ gatewayAPI:
   filters: []
   # -- TLS from the gateway to the NiFi pods (equivalent to nginx.ingress.kubernetes.io/backend-protocol: HTTPS).
   # Creates a BackendTLSPolicy targeting the backend Service. NiFi uses a self-signed
-  # certificate, so the CA must be provided as a ConfigMap (key ca.crt) in the release namespace.
+  # certificate, so the CA must be provided as a Secret or ConfigMap (key ca.crt) in the release namespace.
   backendTLS:
     # -- Create the BackendTLSPolicy
     enabled: true
@@ -248,11 +248,11 @@ gatewayAPI:
     hostname: 'nifi.{{ $.Values.serverName }}'
     # -- Well-known CA bundle (System); ignored when caCertificateRefs is set
     wellKnownCACertificates: System
-    # -- CA ConfigMap references used to validate the NiFi certificate
+    # -- CA references (Secret or ConfigMap, templated) used to validate the NiFi certificate
     caCertificateRefs:
       - group: ""
-        kind: ConfigMap
-        name: radar-nifi-ca
+        kind: Secret
+        name: '{{ include "common.names.fullname" . }}-nifi-cluster-ca-certificate'
   # -- HTTP->HTTPS redirect route (equivalent to nginx force-TLS behaviour)
   httpsRedirect:
     # -- Enable a second HTTPRoute that 301-redirects HTTP traffic to HTTPS

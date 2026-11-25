@@ -2,7 +2,7 @@
 
 # radar-nifi
 
-![Version: 3.1.1](https://img.shields.io/badge/Version-3.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 3.1.2](https://img.shields.io/badge/Version-3.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -136,11 +136,11 @@ A Helm chart for Kubernetes
 | gatewayAPI.path | string | `"/"` | Path to match within the URL structure |
 | gatewayAPI.backend | object | check values.yaml | Backend Service (the NiFi headless service) and port the route forwards to |
 | gatewayAPI.filters | list | `[]` | Additional HTTPRoute filters (e.g. URLRewrite, RequestHeaderModifier) NOTE: the ingress's cookie-based session affinity (nginx.ingress.kubernetes.io/affinity and related session-cookie-* annotations) has no HTTPRoute equivalent and is NOT replicated here; configure it with your Gateway controller's policies if required. |
-| gatewayAPI.backendTLS | object | `{"caCertificateRefs":[{"group":"","kind":"ConfigMap","name":"radar-nifi-ca"}],"enabled":true,"hostname":"nifi.{{ $.Values.serverName }}","wellKnownCACertificates":"System"}` | TLS from the gateway to the NiFi pods (equivalent to nginx.ingress.kubernetes.io/backend-protocol: HTTPS). Creates a BackendTLSPolicy targeting the backend Service. NiFi uses a self-signed certificate, so the CA must be provided as a ConfigMap (key ca.crt) in the release namespace. |
+| gatewayAPI.backendTLS | object | `{"caCertificateRefs":[{"group":"","kind":"Secret","name":"{{ include \"common.names.fullname\" . }}-nifi-cluster-ca-certificate"}],"enabled":true,"hostname":"nifi.{{ $.Values.serverName }}","wellKnownCACertificates":"System"}` | TLS from the gateway to the NiFi pods (equivalent to nginx.ingress.kubernetes.io/backend-protocol: HTTPS). Creates a BackendTLSPolicy targeting the backend Service. NiFi uses a self-signed certificate, so the CA must be provided as a Secret or ConfigMap (key ca.crt) in the release namespace. |
 | gatewayAPI.backendTLS.enabled | bool | `true` | Create the BackendTLSPolicy |
 | gatewayAPI.backendTLS.hostname | string | `"nifi.{{ $.Values.serverName }}"` | Certificate hostname to validate against the NiFi server certificate |
 | gatewayAPI.backendTLS.wellKnownCACertificates | string | `"System"` | Well-known CA bundle (System); ignored when caCertificateRefs is set |
-| gatewayAPI.backendTLS.caCertificateRefs | list | `[{"group":"","kind":"ConfigMap","name":"radar-nifi-ca"}]` | CA ConfigMap references used to validate the NiFi certificate |
+| gatewayAPI.backendTLS.caCertificateRefs | list | `[{"group":"","kind":"Secret","name":"{{ include \"common.names.fullname\" . }}-nifi-cluster-ca-certificate"}]` | CA references (Secret or ConfigMap, templated) used to validate the NiFi certificate |
 | gatewayAPI.httpsRedirect | object | `{"enabled":true,"port":80,"sectionName":"","statusCode":301}` | HTTP->HTTPS redirect route (equivalent to nginx force-TLS behaviour) |
 | gatewayAPI.httpsRedirect.enabled | bool | `true` | Enable a second HTTPRoute that 301-redirects HTTP traffic to HTTPS |
 | gatewayAPI.httpsRedirect.port | int | `80` | HTTP listener port on the Gateway to attach the redirect to |

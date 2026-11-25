@@ -56,7 +56,7 @@ gateway:
     #   metallb.io/loadBalancerIPs: <IP>
   # -- Listeners exposed by the Gateway. Rendered as-is; string values support
   # Helm templating (tpl), so hostnames can reference other values.
-  # @default -- an HTTP (:80) and HTTPS (:443) listener, see values.yaml
+  # @default -- HTTP (:80) and HTTPS (:443) listeners for the base, dashboard and nifi hostnames, see values.yaml
   listeners:
     - name: http
       hostname: "{{ .Values.serverName }}"
@@ -72,3 +72,41 @@ gateway:
           - kind: Secret
             group: ""
             name: radar-base-tls
+    - name: http-dashboard
+      hostname: "dashboard.{{ .Values.serverName }}"
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-dashboard
+      hostname: "dashboard.{{ .Values.serverName }}"
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: radar-base-tls-dashboard
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: http-nifi
+      hostname: "nifi.{{ .Values.serverName }}"
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https-nifi
+      hostname: "nifi.{{ .Values.serverName }}"
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: radar-nifi-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
