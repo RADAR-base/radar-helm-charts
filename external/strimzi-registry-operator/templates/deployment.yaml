@@ -23,6 +23,6 @@ spec:
           - name: SSR_CLUSTER_NAME
             value: {{ required "A valid .Values.clusterName entry required" .Values.clusterName | quote }}
           - name: SSR_NAMESPACE
-            value: {{ .Values.clusterNamespace | quote }}
+            value: {{ required "A valid .Values.clusterNamespace entry required" .Values.clusterNamespace | quote }}
           command: ["kopf"]
           args: ["run",  "--standalone",  "-m",  "strimziregistryoperator.handlers",  "--namespace",  "{{ .Values.clusterNamespace }}",  "--verbose"]
