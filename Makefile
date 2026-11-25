@@ -178,6 +178,13 @@ update-redis-cluster:
 	@helm pull -d external --untar ot-container-kit/$(patsubst update-%,%,$@)
 	@echo ""
 
+update-seaweedfs-operator:
+	@echo "Updating seaweedfs-operator"
+	@rm -rf external/$(patsubst update-%,%,$@)
+	@helm repo add $(patsubst update-%,%,$@) https://seaweedfs.github.io/seaweedfs-operator/
+	@helm pull -d external --untar $(patsubst update-%,%,$@)/$(patsubst update-%,%,$@)
+	@echo ""
+
 update-strimzi-kafka-operator:
 	@echo "Updating strimzi-kafka-operator"
 	@rm -rf external/$(patsubst update-%,%,$@)

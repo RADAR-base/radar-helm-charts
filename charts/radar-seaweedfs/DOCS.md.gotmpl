@@ -1,0 +1,13 @@
+{{ define "radar-seaweedfs.notes" -}}
+## SeaweedFS
+
+This chart deploys a SeaweedFS cluster (masters, volume servers, filers and S3 gateways) as a `Seaweed` custom
+resource, creates the RADAR-base S3 buckets as `Bucket` resources and configures the S3 identities. It needs the
+[SeaweedFS operator](https://github.com/seaweedfs/seaweedfs-operator) (`radar/seaweedfs-operator`, vendored in
+`external/seaweedfs-operator`) to be installed first, in a separate release: the operator chart installs the CRDs
+that this chart's resources use.
+
+The S3 API is served at `http://<fullname>-s3:8333`. Only the S3 API (which requires credentials),
+the admin UI (password protected) and metrics are reachable from outside the SeaweedFS pods; the network policy
+blocks the unauthenticated filer, master and volume server APIs.
+{{- end }}

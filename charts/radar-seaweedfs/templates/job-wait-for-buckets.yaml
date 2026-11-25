@@ -1,0 +1,70 @@
+{{- if .Values.waitForBuckets.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "common.names.fullname" . }}-wait-for-buckets
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: wait-for-buckets
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: {{ add .Values.waitForBuckets.timeoutSeconds 30 }}
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: wait-for-buckets
+    spec:
+      restartPolicy: Never
+      {{- include "common.images.renderPullSecrets" (dict "images" (list .Values.image) "context" $) | nindent 6 }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 100
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: wait-for-buckets
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.waitForBuckets.image "global" .Values.global) }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          env:
+            - name: FILER_URL
+              value: http://{{ include "common.names.fullname" . }}-filer.{{ include "common.names.namespace" . }}.svc:8888
+            - name: MASTER_URL
+              value: http://{{ include "common.names.fullname" . }}-master.{{ include "common.names.namespace" . }}.svc:9333
+            - name: S3_URL
+              value: http://{{ include "common.names.fullname" . }}-s3.{{ include "common.names.namespace" . }}.svc:8333
+            - name: TIMEOUT
+              value: {{ .Values.waitForBuckets.timeoutSeconds | quote }}
+            - name: BUCKETS
+              value: {{ join " " .Values.buckets | quote }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              start=$(date +%s)
+              wait_until() {
+                echo "Waiting for $1 ..."
+                until eval "$2"; do
+                  if [ $(( $(date +%s) - start )) -ge "${TIMEOUT}" ]; then
+                    echo "Timed out after ${TIMEOUT}s waiting for $1" >&2
+                    exit 1
+                  fi
+                  sleep 3
+                done
+                echo "Done: $1"
+              }
+              wait_until "free volume slots" 'curl -sf "${MASTER_URL}/dir/status" | grep -q "\"Free\":[1-9]"'
+              # The S3 gateway answers unauthenticated requests with 403 Access Denied.
+              wait_until "S3 gateway" '[ "$(curl -s -o /dev/null -w "%{http_code}" "${S3_URL}/")" = "403" ]'
+              for bucket in ${BUCKETS}; do
+                wait_until "bucket ${bucket}" '[ "$(curl -s -o /dev/null -w "%{http_code}" -H "Accept: application/json" "${FILER_URL}/buckets/${bucket}/")" = "200" ]'
+              done
+{{- end }}
