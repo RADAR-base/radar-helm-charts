@@ -1,0 +1,34 @@
+{{- if and .Values.tetragonOperator.enabled .Values.tetragonOperator.prometheus.enabled .Values.tetragonOperator.prometheus.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    {{- with .Values.tetragonOperator.prometheus.serviceMonitor.labelsOverride}}
+    {{- toYaml . | nindent 4 }}
+    {{- else }}
+    {{- include "tetragon-operator.labels" . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.tetragonOperator.prometheus.serviceMonitor.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  name: {{ include "tetragon-operator.name" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  endpoints:
+    - honorLabels: true
+      interval: {{ .Values.tetragonOperator.prometheus.serviceMonitor.scrapeInterval | quote }}
+      path: /metrics
+      port: metrics
+      relabelings:
+        - action: replace
+          replacement: ${1}
+          sourceLabels:
+            - __meta_kubernetes_pod_node_name
+          targetLabel: node
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "tetragon-operator.selectorLabels" . | nindent 6 }}
+{{- end }}

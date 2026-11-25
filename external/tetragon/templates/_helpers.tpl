@@ -1,0 +1,227 @@
+{{/*
+Resources names
+*/}}
+{{- define "tetragon.name" -}}
+{{- default .Release.Name .Values.tetragon.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{- define "tetragon.configMapName" -}}
+{{- printf "%s-config" (include "tetragon.name" .) | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{- define "tetragon.clusterRole" -}}
+{{- include "tetragon.name" . }}
+{{- end }}
+
+{{- define "tetragon.role" -}}
+{{- include "tetragon.name" . }}
+{{- end }}
+
+{{- define "tetragon-operator.name" -}}
+{{- default (printf "%s-operator" .Release.Name) .Values.tetragonOperator.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{- define "tetragon-operator.clusterRole" -}}
+{{- include "tetragon-operator.name" . }}
+{{- end }}
+
+{{- define "tetragon-operator.roleBindingName" -}}
+{{- printf "%s-rolebinding" (include "tetragon-operator.name" .) | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{- define "tetragon-operator.configMapName" -}}
+{{- printf "%s-config" (include "tetragon-operator.name" .) | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{- define "tetragon-rthooks.name" -}}
+{{- default (printf "%s-rthooks" .Release.Name) .Values.rthooks.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+
+{{/*
+Common labels
+*/}}
+{{- define "commonLabels" -}}
+helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/part-of: {{ .Chart.Name }}
+{{- end }}
+
+{{- define "tetragon.labels" -}}
+{{ include "tetragon.selectorLabels" . }}
+{{ include "commonLabels" . }}
+app.kubernetes.io/component: agent
+{{- end }}
+{{- define "tetragon-operator.labels" -}}
+{{ include "tetragon-operator.selectorLabels" . }}
+{{ include "commonLabels" . }}
+app.kubernetes.io/component: operator
+{{- end }}
+{{- define "tetragon-rthooks.labels" -}}
+{{ include "tetragon-rthooks.selectorLabels" . }}
+{{ include "commonLabels" . }}
+app.kubernetes.io/component: rthooks
+{{- end }}
+{{- define "tetragon-certgen.labels" -}}
+{{ include "tetragon.selectorLabels" . }}
+{{ include "commonLabels" . }}
+app.kubernetes.io/component: certgen
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "tetragon.selectorLabels" -}}
+app.kubernetes.io/name: {{ .Chart.Name }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+{{- define "tetragon-operator.selectorLabels" -}}
+app.kubernetes.io/name: "tetragon-operator"
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+{{- define "tetragon-rthooks.selectorLabels" -}}
+app.kubernetes.io/name: "tetragon-rthooks"
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "container.export.stdout.name" -}}
+{{- print "export-stdout" -}}
+{{- end }}
+
+{{- define "container.tetragon.name" -}}
+{{- print "tetragon" -}}
+{{- end }}
+
+{{/*
+ServiceAccounts
+*/}}
+{{- define "tetragon.serviceAccount" -}}
+{{- if .Values.serviceAccount.name -}}
+{{- printf "%s" .Values.serviceAccount.name -}}
+{{- else -}}
+{{- include "tetragon.name" . -}}
+{{- end -}}
+{{- end }}
+
+{{- define "tetragon-operator.serviceAccount" -}}
+{{- if .Values.tetragonOperator.serviceAccount.name -}}
+{{- printf  "%s" .Values.tetragonOperator.serviceAccount.name -}}
+{{- else -}}
+{{- printf  "%s-service-account" (include "tetragon-operator.name" .) -}}
+{{- end -}}
+{{- end }}
+
+{{- define "container.tetragonOCIHookSetup.installPath" -}}
+{{- print "/hostInstall" -}}
+{{- end }}
+
+{{- define "container.tetragonOCIHookSetup.hooksPath" -}}
+{{- print "/hostHooks" -}}
+{{- end }}
+
+{{- define "tetragon.image" -}}
+{{ .Values.tetragon.image.override | default (printf "%v:%v" .Values.tetragon.image.repository (.Values.tetragon.image.tag | default .Chart.AppVersion)) | quote }}
+{{- end -}}
+
+{{/*
+Runtime-hooks
+*/}}
+
+{{- define "rthooks.image" -}}
+{{ .Values.rthooks.image.override | default (printf "%v:%v" .Values.rthooks.image.repository .Values.rthooks.image.tag) | quote }}
+{{- end -}}
+
+{{- define "rthooksInterface" -}}
+{{ $iface := .Values.rthooks.interface }}
+{{- if (eq $iface "oci-hooks") -}}
+	oci-hooks
+{{- else if (eq $iface "nri-hook") -}}
+	nri-hook
+{{- else -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+rthooks affinity: when rthooks.affinity is explicitly set (including {}),
+use it as-is. Otherwise fall back to the top-level .Values.affinity.
+*/}}
+{{- define "tetragon-rthooks.affinity" -}}
+{{- if hasKey .Values.rthooks "affinity" -}}
+{{- toYaml .Values.rthooks.affinity -}}
+{{- else -}}
+{{- toYaml .Values.affinity -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+gRPC TLS resource names.
+*/}}
+{{- define "tetragon.grpcTlsSecretName" -}}
+{{- printf "%s-server-certs" (include "tetragon.name" .) | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{- define "tetragon.caSecretName" -}}
+{{- printf "%s-ca" (include "tetragon.name" .) | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
+gRPC TLS cert identity.
+
+A wildcard SAN over a synthetic DNS suffix lets one Secret cover every
+DaemonSet pod: clients dial the agent's TCP address but override SNI to a
+single-label subdomain (RFC 6125 wildcard rules) so the cert validates
+without per-node provisioning.
+
+  server SAN: *.tetragon-grpc.cilium.io
+  client SNI: <any>.tetragon-grpc.cilium.io
+*/}}
+{{- define "tetragon.grpcTls.domain" -}}
+{{- print "tetragon-grpc.cilium.io" -}}
+{{- end }}
+
+{{- define "tetragon.grpcTls.commonName" -}}
+{{- printf "*.%s" (include "tetragon.grpcTls.domain" .) -}}
+{{- end }}
+
+{{- define "tetragon.grpcTls.dnsNames" -}}
+- {{ include "tetragon.grpcTls.commonName" . | quote }}
+{{- range .Values.tetragon.grpc.tls.server.extraDnsNames }}
+- {{ . | quote }}
+{{- end }}
+{{- end }}
+
+{{/*
+Generate / look up the in-cluster CA used by the helm-method server-cert
+Secret. Mirrors cilium.ca.setup: stash the CA on the dot via $_ so all
+templates that render in the same helm pass share one CA.
+*/}}
+{{- define "tetragon.ca.setup" }}
+  {{- if not .commonCA -}}
+    {{- $ca := "" -}}
+    {{- $secretName := include "tetragon.caSecretName" . -}}
+    {{- $crt := .Values.tetragon.grpc.tls.ca.cert -}}
+    {{- $key := .Values.tetragon.grpc.tls.ca.key -}}
+    {{- if and $crt $key }}
+      {{- $ca = buildCustomCert $crt $key -}}
+    {{- else }}
+      {{- with lookup "v1" "Secret" .Release.Namespace $secretName }}
+        {{- $crt := index .data "ca.crt" }}
+        {{- $key := index .data "ca.key" }}
+        {{- $ca = buildCustomCert $crt $key -}}
+      {{- else }}
+        {{- $validity := (.Values.tetragon.grpc.tls.ca.certValidityDuration | int) -}}
+        {{- $ca = genCA "Tetragon CA" $validity -}}
+      {{- end }}
+    {{- end -}}
+    {{- $_ := set . "commonCA" $ca -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "tetragon.bool" -}}
+{{- $v := toString . -}}
+{{- if not (has $v (list "true" "false")) -}}
+{{- fail (printf "expected a boolean, got %q" $v) -}}
+{{- end -}}
+{{- $v -}}
+{{- end }}
